@@ -15,16 +15,9 @@
 package openflow
 
 import (
-	"encoding/binary"
-	"errors"
-	"fmt"
-
 	"antrea.io/libOpenflow/openflow15"
 	"antrea.io/libOpenflow/protocol"
-	"antrea.io/libOpenflow/util"
 	"antrea.io/ofnet/ofctrl"
-	"golang.org/x/time/rate"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/ovs/openflow"
 )
@@ -88,7 +81,8 @@ const (
 
 // RegisterPacketInHandler stores controller handler in a map with category as keys.
 func (c *client) RegisterPacketInHandler(packetHandlerCategory uint8, packetInHandler PacketInHandler) {
-	c.packetInHandlers[packetHandlerCategory] = packetInHandler
+	_ = "STUB: not implemented"
+	return
 }
 
 // featureStartPacketIn contains packetIn resources specifically for each feature that uses packetIn.
@@ -99,87 +93,38 @@ type featureStartPacketIn struct {
 }
 
 func newFeatureStartPacketIn(category uint8, stopCh <-chan struct{}, queueSize, queueRate int) *featureStartPacketIn {
-	featurePacketIn := featureStartPacketIn{category: category, stopCh: stopCh}
-	featurePacketIn.packetInQueue = openflow.NewPacketInQueue(category, queueSize, rate.Limit(queueRate))
-
-	return &featurePacketIn
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // StartPacketInHandler is the starting point for processing feature packetIn requests.
-func (c *client) StartPacketInHandler(stopCh <-chan struct{}) {
-	if len(c.packetInHandlers) == 0 {
-		return
-	}
-	// Iterate through each feature that starts packetIn. Subscribe with their specified category.
-	for category := range c.packetInHandlers {
-		featurePacketIn := newFeatureStartPacketIn(category, stopCh, c.packetInRate*2, c.packetInRate)
-		err := c.subscribeFeaturePacketIn(featurePacketIn)
-		if err != nil {
-			klog.Errorf("received error %+v while subscribing packetIn for each feature", err)
-		}
-	}
-}
+func (c *client) StartPacketInHandler(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
+
+// Iterate through each feature that starts packetIn. Subscribe with their specified category.
 
 func (c *client) subscribeFeaturePacketIn(featurePacketIn *featureStartPacketIn) error {
-	err := c.SubscribePacketIn(featurePacketIn.category, featurePacketIn.packetInQueue)
-	if err != nil {
-		return fmt.Errorf("subscribe %d packetIn failed %+v", featurePacketIn.category, err)
-	}
-	go c.parsePacketIn(featurePacketIn)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (c *client) parsePacketIn(featurePacketIn *featureStartPacketIn) {
-	for {
-		pktIn := featurePacketIn.packetInQueue.GetRateLimited(featurePacketIn.stopCh)
-		if pktIn == nil {
-			return
-		}
-		// Use corresponding handler subscribed to the category to handle packetIn
-		if handler, ok := c.packetInHandlers[featurePacketIn.category]; ok {
-			klog.V(2).InfoS("Received packetIn", "category", featurePacketIn.category)
-			if err := handler.HandlePacketIn(pktIn); err != nil {
-				klog.ErrorS(err, "PacketIn handler failed to process packet", "category", featurePacketIn.category)
-			}
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
+// Use corresponding handler subscribed to the category to handle packetIn
+
 func GetMatchFieldByRegID(matchers *ofctrl.Matchers, regID int) *ofctrl.MatchField {
-	xregID := uint8(regID / 2)
-	startBit := 4 * (regID % 2)
-	f := matchers.GetMatch(openflow15.OXM_CLASS_PACKET_REGS, xregID)
-	if f == nil {
-		return nil
-	}
-	dataBytes := f.Value.(*openflow15.ByteArrayField).Data
-	data := binary.BigEndian.Uint32(dataBytes[startBit : startBit+4])
-	var mask uint32
-	if f.HasMask {
-		maskBytes, _ := f.Mask.MarshalBinary()
-		mask = binary.BigEndian.Uint32(maskBytes[startBit : startBit+4])
-	}
-	if data == 0 && mask == 0 {
-		return nil
-	}
-	return &ofctrl.MatchField{MatchField: openflow15.NewRegMatchFieldWithMask(regID, data, mask)}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func GetInfoInReg(regMatch *ofctrl.MatchField, rng *openflow15.NXRange) (uint32, error) {
-	regValue, ok := regMatch.GetValue().(*ofctrl.NXRegister)
-	if !ok {
-		return 0, errors.New("register value cannot be retrieved")
-	}
-	if rng != nil {
-		return ofctrl.GetUint32ValueWithRange(regValue.Data, rng), nil
-	}
-	return regValue.Data, nil
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 func GetEthernetPacket(pktIn *ofctrl.PacketIn) (*protocol.Ethernet, error) {
-	ethernetPkt := new(protocol.Ethernet)
-	if err := ethernetPkt.UnmarshalBinary(pktIn.Data.(*util.Buffer).Bytes()); err != nil {
-		return nil, fmt.Errorf("failed to parse ethernet packet from packetIn message: %v", err)
-	}
-	return ethernetPkt, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }

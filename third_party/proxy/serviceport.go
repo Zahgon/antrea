@@ -41,17 +41,9 @@ Modifies:
 package proxy
 
 import (
-	"fmt"
 	"net"
-	"slices"
-	"strings"
 
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/klog/v2"
-	netutils "k8s.io/utils/net"
-
-	"antrea.io/antrea/v2/pkg/features"
-	proxyutil "antrea.io/antrea/v2/third_party/proxy/util"
 )
 
 // ServicePort is an interface which abstracts information about a service.
@@ -115,158 +107,115 @@ type BaseServicePortInfo struct {
 var _ ServicePort = &BaseServicePortInfo{}
 
 // String is part of ServicePort interface.
-func (bsvcPortInfo *BaseServicePortInfo) String() string {
-	return fmt.Sprintf("%s:%d/%s", bsvcPortInfo.clusterIP, bsvcPortInfo.port, bsvcPortInfo.protocol)
-}
+func (bsvcPortInfo *BaseServicePortInfo) String() string { _ = "STUB: not implemented"; return "" }
 
 // ClusterIP is part of ServicePort interface.
 func (bsvcPortInfo *BaseServicePortInfo) ClusterIP() net.IP {
-	return bsvcPortInfo.clusterIP
+	_ = "STUB: not implemented"
+	return *new(net.IP)
 }
 
 // Port is part of ServicePort interface.
-func (bsvcPortInfo *BaseServicePortInfo) Port() int {
-	return bsvcPortInfo.port
-}
+func (bsvcPortInfo *BaseServicePortInfo) Port() int { _ = "STUB: not implemented"; return 0 }
 
 // SessionAffinityType is part of the ServicePort interface.
 func (bsvcPortInfo *BaseServicePortInfo) SessionAffinityType() v1.ServiceAffinity {
-	return bsvcPortInfo.sessionAffinityType
+	_ = "STUB: not implemented"
+	return *new(v1.ServiceAffinity)
 }
 
 // StickyMaxAgeSeconds is part of the ServicePort interface
 func (bsvcPortInfo *BaseServicePortInfo) StickyMaxAgeSeconds() int {
-	return bsvcPortInfo.stickyMaxAgeSeconds
+	_ = "STUB: not implemented"
+	return 0
 }
 
 // Protocol is part of ServicePort interface.
 func (bsvcPortInfo *BaseServicePortInfo) Protocol() v1.Protocol {
-	return bsvcPortInfo.protocol
+	_ = "STUB: not implemented"
+	return *new(v1.Protocol)
 }
 
 // LoadBalancerSourceRanges is part of ServicePort interface
 func (bsvcPortInfo *BaseServicePortInfo) LoadBalancerSourceRanges() []*net.IPNet {
-	return bsvcPortInfo.loadBalancerSourceRanges
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // HealthCheckNodePort is part of ServicePort interface.
 func (bsvcPortInfo *BaseServicePortInfo) HealthCheckNodePort() int {
-	return bsvcPortInfo.healthCheckNodePort
+	_ = "STUB: not implemented"
+	return 0
 }
 
 // NodePort is part of the ServicePort interface.
-func (bsvcPortInfo *BaseServicePortInfo) NodePort() int {
-	return bsvcPortInfo.nodePort
-}
+func (bsvcPortInfo *BaseServicePortInfo) NodePort() int { _ = "STUB: not implemented"; return 0 }
 
 // ExternalIPs is part of ServicePort interface.
 func (bsvcPortInfo *BaseServicePortInfo) ExternalIPs() []net.IP {
-	return bsvcPortInfo.externalIPs
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LoadBalancerVIPs is part of ServicePort interface.
 func (bsvcPortInfo *BaseServicePortInfo) LoadBalancerVIPs() []net.IP {
-	return bsvcPortInfo.loadBalancerVIPs
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ExternalPolicyLocal is part of ServicePort interface.
 func (bsvcPortInfo *BaseServicePortInfo) ExternalPolicyLocal() bool {
-	return bsvcPortInfo.externalPolicyLocal
+	_ = "STUB: not implemented"
+	return false
 }
 
 // InternalPolicyLocal is part of ServicePort interface
 func (bsvcPortInfo *BaseServicePortInfo) InternalPolicyLocal() bool {
-	return bsvcPortInfo.internalPolicyLocal
+	_ = "STUB: not implemented"
+	return false
 }
 
 // ExternallyAccessible is part of ServicePort interface.
 func (bsvcPortInfo *BaseServicePortInfo) ExternallyAccessible() bool {
-	return bsvcPortInfo.nodePort != 0 || len(bsvcPortInfo.loadBalancerVIPs) != 0 || len(bsvcPortInfo.externalIPs) != 0
+	_ = "STUB: not implemented"
+	return false
 }
 
 // UsesClusterEndpoints is part of ServicePort interface.
 func (bsvcPortInfo *BaseServicePortInfo) UsesClusterEndpoints() bool {
+	_ = "STUB: not implemented"
 	// The service port uses Cluster endpoints if the internal traffic policy is "Cluster",
 	// or if it accepts external traffic at all. (Even if the external traffic policy is
 	// "Local", we need Cluster endpoints to implement short circuiting.)
-	return !bsvcPortInfo.internalPolicyLocal || bsvcPortInfo.ExternallyAccessible()
+	return false
 }
 
 // UsesLocalEndpoints is part of ServicePort interface.
 func (bsvcPortInfo *BaseServicePortInfo) UsesLocalEndpoints() bool {
+	_ = "STUB: not implemented"
 	// When DSR is enabled, local group could be used by DSR traffic on backend Node.
 	// As the Service's own information is not enough to determine its load balancer mode, we just ensure the local group
 	// exist as long as it can potentially work in DSR mode.
-	if features.DefaultFeatureGate.Enabled(features.LoadBalancerModeDSR) && (len(bsvcPortInfo.loadBalancerVIPs) != 0 || len(bsvcPortInfo.externalIPs) != 0) {
-		return true
-	}
-	return bsvcPortInfo.internalPolicyLocal || (bsvcPortInfo.externalPolicyLocal && bsvcPortInfo.ExternallyAccessible())
+	return false
 }
 
 func NewBaseServiceInfo(service *v1.Service, ipFamily v1.IPFamily, port *v1.ServicePort) *BaseServicePortInfo {
-	externalPolicyLocal := proxyutil.ExternalPolicyLocal(service)
-	internalPolicyLocal := proxyutil.InternalPolicyLocal(service)
-
-	var stickyMaxAgeSeconds int
-	if service.Spec.SessionAffinity == v1.ServiceAffinityClientIP {
-		// Kube-apiserver side guarantees SessionAffinityConfig won't be nil when session affinity type is ClientIP
-		stickyMaxAgeSeconds = int(*service.Spec.SessionAffinityConfig.ClientIP.TimeoutSeconds)
-	}
-
-	clusterIP := proxyutil.GetClusterIPByFamily(ipFamily, service)
-	info := &BaseServicePortInfo{
-		clusterIP:           netutils.ParseIPSloppy(clusterIP),
-		port:                int(port.Port),
-		protocol:            port.Protocol,
-		nodePort:            int(port.NodePort),
-		sessionAffinityType: service.Spec.SessionAffinity,
-		stickyMaxAgeSeconds: stickyMaxAgeSeconds,
-		externalPolicyLocal: externalPolicyLocal,
-		internalPolicyLocal: internalPolicyLocal,
-	}
-
-	// Filter ExternalIPs to correct IP family
-	ipFamilyMap := proxyutil.MapIPsByIPFamily(service.Spec.ExternalIPs)
-	info.externalIPs = ipFamilyMap[ipFamily]
-
-	// Filter source ranges to correct IP family. Also deal with the fact that
-	// LoadBalancerSourceRanges validation mistakenly allows whitespace padding
-	loadBalancerSourceRanges := make([]string, len(service.Spec.LoadBalancerSourceRanges))
-	for i, sourceRange := range service.Spec.LoadBalancerSourceRanges {
-		loadBalancerSourceRanges[i] = strings.TrimSpace(sourceRange)
-	}
-
-	cidrFamilyMap := proxyutil.MapCIDRsByIPFamily(loadBalancerSourceRanges)
-	cidrs := cidrFamilyMap[ipFamily]
-	// zero-masked cidr means "allow any", which same as the empty loadBalancerSourceRanges.
-	if slices.ContainsFunc(cidrs, proxyutil.IsZeroCIDR) {
-		cidrs = []*net.IPNet{}
-	}
-	info.loadBalancerSourceRanges = cidrs
-
-	// Filter Load Balancer Ingress IPs to correct IP family. While proxying load
-	// balancers might choose to proxy connections from an LB IP of one family to a
-	// service IP of another family, that's irrelevant to kube-proxy, which only
-	// creates rules for VIP-style load balancers.
-	for _, ing := range service.Status.LoadBalancer.Ingress {
-		if ing.IP == "" || !proxyutil.IsVIPMode(ing) {
-			continue
-		}
-
-		ip := netutils.ParseIPSloppy(ing.IP) // (already verified as an IP-address)
-		if ingFamily := proxyutil.GetIPFamilyFromIP(ip); ingFamily == ipFamily {
-			info.loadBalancerVIPs = append(info.loadBalancerVIPs, ip)
-		}
-	}
-
-	if proxyutil.NeedsHealthCheck(service) {
-		p := service.Spec.HealthCheckNodePort
-		if p == 0 {
-			klog.ErrorS(nil, "Service has no healthcheck nodeport", "service", klog.KObj(service))
-		} else {
-			info.healthCheckNodePort = int(p)
-		}
-	}
-
-	return info
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Kube-apiserver side guarantees SessionAffinityConfig won't be nil when session affinity type is ClientIP
+
+// Filter ExternalIPs to correct IP family
+
+// Filter source ranges to correct IP family. Also deal with the fact that
+// LoadBalancerSourceRanges validation mistakenly allows whitespace padding
+
+// zero-masked cidr means "allow any", which same as the empty loadBalancerSourceRanges.
+
+// Filter Load Balancer Ingress IPs to correct IP family. While proxying load
+// balancers might choose to proxy connections from an LB IP of one family to a
+// service IP of another family, that's irrelevant to kube-proxy, which only
+// creates rules for VIP-style load balancers.
+
+// (already verified as an IP-address)

@@ -15,11 +15,8 @@
 package v1beta1
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-
-	crdv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
 )
 
 const GroupName = "system.antrea.io"
@@ -46,17 +43,8 @@ func init() {
 }
 
 func Resource(resource string) schema.GroupResource {
-	return SchemeGroupVersion.WithResource(resource).GroupResource()
+	_ = "STUB: not implemented"
+	return *new(schema.GroupResource)
 }
 
-func addKnownTypes(scheme *runtime.Scheme) error {
-	scheme.AddKnownTypes(
-		SchemeGroupVersion,
-		&crdv1beta1.AntreaControllerInfo{},
-		&crdv1beta1.AntreaControllerInfoList{},
-		&SupportBundle{},
-	)
-
-	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
-	return nil
-}
+func addKnownTypes(scheme *runtime.Scheme) error { _ = "STUB: not implemented"; return nil }

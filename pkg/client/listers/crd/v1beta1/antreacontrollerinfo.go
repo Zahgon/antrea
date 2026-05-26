@@ -42,5 +42,6 @@ type antreaControllerInfoLister struct {
 
 // NewAntreaControllerInfoLister returns a new AntreaControllerInfoLister.
 func NewAntreaControllerInfoLister(indexer cache.Indexer) AntreaControllerInfoLister {
-	return &antreaControllerInfoLister{listers.New[*crdv1beta1.AntreaControllerInfo](indexer, crdv1beta1.Resource("antreacontrollerinfo"))}
+	_ = "STUB: not implemented"
+	return *new(AntreaControllerInfoLister)
 }

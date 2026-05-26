@@ -18,24 +18,11 @@ import (
 	"context"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/testing"
 
-	"antrea.io/antrea/v2/pkg/apis/controlplane"
 	"antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/networkpolicy/clustergroupmember"
 )
 
 func (c *fakeGroupMembers) PaginatedGet(ctx context.Context, name string, pagination v1beta2.PaginationGetOptions, options v1.GetOptions) (result *v1beta2.GroupMembers, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(c.Resource(), c.Namespace(), name), &v1beta2.GroupMembers{})
-
-	if obj == nil {
-		return nil, err
-	}
-	result = obj.(*v1beta2.GroupMembers)
-	var oriMembers *controlplane.GroupMembers
-	v1beta2.Convert_v1beta2_GroupMembers_To_controlplane_GroupMembers(result, oriMembers, nil)
-	result.TotalPages, result.CurrentPage, err = clustergroupmember.PaginateMemberList(&oriMembers.EffectiveMembers, &controlplane.PaginationGetOptions{Page: pagination.Page, Limit: pagination.Limit})
-	v1beta2.Convert_controlplane_GroupMembers_To_v1beta2_GroupMembers(oriMembers, result, nil)
-	return result, err
+	_ = "STUB: not implemented"
+	return nil, nil
 }

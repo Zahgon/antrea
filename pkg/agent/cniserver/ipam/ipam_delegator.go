@@ -15,17 +15,12 @@
 package ipam
 
 import (
-	"context"
 	"os"
-	"path/filepath"
 
 	"github.com/containernetworking/cni/pkg/invoke"
 	"github.com/containernetworking/cni/pkg/types"
-	current "github.com/containernetworking/cni/pkg/types/100"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/klog/v2"
 
-	"antrea.io/antrea/v2/pkg/agent/cniserver/ipam/hostlocal"
 	argtypes "antrea.io/antrea/v2/pkg/agent/cniserver/types"
 )
 
@@ -45,47 +40,24 @@ var (
 )
 
 func (d *IPAMDelegator) Add(args *invoke.Args, k8sArgs *argtypes.K8sArgs, networkConfig []byte) (bool, *IPAMResult, error) {
-	var success = false
-	defer func() {
-		if !success {
-			// Rollback to delete assigned network configuration for failed to execute Add operation
-			args.Command = "DEL"
-			if err := delegateNoResult(d.pluginType, networkConfig, args); err != nil {
-				klog.Errorf("Failed to roll back to delete configuration %s, %v", string(networkConfig), err)
-			}
-		}
-	}()
-	args.Command = "ADD"
-	r, err := delegateWithResult(d.pluginType, networkConfig, args)
-	if err != nil {
-		return true, nil, err
-	}
-
-	ipamResult, err := current.NewResultFromResult(r)
-	if err != nil {
-		return true, nil, err
-	}
-	success = true
-	// IPAM Delegator always owns the request
-	return true, &IPAMResult{Result: *ipamResult}, nil
+	_ = "STUB: not implemented"
+	return false, nil, nil
 }
+
+// Rollback to delete assigned network configuration for failed to execute Add operation
+
+// IPAM Delegator always owns the request
 
 func (d *IPAMDelegator) Del(args *invoke.Args, k8sArgs *argtypes.K8sArgs, networkConfig []byte) (bool, error) {
-	args.Command = "DEL"
-	if err := delegateNoResult(d.pluginType, networkConfig, args); err != nil {
-		return true, err
-	}
-
-	// IPAM Delegator always owns the request
-	return true, nil
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
+// IPAM Delegator always owns the request
+
 func (d *IPAMDelegator) Check(args *invoke.Args, k8sArgs *argtypes.K8sArgs, networkConfig []byte) (bool, error) {
-	args.Command = "CHECK"
-	if err := delegateNoResult(d.pluginType, networkConfig, args); err != nil {
-		return true, err
-	}
-	return true, nil
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
 // GarbageCollectContainerIPs will release IPs allocated by the delegated IPAM
@@ -97,7 +69,8 @@ func (d *IPAMDelegator) Check(args *invoke.Args, k8sArgs *argtypes.K8sArgs, netw
 // support to increase robustness in case of a container runtime bug.
 // Only the host-local plugin is supported.
 func GarbageCollectContainerIPs(network string, desiredIPs sets.Set[string]) error {
-	return hostlocal.GarbageCollectContainerIPs(network, desiredIPs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 var defaultExec invoke.Exec = &invoke.DefaultExec{
@@ -105,43 +78,25 @@ var defaultExec invoke.Exec = &invoke.DefaultExec{
 }
 
 func delegateCommon(delegatePlugin string, exec invoke.Exec, cniPath string) (string, invoke.Exec, error) {
+	_ = "STUB: not implemented"
 	// The CNI searching paths passed from kubelet.
-	configuredPaths := filepath.SplitList(cniPath)
-	paths := make([]string, len(configuredPaths)+1)
-	// When Antrea agent runs as a Pod, the IPAM plugin is always installed in
-	// defaultCNIPath, but kubelet can be configured to use different paths to
-	// search for CNI plugins. So here we always add defaultCNIPath to the CNI
-	// plugin searching paths to make sure the IPAM plugin installed in the agent
-	// Pod can be found.
-	paths[0] = defaultCNIPath
-	copy(paths[1:], configuredPaths)
-
-	pluginPath, err := exec.FindInPath(delegatePlugin, paths)
-	if err != nil {
-		return "", nil, err
-	}
-
-	return pluginPath, exec, nil
+	return "", *new(invoke.Exec), nil
 }
 
-func delegateWithResult(delegatePlugin string, networkConfig []byte, args *invoke.Args) (types.Result, error) {
-	ctx := context.TODO()
-	pluginPath, realExec, err := delegateCommon(delegatePlugin, defaultExec, args.Path)
-	if err != nil {
-		return nil, err
-	}
+// When Antrea agent runs as a Pod, the IPAM plugin is always installed in
+// defaultCNIPath, but kubelet can be configured to use different paths to
+// search for CNI plugins. So here we always add defaultCNIPath to the CNI
+// plugin searching paths to make sure the IPAM plugin installed in the agent
+// Pod can be found.
 
-	return execPluginWithResultFunc(ctx, pluginPath, networkConfig, args, realExec)
+func delegateWithResult(delegatePlugin string, networkConfig []byte, args *invoke.Args) (types.Result, error) {
+	_ = "STUB: not implemented"
+	return *new(types.Result), nil
 }
 
 func delegateNoResult(delegatePlugin string, networkConfig []byte, args *invoke.Args) error {
-	ctx := context.TODO()
-	pluginPath, realExec, err := delegateCommon(delegatePlugin, defaultExec, args.Path)
-	if err != nil {
-		return err
-	}
-
-	return execPluginNoResultFunc(ctx, pluginPath, networkConfig, args, realExec)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func init() {

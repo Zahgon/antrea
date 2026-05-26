@@ -21,12 +21,11 @@
 package v1alpha1
 
 import (
+	sync "sync"
+
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
 )
 
 const (
@@ -67,32 +66,27 @@ var (
 	}
 )
 
-func (x FlowEndReason) Enum() *FlowEndReason {
-	p := new(FlowEndReason)
-	*p = x
-	return p
-}
+func (x FlowEndReason) Enum() *FlowEndReason { _ = "STUB: not implemented"; return nil }
 
-func (x FlowEndReason) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
+func (x FlowEndReason) String() string { _ = "STUB: not implemented"; return "" }
 
 func (FlowEndReason) Descriptor() protoreflect.EnumDescriptor {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes[0].Descriptor()
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumDescriptor)
 }
 
 func (FlowEndReason) Type() protoreflect.EnumType {
-	return &file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes[0]
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumType)
 }
 
 func (x FlowEndReason) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumNumber)
 }
 
 // Deprecated: Use FlowEndReason.Descriptor instead.
-func (FlowEndReason) EnumDescriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{0}
-}
+func (FlowEndReason) EnumDescriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
 type IPVersion int32
 
@@ -116,32 +110,27 @@ var (
 	}
 )
 
-func (x IPVersion) Enum() *IPVersion {
-	p := new(IPVersion)
-	*p = x
-	return p
-}
+func (x IPVersion) Enum() *IPVersion { _ = "STUB: not implemented"; return nil }
 
-func (x IPVersion) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
+func (x IPVersion) String() string { _ = "STUB: not implemented"; return "" }
 
 func (IPVersion) Descriptor() protoreflect.EnumDescriptor {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes[1].Descriptor()
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumDescriptor)
 }
 
 func (IPVersion) Type() protoreflect.EnumType {
-	return &file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes[1]
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumType)
 }
 
 func (x IPVersion) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumNumber)
 }
 
 // Deprecated: Use IPVersion.Descriptor instead.
-func (IPVersion) EnumDescriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{1}
-}
+func (IPVersion) EnumDescriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
 type FlowType int32
 
@@ -171,32 +160,27 @@ var (
 	}
 )
 
-func (x FlowType) Enum() *FlowType {
-	p := new(FlowType)
-	*p = x
-	return p
-}
+func (x FlowType) Enum() *FlowType { _ = "STUB: not implemented"; return nil }
 
-func (x FlowType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
+func (x FlowType) String() string { _ = "STUB: not implemented"; return "" }
 
 func (FlowType) Descriptor() protoreflect.EnumDescriptor {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes[2].Descriptor()
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumDescriptor)
 }
 
 func (FlowType) Type() protoreflect.EnumType {
-	return &file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes[2]
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumType)
 }
 
 func (x FlowType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumNumber)
 }
 
 // Deprecated: Use FlowType.Descriptor instead.
-func (FlowType) EnumDescriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{2}
-}
+func (FlowType) EnumDescriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
 type NetworkPolicyType int32
 
@@ -223,31 +207,29 @@ var (
 	}
 )
 
-func (x NetworkPolicyType) Enum() *NetworkPolicyType {
-	p := new(NetworkPolicyType)
-	*p = x
-	return p
-}
+func (x NetworkPolicyType) Enum() *NetworkPolicyType { _ = "STUB: not implemented"; return nil }
 
-func (x NetworkPolicyType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
+func (x NetworkPolicyType) String() string { _ = "STUB: not implemented"; return "" }
 
 func (NetworkPolicyType) Descriptor() protoreflect.EnumDescriptor {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes[3].Descriptor()
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumDescriptor)
 }
 
 func (NetworkPolicyType) Type() protoreflect.EnumType {
-	return &file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes[3]
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumType)
 }
 
 func (x NetworkPolicyType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumNumber)
 }
 
 // Deprecated: Use NetworkPolicyType.Descriptor instead.
 func (NetworkPolicyType) EnumDescriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{3}
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 type NetworkPolicyRuleAction int32
@@ -276,30 +258,31 @@ var (
 )
 
 func (x NetworkPolicyRuleAction) Enum() *NetworkPolicyRuleAction {
-	p := new(NetworkPolicyRuleAction)
-	*p = x
-	return p
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (x NetworkPolicyRuleAction) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
+func (x NetworkPolicyRuleAction) String() string { _ = "STUB: not implemented"; return "" }
 
 func (NetworkPolicyRuleAction) Descriptor() protoreflect.EnumDescriptor {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes[4].Descriptor()
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumDescriptor)
 }
 
 func (NetworkPolicyRuleAction) Type() protoreflect.EnumType {
-	return &file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes[4]
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumType)
 }
 
 func (x NetworkPolicyRuleAction) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumNumber)
 }
 
 // Deprecated: Use NetworkPolicyRuleAction.Descriptor instead.
 func (NetworkPolicyRuleAction) EnumDescriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{4}
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 type FlowDirection int32
@@ -324,32 +307,27 @@ var (
 	}
 )
 
-func (x FlowDirection) Enum() *FlowDirection {
-	p := new(FlowDirection)
-	*p = x
-	return p
-}
+func (x FlowDirection) Enum() *FlowDirection { _ = "STUB: not implemented"; return nil }
 
-func (x FlowDirection) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
+func (x FlowDirection) String() string { _ = "STUB: not implemented"; return "" }
 
 func (FlowDirection) Descriptor() protoreflect.EnumDescriptor {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes[5].Descriptor()
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumDescriptor)
 }
 
 func (FlowDirection) Type() protoreflect.EnumType {
-	return &file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes[5]
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumType)
 }
 
 func (x FlowDirection) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumNumber)
 }
 
 // Deprecated: Use FlowDirection.Descriptor instead.
-func (FlowDirection) EnumDescriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{5}
-}
+func (FlowDirection) EnumDescriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
 type IPFIX struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
@@ -361,63 +339,27 @@ type IPFIX struct {
 	sizeCache           protoimpl.SizeCache
 }
 
-func (x *IPFIX) Reset() {
-	*x = IPFIX{}
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *IPFIX) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *IPFIX) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *IPFIX) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*IPFIX) ProtoMessage() {}
+func (*IPFIX) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *IPFIX) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use IPFIX.ProtoReflect.Descriptor instead.
-func (*IPFIX) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{0}
-}
+func (*IPFIX) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *IPFIX) GetExportTime() *timestamppb.Timestamp {
-	if x != nil {
-		return x.ExportTime
-	}
-	return nil
-}
+func (x *IPFIX) GetExportTime() *timestamppb.Timestamp { _ = "STUB: not implemented"; return nil }
 
-func (x *IPFIX) GetSequenceNumber() uint32 {
-	if x != nil {
-		return x.SequenceNumber
-	}
-	return 0
-}
+func (x *IPFIX) GetSequenceNumber() uint32 { _ = "STUB: not implemented"; return 0 }
 
-func (x *IPFIX) GetObservationDomainId() uint32 {
-	if x != nil {
-		return x.ObservationDomainId
-	}
-	return 0
-}
+func (x *IPFIX) GetObservationDomainId() uint32 { _ = "STUB: not implemented"; return 0 }
 
-func (x *IPFIX) GetExporterIp() string {
-	if x != nil {
-		return x.ExporterIp
-	}
-	return ""
-}
+func (x *IPFIX) GetExporterIp() string { _ = "STUB: not implemented"; return "" }
 
 type IP struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -428,56 +370,25 @@ type IP struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *IP) Reset() {
-	*x = IP{}
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *IP) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *IP) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *IP) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*IP) ProtoMessage() {}
+func (*IP) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *IP) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use IP.ProtoReflect.Descriptor instead.
-func (*IP) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{1}
-}
+func (*IP) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *IP) GetVersion() IPVersion {
-	if x != nil {
-		return x.Version
-	}
-	return IPVersion_IP_VERSION_UNSPECIFIED
-}
+func (x *IP) GetVersion() IPVersion { _ = "STUB: not implemented"; return *new(IPVersion) }
 
-func (x *IP) GetSource() []byte {
-	if x != nil {
-		return x.Source
-	}
-	return nil
-}
+func (x *IP) GetSource() []byte { _ = "STUB: not implemented"; return nil }
 
-func (x *IP) GetDestination() []byte {
-	if x != nil {
-		return x.Destination
-	}
-	return nil
-}
+func (x *IP) GetDestination() []byte { _ = "STUB: not implemented"; return nil }
 
 type TCP struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -488,42 +399,21 @@ type TCP struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *TCP) Reset() {
-	*x = TCP{}
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *TCP) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *TCP) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *TCP) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*TCP) ProtoMessage() {}
+func (*TCP) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *TCP) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use TCP.ProtoReflect.Descriptor instead.
-func (*TCP) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{2}
-}
+func (*TCP) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *TCP) GetStateName() string {
-	if x != nil {
-		return x.StateName
-	}
-	return ""
-}
+func (x *TCP) GetStateName() string { _ = "STUB: not implemented"; return "" }
 
 type Transport struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
@@ -538,72 +428,32 @@ type Transport struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Transport) Reset() {
-	*x = Transport{}
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *Transport) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *Transport) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *Transport) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*Transport) ProtoMessage() {}
+func (*Transport) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *Transport) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use Transport.ProtoReflect.Descriptor instead.
-func (*Transport) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{3}
-}
+func (*Transport) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *Transport) GetProtocolNumber() uint32 {
-	if x != nil {
-		return x.ProtocolNumber
-	}
-	return 0
-}
+func (x *Transport) GetProtocolNumber() uint32 { _ = "STUB: not implemented"; return 0 }
 
-func (x *Transport) GetSourcePort() uint32 {
-	if x != nil {
-		return x.SourcePort
-	}
-	return 0
-}
+func (x *Transport) GetSourcePort() uint32 { _ = "STUB: not implemented"; return 0 }
 
-func (x *Transport) GetDestinationPort() uint32 {
-	if x != nil {
-		return x.DestinationPort
-	}
-	return 0
-}
+func (x *Transport) GetDestinationPort() uint32 { _ = "STUB: not implemented"; return 0 }
 
 func (x *Transport) GetProtocol() isTransport_Protocol {
-	if x != nil {
-		return x.Protocol
-	}
-	return nil
+	_ = "STUB: not implemented"
+	return *new(isTransport_Protocol)
 }
 
-func (x *Transport) GetTCP() *TCP {
-	if x != nil {
-		if x, ok := x.Protocol.(*Transport_TCP); ok {
-			return x.TCP
-		}
-	}
-	return nil
-}
+func (x *Transport) GetTCP() *TCP { _ = "STUB: not implemented"; return nil }
 
 type isTransport_Protocol interface {
 	isTransport_Protocol()
@@ -613,7 +463,7 @@ type Transport_TCP struct {
 	TCP *TCP `protobuf:"bytes,4,opt,name=TCP,proto3,oneof"`
 }
 
-func (*Transport_TCP) isTransport_Protocol() {}
+func (*Transport_TCP) isTransport_Protocol() { _ = "STUB: not implemented"; return }
 
 type Stats struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
@@ -625,63 +475,27 @@ type Stats struct {
 	sizeCache        protoimpl.SizeCache
 }
 
-func (x *Stats) Reset() {
-	*x = Stats{}
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *Stats) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *Stats) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *Stats) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*Stats) ProtoMessage() {}
+func (*Stats) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *Stats) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use Stats.ProtoReflect.Descriptor instead.
-func (*Stats) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{4}
-}
+func (*Stats) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *Stats) GetPacketTotalCount() uint64 {
-	if x != nil {
-		return x.PacketTotalCount
-	}
-	return 0
-}
+func (x *Stats) GetPacketTotalCount() uint64 { _ = "STUB: not implemented"; return 0 }
 
-func (x *Stats) GetPacketDeltaCount() uint64 {
-	if x != nil {
-		return x.PacketDeltaCount
-	}
-	return 0
-}
+func (x *Stats) GetPacketDeltaCount() uint64 { _ = "STUB: not implemented"; return 0 }
 
-func (x *Stats) GetOctetTotalCount() uint64 {
-	if x != nil {
-		return x.OctetTotalCount
-	}
-	return 0
-}
+func (x *Stats) GetOctetTotalCount() uint64 { _ = "STUB: not implemented"; return 0 }
 
-func (x *Stats) GetOctetDeltaCount() uint64 {
-	if x != nil {
-		return x.OctetDeltaCount
-	}
-	return 0
-}
+func (x *Stats) GetOctetDeltaCount() uint64 { _ = "STUB: not implemented"; return 0 }
 
 type Labels struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -692,42 +506,21 @@ type Labels struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Labels) Reset() {
-	*x = Labels{}
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *Labels) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *Labels) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *Labels) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*Labels) ProtoMessage() {}
+func (*Labels) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *Labels) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use Labels.ProtoReflect.Descriptor instead.
-func (*Labels) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{5}
-}
+func (*Labels) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *Labels) GetLabels() map[string]string {
-	if x != nil {
-		return x.Labels
-	}
-	return nil
-}
+func (x *Labels) GetLabels() map[string]string { _ = "STUB: not implemented"; return nil }
 
 type Kubernetes struct {
 	state                          protoimpl.MessageState  `protogen:"open.v1"`
@@ -769,273 +562,102 @@ type Kubernetes struct {
 	sizeCache                      protoimpl.SizeCache
 }
 
-func (x *Kubernetes) Reset() {
-	*x = Kubernetes{}
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *Kubernetes) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *Kubernetes) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *Kubernetes) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*Kubernetes) ProtoMessage() {}
+func (*Kubernetes) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *Kubernetes) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use Kubernetes.ProtoReflect.Descriptor instead.
-func (*Kubernetes) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{6}
-}
+func (*Kubernetes) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *Kubernetes) GetFlowType() FlowType {
-	if x != nil {
-		return x.FlowType
-	}
-	return FlowType_FLOW_TYPE_UNSPECIFIED
-}
+func (x *Kubernetes) GetFlowType() FlowType { _ = "STUB: not implemented"; return *new(FlowType) }
 
-func (x *Kubernetes) GetSourcePodNamespace() string {
-	if x != nil {
-		return x.SourcePodNamespace
-	}
-	return ""
-}
+func (x *Kubernetes) GetSourcePodNamespace() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetSourcePodName() string {
-	if x != nil {
-		return x.SourcePodName
-	}
-	return ""
-}
+func (x *Kubernetes) GetSourcePodName() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetSourcePodUid() string {
-	if x != nil {
-		return x.SourcePodUid
-	}
-	return ""
-}
+func (x *Kubernetes) GetSourcePodUid() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetSourcePodLabels() *Labels {
-	if x != nil {
-		return x.SourcePodLabels
-	}
-	return nil
-}
+func (x *Kubernetes) GetSourcePodLabels() *Labels { _ = "STUB: not implemented"; return nil }
 
-func (x *Kubernetes) GetSourceNodeName() string {
-	if x != nil {
-		return x.SourceNodeName
-	}
-	return ""
-}
+func (x *Kubernetes) GetSourceNodeName() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetSourceNodeUid() string {
-	if x != nil {
-		return x.SourceNodeUid
-	}
-	return ""
-}
+func (x *Kubernetes) GetSourceNodeUid() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetDestinationPodNamespace() string {
-	if x != nil {
-		return x.DestinationPodNamespace
-	}
-	return ""
-}
+func (x *Kubernetes) GetDestinationPodNamespace() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetDestinationPodName() string {
-	if x != nil {
-		return x.DestinationPodName
-	}
-	return ""
-}
+func (x *Kubernetes) GetDestinationPodName() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetDestinationPodUid() string {
-	if x != nil {
-		return x.DestinationPodUid
-	}
-	return ""
-}
+func (x *Kubernetes) GetDestinationPodUid() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetDestinationPodLabels() *Labels {
-	if x != nil {
-		return x.DestinationPodLabels
-	}
-	return nil
-}
+func (x *Kubernetes) GetDestinationPodLabels() *Labels { _ = "STUB: not implemented"; return nil }
 
-func (x *Kubernetes) GetDestinationNodeName() string {
-	if x != nil {
-		return x.DestinationNodeName
-	}
-	return ""
-}
+func (x *Kubernetes) GetDestinationNodeName() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetDestinationNodeUid() string {
-	if x != nil {
-		return x.DestinationNodeUid
-	}
-	return ""
-}
+func (x *Kubernetes) GetDestinationNodeUid() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetDestinationClusterIp() []byte {
-	if x != nil {
-		return x.DestinationClusterIp
-	}
-	return nil
-}
+func (x *Kubernetes) GetDestinationClusterIp() []byte { _ = "STUB: not implemented"; return nil }
 
-func (x *Kubernetes) GetDestinationServicePort() uint32 {
-	if x != nil {
-		return x.DestinationServicePort
-	}
-	return 0
-}
+func (x *Kubernetes) GetDestinationServicePort() uint32 { _ = "STUB: not implemented"; return 0 }
 
-func (x *Kubernetes) GetDestinationServicePortName() string {
-	if x != nil {
-		return x.DestinationServicePortName
-	}
-	return ""
-}
+func (x *Kubernetes) GetDestinationServicePortName() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetDestinationServiceUid() string {
-	if x != nil {
-		return x.DestinationServiceUid
-	}
-	return ""
-}
+func (x *Kubernetes) GetDestinationServiceUid() string { _ = "STUB: not implemented"; return "" }
 
 func (x *Kubernetes) GetIngressNetworkPolicyType() NetworkPolicyType {
-	if x != nil {
-		return x.IngressNetworkPolicyType
-	}
-	return NetworkPolicyType_NETWORK_POLICY_TYPE_UNSPECIFIED
+	_ = "STUB: not implemented"
+	return *new(NetworkPolicyType)
 }
 
 func (x *Kubernetes) GetIngressNetworkPolicyNamespace() string {
-	if x != nil {
-		return x.IngressNetworkPolicyNamespace
-	}
+	_ = "STUB: not implemented"
 	return ""
 }
 
-func (x *Kubernetes) GetIngressNetworkPolicyName() string {
-	if x != nil {
-		return x.IngressNetworkPolicyName
-	}
-	return ""
-}
+func (x *Kubernetes) GetIngressNetworkPolicyName() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetIngressNetworkPolicyUid() string {
-	if x != nil {
-		return x.IngressNetworkPolicyUid
-	}
-	return ""
-}
+func (x *Kubernetes) GetIngressNetworkPolicyUid() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetIngressNetworkPolicyRuleName() string {
-	if x != nil {
-		return x.IngressNetworkPolicyRuleName
-	}
-	return ""
-}
+func (x *Kubernetes) GetIngressNetworkPolicyRuleName() string { _ = "STUB: not implemented"; return "" }
 
 func (x *Kubernetes) GetIngressNetworkPolicyRuleAction() NetworkPolicyRuleAction {
-	if x != nil {
-		return x.IngressNetworkPolicyRuleAction
-	}
-	return NetworkPolicyRuleAction_NETWORK_POLICY_RULE_ACTION_NO_ACTION
+	_ = "STUB: not implemented"
+	return *new(NetworkPolicyRuleAction)
 }
 
 func (x *Kubernetes) GetEgressNetworkPolicyType() NetworkPolicyType {
-	if x != nil {
-		return x.EgressNetworkPolicyType
-	}
-	return NetworkPolicyType_NETWORK_POLICY_TYPE_UNSPECIFIED
+	_ = "STUB: not implemented"
+	return *new(NetworkPolicyType)
 }
 
-func (x *Kubernetes) GetEgressNetworkPolicyNamespace() string {
-	if x != nil {
-		return x.EgressNetworkPolicyNamespace
-	}
-	return ""
-}
+func (x *Kubernetes) GetEgressNetworkPolicyNamespace() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetEgressNetworkPolicyName() string {
-	if x != nil {
-		return x.EgressNetworkPolicyName
-	}
-	return ""
-}
+func (x *Kubernetes) GetEgressNetworkPolicyName() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetEgressNetworkPolicyUid() string {
-	if x != nil {
-		return x.EgressNetworkPolicyUid
-	}
-	return ""
-}
+func (x *Kubernetes) GetEgressNetworkPolicyUid() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetEgressNetworkPolicyRuleName() string {
-	if x != nil {
-		return x.EgressNetworkPolicyRuleName
-	}
-	return ""
-}
+func (x *Kubernetes) GetEgressNetworkPolicyRuleName() string { _ = "STUB: not implemented"; return "" }
 
 func (x *Kubernetes) GetEgressNetworkPolicyRuleAction() NetworkPolicyRuleAction {
-	if x != nil {
-		return x.EgressNetworkPolicyRuleAction
-	}
-	return NetworkPolicyRuleAction_NETWORK_POLICY_RULE_ACTION_NO_ACTION
+	_ = "STUB: not implemented"
+	return *new(NetworkPolicyRuleAction)
 }
 
-func (x *Kubernetes) GetEgressName() string {
-	if x != nil {
-		return x.EgressName
-	}
-	return ""
-}
+func (x *Kubernetes) GetEgressName() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetEgressIp() []byte {
-	if x != nil {
-		return x.EgressIp
-	}
-	return nil
-}
+func (x *Kubernetes) GetEgressIp() []byte { _ = "STUB: not implemented"; return nil }
 
-func (x *Kubernetes) GetEgressNodeName() string {
-	if x != nil {
-		return x.EgressNodeName
-	}
-	return ""
-}
+func (x *Kubernetes) GetEgressNodeName() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetEgressNodeUid() string {
-	if x != nil {
-		return x.EgressNodeUid
-	}
-	return ""
-}
+func (x *Kubernetes) GetEgressNodeUid() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Kubernetes) GetEgressUid() string {
-	if x != nil {
-		return x.EgressUid
-	}
-	return ""
-}
+func (x *Kubernetes) GetEgressUid() string { _ = "STUB: not implemented"; return "" }
 
 type App struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1045,49 +667,23 @@ type App struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *App) Reset() {
-	*x = App{}
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *App) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *App) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *App) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*App) ProtoMessage() {}
+func (*App) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *App) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use App.ProtoReflect.Descriptor instead.
-func (*App) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{7}
-}
+func (*App) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *App) GetProtocolName() string {
-	if x != nil {
-		return x.ProtocolName
-	}
-	return ""
-}
+func (x *App) GetProtocolName() string { _ = "STUB: not implemented"; return "" }
 
-func (x *App) GetHttpVals() []byte {
-	if x != nil {
-		return x.HttpVals
-	}
-	return nil
-}
+func (x *App) GetHttpVals() []byte { _ = "STUB: not implemented"; return nil }
 
 type Aggregation struct {
 	state                            protoimpl.MessageState `protogen:"open.v1"`
@@ -1107,119 +703,55 @@ type Aggregation struct {
 	sizeCache                        protoimpl.SizeCache
 }
 
-func (x *Aggregation) Reset() {
-	*x = Aggregation{}
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *Aggregation) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *Aggregation) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *Aggregation) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*Aggregation) ProtoMessage() {}
+func (*Aggregation) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *Aggregation) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use Aggregation.ProtoReflect.Descriptor instead.
-func (*Aggregation) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{8}
-}
+func (*Aggregation) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
 func (x *Aggregation) GetEndTsFromSource() *timestamppb.Timestamp {
-	if x != nil {
-		return x.EndTsFromSource
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (x *Aggregation) GetEndTsFromDestination() *timestamppb.Timestamp {
-	if x != nil {
-		return x.EndTsFromDestination
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (x *Aggregation) GetStatsFromSource() *Stats {
-	if x != nil {
-		return x.StatsFromSource
-	}
-	return nil
-}
+func (x *Aggregation) GetStatsFromSource() *Stats { _ = "STUB: not implemented"; return nil }
 
-func (x *Aggregation) GetReverseStatsFromSource() *Stats {
-	if x != nil {
-		return x.ReverseStatsFromSource
-	}
-	return nil
-}
+func (x *Aggregation) GetReverseStatsFromSource() *Stats { _ = "STUB: not implemented"; return nil }
 
-func (x *Aggregation) GetStatsFromDestination() *Stats {
-	if x != nil {
-		return x.StatsFromDestination
-	}
-	return nil
-}
+func (x *Aggregation) GetStatsFromDestination() *Stats { _ = "STUB: not implemented"; return nil }
 
 func (x *Aggregation) GetReverseStatsFromDestination() *Stats {
-	if x != nil {
-		return x.ReverseStatsFromDestination
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (x *Aggregation) GetThroughputFromSource() uint64 {
-	if x != nil {
-		return x.ThroughputFromSource
-	}
-	return 0
-}
+func (x *Aggregation) GetThroughputFromSource() uint64 { _ = "STUB: not implemented"; return 0 }
 
-func (x *Aggregation) GetReverseThroughputFromSource() uint64 {
-	if x != nil {
-		return x.ReverseThroughputFromSource
-	}
-	return 0
-}
+func (x *Aggregation) GetReverseThroughputFromSource() uint64 { _ = "STUB: not implemented"; return 0 }
 
-func (x *Aggregation) GetThroughputFromDestination() uint64 {
-	if x != nil {
-		return x.ThroughputFromDestination
-	}
-	return 0
-}
+func (x *Aggregation) GetThroughputFromDestination() uint64 { _ = "STUB: not implemented"; return 0 }
 
 func (x *Aggregation) GetReverseThroughputFromDestination() uint64 {
-	if x != nil {
-		return x.ReverseThroughputFromDestination
-	}
+	_ = "STUB: not implemented"
 	return 0
 }
 
-func (x *Aggregation) GetThroughput() uint64 {
-	if x != nil {
-		return x.Throughput
-	}
-	return 0
-}
+func (x *Aggregation) GetThroughput() uint64 { _ = "STUB: not implemented"; return 0 }
 
-func (x *Aggregation) GetReverseThroughput() uint64 {
-	if x != nil {
-		return x.ReverseThroughput
-	}
-	return 0
-}
+func (x *Aggregation) GetReverseThroughput() uint64 { _ = "STUB: not implemented"; return 0 }
 
 type Flow struct {
 	state        protoimpl.MessageState `protogen:"open.v1"`
@@ -1244,127 +776,49 @@ type Flow struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Flow) Reset() {
-	*x = Flow{}
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *Flow) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *Flow) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *Flow) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*Flow) ProtoMessage() {}
+func (*Flow) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *Flow) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use Flow.ProtoReflect.Descriptor instead.
-func (*Flow) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP(), []int{9}
-}
+func (*Flow) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *Flow) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
+func (x *Flow) GetId() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Flow) GetIpfix() *IPFIX {
-	if x != nil {
-		return x.Ipfix
-	}
-	return nil
-}
+func (x *Flow) GetIpfix() *IPFIX { _ = "STUB: not implemented"; return nil }
 
-func (x *Flow) GetStartTs() *timestamppb.Timestamp {
-	if x != nil {
-		return x.StartTs
-	}
-	return nil
-}
+func (x *Flow) GetStartTs() *timestamppb.Timestamp { _ = "STUB: not implemented"; return nil }
 
-func (x *Flow) GetEndTs() *timestamppb.Timestamp {
-	if x != nil {
-		return x.EndTs
-	}
-	return nil
-}
+func (x *Flow) GetEndTs() *timestamppb.Timestamp { _ = "STUB: not implemented"; return nil }
 
-func (x *Flow) GetEndReason() FlowEndReason {
-	if x != nil {
-		return x.EndReason
-	}
-	return FlowEndReason_FLOW_END_REASON_UNSPECIFIED
-}
+func (x *Flow) GetEndReason() FlowEndReason { _ = "STUB: not implemented"; return *new(FlowEndReason) }
 
-func (x *Flow) GetIp() *IP {
-	if x != nil {
-		return x.Ip
-	}
-	return nil
-}
+func (x *Flow) GetIp() *IP { _ = "STUB: not implemented"; return nil }
 
-func (x *Flow) GetTransport() *Transport {
-	if x != nil {
-		return x.Transport
-	}
-	return nil
-}
+func (x *Flow) GetTransport() *Transport { _ = "STUB: not implemented"; return nil }
 
-func (x *Flow) GetK8S() *Kubernetes {
-	if x != nil {
-		return x.K8S
-	}
-	return nil
-}
+func (x *Flow) GetK8S() *Kubernetes { _ = "STUB: not implemented"; return nil }
 
-func (x *Flow) GetStats() *Stats {
-	if x != nil {
-		return x.Stats
-	}
-	return nil
-}
+func (x *Flow) GetStats() *Stats { _ = "STUB: not implemented"; return nil }
 
-func (x *Flow) GetReverseStats() *Stats {
-	if x != nil {
-		return x.ReverseStats
-	}
-	return nil
-}
+func (x *Flow) GetReverseStats() *Stats { _ = "STUB: not implemented"; return nil }
 
 // Deprecated: Marked as deprecated in pkg/apis/flow/v1alpha1/flow.proto.
-func (x *Flow) GetApp() *App {
-	if x != nil {
-		return x.App
-	}
-	return nil
-}
+func (x *Flow) GetApp() *App { _ = "STUB: not implemented"; return nil }
 
 func (x *Flow) GetFlowDirection() FlowDirection {
-	if x != nil {
-		return x.FlowDirection
-	}
-	return FlowDirection_FLOW_DIRECTION_INGRESS
+	_ = "STUB: not implemented"
+	return *new(FlowDirection)
 }
 
-func (x *Flow) GetAggregation() *Aggregation {
-	if x != nil {
-		return x.Aggregation
-	}
-	return nil
-}
+func (x *Flow) GetAggregation() *Aggregation { _ = "STUB: not implemented"; return nil }
 
 var File_pkg_apis_flow_v1alpha1_flow_proto protoreflect.FileDescriptor
 
@@ -1515,10 +969,8 @@ var (
 )
 
 func file_pkg_apis_flow_v1alpha1_flow_proto_rawDescGZIP() []byte {
-	file_pkg_apis_flow_v1alpha1_flow_proto_rawDescOnce.Do(func() {
-		file_pkg_apis_flow_v1alpha1_flow_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_pkg_apis_flow_v1alpha1_flow_proto_rawDesc), len(file_pkg_apis_flow_v1alpha1_flow_proto_rawDesc)))
-	})
-	return file_pkg_apis_flow_v1alpha1_flow_proto_rawDescData
+	_ = "STUB: not implemented"
+	return nil
 }
 
 var file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
@@ -1580,30 +1032,5 @@ var file_pkg_apis_flow_v1alpha1_flow_proto_depIdxs = []int32{
 	0,  // [0:29] is the sub-list for field type_name
 }
 
-func init() { file_pkg_apis_flow_v1alpha1_flow_proto_init() }
-func file_pkg_apis_flow_v1alpha1_flow_proto_init() {
-	if File_pkg_apis_flow_v1alpha1_flow_proto != nil {
-		return
-	}
-	file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes[3].OneofWrappers = []any{
-		(*Transport_TCP)(nil),
-	}
-	type x struct{}
-	out := protoimpl.TypeBuilder{
-		File: protoimpl.DescBuilder{
-			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_pkg_apis_flow_v1alpha1_flow_proto_rawDesc), len(file_pkg_apis_flow_v1alpha1_flow_proto_rawDesc)),
-			NumEnums:      6,
-			NumMessages:   11,
-			NumExtensions: 0,
-			NumServices:   0,
-		},
-		GoTypes:           file_pkg_apis_flow_v1alpha1_flow_proto_goTypes,
-		DependencyIndexes: file_pkg_apis_flow_v1alpha1_flow_proto_depIdxs,
-		EnumInfos:         file_pkg_apis_flow_v1alpha1_flow_proto_enumTypes,
-		MessageInfos:      file_pkg_apis_flow_v1alpha1_flow_proto_msgTypes,
-	}.Build()
-	File_pkg_apis_flow_v1alpha1_flow_proto = out.File
-	file_pkg_apis_flow_v1alpha1_flow_proto_goTypes = nil
-	file_pkg_apis_flow_v1alpha1_flow_proto_depIdxs = nil
-}
+func init()                                        { file_pkg_apis_flow_v1alpha1_flow_proto_init() }
+func file_pkg_apis_flow_v1alpha1_flow_proto_init() { _ = "STUB: not implemented"; return }

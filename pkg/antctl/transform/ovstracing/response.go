@@ -15,22 +15,12 @@
 package ovstracing
 
 import (
-	"encoding/json"
 	"io"
-
-	"antrea.io/antrea/v2/pkg/agent/apis"
 )
 
 func Transform(reader io.Reader, _ bool, _ map[string]string) (interface{}, error) {
-	b, err := io.ReadAll(reader)
-	if err != nil {
-		return nil, err
-	}
-	resp := new(apis.OVSTracingResponse)
-	err = json.Unmarshal(b, resp)
-	if err != nil {
-		return nil, err
-	}
-	// Output the raw bytes of the OVS trace command outputs.
-	return []byte(resp.Result), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// Output the raw bytes of the OVS trace command outputs.

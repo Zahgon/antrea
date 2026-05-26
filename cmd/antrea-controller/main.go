@@ -21,10 +21,6 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/log"
-	"antrea.io/antrea/v2/pkg/version"
 )
 
 func main() {
@@ -34,30 +30,4 @@ func main() {
 	}
 }
 
-func newControllerCommand() *cobra.Command {
-	opts := newOptions()
-
-	cmd := &cobra.Command{
-		Use:  "antrea-controller",
-		Long: "The Antrea Controller.",
-		Run: func(cmd *cobra.Command, args []string) {
-			log.InitLogs(cmd.Flags())
-			defer log.FlushLogs()
-			if err := opts.complete(); err != nil {
-				klog.Fatalf("Failed to complete: %v", err)
-			}
-			if err := opts.validate(args); err != nil {
-				klog.Fatalf("Failed to validate: %v", err)
-			}
-			if err := run(opts); err != nil {
-				klog.Fatalf("Error running controller: %v", err)
-			}
-		},
-		Version: version.GetFullVersionWithRuntimeInfo(),
-	}
-
-	flags := cmd.Flags()
-	opts.addFlags(flags)
-	log.AddFlags(flags)
-	return cmd
-}
+func newControllerCommand() *cobra.Command { _ = "STUB: not implemented"; return nil }

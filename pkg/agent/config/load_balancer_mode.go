@@ -14,8 +14,6 @@
 
 package config
 
-import "strings"
-
 type LoadBalancerMode int
 
 const (
@@ -34,18 +32,9 @@ var (
 // GetLoadBalancerModeFromStr returns true and LoadBalancerMode corresponding to input string.
 // Otherwise, false and undefined value is returned
 func GetLoadBalancerModeFromStr(str string) (bool, LoadBalancerMode) {
-	for idx, ms := range loadBalancerModeStrs {
-		if strings.EqualFold(ms, str) {
-			return true, LoadBalancerMode(idx)
-		}
-	}
-	return false, LoadBalancerModeInvalid
+	_ = "STUB: not implemented"
+	return false, *new(LoadBalancerMode)
 }
 
 // String returns value in string.
-func (m LoadBalancerMode) String() string {
-	if m == LoadBalancerModeInvalid {
-		return "invalid"
-	}
-	return loadBalancerModeStrs[m]
-}
+func (m LoadBalancerMode) String() string { _ = "STUB: not implemented"; return "" }

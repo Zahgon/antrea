@@ -29,22 +29,6 @@ type fakeResourceImports struct {
 }
 
 func newFakeResourceImports(fake *FakeMulticlusterV1alpha1, namespace string) multiclusterv1alpha1.ResourceImportInterface {
-	return &fakeResourceImports{
-		gentype.NewFakeClientWithList[*v1alpha1.ResourceImport, *v1alpha1.ResourceImportList](
-			fake.Fake,
-			namespace,
-			v1alpha1.SchemeGroupVersion.WithResource("resourceimports"),
-			v1alpha1.SchemeGroupVersion.WithKind("ResourceImport"),
-			func() *v1alpha1.ResourceImport { return &v1alpha1.ResourceImport{} },
-			func() *v1alpha1.ResourceImportList { return &v1alpha1.ResourceImportList{} },
-			func(dst, src *v1alpha1.ResourceImportList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.ResourceImportList) []*v1alpha1.ResourceImport {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha1.ResourceImportList, items []*v1alpha1.ResourceImport) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(multiclusterv1alpha1.ResourceImportInterface)
 }

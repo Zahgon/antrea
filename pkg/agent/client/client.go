@@ -16,23 +16,14 @@ package client
 
 import (
 	"context"
-	"fmt"
-	"os"
-	"strconv"
 	"sync"
 
 	"k8s.io/apiserver/pkg/server/dynamiccertificates"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/component-base/config"
-	"k8s.io/klog/v2"
 
-	"antrea.io/antrea/v2/pkg/apis"
-	cert "antrea.io/antrea/v2/pkg/apiserver/certificate"
 	"antrea.io/antrea/v2/pkg/client/clientset/versioned"
-	"antrea.io/antrea/v2/pkg/util/env"
-	"antrea.io/antrea/v2/pkg/util/k8s"
 )
 
 // AntreaClientProvider provides a method to get Antrea client.
@@ -71,139 +62,36 @@ var _ dynamiccertificates.Listener = &antreaClientProvider{}
 var _ Listener = &antreaClientProvider{}
 
 func NewAntreaClientProvider(config config.ClientConnectionConfiguration, kubeClient kubernetes.Interface) (*antreaClientProvider, error) {
-	antreaCAProvider, err := dynamiccertificates.NewDynamicCAFromConfigMapController(
-		"antrea-ca",
-		cert.GetCAConfigMapNamespace(),
-		apis.AntreaCAConfigMapName,
-		apis.CAConfigMapKey,
-		kubeClient)
-	if err != nil {
-		return nil, err
-	}
-
-	var endpointResolver *EndpointResolver
-	if len(config.Kubeconfig) == 0 {
-		klog.InfoS("No Antrea kubeconfig file was specified. Falling back to in-cluster config")
-		port := os.Getenv("ANTREA_SERVICE_PORT")
-		if len(port) == 0 {
-			return nil, fmt.Errorf("unable to create Endpoint resolver for Antrea Service, ANTREA_SERVICE_PORT must be defined for in-cluster config")
-		}
-		servicePort, err := strconv.ParseInt(port, 10, 32)
-		if err != nil {
-			return nil, fmt.Errorf("invalid port number stored in ANTREA_SERVICE_PORT: %w", err)
-		}
-		endpointResolver = NewEndpointResolver(kubeClient, env.GetAntreaNamespace(), apis.AntreaServiceName, int32(servicePort))
-	}
-
-	antreaClientProvider := &antreaClientProvider{
-		config:            config,
-		caContentProvider: antreaCAProvider,
-		endpointResolver:  endpointResolver,
-	}
-
-	antreaCAProvider.AddListener(antreaClientProvider)
-	if endpointResolver != nil {
-		endpointResolver.AddListener(antreaClientProvider)
-	}
-
-	return antreaClientProvider, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // RunOnce runs the task a single time synchronously, ensuring client is initialized if kubeconfig is specified.
-func (p *antreaClientProvider) RunOnce() error {
-	return p.updateAntreaClient()
-}
+func (p *antreaClientProvider) RunOnce() error { _ = "STUB: not implemented"; return nil }
 
 // Run starts the caContentProvider, which watches the ConfigMap and notifies changes
 // by calling Enqueue.
-func (p *antreaClientProvider) Run(ctx context.Context) {
-	go p.caContentProvider.Run(ctx, 1)
-	if p.endpointResolver != nil {
-		go p.endpointResolver.Run(ctx)
-	}
-	<-ctx.Done()
-}
+func (p *antreaClientProvider) Run(ctx context.Context) { _ = "STUB: not implemented"; return }
 
 // Enqueue implements dynamiccertificates.Listener. It will be called by caContentProvider
 // when caBundle is updated.
-func (p *antreaClientProvider) Enqueue() {
-	if err := p.updateAntreaClient(); err != nil {
-		klog.ErrorS(err, "Failed to update Antrea client")
-	}
-}
+func (p *antreaClientProvider) Enqueue() { _ = "STUB: not implemented"; return }
 
 // GetAntreaClient implements AntreaClientProvider.
 func (p *antreaClientProvider) GetAntreaClient() (versioned.Interface, error) {
-	p.mutex.RLock()
-	defer p.mutex.RUnlock()
-	if p.client == nil {
-		return nil, fmt.Errorf("Antrea client is not ready")
-	}
-	return p.client, nil
+	_ = "STUB: not implemented"
+	return *new(versioned.Interface), nil
 }
 
-func (p *antreaClientProvider) updateAntreaClient() error {
-	var kubeConfig *rest.Config
-	var err error
-	if len(p.config.Kubeconfig) == 0 {
-		caBundle := p.caContentProvider.CurrentCABundleContent()
-		if caBundle == nil {
-			klog.InfoS("Didn't get CA certificate, skip updating Antrea Client")
-			return nil
-		}
-		endpointURL := p.endpointResolver.CurrentEndpointURL()
-		if endpointURL == nil {
-			klog.InfoS("Didn't get Endpoint URL for Antrea Service, skip updating Antrea Client")
-			return nil
-		}
-		kubeConfig, err = inClusterConfig(caBundle, endpointURL.String())
-	} else {
-		kubeConfig, err = clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
-			&clientcmd.ClientConfigLoadingRules{ExplicitPath: p.config.Kubeconfig},
-			&clientcmd.ConfigOverrides{}).ClientConfig()
-	}
-	if err != nil {
-		return err
-	}
+func (p *antreaClientProvider) updateAntreaClient() error { _ = "STUB: not implemented"; return nil }
 
-	// ContentType will be used to define the Accept header if AcceptContentTypes is not set.
-	kubeConfig.ContentType = "application/vnd.kubernetes.protobuf"
-	kubeConfig.QPS = p.config.QPS
-	kubeConfig.Burst = int(p.config.Burst)
-	client, err := versioned.NewForConfig(kubeConfig)
-	if err != nil {
-		return err
-	}
-
-	klog.Info("Updating Antrea client with the new CA bundle")
-	p.mutex.Lock()
-	defer p.mutex.Unlock()
-	p.client = client
-
-	return nil
-}
+// ContentType will be used to define the Accept header if AcceptContentTypes is not set.
 
 // inClusterConfig returns a config object which uses the service account Kubernetes gives to
 // Pods. It's intended for clients that expect to be running inside a Pod running on Kubernetes. It
 // will return error if called from a process not running in a Kubernetes environment.
 func inClusterConfig(caBundle []byte, endpoint string) (*rest.Config, error) {
+	_ = "STUB: not implemented"
 	// #nosec G101: false positive triggered by variable name which includes "token"
-	const tokenFile = "/var/run/secrets/kubernetes.io/serviceaccount/token"
-
-	token, err := os.ReadFile(tokenFile)
-	if err != nil {
-		return nil, err
-	}
-
-	tlsClientConfig := rest.TLSClientConfig{
-		CAData:     caBundle,
-		ServerName: k8s.GetServiceDNSNames(env.GetAntreaNamespace(), apis.AntreaServiceName)[0],
-	}
-
-	return &rest.Config{
-		Host:            endpoint,
-		TLSClientConfig: tlsClientConfig,
-		BearerToken:     string(token),
-		BearerTokenFile: tokenFile,
-	}, nil
+	return nil, nil
 }

@@ -16,14 +16,9 @@ package exporter
 
 import (
 	"context"
-	"fmt"
-	"os"
-	"path"
 	"time"
 
 	"github.com/google/uuid"
-	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/klog/v2"
 
 	flowpb "antrea.io/antrea/v2/pkg/apis/flow/v1alpha1"
 	"antrea.io/antrea/v2/pkg/flowaggregator/clickhouseclient"
@@ -44,66 +39,18 @@ const (
 )
 
 func buildClickHouseConfig(opt *options.Options) clickhouseclient.ClickHouseConfig {
-	return clickhouseclient.ClickHouseConfig{
-		Username:           os.Getenv("CH_USERNAME"),
-		Password:           os.Getenv("CH_PASSWORD"),
-		Database:           opt.Config.ClickHouse.Database,
-		DatabaseURL:        opt.Config.ClickHouse.DatabaseURL,
-		Debug:              opt.Config.ClickHouse.Debug,
-		Compress:           opt.Config.ClickHouse.Compress,
-		CommitInterval:     opt.ClickHouseCommitInterval,
-		CACert:             opt.Config.ClickHouse.TLS.CACert,
-		InsecureSkipVerify: opt.Config.ClickHouse.TLS.InsecureSkipVerify,
-	}
+	_ = "STUB: not implemented"
+	return *new(clickhouseclient.ClickHouseConfig)
 }
 
 func NewClickHouseExporter(clusterUUID uuid.UUID, opt *options.Options) (*ClickHouseExporter, error) {
-	chConfig := buildClickHouseConfig(opt)
-	klog.InfoS("ClickHouse configuration", "database", chConfig.Database, "databaseURL", chConfig.DatabaseURL, "debug", chConfig.Debug,
-		"compress", *chConfig.Compress, "commitInterval", chConfig.CommitInterval, "insecureSkipVerify", chConfig.InsecureSkipVerify, "caCert", chConfig.CACert)
-	var errMessage error
-	if chConfig.CACert {
-		err := wait.PollUntilContextTimeout(context.TODO(), DefaultInterval, Timeout, false, func(ctx context.Context) (bool, error) {
-			caCertPath := path.Join(CertDir, CACertFile)
-			certificate, err := os.ReadFile(caCertPath)
-			if err != nil {
-				errMessage = err
-				return false, nil
-			}
-			chConfig.Certificate = certificate
-			return true, nil
-		})
-		if err != nil {
-			return nil, fmt.Errorf("error when reading custom CA certificate: %v", errMessage)
-		}
-	}
-	chExportProcess, err := clickhouseclient.NewClickHouseClient(chConfig, clusterUUID.String())
-	if err != nil {
-		return nil, err
-	}
-	return &ClickHouseExporter{
-		chConfig:        &chConfig,
-		chExportProcess: chExportProcess,
-	}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Run consumes flow records from the ring buffer and writes them to ClickHouse.
 // It blocks until ctx is cancelled or the consumer signals shutdown.
 func (e *ClickHouseExporter) Run(ctx context.Context, buf ringbuffer.BroadcastBuffer[*flowpb.Flow]) {
-	consumer := buf.NewConsumer(ringbuffer.WithMaxConsumeDeadline(consumeDeadline))
-	e.chExportProcess.Start()
-	defer e.chExportProcess.Stop()
-
-	records := make([]*flowpb.Flow, consumeMultipleBatchSize)
-	for {
-		n, _, shutdown := consumer.ConsumeMultiple(records)
-		for _, record := range records[:n] {
-			if err := e.chExportProcess.CacheRecord(record); err != nil {
-				klog.ErrorS(err, "Error when caching record for ClickHouse")
-			}
-		}
-		if shutdown || ctx.Err() != nil {
-			return
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }

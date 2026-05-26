@@ -15,18 +15,9 @@
 package testing
 
 import (
-	"crypto/rand"
 	"net/netip"
 )
 
-func RandIPv4() netip.Addr {
-	var ip [4]byte
-	rand.Read(ip[:])
-	return netip.AddrFrom4(ip)
-}
+func RandIPv4() netip.Addr { _ = "STUB: not implemented"; return *new(netip.Addr) }
 
-func RandIPv6() netip.Addr {
-	var ip [16]byte
-	rand.Read(ip[:])
-	return netip.AddrFrom16(ip)
-}
+func RandIPv6() netip.Addr { _ = "STUB: not implemented"; return *new(netip.Addr) }

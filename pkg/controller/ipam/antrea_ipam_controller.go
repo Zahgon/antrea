@@ -15,34 +15,19 @@
 package ipam
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
 	"net"
-	"strings"
 	"time"
 
 	appsv1 "k8s.io/api/apps/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/labels"
-	apitypes "k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/wait"
 	appsinformers "k8s.io/client-go/informers/apps/v1"
 	coreinformers "k8s.io/client-go/informers/core/v1"
 	corelisters "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
-	"k8s.io/klog/v2"
 
-	crdv1b1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
 	"antrea.io/antrea/v2/pkg/client/clientset/versioned"
 	crdinformers "antrea.io/antrea/v2/pkg/client/informers/externalversions/crd/v1beta1"
 	crdlisters "antrea.io/antrea/v2/pkg/client/listers/crd/v1beta1"
-	annotation "antrea.io/antrea/v2/pkg/ipam"
-	"antrea.io/antrea/v2/pkg/ipam/poolallocator"
-	"antrea.io/antrea/v2/pkg/util/k8s"
 )
 
 const (
@@ -92,17 +77,8 @@ type AntreaIPAMController struct {
 }
 
 func statefulSetIndexFunc(obj interface{}) ([]string, error) {
-	ipPool, ok := obj.(*crdv1b1.IPPool)
-	if !ok {
-		return nil, fmt.Errorf("obj is not IPPool: %+v", obj)
-	}
-	statefulSetNames := sets.New[string]()
-	for _, address := range ipPool.Status.IPAddresses {
-		if address.Owner.StatefulSet != nil {
-			statefulSetNames.Insert(k8s.NamespacedName(address.Owner.StatefulSet.Namespace, address.Owner.StatefulSet.Name))
-		}
-	}
-	return statefulSetNames.UnsortedList(), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func NewAntreaIPAMController(crdClient versioned.Interface,
@@ -110,420 +86,134 @@ func NewAntreaIPAMController(crdClient versioned.Interface,
 	namespaceInformer coreinformers.NamespaceInformer,
 	podInformer coreinformers.PodInformer,
 	statefulSetInformer appsinformers.StatefulSetInformer) *AntreaIPAMController {
-
-	ipPoolInformer.Informer().AddIndexers(cache.Indexers{statefulSetIndex: statefulSetIndexFunc})
-
-	c := &AntreaIPAMController{
-		crdClient: crdClient,
-		statefulSetQueue: workqueue.NewTypedRateLimitingQueueWithConfig(
-			workqueue.NewTypedItemExponentialFailureRateLimiter[string](minRetryDelay, maxRetryDelay),
-			workqueue.TypedRateLimitingQueueConfig[string]{
-				Name: "statefulSetPreallocationAndCleanup",
-			},
-		),
-		namespaceLister:         namespaceInformer.Lister(),
-		namespaceListerSynced:   namespaceInformer.Informer().HasSynced,
-		statefulSetInformer:     statefulSetInformer,
-		statefulSetListerSynced: statefulSetInformer.Informer().HasSynced,
-		podLister:               podInformer.Lister(),
-		podInformerSynced:       podInformer.Informer().HasSynced,
-		ipPoolInformer:          ipPoolInformer,
-		ipPoolLister:            ipPoolInformer.Lister(),
-		ipPoolListerSynced:      ipPoolInformer.Informer().HasSynced,
-		statusQueue: workqueue.NewTypedRateLimitingQueueWithConfig(
-			workqueue.NewTypedItemExponentialFailureRateLimiter[string](minRetryDelay, maxRetryDelay),
-			workqueue.TypedRateLimitingQueueConfig[string]{
-				Name: "IPPoolStatus",
-			},
-		),
-	}
-
-	// Add handlers for Stateful Set events.
-	// Note that update is not handled here: IP Pool annotation should not be
-	// updated without recreating the resource
-	klog.V(2).InfoS("Subscribing for StatefulSet notifications", "controller", controllerName)
-	statefulSetInformer.Informer().AddEventHandler(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc:    c.enqueueStatefulSetCreateEvent,
-			DeleteFunc: c.enqueueStatefulSetDeleteEvent,
-		},
-	)
-
-	return c
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Add handlers for Stateful Set events.
+// Note that update is not handled here: IP Pool annotation should not be
+// updated without recreating the resource
 
 // Enqueue the StatefulSet create notification to be processed by the worker
 func (c *AntreaIPAMController) enqueueStatefulSetCreateEvent(obj interface{}) {
-	ss := obj.(*appsv1.StatefulSet)
-	klog.V(2).InfoS("Create notification", "Namespace", ss.Namespace, "StatefulSet", ss.Name)
-
-	key := k8s.NamespacedName(ss.Namespace, ss.Name)
-	c.statefulSetQueue.Add(key)
+	_ = "STUB: not implemented"
+	return
 }
 
 // Enqueue the StatefulSet delete notification to be processed by the worker
 func (c *AntreaIPAMController) enqueueStatefulSetDeleteEvent(obj interface{}) {
-	ss, ok := obj.(*appsv1.StatefulSet)
-	if !ok {
-		// When the informer's watch connection is interrupted and re-established,
-		// delete events are delivered as cache.DeletedFinalStateUnknown tombstones.
-		tombstone, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			klog.ErrorS(nil, "Error decoding object when deleting StatefulSet, invalid type", "object", obj)
-			return
-		}
-		ss, ok = tombstone.Obj.(*appsv1.StatefulSet)
-		if !ok {
-			klog.ErrorS(nil, "Error decoding object tombstone when deleting StatefulSet, invalid type", "object", tombstone.Obj)
-			return
-		}
-	}
-	klog.V(2).InfoS("Delete notification", "Namespace", ss.Namespace, "StatefulSet", ss.Name)
-
-	key := k8s.NamespacedName(ss.Namespace, ss.Name)
-	c.statefulSetQueue.Add(key)
+	_ = "STUB: not implemented"
+	return
 }
+
+// When the informer's watch connection is interrupted and re-established,
+// delete events are delivered as cache.DeletedFinalStateUnknown tombstones.
 
 // Inspect all IPPools for stale IP Address entries.
 // This may happen if controller was down during StatefulSet/Pod delete event.
 // If such entry is found, enqueue cleanup event for this StatefulSet/Pod.
-func (c *AntreaIPAMController) cleanUpStaleIPAddresses() {
-	pools, _ := c.ipPoolLister.List(labels.Everything())
-	statefulSets, _ := c.statefulSetInformer.Lister().List(labels.Everything())
-	statefulSetMap := make(map[string]struct{}, len(statefulSets))
+func (c *AntreaIPAMController) cleanUpStaleIPAddresses() { _ = "STUB: not implemented"; return }
 
-	for _, ss := range statefulSets {
-		// Prepare map of existing StatefulSets for quick reference below
-		statefulSetMap[k8s.NamespacedName(ss.Namespace, ss.Name)] = struct{}{}
-	}
+// Prepare map of existing StatefulSets for quick reference below
 
-	pods, _ := c.podLister.List(labels.Everything())
-	activePodsMap := make(map[string]struct{}, len(pods))
-	for _, p := range pods {
-		// When the Pod is terminated, we should recycle the IPs.
-		if k8s.IsPodTerminated(p) {
-			continue
-		}
-		activePodsMap[k8s.NamespacedName(p.Namespace, p.Name)] = struct{}{}
-	}
+// When the Pod is terminated, we should recycle the IPs.
 
-	poolsUpdated := 0
-	for _, ipPool := range pools {
-		updateNeeded := false
-		ipAddrs := ipPool.Status.IPAddresses
-		newList := make([]crdv1b1.IPAddressState, 0, len(ipAddrs))
+// Cleanup reserved addresses
 
-		for _, address := range ipAddrs {
-			// Cleanup reserved addresses
-			if address.Owner.Pod != nil {
-				if _, ok := activePodsMap[k8s.NamespacedName(address.Owner.Pod.Namespace, address.Owner.Pod.Name)]; !ok {
-					klog.V(2).InfoS("IPPool contains stale IP address for Pod that no longer exists", "IPPool", ipPool.Name, "Namespace", address.Owner.Pod.Namespace, "Pod", address.Owner.Pod.Name)
-					address.Owner.Pod = nil
-					if address.Owner.StatefulSet != nil {
-						address.Phase = crdv1b1.IPAddressPhaseReserved
-					}
-					updateNeeded = true
-				}
-			}
-			if address.Owner.StatefulSet != nil {
-				key := k8s.NamespacedName(address.Owner.StatefulSet.Namespace, address.Owner.StatefulSet.Name)
-				if _, ok := statefulSetMap[key]; !ok {
-					// This entry refers to StatefulSet that no longer exists
-					klog.V(2).InfoS("IPPool contains stale IP address for StatefulSet that no longer exists", "IPPool", ipPool.Name, "Namespace", address.Owner.StatefulSet.Namespace, "StatefulSet", address.Owner.StatefulSet.Name)
-					address.Owner.StatefulSet = nil
-					updateNeeded = true
-				}
-			}
+// This entry refers to StatefulSet that no longer exists
 
-			if address.Owner.StatefulSet != nil || address.Owner.Pod != nil {
-				newList = append(newList, address)
-			}
-		}
-
-		if updateNeeded {
-			ipPoolCopy := ipPool.DeepCopy()
-			ipPoolCopy.Status.IPAddresses = newList
-			_, err := c.crdClient.CrdV1beta1().IPPools().UpdateStatus(context.TODO(), ipPoolCopy, metav1.UpdateOptions{})
-			if err != nil {
-				// Next cleanup job will retry
-				klog.ErrorS(err, "Updating IP Pool status failed", "IPPool", ipPool.Name)
-			} else {
-				poolsUpdated += 1
-			}
-		}
-	}
-	if poolsUpdated != 0 {
-		klog.InfoS("Cleanup job for IP Pools finished", "updated", poolsUpdated)
-	}
-}
+// Next cleanup job will retry
 
 // Look for an IP Pool associated with this StatefulSet.
 // If IPPool is found, this routine will clear all addresses that might be reserved for the pool.
 func (c *AntreaIPAMController) cleanIPPoolForStatefulSet(namespacedName string) error {
-	klog.InfoS("Processing delete notification", "StatefulSet", namespacedName)
-	ipPools, _ := c.ipPoolInformer.Informer().GetIndexer().ByIndex(statefulSetIndex, namespacedName)
-
-	var retry bool
-	namespace, name := k8s.SplitNamespacedName(namespacedName)
-	for _, item := range ipPools {
-		ipPool := item.(*crdv1b1.IPPool)
-		allocator, err := poolallocator.NewIPPoolAllocator(ipPool.Name, c.crdClient, c.ipPoolLister)
-		if err != nil {
-			// This is not a transient error - log and forget
-			klog.ErrorS(err, "Failed to find IP Pool", "IPPool", ipPool.Name)
-			continue
-		}
-
-		err = allocator.ReleaseStatefulSet(namespace, name)
-		if err != nil {
-			// This can be a transient error - worker will retry
-			klog.ErrorS(err, "Failed to clean IP allocations", "StatefulSet", namespacedName, "IPPool", ipPool.Name)
-			retry = true
-			continue
-		}
-	}
-
-	if retry {
-		return fmt.Errorf("stale IP allocations cleanup failed for at least one IPPool")
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
+// This is not a transient error - log and forget
+
+// This can be a transient error - worker will retry
+
 // Find IP Pools annotated to StatefulSet via direct annotation or Namespace annotation
 func (c *AntreaIPAMController) getIPPoolsForStatefulSet(ss *appsv1.StatefulSet) ([]string, []net.IP) {
+	_ = "STUB: not implemented"
 
 	// Inspect IP annotation for the Pods
-	ipStrings := ss.Spec.Template.Annotations[annotation.AntreaIPAMPodIPAnnotationKey]
-	ipStrings = strings.ReplaceAll(ipStrings, " ", "")
-	var ips []net.IP
-	if ipStrings != "" {
-		splittedIPStrings := strings.Split(ipStrings, annotation.AntreaIPAMAnnotationDelimiter)
-		for _, ipString := range splittedIPStrings {
-			ip := net.ParseIP(ipString)
-			if ip == nil {
-				klog.ErrorS(nil, "Ignored invalid Pod IP annotation in the StatefulSet template", "annotation", ipStrings, "statefulSet", klog.KObj(ss))
-				ips = nil
-				break
-			}
-			ips = append(ips, ip)
-		}
-	}
-
-	// Inspect pool annotation for the Pods
-	// In order to avoid extra API call in IPAM driver, IPAM annotations are defined
-	// on Pods rather than on StatefulSet
-	annotations, exists := ss.Spec.Template.Annotations[annotation.AntreaIPAMAnnotationKey]
-	if exists {
-		// Stateful Set Pod is annotated with dedicated IP pool
-		return strings.Split(annotations, annotation.AntreaIPAMAnnotationDelimiter), ips
-	}
-
-	// Inspect Namespace
-	namespace, err := c.namespaceLister.Get(ss.Namespace)
-	if err != nil {
-		// Should never happen
-		klog.Errorf("Namespace %s not found for StatefulSet %s", ss.Namespace, ss.Name)
-		return nil, nil
-	}
-
-	annotations, exists = namespace.Annotations[annotation.AntreaIPAMAnnotationKey]
-	if exists {
-		return strings.Split(annotations, annotation.AntreaIPAMAnnotationDelimiter), ips
-	}
-
 	return nil, nil
-
 }
+
+// Inspect pool annotation for the Pods
+// In order to avoid extra API call in IPAM driver, IPAM annotations are defined
+// on Pods rather than on StatefulSet
+
+// Stateful Set Pod is annotated with dedicated IP pool
+
+// Inspect Namespace
+
+// Should never happen
 
 // Look for an IP Pool associated with this StatefulSet, either a dedicated one or
 // annotated to the Namespace. If such IP Pool is found, preallocate IPs for the StatefulSet.
 // This function returns error if pool is not found, or allocation fails.
 func (c *AntreaIPAMController) preallocateIPPoolForStatefulSet(ss *appsv1.StatefulSet) error {
-	klog.InfoS("Processing create notification", "Namespace", ss.Namespace, "StatefulSet", ss.Name)
-
-	ipPools, ips := c.getIPPoolsForStatefulSet(ss)
-	var ip net.IP
-	if len(ips) > 0 {
-		ip = ips[0]
-	}
-
-	if ipPools == nil {
-		// nothing to preallocate
-		return nil
-	}
-
-	if len(ipPools) > 1 {
-		return fmt.Errorf("annotation of multiple IP Pools is not supported")
-	}
-
-	// Only one pool is supported for now. Dual stack support coming in future.
-	ipPoolName := ipPools[0]
-	allocator, err := poolallocator.NewIPPoolAllocator(ipPoolName, c.crdClient, c.ipPoolLister)
-	if err != nil {
-		return fmt.Errorf("failed to find IP Pool %s: %s", ipPoolName, err)
-	}
-
-	size := int(*ss.Spec.Replicas)
-	// Note that AllocateStatefulSet would not preallocate IPs if this StatefulSet is already present
-	// in the pool. This safeguards us from double allocation in case agent allocated IP by the time
-	// controller task is executed. Note also that StatefulSet resize will not be handled.
-	if size > 0 {
-		err = allocator.AllocateStatefulSet(ss.Namespace, ss.Name, size, ip)
-		if err != nil {
-			return fmt.Errorf("failed to preallocate continuous IP space of size %d from Pool %s: %s", size, ipPoolName, err)
-		}
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
-func (c *AntreaIPAMController) statefulSetWorker() {
-	for c.processNextStatefulSetWorkItem() {
-	}
-}
+
+// nothing to preallocate
+
+// Only one pool is supported for now. Dual stack support coming in future.
+
+// Note that AllocateStatefulSet would not preallocate IPs if this StatefulSet is already present
+// in the pool. This safeguards us from double allocation in case agent allocated IP by the time
+// controller task is executed. Note also that StatefulSet resize will not be handled.
+
+func (c *AntreaIPAMController) statefulSetWorker() { _ = "STUB: not implemented"; return }
 
 func (c *AntreaIPAMController) processNextStatefulSetWorkItem() bool {
-	key, quit := c.statefulSetQueue.Get()
-	if quit {
-		return false
-	}
-
-	defer c.statefulSetQueue.Done(key)
-
-	namespace, name := k8s.SplitNamespacedName(key)
-	ss, err := c.statefulSetInformer.Lister().StatefulSets(namespace).Get(name)
-
-	if err != nil {
-		if errors.IsNotFound(err) {
-			// StatefulSet no longer present - clean up reserved pool IPs
-			err = c.cleanIPPoolForStatefulSet(key)
-			if err != nil {
-				// Put the item back on the workqueue to handle any transient errors.
-				c.statefulSetQueue.AddRateLimited(key)
-				klog.ErrorS(err, "Failed to clean IP addresses reserved for StatefulSet from IP Pool", "StatefulSet", key)
-				return true
-			}
-		} else {
-			klog.ErrorS(err, "Failed to get StatefulSet", "StatefulSet", key)
-		}
-	} else {
-		// StatefulSet was created - preallocate IPs based on replicas with best effort
-		err := c.preallocateIPPoolForStatefulSet(ss)
-		if err != nil {
-			// Preallocation is best effort - we do not retry even with transient errors,
-			// since we don't want to implement logic that would delay Pods while waiting for
-			// preallocation.
-			klog.ErrorS(err, "No IPs reserved for StatefulSet", "StatefulSet", key)
-		}
-	}
-
-	c.statefulSetQueue.Forget(key)
-	return true
+	_ = "STUB: not implemented"
+	return false
 }
 
+// StatefulSet no longer present - clean up reserved pool IPs
+
+// Put the item back on the workqueue to handle any transient errors.
+
+// StatefulSet was created - preallocate IPs based on replicas with best effort
+
+// Preallocation is best effort - we do not retry even with transient errors,
+// since we don't want to implement logic that would delay Pods while waiting for
+// preallocation.
+
 func (c *AntreaIPAMController) updateIPPoolCounters(poolName string) error {
-	ipPool, err := c.ipPoolLister.Get(poolName)
-	if err != nil {
-		if errors.IsNotFound(err) {
-			return nil
-		}
-		return fmt.Errorf("failed to retrieve IPPool %s, error: %v", poolName, err)
-	}
-
-	allocator, err := poolallocator.NewIPPoolAllocator(ipPool.Name, c.crdClient, c.ipPoolLister)
-
-	if err != nil {
-		return fmt.Errorf("failed to initialize allocator for IPPool %s, error: %v", poolName, err)
-	}
-
-	// Total is fetched from allocator as here are trapped changes to CRD, e.g addition of new IPRange
-	total := allocator.Total()
-
-	// Used is gathered from IP allocation status within the CRD - as it can be set by each one of the agents
-	used := len(ipPool.Status.IPAddresses)
-
-	// If update has no effect, exit
-	if ipPool.Status.Usage.Used == used && ipPool.Status.Usage.Total == total {
-		return nil
-	}
-
-	patch, _ := json.Marshal(map[string]interface{}{
-		"status": map[string]interface{}{
-			"usage": map[string]interface{}{
-				"used":  used,
-				"total": total,
-			},
-		},
-	})
-
-	_, err = c.crdClient.CrdV1beta1().IPPools().Patch(context.TODO(), ipPool.Name, apitypes.MergePatchType, patch, metav1.PatchOptions{}, "status")
-	if err != nil {
-		return fmt.Errorf("failed to update IPPool %s counters, error: %v", poolName, err)
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (c *AntreaIPAMController) createHandler(obj interface{}) {
-	ipPool := obj.(*crdv1b1.IPPool)
-	c.statusQueue.Add(ipPool.Name)
-}
+// Total is fetched from allocator as here are trapped changes to CRD, e.g addition of new IPRange
+
+// Used is gathered from IP allocation status within the CRD - as it can be set by each one of the agents
+
+// If update has no effect, exit
+
+func (c *AntreaIPAMController) createHandler(obj interface{}) { _ = "STUB: not implemented"; return }
 
 func (c *AntreaIPAMController) updateHandler(oldObj, newObj interface{}) {
-	ipPool := newObj.(*crdv1b1.IPPool)
-	c.statusQueue.Add(ipPool.Name)
+	_ = "STUB: not implemented"
+	return
 }
 
-func (c *AntreaIPAMController) processNextWorkItem() bool {
-	key, quit := c.statusQueue.Get()
-	if quit {
-		return false
-	}
-	defer c.statusQueue.Done(key)
+func (c *AntreaIPAMController) processNextWorkItem() bool { _ = "STUB: not implemented"; return false }
 
-	if err := c.updateIPPoolCounters(key); err != nil {
-		// Put the item back in the workqueue to handle any transient errors.
-		c.statusQueue.AddRateLimited(key)
-		klog.ErrorS(err, "Failed to sync IPPool status", "IPPool", key)
-		return true
-	}
-	// If no error occurs we Forget this item so it does not get queued again until
-	// another change happens.
-	c.statusQueue.Forget(key)
-	return true
-}
+// Put the item back in the workqueue to handle any transient errors.
 
-func (c *AntreaIPAMController) worker() {
-	for c.processNextWorkItem() {
-	}
-}
+// If no error occurs we Forget this item so it does not get queued again until
+// another change happens.
+
+func (c *AntreaIPAMController) worker() { _ = "STUB: not implemented"; return }
 
 // Run begins watching and syncing of a AntreaIPAMController.
-func (c *AntreaIPAMController) Run(stopCh <-chan struct{}) {
+func (c *AntreaIPAMController) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	defer c.statefulSetQueue.ShutDown()
-	defer c.statusQueue.ShutDown()
-
-	klog.InfoS("Starting", "controller", controllerName)
-	defer klog.InfoS("Shutting down", "controller", controllerName)
-
-	c.ipPoolInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
-		AddFunc:    c.createHandler,
-		UpdateFunc: c.updateHandler,
-	})
-
-	cacheSyncs := []cache.InformerSynced{c.namespaceListerSynced, c.podInformerSynced, c.statefulSetListerSynced, c.ipPoolListerSynced}
-	if !cache.WaitForNamedCacheSync(controllerName, stopCh, cacheSyncs...) {
-		return
-	}
-
-	// Periodic cleanup IP Pools of stale IP addresses
-	go wait.NonSlidingUntil(c.cleanUpStaleIPAddresses, garbageCollectionInterval, stopCh)
-
-	go wait.Until(c.statefulSetWorker, time.Second, stopCh)
-
-	for i := 0; i < defaultWorkers; i++ {
-		go wait.Until(c.worker, time.Second, stopCh)
-	}
-
-	<-stopCh
-}
+// Periodic cleanup IP Pools of stale IP addresses

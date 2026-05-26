@@ -43,8 +43,6 @@ Adds:
 package proxy
 
 import (
-	"fmt"
-
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 
@@ -79,16 +77,9 @@ type ServicePortName struct {
 	Protocol v1.Protocol
 }
 
-func (spn ServicePortName) String() string {
-	return fmt.Sprintf("%s%s", spn.NamespacedName.String(), fmtPortName(spn.Port))
-}
+func (spn ServicePortName) String() string { _ = "STUB: not implemented"; return "" }
 
-func fmtPortName(in string) string {
-	if in == "" {
-		return ""
-	}
-	return fmt.Sprintf(":%s", in)
-}
+func fmtPortName(in string) string { _ = "STUB: not implemented"; return "" }
 
 // ServiceEndpoint is used to identify a service and one of its endpoint pair.
 type ServiceEndpoint struct {

@@ -43,11 +43,8 @@ Modifies:
 package runner
 
 import (
-	"fmt"
 	"time"
 
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	"k8s.io/klog/v2"
 	"k8s.io/utils/clock"
 )
 
@@ -86,95 +83,44 @@ type BoundedFrequencyRunner struct {
 // (unless another trigger, like `Run()` or `maxInterval`, causes it to run sooner). Any
 // successful run will abort the retry attempt.
 func NewBoundedFrequencyRunner(name string, fn func() error, minInterval, retryInterval, maxInterval time.Duration) *BoundedFrequencyRunner {
-	return construct(name, fn, minInterval, retryInterval, maxInterval, clock.RealClock{})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Make an instance with dependencies injected.
 func construct(name string, fn func() error, minInterval, retryInterval, maxInterval time.Duration, clock clock.Clock) *BoundedFrequencyRunner {
-	if maxInterval < minInterval {
-		panic(fmt.Sprintf("%s: maxInterval (%v) must be >= minInterval (%v)", name, maxInterval, minInterval))
-	}
-
-	bfr := &BoundedFrequencyRunner{
-		name: name,
-		fn:   fn,
-
-		minInterval:   minInterval,
-		retryInterval: retryInterval,
-		maxInterval:   maxInterval,
-
-		run:   make(chan struct{}, 1),
-		clock: clock,
-	}
-
-	return bfr
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Loop handles the periodic timer and run requests.  This is expected to be
 // called as a goroutine.
-func (bfr *BoundedFrequencyRunner) Loop(stop <-chan struct{}) {
-	klog.V(3).InfoS("Loop running", "runner", bfr.name)
+func (bfr *BoundedFrequencyRunner) Loop(stop <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	bfr.minIntervalTimer = bfr.clock.NewTimer(bfr.minInterval)
-	defer bfr.minIntervalTimer.Stop()
+// Initialize nextRunTimer with maxInterval
 
-	// Initialize nextRunTimer with maxInterval
-	bfr.nextRunTimer = bfr.clock.NewTimer(bfr.maxInterval)
-	defer bfr.nextRunTimer.Stop()
+// Wait on the single timer
 
-	for {
-		select {
-		case <-stop:
-			klog.V(3).InfoS("Loop stopping", "runner", bfr.name)
-			return
-		case <-bfr.nextRunTimer.C(): // Wait on the single timer
-		case <-bfr.run:
-		}
+// stop the timers here to allow the tests using the fake clock to synchronize
+// with the fakeClock.HasWaiters() method. The timers are reset after the function
+// is executed.
 
-		// stop the timers here to allow the tests using the fake clock to synchronize
-		// with the fakeClock.HasWaiters() method. The timers are reset after the function
-		// is executed.
-		bfr.minIntervalTimer.Stop()
-		bfr.nextRunTimer.Stop()
+// avoid crashing if the function executed crashes
 
-		var err error
-		// avoid crashing if the function executed crashes
-		func() {
-			defer utilruntime.HandleCrash()
-			err = bfr.fn()
-		}()
+// Determine the next interval based on the result
 
-		// Determine the next interval based on the result
-		nextInterval := bfr.maxInterval
-		if err != nil {
-			// If error, ensure next run is within retryInterval and maxInterval
-			if bfr.retryInterval < nextInterval {
-				nextInterval = bfr.retryInterval
-			}
-			klog.V(3).InfoS("scheduling retry", "runner", bfr.name, "interval", nextInterval, "error", err)
-		}
-		// Reset the timers
-		bfr.minIntervalTimer.Reset(bfr.minInterval)
-		bfr.nextRunTimer.Reset(nextInterval)
+// If error, ensure next run is within retryInterval and maxInterval
 
-		// Wait for minInterval before looping
-		select {
-		case <-stop:
-			klog.V(3).InfoS("Loop stopping", "runner", bfr.name)
-			return
-		case <-bfr.minIntervalTimer.C():
-		}
-	}
-}
+// Reset the timers
+
+// Wait for minInterval before looping
 
 // Run the work function as soon as possible.  If this is called while Loop is not
 // running, the call may be deferred indefinitely.
 // Once there is a queued request to call the work function, further calls to
 // Run() will have no effect until after it runs.
 func (bfr *BoundedFrequencyRunner) Run() {
+	_ = "STUB: not implemented"
 	// If bfr.run is empty, push an element onto it. Otherwise, do nothing.
-	select {
-	case bfr.run <- struct{}{}:
-	default:
-	}
+	return
 }

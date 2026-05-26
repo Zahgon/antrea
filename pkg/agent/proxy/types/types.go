@@ -16,12 +16,8 @@ package types
 
 import (
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/klog/v2"
-	utilnet "k8s.io/utils/net"
 
-	mccommon "antrea.io/antrea/v2/multicluster/controllers/multicluster/common"
 	"antrea.io/antrea/v2/pkg/agent/config"
-	"antrea.io/antrea/v2/pkg/agent/types"
 	"antrea.io/antrea/v2/pkg/ovs/openflow"
 	k8sproxy "antrea.io/antrea/v2/third_party/proxy"
 )
@@ -44,44 +40,18 @@ type ServiceInfo struct {
 }
 
 func getLoadBalancerMode(service *corev1.Service) *config.LoadBalancerMode {
-	if modeStr, exists := service.Annotations[types.ServiceLoadBalancerModeAnnotationKey]; exists {
-		ok, mode := config.GetLoadBalancerModeFromStr(modeStr)
-		if !ok {
-			klog.ErrorS(nil, "The Service's load balancer mode annotation is invalid", "Service", klog.KObj(service), "mode", modeStr)
-			return nil
-		}
-		return &mode
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // NewServiceInfo returns a new k8sproxy.ServicePort which abstracts a serviceInfo.
 func NewServiceInfo(port *corev1.ServicePort, service *corev1.Service, baseInfo *k8sproxy.BaseServicePortInfo) k8sproxy.ServicePort {
-	info := &ServiceInfo{BaseServicePortInfo: baseInfo}
-	info.IsNested = mccommon.IsMulticlusterService(service)
-	info.LoadBalancerMode = getLoadBalancerMode(service)
-	if utilnet.IsIPv6(baseInfo.ClusterIP()) {
-		info.OFProtocol = openflow.ProtocolTCPv6
-		switch port.Protocol {
-		case corev1.ProtocolUDP:
-			info.OFProtocol = openflow.ProtocolUDPv6
-		case corev1.ProtocolSCTP:
-			info.OFProtocol = openflow.ProtocolSCTPv6
-		}
-	} else {
-		info.OFProtocol = openflow.ProtocolTCP
-		switch port.Protocol {
-		case corev1.ProtocolUDP:
-			info.OFProtocol = openflow.ProtocolUDP
-		case corev1.ProtocolSCTP:
-			info.OFProtocol = openflow.ProtocolSCTP
-		}
-	}
-	return info
+	_ = "STUB: not implemented"
+	return *new(k8sproxy.ServicePort)
 }
 
 // NewEndpointInfo returns a new k8sproxy.Endpoint which abstracts an endpointsInfo.
 func NewEndpointInfo(baseInfo *k8sproxy.BaseEndpointInfo, _ *k8sproxy.ServicePortName) k8sproxy.Endpoint {
-	info := &EndpointInfo{BaseEndpointInfo: baseInfo}
-	return info
+	_ = "STUB: not implemented"
+	return *new(k8sproxy.Endpoint)
 }

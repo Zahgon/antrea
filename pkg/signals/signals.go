@@ -16,10 +16,7 @@ package signals
 
 import (
 	"os"
-	"os/signal"
 	"syscall"
-
-	"k8s.io/klog/v2"
 )
 
 var (
@@ -31,23 +28,6 @@ var (
 // will block until a signal is received. The first signal received will cause the stopCh channel to
 // be closed, giving the opportunity to the program to exist gracefully. If a second signal is
 // received before then, we will force exit with code 1.
-func RegisterSignalHandlers() <-chan struct{} {
-	stopCh := make(chan struct{})
+func RegisterSignalHandlers() <-chan struct{} { _ = "STUB: not implemented"; return nil }
 
-	go func() {
-		<-notifyCh
-		close(stopCh)
-		<-notifyCh
-		klog.InfoS("Received second signal, will force exit")
-		klog.Flush()
-		os.Exit(1)
-	}()
-
-	signal.Notify(notifyCh, capturedSignals...)
-
-	return stopCh
-}
-
-func GenerateStopSignal() {
-	notifyCh <- syscall.SIGTERM
-}
+func GenerateStopSignal() { _ = "STUB: not implemented"; return }

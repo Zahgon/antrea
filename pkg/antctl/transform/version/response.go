@@ -15,14 +15,7 @@
 package version
 
 import (
-	"encoding/json"
 	"io"
-
-	k8sversion "k8s.io/apimachinery/pkg/version"
-	"k8s.io/klog/v2"
-
-	clusterinfov1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
-	antreaversion "antrea.io/antrea/v2/pkg/version"
 )
 
 type Response struct {
@@ -36,72 +29,19 @@ type Response struct {
 // will try to parse the response as a AgentVersionResponse and then populate
 // it with the version of antctl to a transformedVersionResponse object.
 func AgentTransform(reader io.Reader, _ bool, _ map[string]string) (interface{}, error) {
-	b, err := io.ReadAll(reader)
-	if err != nil {
-		return nil, err
-	}
-	klog.Infof("version transform received: %s", string(b))
-	v := new(k8sversion.Info)
-	err = json.Unmarshal(b, v)
-	if err != nil {
-		return nil, err
-	}
-	agentVersion := v.GitVersion
-	if len(v.GitCommit) > 0 {
-		agentVersion += "-" + v.GitCommit
-	}
-	if len(v.GitTreeState) > 0 {
-		agentVersion += "." + v.GitTreeState
-	}
-	resp := &Response{
-		AgentVersion:  agentVersion,
-		AntctlVersion: antreaversion.GetFullVersion(),
-	}
-	return resp, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func ControllerTransform(reader io.Reader, _ bool, _ map[string]string) (interface{}, error) {
-	b, err := io.ReadAll(reader)
-	if err != nil {
-		return nil, err
-	}
-	klog.Infof("version transform received: %s", string(b))
-	controllerInfo := new(clusterinfov1beta1.AntreaControllerInfo)
-	err = json.Unmarshal(b, controllerInfo)
-	if err != nil {
-		return nil, err
-	}
-	resp := &Response{
-		ControllerVersion: controllerInfo.Version,
-		AntctlVersion:     antreaversion.GetFullVersion(),
-	}
-	return resp, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // FlowAggregatorTransform is the AddonTransform for the flow aggregator version command.
 // This function will try to parse the response as a FlowAggregatorVersionResponse and
 // then populate it with the version of antctl to a transformedVersionResponse object.
 func FlowAggregatorTransform(reader io.Reader, _ bool, _ map[string]string) (interface{}, error) {
-	b, err := io.ReadAll(reader)
-	if err != nil {
-		return nil, err
-	}
-	klog.Infof("version transform received: %s", string(b))
-	v := new(k8sversion.Info)
-	err = json.Unmarshal(b, v)
-	if err != nil {
-		return nil, err
-	}
-	flowAggregatorVersion := v.GitVersion
-	if len(v.GitCommit) > 0 {
-		flowAggregatorVersion += "-" + v.GitCommit
-	}
-	if len(v.GitTreeState) > 0 {
-		flowAggregatorVersion += "." + v.GitTreeState
-	}
-	resp := &Response{
-		FlowAggregatorVersion: flowAggregatorVersion,
-		AntctlVersion:         antreaversion.GetFullVersion(),
-	}
-	return resp, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }

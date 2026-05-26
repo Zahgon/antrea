@@ -13,11 +13,6 @@
 
 package ovsctl
 
-import (
-	"fmt"
-	"os/exec"
-)
-
 type OVSAppctlRunner interface {
 	RunAppctlCmd(cmd string, needsBridge bool, args ...string) ([]byte, error)
 }
@@ -60,10 +55,12 @@ type OVSCtlClient interface {
 type BadRequestError string
 
 func (e BadRequestError) Error() string {
-	return string(e)
+	_ = "STUB: not implemented"
+
+	// ExecError is for errors happened in command execution.
+	return ""
 }
 
-// ExecError is for errors happened in command execution.
 type ExecError struct {
 	error
 	// stderr output.
@@ -71,20 +68,10 @@ type ExecError struct {
 }
 
 // CommandExecuted returns whether the OVS command has been executed.
-func (e *ExecError) CommandExecuted() bool {
-	exit, ok := e.error.(*exec.ExitError)
-	return ok && exit.ExitCode() != exitCodeCommandNotFound
-}
+func (e *ExecError) CommandExecuted() bool { _ = "STUB: not implemented"; return false }
 
 // GetErrorOutput returns the command's output to stderr if it has been executed
 // and exited with an error.
-func (e *ExecError) GetErrorOutput() string {
-	if !e.CommandExecuted() {
-		return ""
-	}
-	return e.errorOutput
-}
+func (e *ExecError) GetErrorOutput() string { _ = "STUB: not implemented"; return "" }
 
-func (e *ExecError) Error() string {
-	return fmt.Sprintf("ExecError: %v, output: %s", e.error, e.errorOutput)
-}
+func (e *ExecError) Error() string { _ = "STUB: not implemented"; return "" }

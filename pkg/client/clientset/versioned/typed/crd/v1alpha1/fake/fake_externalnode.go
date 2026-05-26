@@ -29,22 +29,6 @@ type fakeExternalNodes struct {
 }
 
 func newFakeExternalNodes(fake *FakeCrdV1alpha1, namespace string) crdv1alpha1.ExternalNodeInterface {
-	return &fakeExternalNodes{
-		gentype.NewFakeClientWithList[*v1alpha1.ExternalNode, *v1alpha1.ExternalNodeList](
-			fake.Fake,
-			namespace,
-			v1alpha1.SchemeGroupVersion.WithResource("externalnodes"),
-			v1alpha1.SchemeGroupVersion.WithKind("ExternalNode"),
-			func() *v1alpha1.ExternalNode { return &v1alpha1.ExternalNode{} },
-			func() *v1alpha1.ExternalNodeList { return &v1alpha1.ExternalNodeList{} },
-			func(dst, src *v1alpha1.ExternalNodeList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.ExternalNodeList) []*v1alpha1.ExternalNode {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha1.ExternalNodeList, items []*v1alpha1.ExternalNode) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1alpha1.ExternalNodeInterface)
 }

@@ -26,7 +26,6 @@ package testing
 
 import (
 	context "context"
-	reflect "reflect"
 
 	transfermanager "github.com/aws/aws-sdk-go-v2/feature/s3/transfermanager"
 	gomock "go.uber.org/mock/gomock"
@@ -46,32 +45,25 @@ type MockS3UploaderAPIMockRecorder struct {
 
 // NewMockS3UploaderAPI creates a new mock instance.
 func NewMockS3UploaderAPI(ctrl *gomock.Controller) *MockS3UploaderAPI {
-	mock := &MockS3UploaderAPI{ctrl: ctrl}
-	mock.recorder = &MockS3UploaderAPIMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockS3UploaderAPI) EXPECT() *MockS3UploaderAPIMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// Upload mocks base method.
+	return nil
 }
 
-// Upload mocks base method.
 func (m *MockS3UploaderAPI) Upload(ctx context.Context, input *transfermanager.UploadObjectInput, awsS3Uploader *transfermanager.Client, opts ...func(*transfermanager.Options)) (*transfermanager.UploadObjectOutput, error) {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, input, awsS3Uploader}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Upload", varargs...)
-	ret0, _ := ret[0].(*transfermanager.UploadObjectOutput)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Upload indicates an expected call of Upload.
 func (mr *MockS3UploaderAPIMockRecorder) Upload(ctx, input, awsS3Uploader any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, input, awsS3Uploader}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Upload", reflect.TypeOf((*MockS3UploaderAPI)(nil).Upload), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }

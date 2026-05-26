@@ -15,11 +15,7 @@
 package gobgp
 
 import (
-	"maps"
-	"slices"
-
 	gobgplog "github.com/osrg/gobgp/v3/pkg/log"
-	"k8s.io/klog/v2"
 )
 
 // goBGPLogger implements https://github.com/osrg/gobgp/blob/master/pkg/log/logger.go interface.
@@ -27,54 +23,39 @@ type goBGPLogger struct {
 	routerID string
 }
 
-func newGoBGPLogger(routerID string) *goBGPLogger {
-	return &goBGPLogger{
-		routerID: routerID,
-	}
-}
+func newGoBGPLogger(routerID string) *goBGPLogger { _ = "STUB: not implemented"; return nil }
 
 // We use a depth of 1 for all log messages to get more useful source information.
 // Otherwise, the reported source location would be the line where the klog function is invoked.
 
-func (g *goBGPLogger) Panic(msg string, fields gobgplog.Fields) {
-	klog.ErrorSDepth(1, nil, msg, g.logFieldsToKeysAndValues(fields)...)
-}
+func (g *goBGPLogger) Panic(msg string, fields gobgplog.Fields) { _ = "STUB: not implemented"; return }
 
-func (g *goBGPLogger) Fatal(msg string, fields gobgplog.Fields) {
-	klog.ErrorSDepth(1, nil, msg, g.logFieldsToKeysAndValues(fields)...)
-}
+func (g *goBGPLogger) Fatal(msg string, fields gobgplog.Fields) { _ = "STUB: not implemented"; return }
 
-func (g *goBGPLogger) Error(msg string, fields gobgplog.Fields) {
-	klog.ErrorSDepth(1, nil, msg, g.logFieldsToKeysAndValues(fields)...)
-}
+func (g *goBGPLogger) Error(msg string, fields gobgplog.Fields) { _ = "STUB: not implemented"; return }
 
-func (g *goBGPLogger) Warn(msg string, fields gobgplog.Fields) {
-	klog.V(0).InfoSDepth(1, msg, g.logFieldsToKeysAndValues(fields)...)
-}
+func (g *goBGPLogger) Warn(msg string, fields gobgplog.Fields) { _ = "STUB: not implemented"; return }
 
-func (g *goBGPLogger) Info(msg string, fields gobgplog.Fields) {
-	klog.V(0).InfoSDepth(1, msg, g.logFieldsToKeysAndValues(fields)...)
-}
+func (g *goBGPLogger) Info(msg string, fields gobgplog.Fields) { _ = "STUB: not implemented"; return }
 
-func (g *goBGPLogger) Debug(msg string, fields gobgplog.Fields) {
-	klog.V(4).InfoSDepth(1, msg, g.logFieldsToKeysAndValues(fields)...)
-}
+func (g *goBGPLogger) Debug(msg string, fields gobgplog.Fields) { _ = "STUB: not implemented"; return }
 
 // This should never be used in Antrea.
 func (g *goBGPLogger) SetLevel(level gobgplog.LogLevel) {
+	_ = "STUB: not implemented"
+
+	// This should never be used in Antrea.
+	return
 }
 
-// This should never be used in Antrea.
 func (g *goBGPLogger) GetLevel() gobgplog.LogLevel {
-	return gobgplog.LogLevel(0)
+	_ = "STUB: not implemented"
+	return *new(gobgplog.LogLevel)
 }
 
 func (g *goBGPLogger) logFieldsToKeysAndValues(fields gobgplog.Fields) []interface{} {
-	keysAndValues := make([]interface{}, 0, (len(fields)+1)*2)
-	// Add routerID to all log messages for more context.
-	keysAndValues = append(keysAndValues, "routerID", g.routerID)
-	for _, key := range slices.Sorted(maps.Keys(fields)) {
-		keysAndValues = append(keysAndValues, key, fields[key])
-	}
-	return keysAndValues
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Add routerID to all log messages for more context.

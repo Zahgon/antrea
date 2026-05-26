@@ -25,9 +25,4 @@ import "k8s.io/apimachinery/pkg/util/sets"
 // s1 = {a1, a2, a3, a4, a5}
 //
 // It supersedes s1.Union(s2) when constructing a new set is not the intention.
-func MergeInt32(dst, src sets.Set[int32]) sets.Set[int32] {
-	for item := range src {
-		dst.Insert(item)
-	}
-	return dst
-}
+func MergeInt32(dst, src sets.Set[int32]) sets.Set[int32] { _ = "STUB: not implemented"; return nil }

@@ -15,44 +15,21 @@
 package supportbundle
 
 import (
-	"bufio"
 	"context"
-	"encoding/json"
-	"fmt"
 	"io"
-	"os"
-	"path"
-	"path/filepath"
 	"strings"
-	"sync"
-	"time"
 
 	"github.com/cheggaaa/pb/v3"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.yaml.in/yaml/v3"
-	"golang.org/x/sync/errgroup"
-	"golang.org/x/time/rate"
 
 	corev1 "k8s.io/api/core/v1"
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/api/meta"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	k8sruntime "k8s.io/apimachinery/pkg/runtime"
-	utilerror "k8s.io/apimachinery/pkg/util/errors"
-	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"k8s.io/klog/v2"
 
-	"antrea.io/antrea/v2/pkg/antctl/raw"
 	"antrea.io/antrea/v2/pkg/antctl/runtime"
-	"antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
-	systemv1beta1 "antrea.io/antrea/v2/pkg/apis/system/v1beta1"
 	antrea "antrea.io/antrea/v2/pkg/client/clientset/versioned"
 	systemclientset "antrea.io/antrea/v2/pkg/client/clientset/versioned/typed/system/v1beta1"
-	"antrea.io/antrea/v2/pkg/util/compress"
-	"antrea.io/antrea/v2/pkg/util/k8s"
 )
 
 const (
@@ -129,64 +106,29 @@ func init() {
 var getSupportBundleClient func() (systemclientset.SupportBundleInterface, error) = setupSupportBundleClient
 
 func setupSupportBundleClient() (systemclientset.SupportBundleInterface, error) {
-	kubeconfig := &rest.Config{}
-	raw.SetupLocalKubeconfig(kubeconfig)
-	client, err := systemclientset.NewForConfig(kubeconfig)
-	return client.SupportBundles(), err
+	_ = "STUB: not implemented"
+	return *new(systemclientset.SupportBundleInterface), nil
 }
 
 func localSupportBundleRequest(cmd *cobra.Command, mode string, writer io.Writer) error {
-	ctx := cmd.Context()
-	client, err := getSupportBundleClient()
-	if err != nil {
-		return fmt.Errorf("error when creating system client: %w", err)
-	}
-	if _, err := client.Create(ctx, &systemv1beta1.SupportBundle{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: mode,
-		},
-	}, metav1.CreateOptions{}); err != nil {
-		return fmt.Errorf("error when creating the support bundle: %w", err)
-	}
-	timer := time.NewTimer(100 * time.Millisecond) // will expire after 100ms
-	defer timer.Stop()
-	for {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		case <-timer.C:
-			supportBundle, err := client.Get(ctx, mode, metav1.GetOptions{})
-			if err != nil {
-				return fmt.Errorf("error when getting the support bundle: %w", err)
-			}
-			if supportBundle.Status == systemv1beta1.SupportBundleStatusCollected {
-				fmt.Fprintf(writer, "Created bundle under %s\n", os.TempDir())
-				fmt.Fprintf(writer, "Expire time: %s\n", supportBundle.DeletionTimestamp)
-				return nil
-			}
-			// retry again after 500ms
-			timer.Reset(500 * time.Millisecond)
-		}
-	}
-
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func agentRunE(cmd *cobra.Command, _ []string) error {
-	return localSupportBundleRequest(cmd, runtime.ModeAgent, os.Stdout)
-}
+// will expire after 100ms
+
+// retry again after 500ms
+
+func agentRunE(cmd *cobra.Command, _ []string) error { _ = "STUB: not implemented"; return nil }
 
 func controllerLocalRunE(cmd *cobra.Command, _ []string) error {
-	return localSupportBundleRequest(cmd, runtime.ModeController, os.Stdout)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func request(ctx context.Context, component string, client systemclientset.SupportBundleInterface) error {
-	_, err := client.Create(ctx, &systemv1beta1.SupportBundle{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: component,
-		},
-		Since: option.since,
-	}, metav1.CreateOptions{})
-	return err
+	_ = "STUB: not implemented"
+	return nil
 }
 
 type result struct {
@@ -202,37 +144,8 @@ func mapClients(
 	bar *pb.ProgressBar,
 	af, cf func(ctx context.Context, nodeName string, c systemclientset.SupportBundleInterface) error,
 ) map[string]error {
-	bar.Set("prefix", prefix)
-	results := make(map[string]error, len(agentClients)+1)
-
-	func() {
-		rateLimiter := rate.NewLimiter(requestRate, requestBurst)
-		ch := make(chan result)
-		g, ctx := errgroup.WithContext(ctx)
-		for nodeName, client := range agentClients {
-			rateLimiter.Wait(ctx)
-			nodeName, client := nodeName, client
-			g.Go(func() error {
-				defer bar.Increment()
-				err := af(ctx, nodeName, client)
-				ch <- result{nodeName: nodeName, err: err}
-				return err
-			})
-		}
-
-		for i := 0; i < len(agentClients); i++ {
-			result := <-ch
-			results[result.nodeName] = result.err
-		}
-
-		g.Wait()
-	}()
-
-	if controllerClient != nil {
-		defer bar.Increment()
-		results[""] = cf(ctx, "", controllerClient)
-	}
-	return results
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func requestAll(
@@ -241,19 +154,8 @@ func requestAll(
 	controllerClient systemclientset.SupportBundleInterface,
 	bar *pb.ProgressBar,
 ) map[string]error {
-	return mapClients(
-		ctx,
-		"Requesting",
-		agentClients,
-		controllerClient,
-		bar,
-		func(ctx context.Context, nodeName string, c systemclientset.SupportBundleInterface) error {
-			return request(ctx, runtime.ModeAgent, c)
-		},
-		func(ctx context.Context, nodeName string, c systemclientset.SupportBundleInterface) error {
-			return request(ctx, runtime.ModeController, c)
-		},
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func download(
@@ -263,64 +165,16 @@ func download(
 	client systemclientset.SupportBundleInterface,
 	component string,
 ) error {
-	timer := time.NewTimer(100 * time.Millisecond) // will expire after 100ms
-	defer timer.Stop()
-	for {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		case <-timer.C:
-			supportBundle, err := client.Get(ctx, component, metav1.GetOptions{})
-			if err != nil {
-				return fmt.Errorf("error when downloading the support bundle: %w", err)
-			}
-			if supportBundle.Status == systemv1beta1.SupportBundleStatusCollected {
-				if len(downloadPath) == 0 {
-					break
-				}
-				var fileName string
-				if len(suffix) > 0 {
-					fileName = path.Join(downloadPath, fmt.Sprintf("%s_%s.tar.gz", component, suffix))
-				} else {
-					fileName = path.Join(downloadPath, fmt.Sprintf("%s.tar.gz", component))
-				}
-				f, err := defaultFS.Create(fileName)
-				if err != nil {
-					return fmt.Errorf("error when creating the support bundle tar gz: %w", err)
-				}
-				defer f.Close()
-				stream, err := client.Download(ctx, component)
-				if err != nil {
-					return fmt.Errorf("error when downloading the support bundle: %w", err)
-				}
-				defer stream.Close()
-				if _, err := io.Copy(f, stream); err != nil {
-					return fmt.Errorf("error when downloading the support bundle: %w", err)
-				}
-				return nil
-			}
-			// retry again after 500ms
-			timer.Reset(500 * time.Millisecond)
-		}
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
+// will expire after 100ms
+
+// retry again after 500ms
+
 func writeFailedNodes(downloadPath string, nodes []string) error {
-	file, err := defaultFS.OpenFile(filepath.Join(downloadPath, "failed_nodes"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return fmt.Errorf("err create file for failed nodes: %w", err)
-	}
-	defer file.Close()
-
-	dataWriter := bufio.NewWriter(file)
-	for _, node := range nodes {
-		_, _ = dataWriter.WriteString(node + "\n")
-	}
-
-	err = dataWriter.Flush()
-	if err != nil {
-		return err
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
@@ -334,32 +188,8 @@ func downloadAll(
 	bar *pb.ProgressBar,
 	preResults map[string]error,
 ) map[string]error {
-	results := mapClients(
-		ctx,
-		"Downloading",
-		agentClients,
-		controllerClient,
-		bar,
-		func(ctx context.Context, nodeName string, c systemclientset.SupportBundleInterface) error {
-			if preResults[nodeName] == nil {
-				return download(ctx, nodeName, downloadPath, c, runtime.ModeAgent)
-			}
-			return preResults[nodeName]
-
-		},
-		func(ctx context.Context, nodeName string, c systemclientset.SupportBundleInterface) error {
-			if preResults[""] == nil {
-				return download(ctx, "", downloadPath, c, runtime.ModeController)
-			}
-			return preResults[nodeName]
-		},
-	)
-	for k, v := range results {
-		if v != nil {
-			preResults[k] = v
-		}
-	}
-	return preResults
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // createAgentClients creates clients for agents on specified nodes. If nameList is set, then nameFilter will be ignored.
@@ -372,58 +202,8 @@ func createAgentClients(
 	nameList []string,
 	insecure bool,
 ) (map[string]systemclientset.SupportBundleInterface, error) {
-	clients := map[string]systemclientset.SupportBundleInterface{}
-	nodeAgentInfoMap := map[string]*v1beta1.AntreaAgentInfo{}
-	agentInfoList, err := antreaClientset.CrdV1beta1().AntreaAgentInfos().List(context.TODO(), metav1.ListOptions{ResourceVersion: "0"})
-	if err != nil {
-		return nil, err
-	}
-	for idx := range agentInfoList.Items {
-		agentInfo := &agentInfoList.Items[idx]
-		nodeAgentInfoMap[agentInfo.NodeRef.Name] = agentInfo
-	}
-	nodeList, err := k8sClientset.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{LabelSelector: option.labelSelector, ResourceVersion: "0"})
-	if err != nil {
-		return nil, err
-	}
-	var matcher func(name string) bool
-	if len(nameList) > 0 {
-		matchSet := make(map[string]struct{})
-		for _, name := range nameList {
-			matchSet[name] = struct{}{}
-		}
-		matcher = func(name string) bool {
-			_, ok := matchSet[name]
-			return ok
-		}
-	} else {
-		matcher = func(name string) bool {
-			hit, _ := filepath.Match(nameFilter, name)
-			return hit
-		}
-	}
-	for i := range nodeList.Items {
-		node := &nodeList.Items[i]
-		if !matcher(node.Name) {
-			continue
-		}
-		agentInfo, ok := nodeAgentInfoMap[node.Name]
-		if !ok {
-			continue
-		}
-		cfg, err := raw.CreateAgentClientCfgFromObjects(ctx, k8sClientset, kubeconfig, node, agentInfo, insecure)
-		if err != nil {
-			klog.ErrorS(err, "Error when creating agent client config", "node", node.Name)
-			continue
-		}
-		client, err := systemclientset.NewForConfig(cfg)
-		if err != nil {
-			klog.ErrorS(err, "Error when creating agent client", "node", node.Name)
-			continue
-		}
-		clients[node.Name] = client.SupportBundles()
-	}
-	return clients, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func createControllerClient(
@@ -433,429 +213,53 @@ func createControllerClient(
 	cfgTmpl *rest.Config,
 	insecure bool,
 ) (systemclientset.SupportBundleInterface, error) {
-	cfg, err := raw.CreateControllerClientCfg(ctx, k8sClientset, antreaClientset, cfgTmpl, insecure)
-	if err != nil {
-		return nil, fmt.Errorf("error when creating controller client config: %w", err)
-	}
-	controllerClient, err := systemclientset.NewForConfig(cfg)
-	if err != nil {
-		return nil, fmt.Errorf("error when creating controller client: %w", err)
-	}
-	return controllerClient.SupportBundles(), nil
+	_ = "STUB: not implemented"
+	return *new(systemclientset.SupportBundleInterface), nil
 }
 
 func getClusterInfo(w io.Writer, k8sClient kubernetes.Interface) error {
-	g := new(errgroup.Group)
-	var writeLock sync.Mutex
-
-	outputObjects := func(objects []k8sruntime.Object, comment string) error {
-		writeLock.Lock()
-		defer writeLock.Unlock()
-		if _, err := fmt.Fprintf(w, "#%s\n", comment); err != nil {
-			return err
-		}
-		for _, obj := range objects {
-			var jsonObj interface{}
-			data, err := json.Marshal(obj)
-			if err != nil {
-				return err
-			}
-			if err = yaml.Unmarshal(data, &jsonObj); err != nil {
-				return err
-			}
-			data, err = yaml.Marshal(jsonObj)
-			if err != nil {
-				return err
-			}
-			_, err = w.Write(data)
-			if err != nil {
-				return err
-			}
-			if _, err = fmt.Fprintln(w, "---"); err != nil {
-				return err
-			}
-		}
-		return nil
-	}
-	outputList := func(list k8sruntime.Object, comment string) error {
-		objects, err := meta.ExtractList(list)
-		if err != nil {
-			return err
-		}
-		return outputObjects(objects, comment)
-	}
-
-	g.Go(func() error {
-		pods, err := k8sClient.CoreV1().Pods(metav1.NamespaceAll).List(context.TODO(), metav1.ListOptions{ResourceVersion: "0"})
-		if err != nil {
-			return err
-		}
-		if err := outputList(pods, "pods"); err != nil {
-			return err
-		}
-		return nil
-	})
-	g.Go(func() error {
-		nodes, err := k8sClient.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{ResourceVersion: "0"})
-		if err != nil {
-			return err
-		}
-		if err := outputList(nodes, "nodes"); err != nil {
-			return err
-		}
-		return nil
-	})
-	g.Go(func() error {
-		deployments, err := k8sClient.AppsV1().Deployments(metav1.NamespaceAll).List(context.TODO(), metav1.ListOptions{ResourceVersion: "0"})
-		if err != nil {
-			return err
-		}
-		if err := outputList(deployments, "deployments"); err != nil {
-			return err
-		}
-		return nil
-	})
-	g.Go(func() error {
-		replicas, err := k8sClient.AppsV1().ReplicaSets(metav1.NamespaceAll).List(context.TODO(), metav1.ListOptions{ResourceVersion: "0"})
-		if err != nil {
-			return err
-		}
-		if err := outputList(replicas, "replicas"); err != nil {
-			return err
-		}
-		return nil
-	})
-	g.Go(func() error {
-		daemonsets, err := k8sClient.AppsV1().DaemonSets(metav1.NamespaceAll).List(context.TODO(), metav1.ListOptions{ResourceVersion: "0"})
-		if err != nil {
-			return err
-		}
-		if err := outputList(daemonsets, "daemonsets"); err != nil {
-			return err
-		}
-		return nil
-	})
-	g.Go(func() error {
-		// These are the ConfigMaps created by Antrea in the the kube-system Namespace.
-		configMapNames := []string{
-			"antrea-config",
-			"antrea-ca",
-			"antrea-ipsec-ca",
-			"antrea-cluster-identity",
-		}
-		var configMaps []k8sruntime.Object
-		for _, name := range configMapNames {
-			cm, err := k8sClient.CoreV1().ConfigMaps(metav1.NamespaceSystem).Get(context.TODO(), name, metav1.GetOptions{ResourceVersion: "0"})
-			if apierrors.IsNotFound(err) {
-				continue
-			} else if err != nil {
-				return err
-			}
-			configMaps = append(configMaps, cm)
-		}
-		if err := outputObjects(configMaps, "configs"); err != nil {
-			return err
-		}
-		return nil
-	})
-	return g.Wait()
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// These are the ConfigMaps created by Antrea in the the kube-system Namespace.
 
 func controllerRemoteRunE(cmd *cobra.Command, args []string) error {
-	ctx := cmd.Context()
-	if option.dir == "" {
-		cwd, _ := os.Getwd()
-		option.dir = filepath.Join(cwd, "support-bundles_"+time.Now().Format(timeFormat))
-	}
-	dir, err := filepath.Abs(option.dir)
-	if err != nil {
-		return fmt.Errorf("error when resolving path '%s': %w", option.dir, err)
-	}
-
-	kubeconfig, err := raw.ResolveKubeconfig(cmd)
-	if err != nil {
-		return err
-	}
-	kubeconfig.APIPath = "/apis"
-	kubeconfig.GroupVersion = &systemv1beta1.SchemeGroupVersion
-	if server, _ := Command.Flags().GetString("server"); server != "" {
-		kubeconfig.Host = server
-	}
-
-	k8sClientset, antreaClientset, err := raw.SetupClients(kubeconfig)
-	if err != nil {
-		return fmt.Errorf("failed to create clientset: %w", err)
-	}
-
-	if err := os.MkdirAll(option.dir, 0700); err != nil {
-		return fmt.Errorf("error when creating output dir: %w", err)
-	}
-
-	f, err := os.Create(filepath.Join(option.dir, "clusterinfo"))
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-	err = getClusterInfo(f, k8sClientset)
-	if err != nil {
-		return err
-	}
-
-	var controllerClient systemclientset.SupportBundleInterface
-	var agentClients map[string]systemclientset.SupportBundleInterface
-
-	// Collect controller bundle when no Node name or label filter is specified, or
-	// when --controller-only is set.
-	if (len(args) == 0 && len(option.nodeListFile) == 0 && option.labelSelector == "") || option.controllerOnly {
-		controllerClient, err = createControllerClient(ctx, k8sClientset, antreaClientset, kubeconfig, option.insecure)
-		if err != nil {
-			return fmt.Errorf("error when creating controller client: %w", err)
-		}
-	}
-	if !option.controllerOnly {
-		nameFilter := "*"
-		var nameList []string
-		if len(args) == 1 {
-			nameFilter = args[0]
-		} else if len(option.nodeListFile) != 0 {
-			nodeListFile, err := filepath.Abs(option.nodeListFile)
-			if err != nil {
-				return fmt.Errorf("error when resolving node-list-file path: %w", err)
-			}
-			f, err := os.Open(nodeListFile)
-			if err != nil {
-				return fmt.Errorf("error when opening node-list-file: %w", err)
-			}
-			defer f.Close()
-			scanner := bufio.NewScanner(f)
-			scanner.Split(bufio.ScanLines)
-			for scanner.Scan() {
-				nameList = append(nameList, strings.TrimSpace(scanner.Text()))
-			}
-		} else if len(args) > 1 {
-			nameList = args
-		}
-		agentClients, err = createAgentClients(ctx, k8sClientset, antreaClientset, kubeconfig, nameFilter, nameList, option.insecure)
-		if err != nil {
-			return fmt.Errorf("error when creating agent clients: %w", err)
-		}
-	}
-
-	if controllerClient == nil && len(agentClients) == 0 {
-		return fmt.Errorf("no matched Nodes found to collect agent bundles")
-	}
-
-	amount := len(agentClients) * 2
-	if controllerClient != nil {
-		amount += 2
-	}
-	bar := barTmpl.Start(amount)
-	defer bar.Finish()
-	defer bar.Set("prefix", "Finish ")
-
-	results := requestAll(ctx, agentClients, controllerClient, bar)
-	results = downloadAll(ctx, agentClients, controllerClient, dir, bar, results)
-	return processResults(ctx, antreaClientset, k8sClientset, results, dir)
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func genErrorMsg(resultMap map[string]error) string {
-	msg := ""
-	for _, v := range resultMap {
-		msg += v.Error() + ";"
-	}
-	return msg
-}
+// Collect controller bundle when no Node name or label filter is specified, or
+// when --controller-only is set.
+
+func genErrorMsg(resultMap map[string]error) string { _ = "STUB: not implemented"; return "" }
 
 // processResults will output the failed nodes and their reasons if any. If no data was collected,
 // error is returned, otherwise will return nil. For failed nodes and controller, will also trying to get logs from
 // kubernetes api.
 func processResults(ctx context.Context, antreaClientset antrea.Interface, k8sClient kubernetes.Interface, resultMap map[string]error, dir string) error {
-	resultStr := ""
-	var failedNodes []string
-	allFailed := true
-	var err error
-
-	for k, v := range resultMap {
-		if k != "" && v != nil {
-			resultStr += fmt.Sprintf("- %s: %s\n", k, v.Error())
-			failedNodes = append(failedNodes, k)
-		}
-		if v == nil {
-			allFailed = false
-		}
-	}
-
-	controllerFailed := resultMap[""] != nil
-	if controllerFailed {
-		fmt.Println("Controller Info Failed Reason: " + resultMap[""].Error())
-	}
-
-	if resultStr != "" {
-		fmt.Println("Failed nodes: ")
-		fmt.Print(resultStr)
-	}
-
-	if failedNodes != nil {
-		err = writeFailedNodes(dir, failedNodes)
-	}
-
-	// download logs from kubernetes api
-	if failedNodes != nil {
-		if err = downloadFallbackAgentBundleFromKubernetes(ctx, antreaClientset, k8sClient, failedNodes, dir); err != nil {
-			fmt.Println("Failed to download agent bundle from kubernetes api: " + err.Error())
-		} else {
-			allFailed = false
-		}
-	}
-	if controllerFailed {
-		if err = downloadFallbackControllerBundleFromKubernetes(ctx, antreaClientset, k8sClient, dir); err != nil {
-			fmt.Println("Failed to download controller bundle from kubernetes api: " + err.Error())
-		} else {
-			allFailed = false
-		}
-	}
-
-	if allFailed {
-		return fmt.Errorf("no data was collected: %s", genErrorMsg(resultMap))
-	} else {
-		return err
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func downloadFallbackControllerBundleFromKubernetes(ctx context.Context, antreaClientset antrea.Interface, k8sClient kubernetes.Interface, dir string) error {
-	tmpDir, err := afero.TempDir(defaultFS, "", "bundle_tmp_")
-	if err != nil {
-		return err
-	}
-	defer defaultFS.RemoveAll(tmpDir)
+// download logs from kubernetes api
 
-	var podRef *corev1.ObjectReference
-	if err := func() error {
-		controllerInfo, err := antreaClientset.CrdV1beta1().AntreaControllerInfos().Get(ctx, v1beta1.AntreaControllerInfoResourceName, metav1.GetOptions{})
-		if err != nil {
-			return err
-		}
-		podRef = &controllerInfo.PodRef
-		data, err := yaml.Marshal(controllerInfo)
-		if err != nil {
-			return err
-		}
-		if err := afero.WriteFile(defaultFS, filepath.Join(dir, "controllerinfo"), data, 0644); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return err
-	}
-	if podRef == nil {
-		return fmt.Errorf("no podRef found in AntreaControllerInfo")
-	}
-	pod, err := k8sClient.CoreV1().Pods(podRef.Namespace).Get(ctx, podRef.Name, metav1.GetOptions{})
-	if err != nil {
-		return err
-	}
-	if err := downloadPodLogs(ctx, k8sClient, pod.Namespace, pod.Name, k8s.GetPodContainerNames(pod), tmpDir); err != nil {
-		return err
-	}
-	return packPodBundle(pod, dir, tmpDir)
+func downloadFallbackControllerBundleFromKubernetes(ctx context.Context, antreaClientset antrea.Interface, k8sClient kubernetes.Interface, dir string) error {
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func downloadFallbackAgentBundleFromKubernetes(ctx context.Context, antreaClientset antrea.Interface, k8sClient kubernetes.Interface, failedNodes []string, dir string) error {
-	agentInfoList, err := antreaClientset.CrdV1beta1().AntreaAgentInfos().List(ctx, metav1.ListOptions{ResourceVersion: "0"})
-	if err != nil {
-		return err
-	}
-
-	agentInfoMap := map[string]v1beta1.AntreaAgentInfo{}
-	for _, agentInfo := range agentInfoList.Items {
-		agentInfoMap[agentInfo.Name] = agentInfo
-	}
-	pods, err := k8sClient.CoreV1().Pods("kube-system").List(ctx, metav1.ListOptions{
-		ResourceVersion: "0",
-		LabelSelector:   "app=antrea,component=antrea-agent",
-	})
-	if err != nil {
-		return err
-	}
-	failedNodeSet := sets.NewString(failedNodes...)
-	var errors []error
-	for _, pod := range pods.Items {
-		if !failedNodeSet.Has(pod.Spec.NodeName) {
-			continue
-		}
-		if err := func() error {
-			tmpDir, err := afero.TempDir(defaultFS, "", "bundle_tmp_")
-			if err != nil {
-				return err
-			}
-			defer defaultFS.RemoveAll(tmpDir)
-			if agentInfo, ok := agentInfoMap[pod.Spec.NodeName]; ok {
-				data, err := yaml.Marshal(agentInfo)
-				if err != nil {
-					return err
-				}
-				if err = afero.WriteFile(defaultFS, filepath.Join(tmpDir, "agentinfo"), data, 0644); err != nil {
-					return err
-				}
-			}
-			err = downloadPodLogs(ctx, k8sClient, pod.Namespace, pod.Name, k8s.GetPodContainerNames(&pod), tmpDir)
-			if err != nil {
-				return err
-			}
-			return packPodBundle(&pod, dir, tmpDir)
-		}(); err != nil {
-			errors = append(errors, err)
-		}
-	}
-	return utilerror.NewAggregate(errors)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func packPodBundle(pod *corev1.Pod, dir string, bundleDir string) error {
-	prefix := "agent_"
-	if strings.Contains(pod.Name, "controller") {
-		prefix = "controller_"
-	}
-	gzFileName := filepath.Join(dir, prefix+pod.Spec.NodeName+".tar.gz")
-	f, err := defaultFS.Create(gzFileName)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-	_, err = compress.PackDir(defaultFS, bundleDir, f)
-	return err
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func downloadPodLogs(ctx context.Context, k8sClient kubernetes.Interface, namespace string, podName string, containers []string, dir string) error {
-	downloadContainerLogs := func(containerName string) error {
-		containerDirName, _ := strings.CutPrefix(containerName, "antrea-")
-		containerLogDir := filepath.Join(dir, "logs", containerDirName)
-		err := os.MkdirAll(containerLogDir, 0755)
-		if err != nil {
-			return err
-		}
-		fileName := filepath.Join(containerLogDir, containerName+".log")
-		f, err := defaultFS.Create(fileName)
-		if err != nil {
-			return err
-		}
-		defer f.Close()
-		logOption := &corev1.PodLogOptions{
-			Container: containerName,
-		}
-		logs := k8sClient.CoreV1().Pods(namespace).GetLogs(podName, logOption)
-		logStream, err := logs.Stream(ctx)
-		if err != nil {
-			return err
-		}
-
-		if _, err = io.Copy(f, logStream); err != nil {
-			return err
-		}
-		return logStream.Close()
-	}
-	var errors []error
-	for _, containerName := range containers {
-		errors = append(errors, downloadContainerLogs(containerName))
-	}
-	return utilerror.NewAggregate(errors)
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -26,7 +26,6 @@ package testing
 
 import (
 	context "context"
-	reflect "reflect"
 
 	bgp "antrea.io/antrea/v2/pkg/agent/bgp"
 	gomock "go.uber.org/mock/gomock"
@@ -46,140 +45,115 @@ type MockInterfaceMockRecorder struct {
 
 // NewMockInterface creates a new mock instance.
 func NewMockInterface(ctrl *gomock.Controller) *MockInterface {
-	mock := &MockInterface{ctrl: ctrl}
-	mock.recorder = &MockInterfaceMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddPeer mocks base method.
+	return nil
 }
 
-// AddPeer mocks base method.
 func (m *MockInterface) AddPeer(ctx context.Context, peerConf bgp.PeerConfig) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddPeer", ctx, peerConf)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddPeer indicates an expected call of AddPeer.
 func (mr *MockInterfaceMockRecorder) AddPeer(ctx, peerConf any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddPeer", reflect.TypeOf((*MockInterface)(nil).AddPeer), ctx, peerConf)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AdvertiseRoutes mocks base method.
 func (m *MockInterface) AdvertiseRoutes(ctx context.Context, routes []bgp.Route) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AdvertiseRoutes", ctx, routes)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AdvertiseRoutes indicates an expected call of AdvertiseRoutes.
 func (mr *MockInterfaceMockRecorder) AdvertiseRoutes(ctx, routes any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AdvertiseRoutes", reflect.TypeOf((*MockInterface)(nil).AdvertiseRoutes), ctx, routes)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetPeers mocks base method.
 func (m *MockInterface) GetPeers(ctx context.Context) ([]bgp.PeerStatus, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPeers", ctx)
-	ret0, _ := ret[0].([]bgp.PeerStatus)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetPeers indicates an expected call of GetPeers.
 func (mr *MockInterfaceMockRecorder) GetPeers(ctx any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPeers", reflect.TypeOf((*MockInterface)(nil).GetPeers), ctx)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetRoutes mocks base method.
 func (m *MockInterface) GetRoutes(ctx context.Context, routeType bgp.RouteType, peerAddress string) ([]bgp.Route, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetRoutes", ctx, routeType, peerAddress)
-	ret0, _ := ret[0].([]bgp.Route)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetRoutes indicates an expected call of GetRoutes.
 func (mr *MockInterfaceMockRecorder) GetRoutes(ctx, routeType, peerAddress any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRoutes", reflect.TypeOf((*MockInterface)(nil).GetRoutes), ctx, routeType, peerAddress)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RemovePeer mocks base method.
 func (m *MockInterface) RemovePeer(ctx context.Context, peerConf bgp.PeerConfig) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RemovePeer", ctx, peerConf)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RemovePeer indicates an expected call of RemovePeer.
 func (mr *MockInterfaceMockRecorder) RemovePeer(ctx, peerConf any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemovePeer", reflect.TypeOf((*MockInterface)(nil).RemovePeer), ctx, peerConf)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Start mocks base method.
-func (m *MockInterface) Start(ctx context.Context) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Start", ctx)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockInterface) Start(ctx context.Context) error { _ = "STUB: not implemented"; return nil }
 
 // Start indicates an expected call of Start.
 func (mr *MockInterfaceMockRecorder) Start(ctx any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Start", reflect.TypeOf((*MockInterface)(nil).Start), ctx)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Stop mocks base method.
-func (m *MockInterface) Stop(ctx context.Context) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Stop", ctx)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockInterface) Stop(ctx context.Context) error { _ = "STUB: not implemented"; return nil }
 
 // Stop indicates an expected call of Stop.
 func (mr *MockInterfaceMockRecorder) Stop(ctx any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Stop", reflect.TypeOf((*MockInterface)(nil).Stop), ctx)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UpdatePeer mocks base method.
 func (m *MockInterface) UpdatePeer(ctx context.Context, peerConf bgp.PeerConfig) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdatePeer", ctx, peerConf)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UpdatePeer indicates an expected call of UpdatePeer.
 func (mr *MockInterfaceMockRecorder) UpdatePeer(ctx, peerConf any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePeer", reflect.TypeOf((*MockInterface)(nil).UpdatePeer), ctx, peerConf)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // WithdrawRoutes mocks base method.
 func (m *MockInterface) WithdrawRoutes(ctx context.Context, routes []bgp.Route) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "WithdrawRoutes", ctx, routes)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // WithdrawRoutes indicates an expected call of WithdrawRoutes.
 func (mr *MockInterfaceMockRecorder) WithdrawRoutes(ctx, routes any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithdrawRoutes", reflect.TypeOf((*MockInterface)(nil).WithdrawRoutes), ctx, routes)
+	_ = "STUB: not implemented"
+	return nil
 }

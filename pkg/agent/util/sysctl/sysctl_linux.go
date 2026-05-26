@@ -17,53 +17,24 @@
 
 package sysctl
 
-import (
-	"os"
-	"path"
-	"strconv"
-	"strings"
-
-	"k8s.io/klog/v2"
-)
-
 const (
 	sysctlNet = "/proc/sys/net"
 )
 
 // GetSysctlNet returns the value for sysctl net.* settings
-func GetSysctlNet(sysctl string) (int, error) {
-	data, err := os.ReadFile(path.Join(sysctlNet, sysctl))
-	if err != nil {
-		return -1, err
-	}
-	val, err := strconv.Atoi(strings.Trim(string(data), " \n"))
-	if err != nil {
-		return -1, err
-	}
-	return val, nil
-}
+func GetSysctlNet(sysctl string) (int, error) { _ = "STUB: not implemented"; return 0, nil }
 
 // SetSysctlNet sets the specified sysctl net.* parameter to the new value.
 func SetSysctlNet(sysctl string, newVal int) error {
+	_ = "STUB: not implemented"
 	// #nosec G306: provided permissions match /proc/sys file permissions
-	return os.WriteFile(path.Join(sysctlNet, sysctl), []byte(strconv.Itoa(newVal)), 0640)
+	return nil
 }
 
 // EnsureSysctlNetValue checks if the specified sysctl net.* parameter is already set to the
 // provided value, and if not, it makes it so.
-func EnsureSysctlNetValue(sysctl string, value int) error {
-	val, err := GetSysctlNet(sysctl)
-	if err != nil {
-		// If permission error, please provide access to sysctl setting
-		klog.ErrorS(err, "Error when getting sysctl parameter", "path", sysctl)
-		return err
-	} else if val != value {
-		err = SetSysctlNet(sysctl, value)
-		if err != nil {
-			// If permission error, please provide access to sysctl setting
-			klog.ErrorS(err, "Error when setting sysctl parameter", "path", sysctl, "value", value)
-			return err
-		}
-	}
-	return nil
-}
+func EnsureSysctlNetValue(sysctl string, value int) error { _ = "STUB: not implemented"; return nil }
+
+// If permission error, please provide access to sysctl setting
+
+// If permission error, please provide access to sysctl setting

@@ -38,7 +38,6 @@ import (
 	"sync"
 
 	"k8s.io/component-base/metrics"
-	"k8s.io/component-base/metrics/legacyregistry"
 )
 
 const (
@@ -93,11 +92,4 @@ var (
 var registerMetrics sync.Once
 
 // registerCidrsetMetrics the metrics that are to be monitored.
-func registerCidrsetMetrics() {
-	registerMetrics.Do(func() {
-		legacyregistry.MustRegister(cidrSetAllocations)
-		legacyregistry.MustRegister(cidrSetReleases)
-		legacyregistry.MustRegister(cidrSetUsage)
-		legacyregistry.MustRegister(cidrSetAllocationTriesPerRequest)
-	})
-}
+func registerCidrsetMetrics() { _ = "STUB: not implemented"; return }

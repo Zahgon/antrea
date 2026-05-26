@@ -15,9 +15,6 @@
 package collector
 
 import (
-	"fmt"
-	"sync"
-
 	ipfixcollector "github.com/vmware/go-ipfix/pkg/collector"
 
 	flowpb "antrea.io/antrea/v2/pkg/apis/flow/v1alpha1"
@@ -40,79 +37,23 @@ func NewIPFIXCollector(
 	aggregatorTransportProtocol flowaggregatorconfig.AggregatorTransportProtocol,
 	caCert, serverKey, serverCert []byte,
 ) (*ipfixCollector, error) {
-	var cpInput ipfixcollector.CollectorInput
-	switch aggregatorTransportProtocol {
-	case flowaggregatorconfig.AggregatorTransportProtocolTLS:
-		cpInput = ipfixcollector.CollectorInput{
-			Address:       ipfixCollectorAddress,
-			Protocol:      tcpTransport,
-			MaxBufferSize: 65535,
-			TemplateTTL:   0, // use default value from go-ipfix library
-			IsEncrypted:   true,
-			CACert:        caCert,
-			ServerKey:     serverKey,
-			ServerCert:    serverCert,
-		}
-	case flowaggregatorconfig.AggregatorTransportProtocolTCP:
-		cpInput = ipfixcollector.CollectorInput{
-			Address:       ipfixCollectorAddress,
-			Protocol:      tcpTransport,
-			MaxBufferSize: 65535,
-			TemplateTTL:   0, // use default value from go-ipfix library
-			IsEncrypted:   false,
-		}
-	case flowaggregatorconfig.AggregatorTransportProtocolUDP:
-		cpInput = ipfixcollector.CollectorInput{
-			Address:       ipfixCollectorAddress,
-			Protocol:      udpTransport,
-			MaxBufferSize: 1024,
-			TemplateTTL:   0, // use default value from go-ipfix library
-			IsEncrypted:   false,
-		}
-	default:
-		return nil, fmt.Errorf("unsupported protocol: %s", aggregatorTransportProtocol)
-	}
-	// Tell the collector to accept IEs which are not part of the IPFIX registry (hardcoded in
-	// the go-ipfix library). The preprocessor will take care of removing these elements.
-	cpInput.DecodingMode = ipfixcollector.DecodingModeLenientKeepUnknown
-	collectingProcess, err := ipfixcollector.InitCollectingProcess(cpInput)
-	if err != nil {
-		return nil, fmt.Errorf("failed to initialize IPFIX collector: %w", err)
-	}
-
-	preprocessor, err := newPreprocessor(collectingProcess.GetMsgChan(), recordCh)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create IPFIX preprocessor: %w", err)
-	}
-
-	return &ipfixCollector{
-		collectingProcess: collectingProcess,
-		preprocessor:      preprocessor,
-	}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func (c *ipfixCollector) Run(stopCh <-chan struct{}) {
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		// blocking function, will return when c.collectingProcess.Stop() is called
-		c.collectingProcess.Start()
-	}()
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		c.preprocessor.Run(stopCh)
-	}()
-	<-stopCh
-	c.collectingProcess.Stop()
-	wg.Wait()
-}
+// use default value from go-ipfix library
 
-func (c *ipfixCollector) GetNumRecordsReceived() int64 {
-	return c.collectingProcess.GetNumRecordsReceived()
-}
+// use default value from go-ipfix library
 
-func (c *ipfixCollector) GetNumConnsToCollector() int64 {
-	return c.collectingProcess.GetNumConnToCollector()
-}
+// use default value from go-ipfix library
+
+// Tell the collector to accept IEs which are not part of the IPFIX registry (hardcoded in
+// the go-ipfix library). The preprocessor will take care of removing these elements.
+
+func (c *ipfixCollector) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
+
+// blocking function, will return when c.collectingProcess.Stop() is called
+
+func (c *ipfixCollector) GetNumRecordsReceived() int64 { _ = "STUB: not implemented"; return 0 }
+
+func (c *ipfixCollector) GetNumConnsToCollector() int64 { _ = "STUB: not implemented"; return 0 }

@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	crdv1alpha1 "antrea.io/antrea/v2/pkg/apis/crd/v1alpha1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -52,15 +51,4 @@ type bGPPolicies struct {
 }
 
 // newBGPPolicies returns a BGPPolicies
-func newBGPPolicies(c *CrdV1alpha1Client) *bGPPolicies {
-	return &bGPPolicies{
-		gentype.NewClientWithList[*crdv1alpha1.BGPPolicy, *crdv1alpha1.BGPPolicyList](
-			"bgppolicies",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *crdv1alpha1.BGPPolicy { return &crdv1alpha1.BGPPolicy{} },
-			func() *crdv1alpha1.BGPPolicyList { return &crdv1alpha1.BGPPolicyList{} },
-		),
-	}
-}
+func newBGPPolicies(c *CrdV1alpha1Client) *bGPPolicies { _ = "STUB: not implemented"; return nil }

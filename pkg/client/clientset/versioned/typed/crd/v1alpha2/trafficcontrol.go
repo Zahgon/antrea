@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	crdv1alpha2 "antrea.io/antrea/v2/pkg/apis/crd/v1alpha2"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -53,14 +52,6 @@ type trafficControls struct {
 
 // newTrafficControls returns a TrafficControls
 func newTrafficControls(c *CrdV1alpha2Client) *trafficControls {
-	return &trafficControls{
-		gentype.NewClientWithList[*crdv1alpha2.TrafficControl, *crdv1alpha2.TrafficControlList](
-			"trafficcontrols",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *crdv1alpha2.TrafficControl { return &crdv1alpha2.TrafficControl{} },
-			func() *crdv1alpha2.TrafficControlList { return &crdv1alpha2.TrafficControlList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

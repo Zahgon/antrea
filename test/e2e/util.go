@@ -14,50 +14,12 @@
 
 package e2e
 
-import (
-	"fmt"
-	"io"
-	"net"
-	"os"
-	"strings"
-	"time"
-
-	"k8s.io/klog/v2"
-)
-
 // IsDirEmpty checks whether a directory is empty or not.
-func IsDirEmpty(name string) (bool, error) {
-	f, err := os.Open(name)
-	if err != nil {
-		return false, err
-	}
-	defer f.Close()
+func IsDirEmpty(name string) (bool, error) { _ = "STUB: not implemented"; return false, nil }
 
-	_, err = f.Readdirnames(1)
-	if err == io.EOF {
-		return true, nil
-	}
-	return false, err
-}
+func timeCost() func(string) { _ = "STUB: not implemented"; return nil }
 
-func timeCost() func(string) {
-	start := time.Now()
-	return func(status string) {
-		tc := time.Since(start)
-		klog.Infof("Confirming %s status costs %v", status, tc)
-	}
-}
-
-func IPFamily(ip string) string {
-	switch {
-	case net.ParseIP(ip).To4() != nil:
-		return "v4"
-	case net.ParseIP(ip).To16() != nil:
-		return "v6"
-	default:
-		return ""
-	}
-}
+func IPFamily(ip string) string { _ = "STUB: not implemented"; return "" }
 
 // getHTTPURLFromIPPort returns a HTTP url based on the IP, port and the additional paths if provided.
 // Examples:
@@ -66,9 +28,6 @@ func IPFamily(ip string) string {
 // getHTTPURLFromIPPort("1.2.3.4", 8080, "api/v1/metadata?", "foo=bar") == "http://1.2.3.4:8080/api/v1/metadata?foo=bar"
 // getHTTPURLFromIPPort("fd74:ca9b:172::b4e", 8080) == "http://[fd74:ca9b:172::b4e]:8080"
 func getHTTPURLFromIPPort(ip string, port int32, paths ...string) string {
-	url := "http://" + net.JoinHostPort(ip, fmt.Sprint(port))
-	if len(paths) > 0 {
-		url += "/" + strings.Join(paths, "")
-	}
-	return url
+	_ = "STUB: not implemented"
+	return ""
 }

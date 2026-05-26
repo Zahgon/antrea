@@ -16,12 +16,8 @@ package linkmonitor
 
 import (
 	"sync"
-	"time"
 
 	"github.com/vishvananda/netlink"
-	"golang.org/x/sys/unix"
-	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/klog/v2"
 	"k8s.io/utils/set"
 
 	utilnetlink "antrea.io/antrea/v2/pkg/agent/util/netlink"
@@ -41,121 +37,26 @@ type linkMonitor struct {
 	netlink           utilnetlink.Interface
 }
 
-func NewLinkMonitor() *linkMonitor {
-	return &linkMonitor{
-		linkSubscribeFunc: netlink.LinkSubscribeWithOptions,
-		eventHandlers:     make(map[string][]LinkEventHandler),
-		linkNames:         set.New[string](),
-		linkIndexMap:      make(map[int32]string),
-		netlink:           &netlink.Handle{},
-	}
-}
+func NewLinkMonitor() *linkMonitor { _ = "STUB: not implemented"; return nil }
 
-func (d *linkMonitor) HasSynced() bool {
-	d.mutex.RLock()
-	defer d.mutex.RUnlock()
-	return d.cacheSynced
-}
+func (d *linkMonitor) HasSynced() bool { _ = "STUB: not implemented"; return false }
 
 func (d *linkMonitor) AddEventHandler(handler LinkEventHandler, linkNames ...string) {
-	if len(linkNames) == 0 {
-		d.eventHandlers[linkAny] = append(d.eventHandlers[linkAny], handler)
-		return
-	}
-	for _, name := range linkNames {
-		d.eventHandlers[name] = append(d.eventHandlers[name], handler)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
-func (d *linkMonitor) Run(stopCh <-chan struct{}) {
-	klog.InfoS("Starting LinkMonitor")
+func (d *linkMonitor) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	wait.NonSlidingUntil(func() { d.listAndWatchLinks(stopCh) }, 5*time.Second, stopCh)
+func (d *linkMonitor) listAndWatchLinks(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	<-stopCh
-}
+// For link rename events, notify handlers watching the original name
 
-func (d *linkMonitor) listAndWatchLinks(stopCh <-chan struct{}) {
-	ch := make(chan netlink.LinkUpdate, 100)
-	if err := d.linkSubscribeFunc(ch, stopCh, netlink.LinkSubscribeOptions{
-		ErrorCallback: func(err error) {
-			klog.ErrorS(err, "Received error from link update subscription")
-		},
-	}); err != nil {
-		klog.ErrorS(err, "Failed to subscribe link update")
-		return
-	}
-
-	links, err := d.netlink.LinkList()
-	if err != nil {
-		klog.ErrorS(err, "failed to list links on the Node")
-		return
-	}
-
-	d.mutex.Lock()
-	for _, l := range links {
-		d.linkIndexMap[int32(l.Attrs().Index)] = l.Attrs().Name
-		d.linkNames.Insert(l.Attrs().Name)
-	}
-	d.cacheSynced = true
-	d.mutex.Unlock()
-
-	for _, l := range links {
-		d.notifyHandlers(l.Attrs().Name)
-	}
-
-	for {
-		select {
-		case <-stopCh:
-			return
-		case event := <-ch:
-			eventLinkName := event.Attrs().Name
-			index := event.Index
-			previousName, exists := d.linkIndexMap[index]
-
-			isDelete := event.Header.Type == unix.RTM_DELLINK
-			if isDelete {
-				delete(d.linkIndexMap, index)
-				d.deleteLinkName(eventLinkName)
-			} else {
-				d.linkIndexMap[index] = eventLinkName
-				d.addLinkName(eventLinkName)
-			}
-
-			// For link rename events, notify handlers watching the original name
-			if exists && previousName != eventLinkName {
-				d.deleteLinkName(previousName)
-				d.notifyHandlers(previousName)
-			}
-			d.notifyHandlers(eventLinkName)
-		}
-	}
-}
-
-func (d *linkMonitor) notifyHandlers(linkName string) {
-	for _, h := range d.eventHandlers[linkName] {
-		h(linkName)
-	}
-	for _, h := range d.eventHandlers[linkAny] {
-		h(linkName)
-	}
-}
+func (d *linkMonitor) notifyHandlers(linkName string) { _ = "STUB: not implemented"; return }
 
 // LinkExists checks if the provided interface is configured on the Node.
-func (d *linkMonitor) LinkExists(name string) bool {
-	d.mutex.RLock()
-	defer d.mutex.RUnlock()
-	return d.linkNames.Has(name)
-}
+func (d *linkMonitor) LinkExists(name string) bool { _ = "STUB: not implemented"; return false }
 
-func (d *linkMonitor) addLinkName(name string) {
-	d.mutex.Lock()
-	defer d.mutex.Unlock()
-	d.linkNames.Insert(name)
-}
+func (d *linkMonitor) addLinkName(name string) { _ = "STUB: not implemented"; return }
 
-func (d *linkMonitor) deleteLinkName(name string) {
-	d.mutex.Lock()
-	defer d.mutex.Unlock()
-	d.linkNames.Delete(name)
-}
+func (d *linkMonitor) deleteLinkName(name string) { _ = "STUB: not implemented"; return }

@@ -15,22 +15,13 @@
 package flowexporter
 
 import (
-	"context"
-	"fmt"
-	"hash/fnv"
 	"net"
-	"reflect"
 	"sync"
 	"time"
 
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
-	"k8s.io/klog/v2"
-	"k8s.io/utils/ptr"
 
 	"antrea.io/antrea/v2/pkg/agent/config"
 	"antrea.io/antrea/v2/pkg/agent/controller/noderoute"
@@ -44,8 +35,6 @@ import (
 	"antrea.io/antrea/v2/pkg/ovs/ovsconfig"
 	"antrea.io/antrea/v2/pkg/querier"
 	"antrea.io/antrea/v2/pkg/util/channel"
-	"antrea.io/antrea/v2/pkg/util/env"
-	k8sutil "antrea.io/antrea/v2/pkg/util/k8s"
 
 	"antrea.io/antrea/v2/pkg/util/objectstore"
 	utilwait "antrea.io/antrea/v2/pkg/util/wait"
@@ -147,452 +136,93 @@ func NewFlowExporter(
 	egressQuerier querier.EgressQuerier,
 	networkPolicyWait *utilwait.Group,
 ) (*FlowExporter, error) {
-	ctConnsUpdateChannel := channel.NewSubscribableChannel("Conntrack Connections", ctConnsUpdateChannelBufferSize)
-	denyConnUpdateChannel := channel.NewSubscribableChannel("Deny Connections", denyConnUpdateChannelBufferSize)
-	connTrackDumper := connections.InitializeConnTrackDumper(nodeConfig, serviceCIDRNet, serviceCIDRNetv6, ovsDatapathType, proxyEnabled)
-	poller := connections.NewPoller(connTrackDumper, ctConnsUpdateChannel, o.PollInterval, v4Enabled, v6Enabled, o.ConnectUplinkToBridge)
-
-	if nodeRouteController == nil {
-		klog.InfoS("NodeRouteController is nil, will not be able to determine flow type for connections")
-	}
-
-	nodeName, err := env.GetNodeName()
-	if err != nil {
-		return nil, err
-	}
-	obsDomainID := genObservationID(nodeName)
-
-	klog.InfoS("Retrieving this Node's UID from K8s", "nodeName", nodeName)
-	node, err := k8sClient.CoreV1().Nodes().Get(context.TODO(), nodeName, metav1.GetOptions{})
-	if err != nil {
-		return nil, fmt.Errorf("failed to get Node with name %s from K8s: %w", nodeName, err)
-	}
-	nodeUID := string(node.UID)
-	klog.InfoS("Retrieved this Node's UID from K8s", "nodeName", nodeName, "nodeUID", nodeUID)
-
-	staticDestination, err := createStaticDestinationResFromOptions(o)
-	if err != nil {
-		klog.ErrorS(err, "Failed to create static destination")
-	}
-
-	fe := &FlowExporter{
-		k8sClient: k8sClient,
-
-		destinationInformer: destinationInformer,
-		destinationLister:   destinationInformer.Lister(),
-		destinationSynced:   destinationInformer.Informer().HasSynced,
-
-		staleConnectionTimeout: o.StaleConnectionTimeout,
-		v4Enabled:              v4Enabled,
-		v6Enabled:              v6Enabled,
-		isNetworkPolicyOnly:    trafficEncapMode.IsNetworkPolicyOnly(),
-
-		nodeRouteController: nodeRouteController,
-		podStore:            podStore,
-		proxier:             proxier,
-		egressQuerier:       egressQuerier,
-		npQuerier:           npQuerier,
-		networkPolicyWait:   networkPolicyWait,
-
-		poller:                poller,
-		ctConnUpdateChannel:   ctConnsUpdateChannel,
-		denyConnUpdateChannel: denyConnUpdateChannel,
-
-		staticDestinationRes: staticDestination,
-		destinations:         make(map[string]destinationObj),
-
-		nodeName:    nodeName,
-		nodeUID:     nodeUID,
-		obsDomainID: obsDomainID,
-
-		queue: workqueue.NewTypedRateLimitingQueueWithConfig(
-			workqueue.NewTypedItemExponentialFailureRateLimiter[string](minRetryDelay, maxRetryDelay),
-			workqueue.TypedRateLimitingQueueConfig[string]{
-				Name: "flowexporterdestination",
-			},
-		),
-	}
-
-	destinationInformer.Informer().AddEventHandlerWithResyncPeriod(cache.ResourceEventHandlerFuncs{
-		AddFunc:    fe.addDestination,
-		UpdateFunc: fe.updateDestination,
-		DeleteFunc: fe.deleteDestination,
-	}, 0)
-
-	return fe, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func (fe *FlowExporter) addDestination(obj any) {
-	res := obj.(*api.FlowExporterDestination)
-	klog.V(4).InfoS("Received new FlowExporterDestination", "flowExporterDestination", klog.KObj(res))
-	fe.queue.Add(res.Name)
-}
+func (fe *FlowExporter) addDestination(obj any) { _ = "STUB: not implemented"; return }
 
-func (fe *FlowExporter) updateDestination(old any, new any) {
-	oldRes := old.(*api.FlowExporterDestination)
-	newRes := new.(*api.FlowExporterDestination)
+func (fe *FlowExporter) updateDestination(old any, new any) { _ = "STUB: not implemented"; return }
 
-	klog.V(4).InfoS("Received updated FlowExporterDestination", "flowExporterDestination", klog.KObj(newRes))
-
-	if reflect.DeepEqual(oldRes.Spec, newRes.Spec) {
-		return
-	}
-
-	fe.queue.Add(newRes.Name)
-}
-
-func (fe *FlowExporter) deleteDestination(obj any) {
-	res, ok := obj.(*api.FlowExporterDestination)
-	if !ok {
-		deletedState, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			klog.ErrorS(fmt.Errorf("unexpected object type"), "Could not determine type when handling deleted FlowExporterDestination", "obj", obj)
-			return
-		}
-		res, ok = deletedState.Obj.(*api.FlowExporterDestination)
-		if !ok {
-			klog.ErrorS(fmt.Errorf("unexpected object type"), "DeletedFinalStateUnknown did not contain FlowExporterDestination object", "obj", deletedState.Obj)
-			return
-		}
-	}
-
-	klog.V(4).InfoS("FlowExporterDestination deleted", "resource", klog.KObj(res))
-	fe.queue.Add(res.Name)
-}
+func (fe *FlowExporter) deleteDestination(obj any) { _ = "STUB: not implemented"; return }
 
 func (exp *FlowExporter) GetDenyConnStoreNotifier() channel.Notifier {
-	return exp.denyConnUpdateChannel
+	_ = "STUB: not implemented"
+	return *new(channel.Notifier)
 }
 
 // hasActiveDestinationsLocked reports whether at least one export destination (CR-based or static)
 // is currently active. The caller must hold exp.destinationsMutex.
 func (exp *FlowExporter) hasActiveDestinationsLocked() bool {
-	return exp.staticDestinationRes != nil || len(exp.destinations) > 0
+	_ = "STUB: not implemented"
+	return false
 }
 
 // startPollerIfNeededLocked starts the conntrack poller when there is at least one active destination
 // and the poller is not already running. The caller must hold exp.destinationsMutex.
-func (exp *FlowExporter) startPollerIfNeededLocked() {
-	if !exp.hasActiveDestinationsLocked() || exp.poller == nil || exp.pollerRunning {
-		return
-	}
-	// If a previous poller goroutine is still exiting, wait for it to finish so we never have
-	// two concurrent poller.Run goroutines.
-	if exp.pollerDoneCh != nil {
-		klog.InfoS("Waiting for previous conntrack poller to exit")
-		<-exp.pollerDoneCh
-	}
-	exp.pollerStopCh = make(chan struct{})
-	exp.pollerDoneCh = make(chan struct{})
-	exp.pollerRunning = true
-	klog.InfoS("Starting conntrack poller for flow exporter")
-	go func() {
-		defer close(exp.pollerDoneCh)
-		exp.poller.Run(exp.pollerStopCh)
-	}()
-}
+func (exp *FlowExporter) startPollerIfNeededLocked() { _ = "STUB: not implemented"; return }
+
+// If a previous poller goroutine is still exiting, wait for it to finish so we never have
+// two concurrent poller.Run goroutines.
 
 // stopPollerIfNeededLocked stops the conntrack poller when there are no active destinations and the
 // poller is running. The caller must hold exp.destinationsMutex.
-func (exp *FlowExporter) stopPollerIfNeededLocked() {
-	if exp.hasActiveDestinationsLocked() || !exp.pollerRunning {
-		return
-	}
-	close(exp.pollerStopCh)
-	exp.pollerRunning = false
-	klog.InfoS("Stopped conntrack poller for flow exporter")
-}
+func (exp *FlowExporter) stopPollerIfNeededLocked() { _ = "STUB: not implemented"; return }
 
-func (exp *FlowExporter) Run(stopCh <-chan struct{}) {
-	klog.InfoS("Flow Exporter started")
-	defer exp.queue.ShutDown()
-	cacheSyncs := []cache.InformerSynced{exp.destinationSynced}
-	if exp.nodeRouteController != nil {
-		// Wait for NodeRouteController to have processed the initial list of Nodes so that
-		// the list of Pod subnets is up-to-date.
-		cacheSyncs = append(cacheSyncs, exp.nodeRouteController.HasSynced)
-	}
+func (exp *FlowExporter) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	if !cache.WaitForNamedCacheSync("FlowExporter", stopCh, cacheSyncs...) {
-		return
-	}
+// Wait for NodeRouteController to have processed the initial list of Nodes so that
+// the list of Pod subnets is up-to-date.
 
-	if exp.networkPolicyWait != nil {
-		klog.InfoS("Waiting for NetworkPolicies to become ready")
-		if err := exp.networkPolicyWait.WaitUntil(stopCh); err != nil {
-			klog.ErrorS(err, "Error while waiting for NetworkPolicies to become ready")
-			return
-		}
-	} else {
-		klog.InfoS("Skip waiting for NetworkPolicies to become ready")
-	}
-	exp.networkPolicyReadyTime = time.Now()
+// SubscribableChannels must run whenever the flow exporter is active so Notify does not block
+// producers (e.g. denied-connection updates) when there are no export destinations yet.
 
-	// SubscribableChannels must run whenever the flow exporter is active so Notify does not block
-	// producers (e.g. denied-connection updates) when there are no export destinations yet.
-	go exp.ctConnUpdateChannel.Run(stopCh)
-	go exp.denyConnUpdateChannel.Run(stopCh)
+// Clear staticDestinationRes when createDestinationFromResource fails, so that
+// hasActiveDestinationsLocked will function correctly.
 
-	for range defaultWorkers {
-		go wait.Until(exp.worker, time.Second, stopCh)
-	}
+// Clear staticDestinationRes so hasActiveDestinationsLocked returns false.
 
-	if exp.staticDestinationRes != nil {
-		staticDest, err := exp.createDestinationFromResource(exp.staticDestinationRes)
-		if err != nil {
-			klog.ErrorS(err, "Could not create FlowExporterDestination from static configuration")
-			// Clear staticDestinationRes when createDestinationFromResource fails, so that
-			// hasActiveDestinationsLocked will function correctly.
-			exp.staticDestinationRes = nil
-		} else {
-			exp.destinationsMutex.Lock()
-			exp.startPollerIfNeededLocked()
-			exp.destinationsMutex.Unlock()
-			go staticDest.Run(stopCh)
-		}
-	}
+func (exp *FlowExporter) worker() { _ = "STUB: not implemented"; return }
 
-	<-stopCh
+func (exp *FlowExporter) processNextWorkItem() bool { _ = "STUB: not implemented"; return false }
 
-	exp.destinationsMutex.Lock()
-	defer exp.destinationsMutex.Unlock()
+// If no error occurs we Forget this item so it does not get queued again until
+// another change happens.
 
-	for key, destination := range exp.destinations {
-		close(destination.stopCh)
-		delete(exp.destinations, key)
-	}
-	// Clear staticDestinationRes so hasActiveDestinationsLocked returns false.
-	exp.staticDestinationRes = nil
-	exp.stopPollerIfNeededLocked()
-}
-
-func (exp *FlowExporter) worker() {
-	for exp.processNextWorkItem() {
-	}
-}
-
-func (exp *FlowExporter) processNextWorkItem() bool {
-	key, quit := exp.queue.Get()
-	if quit {
-		return false
-	}
-	defer exp.queue.Done(key)
-	if err := exp.syncFlowExporterDestination(key); err == nil {
-		// If no error occurs we Forget this item so it does not get queued again until
-		// another change happens.
-		exp.queue.Forget(key)
-	} else {
-		// Put the item back on the workqueue to handle any transient errors.
-		exp.queue.AddRateLimited(key)
-		klog.ErrorS(err, "Failed to sync FlowExporterDestination", "key", key)
-	}
-	return true
-}
+// Put the item back on the workqueue to handle any transient errors.
 
 func (exp *FlowExporter) syncFlowExporterDestination(key string) error {
-	klog.InfoS("Syncing FlowExporterDestination", "key", key)
-	exp.destinationsMutex.Lock()
-	defer exp.destinationsMutex.Unlock()
-
-	res, err := exp.destinationLister.Get(key)
-	if err != nil {
-		if apierrors.IsNotFound(err) {
-			klog.InfoS("Removing destination because resource was deleted")
-			dest, ok := exp.destinations[key]
-			if ok {
-				close(dest.stopCh)
-				delete(exp.destinations, key)
-				exp.stopPollerIfNeededLocked()
-			}
-			return nil
-		}
-		return err
-	}
-
-	klog.V(2).InfoS("Adding destination", "flowExporterDestination", klog.KObj(res))
-	dest, err := exp.createDestinationFromResource(res)
-	if err != nil {
-		return fmt.Errorf("unable to create destination from resource: %w", err)
-	}
-
-	destObj, ok := exp.destinations[key]
-	if ok {
-		klog.V(4).InfoS("Removing old instance", "flowExporterDestination", klog.KObj(res))
-		close(destObj.stopCh)
-	}
-
-	stopCh := make(chan struct{})
-	go dest.Run(stopCh)
-	exp.destinations[key] = destinationObj{
-		destination: dest,
-		stopCh:      stopCh,
-	}
-	exp.startPollerIfNeededLocked()
-
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (fe *FlowExporter) createExporter(protocol exporterProtocol) exporter.Interface {
-	var exp exporter.Interface
-	switch protocol.Name() {
-	case api.FlowExporterProtocolGRPC:
-		exp = exporter.NewGRPCExporter(fe.nodeName, fe.nodeUID, fe.obsDomainID)
-	case api.FlowExporterProtocolIPFIX:
-		var collectorProto string
-		if protocol.TransportProtocol() == api.FlowExporterTransportTLS {
-			collectorProto = string(api.FlowExporterTransportTCP)
-		} else {
-			collectorProto = string(protocol.TransportProtocol())
-		}
-		exp = exporter.NewIPFIXExporter(collectorProto, fe.nodeName, fe.obsDomainID, fe.v4Enabled, fe.v6Enabled)
-	default:
-		klog.InfoS("Unsupported exporter protocol", "protocol", protocol.Name())
-	}
-
-	return exp
+	_ = "STUB: not implemented"
+	return *new(exporter.Interface)
 }
 
-func ServiceAddressToDNS(address string) (string, error) {
-	host, _, err := net.SplitHostPort(address)
-	if err != nil {
-		return "", err
-	}
-
-	ns, name := k8sutil.SplitNamespacedName(host)
-	if ns == "" {
-		return "", nil
-	}
-
-	return fmt.Sprintf("%s.%s.svc", name, ns), nil
-}
+func ServiceAddressToDNS(address string) (string, error) { _ = "STUB: not implemented"; return "", nil }
 
 func (fe *FlowExporter) createDestinationFromResource(res *api.FlowExporterDestination) (*Destination, error) {
-	if err := validateResource(res); err != nil {
-		return nil, fmt.Errorf("failed resource validation: %w", err)
-	}
-	protocol := getExporterProtocol(res.Spec.Protocol)
-	exp := fe.createExporter(protocol)
-	if exp == nil {
-		return nil, fmt.Errorf("failed to create exporter")
-	}
-
-	config := DestinationConfig{
-		name:    res.Name,
-		address: res.Spec.Address,
-
-		activeFlowTimeout:      time.Second * time.Duration(res.Spec.ActiveFlowExportTimeoutSeconds),
-		idleFlowTimeout:        time.Second * time.Duration(res.Spec.IdleFlowExportTimeoutSeconds),
-		staleConnectionTimeout: fe.staleConnectionTimeout,
-
-		isNetworkPolicyOnly: fe.isNetworkPolicyOnly,
-		tlsConfig:           res.Spec.TLSConfig,
-		allowProtocolFilter: ptr.Deref(res.Spec.Filter, api.FlowExporterFilter{}).Protocols,
-
-		networkPolicyReadyTime: fe.networkPolicyReadyTime,
-	}
-	return NewDestination(
-		fe.ctConnUpdateChannel,
-		fe.denyConnUpdateChannel,
-		exp,
-		fe.k8sClient,
-		fe.nodeRouteController,
-		fe.podStore,
-		fe.npQuerier,
-		fe.proxier,
-		fe.egressQuerier,
-		fe.networkPolicyReadyTime,
-		config,
-	), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func createStaticDestinationResFromOptions(o *options.FlowExporterOptions) (*api.FlowExporterDestination, error) {
-	if !o.EnableStaticDestination {
-		return nil, nil
-	}
-	feProtocol := api.FlowExporterProtocol{}
-	var feTLSConfig *api.FlowExporterTLSConfig
-
-	dnsName, err := ServiceAddressToDNS(o.FlowCollectorAddr)
-	if err != nil {
-		return nil, fmt.Errorf("unable to determine transform service address to DNS name: %w", err)
-	}
-
-	if o.FlowCollectorProto == "grpc" {
-		feProtocol.GRPC = &api.FlowExporterGRPCConfig{}
-		feTLSConfig = &api.FlowExporterTLSConfig{
-			ServerName: dnsName,
-			CAConfigMap: api.NamespacedName{
-				Name:      caConfigMapName,
-				Namespace: caConfigMapNamespace,
-			},
-			ClientSecret: &api.NamespacedName{
-				Name:      clientSecretName,
-				Namespace: clientSecretNamespace,
-			},
-		}
-	} else {
-		feProtocol.IPFIX = &api.FlowExporterIPFIXConfig{
-			Transport: api.FlowExporterTransportProtocol(o.FlowCollectorProto),
-		}
-		if o.FlowCollectorProto == "tls" {
-			feTLSConfig = &api.FlowExporterTLSConfig{
-				ServerName: dnsName,
-				CAConfigMap: api.NamespacedName{
-					Name:      caConfigMapName,
-					Namespace: caConfigMapNamespace,
-				},
-				ClientSecret: &api.NamespacedName{
-					Name:      clientSecretName,
-					Namespace: clientSecretNamespace,
-				},
-			}
-		}
-	}
-
-	return &api.FlowExporterDestination{
-		Spec: api.FlowExporterDestinationSpec{
-			Address:  o.FlowCollectorAddr,
-			Protocol: feProtocol,
-			Filter: &api.FlowExporterFilter{
-				Protocols: o.ProtocolFilter,
-			},
-			ActiveFlowExportTimeoutSeconds: int32(o.ActiveFlowTimeout.Seconds()),
-			IdleFlowExportTimeoutSeconds:   int32(o.IdleFlowTimeout.Seconds()),
-			TLSConfig:                      feTLSConfig,
-		},
-	}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func getExporterProtocol(proto api.FlowExporterProtocol) exporterProtocol {
-	switch {
-	case proto.IPFIX != nil:
-		return proto.IPFIX
-	case proto.GRPC != nil:
-		return proto.GRPC
-	default:
-		// This case should never happen on real usage. API server requires at least one to be defined.
-		return &api.FlowExporterGRPCConfig{}
-	}
+	_ = "STUB: not implemented"
+	return *new(exporterProtocol)
 }
 
-func genObservationID(nodeName string) uint32 {
-	h := fnv.New32()
-	h.Write([]byte(nodeName))
-	return h.Sum32()
-}
+// This case should never happen on real usage. API server requires at least one to be defined.
+
+func genObservationID(nodeName string) uint32 { _ = "STUB: not implemented"; return 0 }
 
 func validateResource(res *api.FlowExporterDestination) error {
-	protocol := getExporterProtocol(res.Spec.Protocol)
-	switch protocol.Name() {
-	case api.FlowExporterProtocolGRPC:
-		if res.Spec.TLSConfig == nil {
-			return fmt.Errorf("missing spec.TLSConfig for grpc connection")
-		}
-	case api.FlowExporterProtocolIPFIX:
-		if protocol.TransportProtocol() == api.FlowExporterTransportTLS && res.Spec.TLSConfig == nil {
-			return fmt.Errorf("missing spec.TLSConfig for IPFIX connection over TLS")
-		}
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }

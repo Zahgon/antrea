@@ -15,115 +15,24 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"sync"
 	"time"
 
-	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/rest"
-	"k8s.io/klog/v2"
-
-	aggregator "antrea.io/antrea/v2/pkg/flowaggregator"
-	"antrea.io/antrea/v2/pkg/flowaggregator/apiserver"
-	"antrea.io/antrea/v2/pkg/log"
-	"antrea.io/antrea/v2/pkg/signals"
-	"antrea.io/antrea/v2/pkg/util/cipher"
-	"antrea.io/antrea/v2/pkg/util/k8s"
-	"antrea.io/antrea/v2/pkg/util/objectstore"
-	"antrea.io/antrea/v2/pkg/version"
 )
 
 const informerDefaultResync = 12 * time.Hour
 
-func run(configFile string) error {
-	klog.InfoS("Starting Flow Aggregator", "version", version.GetFullVersion())
-	// Set up signal capture: the first SIGTERM / SIGINT signal is handled gracefully and will
-	// cause the stopCh channel to be closed; if another signal is received before the program
-	// exits, we will force exit.
-	stopCh := signals.RegisterSignalHandlers()
-	// Generate a context for functions which require one (instead of stopCh).
-	// We cancel the context when the function returns, which in the normal case will be when
-	// stopCh is closed.
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+func run(configFile string) error { _ = "STUB: not implemented"; return nil }
 
-	log.StartLogFileNumberMonitor(stopCh)
+// Set up signal capture: the first SIGTERM / SIGINT signal is handled gracefully and will
+// cause the stopCh channel to be closed; if another signal is received before the program
+// exits, we will force exit.
 
-	k8sClient, err := createK8sClient()
-	if err != nil {
-		return fmt.Errorf("error when creating K8s client: %w", err)
-	}
-
-	informerFactory := informers.NewSharedInformerFactoryWithOptions(k8sClient, informerDefaultResync, informers.WithTransform(k8s.NewTrimmer(k8s.TrimPod, k8s.TrimNode)))
-	podInformer := informerFactory.Core().V1().Pods()
-	podStore := objectstore.NewPodStore(podInformer.Informer())
-	nodeInformer := informerFactory.Core().V1().Nodes()
-	nodeStore := objectstore.NewNodeStore(nodeInformer.Informer())
-	serviceInformer := informerFactory.Core().V1().Services()
-	serviceStore := objectstore.NewServiceStore(serviceInformer.Informer())
-
-	klog.InfoS("Retrieving Antrea cluster UUID")
-	clusterUUID, err := aggregator.GetClusterUUID(ctx, k8sClient)
-	if err != nil {
-		return err
-	}
-	klog.InfoS("Retrieved Antrea cluster UUID", "clusterUUID", clusterUUID)
-
-	flowAggregator, err := aggregator.NewFlowAggregator(
-		k8sClient,
-		clusterUUID,
-		podStore,
-		nodeStore,
-		serviceStore,
-		configFile,
-	)
-	if err != nil {
-		return err
-	}
-
-	go podStore.Run(stopCh)
-	go nodeStore.Run(stopCh)
-	go serviceStore.Run(stopCh)
-
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		flowAggregator.Run(stopCh)
-	}()
-
-	cipherSuites, err := cipher.GenerateCipherSuitesList(flowAggregator.APIServer.TLSCipherSuites)
-	if err != nil {
-		return fmt.Errorf("error generating Cipher Suite list: %w", err)
-	}
-	apiServer, err := apiserver.New(
-		flowAggregator,
-		flowAggregator.APIServer.APIPort,
-		cipherSuites,
-		cipher.TLSVersionMap[flowAggregator.APIServer.TLSMinVersion])
-	if err != nil {
-		return fmt.Errorf("error when creating flow aggregator API server: %w", err)
-	}
-	go apiServer.Run(ctx)
-
-	informerFactory.Start(stopCh)
-
-	<-stopCh
-	klog.InfoS("Stopping Flow Aggregator")
-	wg.Wait()
-	return nil
-}
+// Generate a context for functions which require one (instead of stopCh).
+// We cancel the context when the function returns, which in the normal case will be when
+// stopCh is closed.
 
 func createK8sClient() (kubernetes.Interface, error) {
-	config, err := rest.InClusterConfig()
-	if err != nil {
-		return nil, err
-	}
-	k8sClient, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		return nil, err
-	}
-	return k8sClient, nil
+	_ = "STUB: not implemented"
+	return *new(kubernetes.Interface), nil
 }

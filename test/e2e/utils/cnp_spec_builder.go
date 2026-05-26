@@ -16,7 +16,6 @@ package utils
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/intstr"
 
 	crdv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
 )
@@ -38,48 +37,28 @@ type ACNPAppliedToSpec struct {
 }
 
 func (b *ClusterNetworkPolicySpecBuilder) Get() *crdv1beta1.ClusterNetworkPolicy {
-	if b.Spec.Ingress == nil {
-		b.Spec.Ingress = []crdv1beta1.Rule{}
-	}
-	if b.Spec.Egress == nil {
-		b.Spec.Egress = []crdv1beta1.Rule{}
-	}
-	return &crdv1beta1.ClusterNetworkPolicy{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: b.Name,
-		},
-		Spec: b.Spec,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterNetworkPolicySpecBuilder) SetName(name string) *ClusterNetworkPolicySpecBuilder {
-	b.Name = name
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterNetworkPolicySpecBuilder) SetPriority(p float64) *ClusterNetworkPolicySpecBuilder {
-	b.Spec.Priority = p
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterNetworkPolicySpecBuilder) SetTier(tier string) *ClusterNetworkPolicySpecBuilder {
-	b.Spec.Tier = tier
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterNetworkPolicySpecBuilder) SetAppliedToGroup(specs []ACNPAppliedToSpec) *ClusterNetworkPolicySpecBuilder {
-	for _, spec := range specs {
-		appliedToPeer := ACNPGetAppliedToPeer(spec.PodSelector,
-			spec.NodeSelector,
-			spec.NSSelector,
-			spec.PodSelectorMatchExp,
-			spec.NodeSelectorMatchExp,
-			spec.NSSelectorMatchExp,
-			spec.Group,
-			spec.Service)
-		b.Spec.AppliedTo = append(b.Spec.AppliedTo, appliedToPeer)
-	}
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ACNPGetAppliedToPeer(podSelector map[string]string,
@@ -90,191 +69,52 @@ func ACNPGetAppliedToPeer(podSelector map[string]string,
 	nsSelectorMatchExp []metav1.LabelSelectorRequirement,
 	appliedToCG string,
 	service *crdv1beta1.NamespacedName) crdv1beta1.AppliedTo {
-
-	var podSel *metav1.LabelSelector
-	var nodeSel *metav1.LabelSelector
-	var nsSel *metav1.LabelSelector
-
-	if podSelector != nil || podSelectorMatchExp != nil {
-		podSel = &metav1.LabelSelector{
-			MatchLabels:      podSelector,
-			MatchExpressions: podSelectorMatchExp,
-		}
-	}
-	if nodeSelector != nil || nodeSelectorMatchExp != nil {
-		nodeSel = &metav1.LabelSelector{
-			MatchLabels:      nodeSelector,
-			MatchExpressions: nodeSelectorMatchExp,
-		}
-	}
-	if nsSelector != nil || nsSelectorMatchExp != nil {
-		nsSel = &metav1.LabelSelector{
-			MatchLabels:      nsSelector,
-			MatchExpressions: nsSelectorMatchExp,
-		}
-	}
-	peer := crdv1beta1.AppliedTo{
-		PodSelector:       podSel,
-		NodeSelector:      nodeSel,
-		NamespaceSelector: nsSel,
-	}
-	if appliedToCG != "" {
-		peer.Group = appliedToCG
-	}
-	if service != nil {
-		peer.Service = service
-	}
-	return peer
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.AppliedTo)
 }
 
 func (b *ClusterNetworkPolicySpecBuilder) AddIngress(rb RuleBuilder) *ClusterNetworkPolicySpecBuilder {
-	b.Spec.Ingress = append(b.Spec.Ingress, rb.GetIngress())
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterNetworkPolicySpecBuilder) AddEgress(rb RuleBuilder) *ClusterNetworkPolicySpecBuilder {
-	b.Spec.Egress = append(b.Spec.Egress, rb.GetEgress())
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterNetworkPolicySpecBuilder) AddNodeSelectorRule(nodeSelector *metav1.LabelSelector, protoc AntreaPolicyProtocol, port *int32, name string,
 	ruleAppliedToSpecs []ACNPAppliedToSpec, action crdv1beta1.RuleAction, isEgress bool) *ClusterNetworkPolicySpecBuilder {
-	var appliedTos []crdv1beta1.AppliedTo
-	for _, at := range ruleAppliedToSpecs {
-		appliedTos = append(appliedTos, ACNPGetAppliedToPeer(at.PodSelector,
-			at.NodeSelector,
-			at.NSSelector,
-			at.PodSelectorMatchExp,
-			at.NodeSelectorMatchExp,
-			at.NSSelectorMatchExp,
-			at.Group,
-			at.Service))
-	}
-	policyPeer := []crdv1beta1.NetworkPolicyPeer{{NodeSelector: nodeSelector}}
-	k8sProtocol, _ := AntreaPolicyProtocolToK8sProtocol(protoc)
-	newRule := crdv1beta1.Rule{
-		Ports: []crdv1beta1.NetworkPolicyPort{
-			{Protocol: &k8sProtocol, Port: &intstr.IntOrString{IntVal: *port}},
-		},
-		Action:    &action,
-		Name:      name,
-		AppliedTo: appliedTos,
-	}
-	if isEgress {
-		newRule.To = policyPeer
-		b.Spec.Egress = append(b.Spec.Egress, newRule)
-	} else {
-		newRule.From = policyPeer
-		b.Spec.Ingress = append(b.Spec.Ingress, newRule)
-	}
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterNetworkPolicySpecBuilder) AddFQDNRule(fqdn string,
 	protoc AntreaPolicyProtocol, port *int32, portName *string, endPort *int32, name string,
 	ruleAppliedToSpecs []ACNPAppliedToSpec, action crdv1beta1.RuleAction) *ClusterNetworkPolicySpecBuilder {
-	var appliedTos []crdv1beta1.AppliedTo
-	for _, at := range ruleAppliedToSpecs {
-		appliedTos = append(appliedTos, ACNPGetAppliedToPeer(at.PodSelector,
-			at.NodeSelector,
-			at.NSSelector,
-			at.PodSelectorMatchExp,
-			at.NodeSelectorMatchExp,
-			at.NSSelectorMatchExp,
-			at.Group,
-			at.Service))
-	}
-	policyPeer := []crdv1beta1.NetworkPolicyPeer{{FQDN: fqdn}}
-	ports, _ := GenPortsOrProtocols(BaseRuleBuilder{
-		Protoc:   protoc,
-		Port:     port,
-		PortName: portName,
-		EndPort:  endPort})
-	newRule := crdv1beta1.Rule{
-		To:        policyPeer,
-		Ports:     ports,
-		Action:    &action,
-		Name:      name,
-		AppliedTo: appliedTos,
-	}
-	b.Spec.Egress = append(b.Spec.Egress, newRule)
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterNetworkPolicySpecBuilder) AddToServicesRule(svcRefs []crdv1beta1.PeerService,
 	name string, ruleAppliedToSpecs []ACNPAppliedToSpec, action crdv1beta1.RuleAction) *ClusterNetworkPolicySpecBuilder {
-	var appliedTos []crdv1beta1.AppliedTo
-	for _, at := range ruleAppliedToSpecs {
-		appliedTos = append(appliedTos, ACNPGetAppliedToPeer(at.PodSelector,
-			at.NodeSelector,
-			at.NSSelector,
-			at.PodSelectorMatchExp,
-			at.NodeSelectorMatchExp,
-			at.NSSelectorMatchExp,
-			at.Group,
-			at.Service))
-	}
-	newRule := crdv1beta1.Rule{
-		To:         make([]crdv1beta1.NetworkPolicyPeer, 0),
-		ToServices: svcRefs,
-		Action:     &action,
-		Name:       name,
-		AppliedTo:  appliedTos,
-	}
-	b.Spec.Egress = append(b.Spec.Egress, newRule)
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterNetworkPolicySpecBuilder) AddStretchedIngressRule(pSel, nsSel map[string]string,
 	name string, ruleAppliedToSpecs []ACNPAppliedToSpec, action crdv1beta1.RuleAction) *ClusterNetworkPolicySpecBuilder {
-
-	var appliedTos []crdv1beta1.AppliedTo
-	for _, at := range ruleAppliedToSpecs {
-		appliedTos = append(appliedTos, ACNPGetAppliedToPeer(at.PodSelector,
-			at.NodeSelector,
-			at.NSSelector,
-			at.PodSelectorMatchExp,
-			at.NodeSelectorMatchExp,
-			at.NSSelectorMatchExp,
-			at.Group,
-			at.Service))
-	}
-	newRule := crdv1beta1.Rule{
-		From:      []crdv1beta1.NetworkPolicyPeer{{Scope: "ClusterSet"}},
-		Action:    &action,
-		Name:      name,
-		AppliedTo: appliedTos,
-	}
-	if len(pSel) > 0 {
-		newRule.From[0].PodSelector = &metav1.LabelSelector{MatchLabels: pSel}
-	}
-	if len(nsSel) > 0 {
-		newRule.From[0].NamespaceSelector = &metav1.LabelSelector{MatchLabels: nsSel}
-	}
-	b.Spec.Ingress = append(b.Spec.Ingress, newRule)
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddEgressDNS mutates the nth policy rule to allow DNS, convenience method
 func (b *ClusterNetworkPolicySpecBuilder) WithEgressDNS() *ClusterNetworkPolicySpecBuilder {
-	protocolUDP, _ := AntreaPolicyProtocolToK8sProtocol(ProtocolUDP)
-	route53 := crdv1beta1.NetworkPolicyPort{
-		Protocol: &protocolUDP,
-		Port:     &intstr.IntOrString{Type: intstr.Int, IntVal: 53},
-	}
-
-	for i, e := range b.Spec.Egress {
-		e.Ports = append(e.Ports, route53)
-		b.Spec.Egress[i] = e
-	}
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterNetworkPolicySpecBuilder) AddEgressLogging(logLabel string) *ClusterNetworkPolicySpecBuilder {
-	for i, e := range b.Spec.Egress {
-		e.EnableLogging = true
-		e.LogLabel = logLabel
-		b.Spec.Egress[i] = e
-	}
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }

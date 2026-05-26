@@ -15,7 +15,6 @@
 package transform
 
 import (
-	"encoding/json"
 	"io"
 	"reflect"
 )
@@ -24,22 +23,6 @@ type unary func(interface{}, map[string]string) (interface{}, error)
 type FuncType func(reader io.Reader, single bool) (interface{}, error)
 
 func GenericFactory(objType, listType reflect.Type, objTransform, listTransform unary, opts map[string]string) FuncType {
-	return func(reader io.Reader, single bool) (interface{}, error) {
-		var refType reflect.Type
-		if single {
-			refType = objType
-		} else {
-			refType = listType
-		}
-		refVal := reflect.New(refType)
-		if err := json.NewDecoder(reader).Decode(refVal.Interface()); err != nil {
-			return nil, err
-		}
-		if single && objTransform != nil {
-			return objTransform(refVal.Interface(), opts)
-		} else if !single && listTransform != nil {
-			return listTransform(refVal.Interface(), opts)
-		}
-		return refVal.Interface(), nil
-	}
+	_ = "STUB: not implemented"
+	return *new(FuncType)
 }

@@ -16,51 +16,21 @@ package apiserver
 
 import (
 	"context"
-	"time"
 
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
-	"k8s.io/apiserver/pkg/registry/rest"
 	genericapiserver "k8s.io/apiserver/pkg/server"
 	"k8s.io/client-go/informers"
 	coreinformers "k8s.io/client-go/informers/core/v1"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/klog/v2"
 	"k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset"
 
-	"antrea.io/antrea/v2/pkg/apis"
-	"antrea.io/antrea/v2/pkg/apis/controlplane"
 	cpinstall "antrea.io/antrea/v2/pkg/apis/controlplane/install"
-	apistats "antrea.io/antrea/v2/pkg/apis/stats"
 	statsinstall "antrea.io/antrea/v2/pkg/apis/stats/install"
 	systeminstall "antrea.io/antrea/v2/pkg/apis/system/install"
-	system "antrea.io/antrea/v2/pkg/apis/system/v1beta1"
 	"antrea.io/antrea/v2/pkg/apiserver/certificate"
-	"antrea.io/antrea/v2/pkg/apiserver/handlers/endpoint"
-	"antrea.io/antrea/v2/pkg/apiserver/handlers/featuregates"
-	"antrea.io/antrea/v2/pkg/apiserver/handlers/loglevel"
-	"antrea.io/antrea/v2/pkg/apiserver/handlers/webhook"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/controlplane/egressgroup"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/controlplane/nodestatssummary"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/controlplane/supportbundlecollection"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/networkpolicy/addressgroup"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/networkpolicy/appliedtogroup"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/networkpolicy/clustergroupmember"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/networkpolicy/groupassociation"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/networkpolicy/groupmember"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/networkpolicy/ipgroupassociation"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/networkpolicy/networkpolicy"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/networkpolicy/networkpolicyevaluation"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/stats/antreaclusternetworkpolicystats"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/stats/antreanetworkpolicystats"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/stats/multicastgroup"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/stats/networkpolicystats"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/stats/nodelatencystats"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/system/controllerinfo"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/system/supportbundle"
 	"antrea.io/antrea/v2/pkg/apiserver/storage"
 	crdv1a2informers "antrea.io/antrea/v2/pkg/client/informers/externalversions/crd/v1alpha2"
 	"antrea.io/antrea/v2/pkg/controller/egress"
@@ -71,7 +41,6 @@ import (
 	"antrea.io/antrea/v2/pkg/controller/stats"
 	controllerbundlecollection "antrea.io/antrea/v2/pkg/controller/supportbundlecollection"
 	"antrea.io/antrea/v2/pkg/controller/traceflow"
-	"antrea.io/antrea/v2/pkg/features"
 )
 
 var (
@@ -139,13 +108,9 @@ type APIServer struct {
 }
 
 func (s *APIServer) Run(ctx context.Context) error {
+	_ = "STUB: not implemented"
 	// Make sure CACertController runs once to publish the CA cert before starting APIServer.
-	if err := s.caCertController.RunOnce(ctx); err != nil {
-		klog.ErrorS(err, "caCertController RunOnce failed")
-	}
-	go s.caCertController.Run(ctx, 1)
-
-	return s.GenericAPIServer.PrepareRun().RunWithContext(ctx)
+	return nil
 }
 
 type completedConfig struct {
@@ -171,206 +136,50 @@ func NewConfig(
 	ipamController *ipam.AntreaIPAMController,
 	bundleCollectionController *controllerbundlecollection.Controller,
 	traceflowController *traceflow.Controller) *Config {
-	return &Config{
-		genericConfig: genericConfig,
-		extraConfig: ExtraConfig{
-			k8sClient:                     k8sClient,
-			addressGroupStore:             addressGroupStore,
-			appliedToGroupStore:           appliedToGroupStore,
-			networkPolicyStore:            networkPolicyStore,
-			egressGroupStore:              egressGroupStore,
-			bundleCollectionStore:         supportBundleCollectionStore,
-			podInformer:                   podInformer,
-			nodeInformer:                  nodeInformer,
-			eeInformer:                    eeInformer,
-			caCertController:              caCertController,
-			statsAggregator:               statsAggregator,
-			controllerQuerier:             controllerQuerier,
-			endpointQuerier:               endpointQuerier,
-			networkPolicyController:       npController,
-			networkPolicyStatusController: networkPolicyStatusController,
-			egressController:              egressController,
-			externalIPPoolController:      externalIPPoolController,
-			ipamController:                ipamController,
-			bundleCollectionController:    bundleCollectionController,
-			traceflowController:           traceflowController,
-		},
-	}
-}
-
-func (c *Config) Complete(informers informers.SharedInformerFactory) completedConfig {
-	return completedConfig{c.genericConfig.Complete(informers), &c.extraConfig}
-}
-
-func installAPIGroup(s *APIServer, c completedConfig) error {
-	addressGroupStorage := addressgroup.NewREST(c.extraConfig.addressGroupStore)
-	appliedToGroupStorage := appliedtogroup.NewREST(c.extraConfig.appliedToGroupStore)
-	networkPolicyStorage := networkpolicy.NewREST(c.extraConfig.networkPolicyStore)
-	networkPolicyStatusStorage := networkpolicy.NewStatusREST(c.extraConfig.networkPolicyStatusController)
-	networkPolicyEvaluationStorage := networkpolicyevaluation.NewREST(controllernetworkpolicy.NewPolicyRuleQuerier(c.extraConfig.endpointQuerier))
-	clusterGroupMembershipStorage := clustergroupmember.NewREST(c.extraConfig.networkPolicyController)
-	groupMembershipStorage := groupmember.NewREST(c.extraConfig.networkPolicyController)
-	groupAssociationStorage := groupassociation.NewREST(c.extraConfig.networkPolicyController)
-	ipGroupAssociationStorage := ipgroupassociation.NewREST(c.extraConfig.podInformer, c.extraConfig.nodeInformer, c.extraConfig.eeInformer, c.extraConfig.networkPolicyController, c.extraConfig.networkPolicyController)
-	nodeStatsSummaryStorage := nodestatssummary.NewREST(c.extraConfig.statsAggregator)
-	egressGroupStorage := egressgroup.NewREST(c.extraConfig.egressGroupStore)
-	bundleCollectionStorage := supportbundlecollection.NewREST(c.extraConfig.bundleCollectionStore)
-	bundleCollectionStatusStorage := supportbundlecollection.NewStatusREST(c.extraConfig.bundleCollectionController)
-	cpGroup := genericapiserver.NewDefaultAPIGroupInfo(controlplane.GroupName, Scheme, parameterCodec, Codecs)
-	cpv1beta2Storage := map[string]rest.Storage{}
-	cpv1beta2Storage["addressgroups"] = addressGroupStorage
-	cpv1beta2Storage["appliedtogroups"] = appliedToGroupStorage
-	cpv1beta2Storage["networkpolicies"] = networkPolicyStorage
-	cpv1beta2Storage["networkpolicies/status"] = networkPolicyStatusStorage
-	cpv1beta2Storage["networkpolicyevaluation"] = networkPolicyEvaluationStorage
-	cpv1beta2Storage["nodestatssummaries"] = nodeStatsSummaryStorage
-	cpv1beta2Storage["groupassociations"] = groupAssociationStorage
-	cpv1beta2Storage["ipgroupassociations"] = ipGroupAssociationStorage
-	cpv1beta2Storage["clustergroupmembers"] = clusterGroupMembershipStorage
-	cpv1beta2Storage["groupmembers"] = groupMembershipStorage
-	cpv1beta2Storage["egressgroups"] = egressGroupStorage
-	cpv1beta2Storage["supportbundlecollections"] = bundleCollectionStorage
-	cpv1beta2Storage["supportbundlecollections/status"] = bundleCollectionStatusStorage
-	cpGroup.VersionedResourcesStorageMap["v1beta2"] = cpv1beta2Storage
-
-	systemGroup := genericapiserver.NewDefaultAPIGroupInfo(system.GroupName, Scheme, metav1.ParameterCodec, Codecs)
-	systemStorage := map[string]rest.Storage{}
-	systemStorage["controllerinfos"] = controllerinfo.NewREST(c.extraConfig.controllerQuerier)
-	bundleStorage := supportbundle.NewControllerStorage()
-	systemStorage["supportbundles"] = bundleStorage.SupportBundle
-	systemStorage["supportbundles/download"] = bundleStorage.Download
-	systemGroup.VersionedResourcesStorageMap["v1beta1"] = systemStorage
-
-	statsGroup := genericapiserver.NewDefaultAPIGroupInfo(apistats.GroupName, Scheme, metav1.ParameterCodec, Codecs)
-	statsStorage := map[string]rest.Storage{}
-	statsStorage["networkpolicystats"] = networkpolicystats.NewREST(c.extraConfig.statsAggregator)
-	statsStorage["antreaclusternetworkpolicystats"] = antreaclusternetworkpolicystats.NewREST(c.extraConfig.statsAggregator)
-	statsStorage["antreanetworkpolicystats"] = antreanetworkpolicystats.NewREST(c.extraConfig.statsAggregator)
-	statsStorage["multicastgroups"] = multicastgroup.NewREST(c.extraConfig.statsAggregator)
-	statsStorage["nodelatencystats"] = nodelatencystats.NewREST()
-	statsGroup.VersionedResourcesStorageMap["v1alpha1"] = statsStorage
-
-	groups := []*genericapiserver.APIGroupInfo{&cpGroup, &systemGroup, &statsGroup}
-
-	for _, apiGroupInfo := range groups {
-		if err := s.GenericAPIServer.InstallAPIGroup(apiGroupInfo); err != nil {
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (c completedConfig) New() (*APIServer, error) {
-	genericServer, err := c.genericConfig.New("antrea-apiserver", genericapiserver.NewEmptyDelegate())
-	if err != nil {
-		return nil, err
-	}
-
-	s := &APIServer{
-		GenericAPIServer: genericServer,
-		caCertController: c.extraConfig.caCertController,
-	}
-
-	if err := installAPIGroup(s, c); err != nil {
-		return nil, err
-	}
-	installHandlers(c.extraConfig, s.GenericAPIServer)
-
-	return s, nil
+func (c *Config) Complete(informers informers.SharedInformerFactory) completedConfig {
+	_ = "STUB: not implemented"
+	return *new(completedConfig)
 }
+
+func installAPIGroup(s *APIServer, c completedConfig) error { _ = "STUB: not implemented"; return nil }
+
+func (c completedConfig) New() (*APIServer, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // CleanupDeprecatedAPIServices deletes the registered APIService resources for
 // the deprecated Antrea API groups.
 func CleanupDeprecatedAPIServices(aggregatorClient clientset.Interface) error {
+	_ = "STUB: not implemented"
 	// The APIService of a deprecated API group should be added to the slice.
 	// After Antrea upgrades from an old version to a new version that
 	// deprecates a registered APIService, the APIService should be deleted,
 	// otherwise K8s will fail to delete an existing Namespace.
 	// Also check: https://github.com/antrea-io/antrea/issues/494
-	deprecatedAPIServices := []string{}
-	for _, as := range deprecatedAPIServices {
-		err := aggregatorClient.ApiregistrationV1().APIServices().Delete(context.TODO(), as, metav1.DeleteOptions{})
-		if err == nil {
-			klog.Infof("Deleted the deprecated APIService %s", as)
-		} else if !apierrors.IsNotFound(err) {
-			return err
-		}
-	}
 	return nil
 }
 
 func installHandlers(c *ExtraConfig, s *genericapiserver.GenericAPIServer) {
-	s.Handler.NonGoRestfulMux.HandleFunc("/loglevel", loglevel.HandleFunc())
-	s.Handler.NonGoRestfulMux.HandleFunc("/featuregates", featuregates.HandleFunc(c.k8sClient))
-	s.Handler.NonGoRestfulMux.HandleFunc("/endpoint", endpoint.HandleFunc(c.endpointQuerier))
-	// Webhook to mutate Namespace labels and add its metadata.name as a label
-	s.Handler.NonGoRestfulMux.HandleFunc("/mutate/namespace", webhook.HandleMutationLabels())
-	if features.DefaultFeatureGate.Enabled(features.AntreaPolicy) {
-		// Get new NetworkPolicyMutator
-		m := controllernetworkpolicy.NewNetworkPolicyMutator(c.networkPolicyController)
-		// Install handlers for NetworkPolicy related mutation
-		s.Handler.NonGoRestfulMux.HandleFunc("/mutate/acnp", webhook.HandleMutationNetworkPolicy(m))
-		s.Handler.NonGoRestfulMux.HandleFunc("/mutate/annp", webhook.HandleMutationNetworkPolicy(m))
-		s.Handler.NonGoRestfulMux.HandleFunc("/mutate/anp", webhook.HandleMutationNetworkPolicy(m))
-
-		// Get new NetworkPolicyValidator
-		v := controllernetworkpolicy.NewNetworkPolicyValidator(c.networkPolicyController)
-		// Install handlers for NetworkPolicy related validation
-		s.Handler.NonGoRestfulMux.HandleFunc("/validate/tier", webhook.HandlerForValidateFunc(v.Validate))
-		s.Handler.NonGoRestfulMux.HandleFunc("/validate/acnp", webhook.HandlerForValidateFunc(v.Validate))
-		s.Handler.NonGoRestfulMux.HandleFunc("/validate/annp", webhook.HandlerForValidateFunc(v.Validate))
-		s.Handler.NonGoRestfulMux.HandleFunc("/validate/anp", webhook.HandlerForValidateFunc(v.Validate))
-		s.Handler.NonGoRestfulMux.HandleFunc("/validate/banp", webhook.HandlerForValidateFunc(v.Validate))
-		s.Handler.NonGoRestfulMux.HandleFunc("/validate/clustergroup", webhook.HandlerForValidateFunc(v.Validate))
-		s.Handler.NonGoRestfulMux.HandleFunc("/validate/group", webhook.HandlerForValidateFunc(v.Validate))
-
-		// Install a post start hook to initialize Tiers on start-up
-		s.AddPostStartHook("initialize-tiers", func(context genericapiserver.PostStartHookContext) error {
-			go func() {
-				// context gets cancelled when the server stops.
-				if err := c.networkPolicyController.InitializeTiers(context); err != nil {
-					klog.ErrorS(err, "Failed to initialize system Tiers")
-				}
-			}()
-			return nil
-		})
-	}
-
-	if features.DefaultFeatureGate.Enabled(features.Egress) || features.DefaultFeatureGate.Enabled(features.ServiceExternalIP) {
-		s.Handler.NonGoRestfulMux.HandleFunc("/validate/externalippool", webhook.HandlerForValidateFunc(c.externalIPPoolController.ValidateExternalIPPool))
-	}
-
-	if features.DefaultFeatureGate.Enabled(features.Egress) {
-		s.Handler.NonGoRestfulMux.HandleFunc("/validate/egress", webhook.HandlerForValidateFunc(c.egressController.ValidateEgress))
-	}
-
-	if features.DefaultFeatureGate.Enabled(features.AntreaIPAM) {
-		s.Handler.NonGoRestfulMux.HandleFunc("/convert/ippool", webhook.HandleCRDConversion(ipam.ConvertIPPool))
-		s.Handler.NonGoRestfulMux.HandleFunc("/validate/ippool", webhook.HandlerForValidateFunc(c.ipamController.ValidateIPPool))
-	}
-
-	if features.DefaultFeatureGate.Enabled(features.SupportBundleCollection) {
-		s.Handler.NonGoRestfulMux.HandleFunc("/validate/supportbundlecollection", webhook.HandlerForValidateFunc(c.bundleCollectionController.Validate))
-	}
-
-	if features.DefaultFeatureGate.Enabled(features.Traceflow) {
-		s.Handler.NonGoRestfulMux.HandleFunc("/validate/traceflow", webhook.HandlerForValidateFunc(c.traceflowController.Validate))
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
-func DefaultCAConfig() *certificate.CAConfig {
-	return &certificate.CAConfig{
-		CAConfigMapName:              apis.AntreaCAConfigMapName,
-		TLSSecretName:                apis.AntreaControllerTLSSecretName,
-		APIServiceSelector:           antreaServedLabelSelector,
-		ValidatingWebhookSelector:    antreaServedLabelSelector,
-		MutationWebhookSelector:      antreaServedLabelSelector,
-		CRDConversionWebhookSelector: antreaServedLabelSelector,
-		CertDir:                      "/var/run/antrea/antrea-controller-tls",
-		SelfSignedCertDir:            "/var/run/antrea/antrea-controller-self-signed",
-		CertReadyTimeout:             2 * time.Minute,
-		MinValidDuration:             time.Hour * 24 * 90, // Rotate the certificate 90 days in advance.
-		ServiceName:                  apis.AntreaServiceName,
-		PairName:                     "antrea-controller",
-	}
-}
+// Webhook to mutate Namespace labels and add its metadata.name as a label
+
+// Get new NetworkPolicyMutator
+
+// Install handlers for NetworkPolicy related mutation
+
+// Get new NetworkPolicyValidator
+
+// Install handlers for NetworkPolicy related validation
+
+// Install a post start hook to initialize Tiers on start-up
+
+// context gets cancelled when the server stops.
+
+func DefaultCAConfig() *certificate.CAConfig { _ = "STUB: not implemented"; return nil }
+
+// Rotate the certificate 90 days in advance.

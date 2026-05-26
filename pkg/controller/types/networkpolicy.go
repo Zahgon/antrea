@@ -33,9 +33,7 @@ type Span interface {
 	Has(nodeName string) bool
 }
 
-func (meta *SpanMeta) Has(nodeName string) bool {
-	return meta.NodeNames.Has(nodeName)
-}
+func (meta *SpanMeta) Has(nodeName string) bool { _ = "STUB: not implemented"; return false }
 
 // AppliedToGroup describes a set of GroupMembers or a Service to apply Network Policies to.
 type AppliedToGroup struct {
@@ -121,18 +119,12 @@ type NetworkPolicy struct {
 }
 
 // GetAddressGroups returns AddressGroups used by this NetworkPolicy.
-func (p *NetworkPolicy) GetAddressGroups() sets.Set[string] {
-	addressGroups := sets.New[string]()
-	for _, rule := range p.Rules {
-		addressGroups.Insert(rule.From.AddressGroups...)
-		addressGroups.Insert(rule.To.AddressGroups...)
-	}
-	return addressGroups
-}
+func (p *NetworkPolicy) GetAddressGroups() sets.Set[string] { _ = "STUB: not implemented"; return nil }
 
 // GetAppliedToGroups returns AppliedToGroups used by this NetworkPolicy.
 func (p *NetworkPolicy) GetAppliedToGroups() sets.Set[string] {
-	return sets.New[string](p.AppliedToGroups...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RuleInfo stores the original NetworkPolicy info, index of this rule in the NetworkPolicy

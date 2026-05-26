@@ -14,46 +14,28 @@
 
 package check
 
-import (
-	"fmt"
-	"os"
-
-	"github.com/fatih/color"
-)
-
 type Logger struct {
 	prefix string
 }
 
-func NewLogger(prefix string) Logger {
-	return Logger{
-		prefix: prefix,
-	}
-}
+func NewLogger(prefix string) Logger { _ = "STUB: not implemented"; return *new(Logger) }
 
 type stringFormatterFunc func(format string, a ...interface{}) string
 
 func noopStringFormatter(format string, a ...interface{}) string {
-	return fmt.Sprintf(format, a...)
+	_ = "STUB: not implemented"
+	return ""
 }
 
 func (l Logger) log(stringFormatter stringFormatterFunc, format string, a ...interface{}) {
-	fmt.Fprint(os.Stdout, l.prefix)
-	fmt.Fprintln(os.Stdout, stringFormatter(format, a...))
+	_ = "STUB: not implemented"
+	return
 }
 
-func (l Logger) Log(format string, a ...interface{}) {
-	l.log(noopStringFormatter, format, a...)
-}
+func (l Logger) Log(format string, a ...interface{}) { _ = "STUB: not implemented"; return }
 
-func (l Logger) Success(format string, a ...interface{}) {
-	l.log(color.GreenString, format, a...)
-}
+func (l Logger) Success(format string, a ...interface{}) { _ = "STUB: not implemented"; return }
 
-func (l Logger) Fail(format string, a ...interface{}) {
-	l.log(color.RedString, format, a...)
-}
+func (l Logger) Fail(format string, a ...interface{}) { _ = "STUB: not implemented"; return }
 
-func (l Logger) Warning(format string, a ...interface{}) {
-	l.log(color.YellowString, format, a...)
-}
+func (l Logger) Warning(format string, a ...interface{}) { _ = "STUB: not implemented"; return }

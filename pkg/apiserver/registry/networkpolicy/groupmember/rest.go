@@ -17,14 +17,10 @@ package groupmember
 import (
 	"context"
 
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apiserver/pkg/endpoints/request"
 	"k8s.io/apiserver/pkg/registry/rest"
 
-	"antrea.io/antrea/v2/pkg/apis/controlplane"
 	"antrea.io/antrea/v2/pkg/apiserver/registry/networkpolicy/clustergroupmember"
-	"antrea.io/antrea/v2/pkg/util/k8s"
 )
 
 type REST struct {
@@ -40,39 +36,25 @@ var (
 
 // NewREST returns a REST object that will work against API services.
 func NewREST(querier clustergroupmember.GroupMembershipQuerier) *REST {
-	return &REST{querier}
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (r *REST) New() runtime.Object {
-	return &controlplane.GroupMembers{}
-}
+func (r *REST) New() runtime.Object { _ = "STUB: not implemented"; return *new(runtime.Object) }
 
-func (r *REST) Destroy() {
-}
+func (r *REST) Destroy() { _ = "STUB: not implemented"; return }
 
 func (r *REST) Get(ctx context.Context, name string, options runtime.Object) (runtime.Object, error) {
-	ns, ok := request.NamespaceFrom(ctx)
-	if !ok || len(ns) == 0 {
-		return nil, errors.NewBadRequest("Namespace parameter required.")
-	}
-	groupName := k8s.NamespacedName(ns, name)
-	var err error
-	memberList := &controlplane.GroupMembers{}
-	memberList.Namespace = ns
-	memberList.Name = name
-	memberList.EffectiveMembers, memberList.EffectiveIPBlocks, memberList.TotalMembers, memberList.TotalPages, memberList.CurrentPage, err = clustergroupmember.GetPaginatedMembers(r.querier, groupName, options)
-	return memberList, err
+	_ = "STUB: not implemented"
+	return *new(runtime.Object), nil
 }
 
 // NewGetOptions returns the default options for Get, so options object is never nil.
 func (r *REST) NewGetOptions() (runtime.Object, bool, string) {
-	return &controlplane.PaginationGetOptions{}, false, ""
+	_ = "STUB: not implemented"
+	return *new(runtime.Object), false, ""
 }
 
-func (r *REST) NamespaceScoped() bool {
-	return true
-}
+func (r *REST) NamespaceScoped() bool { _ = "STUB: not implemented"; return false }
 
-func (r *REST) GetSingularName() string {
-	return "groupmembers"
-}
+func (r *REST) GetSingularName() string { _ = "STUB: not implemented"; return "" }

@@ -26,7 +26,6 @@ package testing
 
 import (
 	net "net"
-	reflect "reflect"
 
 	servicecidr "antrea.io/antrea/v2/pkg/agent/servicecidr"
 	gomock "go.uber.org/mock/gomock"
@@ -46,39 +45,37 @@ type MockInterfaceMockRecorder struct {
 
 // NewMockInterface creates a new mock instance.
 func NewMockInterface(ctrl *gomock.Controller) *MockInterface {
-	mock := &MockInterface{ctrl: ctrl}
-	mock.recorder = &MockInterfaceMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddEventHandler mocks base method.
+	return nil
 }
 
-// AddEventHandler mocks base method.
 func (m *MockInterface) AddEventHandler(handler servicecidr.EventHandler) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "AddEventHandler", handler)
+	_ = "STUB: not implemented"
+	return
 }
 
 // AddEventHandler indicates an expected call of AddEventHandler.
 func (mr *MockInterfaceMockRecorder) AddEventHandler(handler any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddEventHandler", reflect.TypeOf((*MockInterface)(nil).AddEventHandler), handler)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetServiceCIDRs mocks base method.
 func (m *MockInterface) GetServiceCIDRs() ([]*net.IPNet, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetServiceCIDRs")
-	ret0, _ := ret[0].([]*net.IPNet)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetServiceCIDRs indicates an expected call of GetServiceCIDRs.
 func (mr *MockInterfaceMockRecorder) GetServiceCIDRs() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServiceCIDRs", reflect.TypeOf((*MockInterface)(nil).GetServiceCIDRs))
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -16,16 +16,8 @@ package addressgroup
 
 import (
 	"io"
-	"reflect"
 
-	"k8s.io/apimachinery/pkg/api/meta"
-	"k8s.io/kubectl/pkg/cmd/get"
-	"k8s.io/kubectl/pkg/scheme"
-
-	"antrea.io/antrea/v2/pkg/antctl/transform"
 	"antrea.io/antrea/v2/pkg/antctl/transform/common"
-	cpv1beta "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	"antrea.io/antrea/v2/pkg/util/printers"
 )
 
 type Response struct {
@@ -35,78 +27,28 @@ type Response struct {
 }
 
 func listTransform(l interface{}, opts map[string]string) (interface{}, error) {
-	groupsList := l.(*cpv1beta.AddressGroupList)
-	if len(groupsList.Items) == 0 {
-		return "", nil
-	}
-	sortField := opts["sort-by"]
-	if sortField == "" {
-		sortField = ".metadata.name"
-	}
-
-	addressGroupRuntimeObjectList, _ := meta.ExtractList(groupsList)
-	if _, err := get.SortObjects(scheme.Codecs.UniversalDecoder(), addressGroupRuntimeObjectList, sortField); err != nil {
-		return "", err
-	}
-
-	result := make([]Response, 0, len(groupsList.Items))
-	for i := range addressGroupRuntimeObjectList {
-		o, _ := objectTransform(addressGroupRuntimeObjectList[i], opts)
-		result = append(result, o.(Response))
-	}
-	return result, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func objectTransform(o interface{}, _ map[string]string) (interface{}, error) {
-	group := o.(*cpv1beta.AddressGroup)
-	var pods, nodes []common.GroupMember
-	for _, member := range group.GroupMembers {
-		gm := common.GroupMemberTransform(member)
-		if member.Node != nil {
-			nodes = append(nodes, gm)
-			continue
-		}
-		pods = append(pods, gm)
-	}
-	return Response{Name: group.Name, Pods: pods, Nodes: nodes}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func Transform(reader io.Reader, single bool, opts map[string]string) (interface{}, error) {
-	return transform.GenericFactory(
-		reflect.TypeOf(cpv1beta.AddressGroup{}),
-		reflect.TypeOf(cpv1beta.AddressGroupList{}),
-		objectTransform,
-		listTransform,
-		opts,
-	)(reader, single)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 var _ common.TableOutput = new(Response)
 
-func (r Response) GetTableHeader() []string {
-	return []string{"NAME", "POD-IPS", "NODE-IPS"}
-}
+func (r Response) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
-func (r Response) GetPodIPs(maxColumnLength int) string {
-	list := make([]string, len(r.Pods))
-	for i, pod := range r.Pods {
-		list[i] = pod.IP
-	}
-	return printers.GenerateTableElementWithSummary(list, maxColumnLength)
-}
+func (r Response) GetPodIPs(maxColumnLength int) string { _ = "STUB: not implemented"; return "" }
 
-func (r Response) GetNodeIPs(maxColumnLength int) string {
-	list := make([]string, len(r.Nodes))
-	for i, node := range r.Nodes {
-		list[i] = node.IP
-	}
-	return printers.GenerateTableElementWithSummary(list, maxColumnLength)
-}
+func (r Response) GetNodeIPs(maxColumnLength int) string { _ = "STUB: not implemented"; return "" }
 
-func (r Response) GetTableRow(maxColumnLength int) []string {
-	return []string{r.Name, r.GetPodIPs(maxColumnLength), r.GetNodeIPs(maxColumnLength)}
-}
+func (r Response) GetTableRow(maxColumnLength int) []string { _ = "STUB: not implemented"; return nil }
 
-func (r Response) SortRows() bool {
-	return true
-}
+func (r Response) SortRows() bool { _ = "STUB: not implemented"; return false }

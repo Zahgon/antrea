@@ -26,7 +26,6 @@ package testing
 
 import (
 	net "net"
-	reflect "reflect"
 
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,27 +44,25 @@ type MockPacketListenerMockRecorder struct {
 
 // NewMockPacketListener creates a new mock instance.
 func NewMockPacketListener(ctrl *gomock.Controller) *MockPacketListener {
-	mock := &MockPacketListener{ctrl: ctrl}
-	mock.recorder = &MockPacketListenerMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockPacketListener) EXPECT() *MockPacketListenerMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// ListenPacket mocks base method.
+	return nil
 }
 
-// ListenPacket mocks base method.
 func (m *MockPacketListener) ListenPacket(network, address string) (net.PacketConn, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListenPacket", network, address)
-	ret0, _ := ret[0].(net.PacketConn)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return *new(net.PacketConn), nil
 }
 
 // ListenPacket indicates an expected call of ListenPacket.
 func (mr *MockPacketListenerMockRecorder) ListenPacket(network, address any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListenPacket", reflect.TypeOf((*MockPacketListener)(nil).ListenPacket), network, address)
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -40,9 +40,6 @@ type ServiceConfig struct {
 }
 
 func (c *ServiceConfig) TrafficPolicyGroupID() openflow.GroupIDType {
-	if c.TrafficPolicyLocal {
-		return c.LocalGroupID
-	} else {
-		return c.ClusterGroupID
-	}
+	_ = "STUB: not implemented"
+	return *new(openflow.GroupIDType)
 }

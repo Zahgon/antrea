@@ -29,22 +29,6 @@ type fakeNetworkPolicies struct {
 }
 
 func newFakeNetworkPolicies(fake *FakeCrdV1beta1, namespace string) crdv1beta1.NetworkPolicyInterface {
-	return &fakeNetworkPolicies{
-		gentype.NewFakeClientWithList[*v1beta1.NetworkPolicy, *v1beta1.NetworkPolicyList](
-			fake.Fake,
-			namespace,
-			v1beta1.SchemeGroupVersion.WithResource("networkpolicies"),
-			v1beta1.SchemeGroupVersion.WithKind("NetworkPolicy"),
-			func() *v1beta1.NetworkPolicy { return &v1beta1.NetworkPolicy{} },
-			func() *v1beta1.NetworkPolicyList { return &v1beta1.NetworkPolicyList{} },
-			func(dst, src *v1beta1.NetworkPolicyList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta1.NetworkPolicyList) []*v1beta1.NetworkPolicy {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1beta1.NetworkPolicyList, items []*v1beta1.NetworkPolicy) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.NetworkPolicyInterface)
 }

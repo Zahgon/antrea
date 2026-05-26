@@ -22,6 +22,4 @@ import (
 )
 
 // ovsVSwitchdUDS returns the file path of the ovs-vswitchd control named pipe.
-func ovsVSwitchdUDS(ctx context.Context) (string, error) {
-	return "c:/openvswitch/var/run/openvswitch/ovs-vswitchd.ctl", nil
-}
+func ovsVSwitchdUDS(ctx context.Context) (string, error) { _ = "STUB: not implemented"; return "", nil }

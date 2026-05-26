@@ -15,15 +15,9 @@
 package networkpolicy
 
 import (
-	"crypto/sha1" // #nosec G505: not used for security purposes
-	"encoding/hex"
-	"encoding/json"
-	"fmt"
-	"strings"
+	// #nosec G505: not used for security purposes
 
 	admv1 "k8s.io/api/admission/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/klog/v2"
 
 	crdv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
 )
@@ -34,74 +28,17 @@ type NetworkPolicyMutator struct {
 
 // NewNetworkPolicyMutator returns a new *NetworkPolicyMutator.
 func NewNetworkPolicyMutator(networkPolicyController *NetworkPolicyController) *NetworkPolicyMutator {
-	return &NetworkPolicyMutator{
-		networkPolicyController: networkPolicyController,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Mutate function mutates an Antrea-native policy object
 func (m *NetworkPolicyMutator) Mutate(ar *admv1.AdmissionReview) *admv1.AdmissionResponse {
-	var result *metav1.Status
-	var msg string
-	var patch []byte
-	allowed := false
-	patchType := admv1.PatchTypeJSONPatch
-
-	op := ar.Request.Operation
-	curRaw := ar.Request.Object.Raw
-	oldRaw := ar.Request.OldObject.Raw
-
-	switch ar.Request.Kind.Kind {
-	case "ClusterNetworkPolicy":
-		klog.V(2).Info("Mutating Antrea ClusterNetworkPolicy CRD")
-		var curACNP, oldACNP crdv1beta1.ClusterNetworkPolicy
-		if curRaw != nil {
-			if err := json.Unmarshal(curRaw, &curACNP); err != nil {
-				klog.Errorf("Error de-serializing current Antrea ClusterNetworkPolicy")
-				return GetAdmissionResponseForErr(err)
-			}
-		}
-		if oldRaw != nil {
-			if err := json.Unmarshal(oldRaw, &oldACNP); err != nil {
-				klog.Errorf("Error de-serializing old Antrea ClusterNetworkPolicy")
-				return GetAdmissionResponseForErr(err)
-			}
-		}
-		msg, allowed, patch = m.mutateAntreaPolicy(op, curACNP.Spec.Ingress, curACNP.Spec.Egress, curACNP.Spec.Tier)
-	case "NetworkPolicy":
-		klog.V(2).Info("Mutating Antrea NetworkPolicy CRD")
-		var curANNP, oldANNP crdv1beta1.NetworkPolicy
-		if curRaw != nil {
-			if err := json.Unmarshal(curRaw, &curANNP); err != nil {
-				klog.Errorf("Error de-serializing current Antrea NetworkPolicy")
-				return GetAdmissionResponseForErr(err)
-			}
-		}
-		if oldRaw != nil {
-			if err := json.Unmarshal(oldRaw, &oldANNP); err != nil {
-				klog.Errorf("Error de-serializing old Antrea NetworkPolicy")
-				return GetAdmissionResponseForErr(err)
-			}
-		}
-		msg, allowed, patch = m.mutateAntreaPolicy(op, curANNP.Spec.Ingress, curANNP.Spec.Egress, curANNP.Spec.Tier)
-	}
-
-	if msg != "" {
-		result = &metav1.Status{
-			Message: msg,
-		}
-	}
-	response := &admv1.AdmissionResponse{
-		Allowed: allowed,
-		Result:  result,
-	}
-	// For a mutating webhook, patch and patchType must be provided together only when patch exists
-	if len(patch) > 0 {
-		response.PatchType = &patchType
-		response.Patch = patch
-	}
-	return response
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// For a mutating webhook, patch and patchType must be provided together only when patch exists
 
 // mutateAntreaPolicy mutates names of rules of an Antrea NetworkPolicy CRD.
 // If users didn't specify the name of an ingress or egress rule,
@@ -109,48 +46,20 @@ func (m *NetworkPolicyMutator) Mutate(ar *admv1.AdmissionReview) *admv1.Admissio
 // addition to the rule names, it also mutates the Tier field to the default
 // tier name if it is unset.
 func (m *NetworkPolicyMutator) mutateAntreaPolicy(op admv1.Operation, ingress, egress []crdv1beta1.Rule, tier string) (string, bool, []byte) {
-	allowed := true
-	reason := ""
-	var patch []byte
-	switch op {
-	case admv1.Create, admv1.Update:
-		// Mutate Antrea-native policy rule names.
-		ingressRulePaths, ingressRuleNames := generateRuleNames("ingress", ingress)
-		egressRulePaths, egressRuleNames := generateRuleNames("egress", egress)
-		allPaths := append(ingressRulePaths, egressRulePaths...)
-		allValues := append(ingressRuleNames, egressRuleNames...)
-		// Mutate empty tier name to the name of the Default application Tier.
-		if tier == "" {
-			allPaths = append(allPaths, "/spec/tier")
-			allValues = append(allValues, defaultTierName)
-		}
-		genPatch, err := createReplacePatch(allPaths, allValues)
-		if err != nil {
-			allowed = false
-			reason = "unable to generate mutating patch"
-			break
-		}
-		patch = genPatch
-
-	case admv1.Delete:
-		// Delete of Antrea Policies have no mutation
-		allowed = true
-	}
-	return reason, allowed, patch
+	_ = "STUB: not implemented"
+	return "", false, nil
 }
+
+// Mutate Antrea-native policy rule names.
+
+// Mutate empty tier name to the name of the Default application Tier.
+
+// Delete of Antrea Policies have no mutation
 
 // generateRuleNames generates unique rule names and returns a list of json paths and the corresponding list of generated names
 func generateRuleNames(prefix string, rules []crdv1beta1.Rule) ([]string, []string) {
-	var paths []string
-	var values []string
-	for idx, rule := range rules {
-		if rule.Name == "" {
-			genName := fmt.Sprintf("%s-%s-%s", prefix, strings.ToLower(string(*rule.Action)), hashRule(rule))
-			paths = append(paths, fmt.Sprintf("/spec/%s/%d/name", prefix, idx))
-			values = append(values, genName)
-		}
-	}
-	return paths, values
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 type jsonPatchOperation string
@@ -171,30 +80,15 @@ type jsonPatch struct {
 
 // createReplacePatch use paths and values that need to be replace to generate a serialized patch
 func createReplacePatch(paths []string, values []string) ([]byte, error) {
-	var patch []jsonPatch
-
-	if len(paths) != len(values) {
-		return nil, fmt.Errorf("the number of paths is not equal to the number of values that need to be added")
-	}
-
-	for i := range paths {
-		patch = append(patch, jsonPatch{
-			Op:    jsonPatchReplaceOp,
-			Path:  paths[i],
-			Value: values[i],
-		})
-	}
-
-	return json.Marshal(patch)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 const ruleNameSuffixLen = 7
 
 // hashRule calculates a string based on the rule's content.
 func hashRule(r crdv1beta1.Rule) string {
-	hash := sha1.New() // #nosec G401: not used for security purposes
-	b, _ := json.Marshal(r)
-	hash.Write(b)
-	hashValue := hex.EncodeToString(hash.Sum(nil))
-	return hashValue[:ruleNameSuffixLen]
+	_ = "STUB: not implemented"
+	// #nosec G401: not used for security purposes
+	return ""
 }

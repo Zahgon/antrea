@@ -16,17 +16,13 @@
 package multicast
 
 import (
-	"fmt"
 	"net"
-	"strings"
 	"time"
 
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/tools/cache"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/config"
-	"antrea.io/antrea/v2/pkg/agent/util"
 )
 
 const (
@@ -36,42 +32,14 @@ const (
 )
 
 func newRouteClient(nodeconfig *config.NodeConfig, groupCache cache.Indexer, multicastSocket RouteInterface, multicastInterfaces sets.Set[string], flexibleIPAMEnabled bool) *MRouteClient {
-	var m = &MRouteClient{
-		igmpMsgChan:         make(chan []byte, workerCount),
-		nodeConfig:          nodeconfig,
-		groupCache:          groupCache,
-		inboundRouteCache:   cache.NewIndexer(getMulticastInboundEntryKey, cache.Indexers{GroupNameIndexName: inboundGroupIndexFunc}),
-		multicastInterfaces: sets.List(multicastInterfaces),
-		outboundRouteCache:  cache.NewIndexer(getMulticastOutboundEntryKey, cache.Indexers{}),
-		socket:              multicastSocket,
-		flexibleIPAMEnabled: flexibleIPAMEnabled,
-	}
-	return m
-}
-
-func (c *MRouteClient) Initialize() error {
-	c.setMulticastInterfaces()
-	// Allocate VIF for each interface in multicastInterfaceNames and gatewayInterface.
-	// The VIFs will be later used for multicast route configuration.
-	gatewayInterfaceVIF, err := c.socket.AllocateVIFs([]string{c.nodeConfig.GatewayConfig.Name}, 0)
-	if err != nil {
-		return err
-	}
-	c.internalInterfaceVIF = gatewayInterfaceVIF[0]
-	multicastInterfaceNames := make([]string, len(c.multicastInterfaceConfigs))
-	for i, config := range c.multicastInterfaceConfigs {
-		multicastInterfaceNames[i] = config.Name
-	}
-	externalInterfaceVIFs, err := c.socket.AllocateVIFs(multicastInterfaceNames, c.internalInterfaceVIF+1)
-	if err != nil {
-		return err
-	}
-	c.externalInterfaceVIFs = externalInterfaceVIFs
-	if err := c.detectVIFMode(); err != nil {
-		return err
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
+
+func (c *MRouteClient) Initialize() error { _ = "STUB: not implemented"; return nil }
+
+// Allocate VIF for each interface in multicastInterfaceNames and gatewayInterface.
+// The VIFs will be later used for multicast route configuration.
 
 // MRouteClient configures static multicast route.
 type MRouteClient struct {
@@ -96,133 +64,50 @@ type MRouteClient struct {
 // by making these interfaces accept multicast traffic with multicast ip:mgroup.
 // https://tldp.org/HOWTO/Multicast-HOWTO-6.html#ss6.4
 func (c *MRouteClient) multicastInterfacesJoinMgroup(mgroup net.IP) error {
-	groupIP := mgroup.To4()
-	for _, config := range c.multicastInterfaceConfigs {
-		addrIP := config.IPv4Addr.IP.To4()
-		err := c.socket.MulticastInterfaceJoinMgroup(groupIP, addrIP, config.Name)
-		if err != nil && !strings.Contains(err.Error(), "address already in use") {
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (c *MRouteClient) multicastInterfacesLeaveMgroup(mgroup net.IP) error {
-	groupIP := mgroup.To4()
-	for _, config := range c.multicastInterfaceConfigs {
-		addrIP := config.IPv4Addr.IP.To4()
-		err := c.socket.MulticastInterfaceLeaveMgroup(groupIP, addrIP, config.Name)
-		if err != nil {
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // processIGMPNocacheMsg reads igmpMsg from the multicast socket and configures
 // multicast route based on VIF value in the message.
-func (c *MRouteClient) processIGMPNocacheMsg(igmpMsg []byte) {
-	klog.V(2).InfoS("Received igmpMsg", "igmpMsg", igmpMsg)
-	msg, err := c.parseIGMPMsg(igmpMsg)
-	if err != nil {
-		klog.V(4).ErrorS(err, "Error parsing IGMP message")
-		return
-	}
-	if msg.VIF != c.internalInterfaceVIF {
-		// Skip inbound multicast traffic when there is no multicast receiver Pod
-		// listening the msg.Dst group.
-		status, ok, _ := c.groupCache.GetByKey(msg.Dst.String())
-		if !ok {
-			return
-		}
-		groupStatus := status.(*GroupMemberStatus)
-		if len(groupStatus.localMembers) == 0 {
-			return
-		}
-		// Prevent adding route entries for unrecognized VIF.
-		if len(c.externalInterfaceVIFs) < int(msg.VIF) {
-			klog.ErrorS(fmt.Errorf("error finding VIF"), "Adding inbound multicast route entry failed", "VIF", msg.VIF)
-			return
-		}
-		err := c.addInboundMrouteEntry(msg.Src, msg.Dst, msg.VIF)
-		if err != nil {
-			klog.ErrorS(err, "Adding inbound multicast route entry failed")
-		}
-	} else {
-		err = c.addOutboundMrouteEntry(msg.Src, msg.Dst)
-		if err != nil {
-			klog.ErrorS(err, "Adding outbound multicast route entry failed")
-		}
-	}
-}
+func (c *MRouteClient) processIGMPNocacheMsg(igmpMsg []byte) { _ = "STUB: not implemented"; return }
+
+// Skip inbound multicast traffic when there is no multicast receiver Pod
+// listening the msg.Dst group.
+
+// Prevent adding route entries for unrecognized VIF.
 
 func (c *MRouteClient) deleteInboundMrouteEntryByGroup(group net.IP) (err error) {
-	klog.V(2).InfoS("Deleting multicast group", "group", group)
-	mEntries, _ := c.inboundRouteCache.ByIndex(GroupNameIndexName, group.String())
-	for _, route := range mEntries {
-		entry := route.(*inboundMulticastRouteEntry)
-		err := c.deleteInboundMRoute(entry)
-		if err != nil {
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (c *MRouteClient) deleteInboundMRoute(mRoute *inboundMulticastRouteEntry) error {
-	err := c.socket.DelMrouteEntry(net.ParseIP(mRoute.src), net.ParseIP(mRoute.group), mRoute.vif)
-	if err != nil {
-		return err
-	}
-	c.inboundRouteCache.Delete(mRoute)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (c *MRouteClient) deleteOutboundMRoute(mRoute *outboundMulticastRouteEntry) error {
-	err := c.socket.DelMrouteEntry(net.ParseIP(mRoute.src), net.ParseIP(mRoute.group), c.internalInterfaceVIF)
-	if err != nil {
-		return err
-	}
-	c.outboundRouteCache.Delete(mRoute)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // addOutboundMrouteEntry configures multicast route from Antrea gateway to all the multicast interfaces,
 // allowing multicast srcNode Pods to send multicast traffic to external.
 func (c *MRouteClient) addOutboundMrouteEntry(src net.IP, group net.IP) error {
-	klog.V(2).InfoS("Adding outbound multicast route entry", "src", src, "group", group, "outboundVIFs", c.externalInterfaceVIFs)
-	err := c.socket.AddMrouteEntry(src, group, c.internalInterfaceVIF, c.externalInterfaceVIFs)
-	if err != nil {
-		return err
-	}
-	routeEntry := &outboundMulticastRouteEntry{
-		multicastRouteEntry: multicastRouteEntry{
-			group:       group.String(),
-			src:         src.String(),
-			updatedTime: time.Now(),
-		},
-	}
-	c.outboundRouteCache.Add(routeEntry)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // addInboundMrouteEntry configures multicast route from multicast interface to Antrea gateway
 // to allow multicast receiver Pods to receive multicast traffic from external.
 func (c *MRouteClient) addInboundMrouteEntry(src net.IP, group net.IP, inboundVIF uint16) (err error) {
-	klog.V(2).InfoS("Adding inbound multicast route entry", "src", src, "group", group, "inboundVIF", inboundVIF)
-	err = c.socket.AddMrouteEntry(src, group, inboundVIF, []uint16{c.internalInterfaceVIF})
-	if err != nil {
-		return err
-	}
-	routeEntry := &inboundMulticastRouteEntry{
-		vif: inboundVIF,
-		multicastRouteEntry: multicastRouteEntry{
-			group:       group.String(),
-			src:         src.String(),
-			updatedTime: time.Now(),
-		},
-	}
-	c.inboundRouteCache.Add(routeEntry)
+	_ = "STUB: not implemented"
 	return nil
 }
 
@@ -268,57 +153,25 @@ type inboundMulticastRouteEntry struct {
 }
 
 func getMulticastInboundEntryKey(obj interface{}) (string, error) {
-	entry := obj.(*inboundMulticastRouteEntry)
-	return entry.group + "/" + entry.src + "/" + fmt.Sprint(entry.vif), nil
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 func getMulticastOutboundEntryKey(obj interface{}) (string, error) {
-	entry := obj.(*outboundMulticastRouteEntry)
-	return entry.group + "/" + entry.src, nil
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 func inboundGroupIndexFunc(obj interface{}) ([]string, error) {
-	entry, ok := obj.(*inboundMulticastRouteEntry)
-	if !ok {
-		return []string{}, nil
-	}
-	return []string{entry.group}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // setMulticastInterfaces tries to compute all the multicast interfaces used to
 // accept and send multicast traffic based on the provided multicastInterfaces.
-func (c *MRouteClient) setMulticastInterfaces() {
-	multicastInterfaceConfigs := make([]multicastInterfaceConfig, 0, len(c.multicastInterfaces))
-	for _, ifaceName := range c.multicastInterfaces {
-		ipv4Addr, ipv6Addr, iface, err := util.GetIPNetDeviceByName(ifaceName)
-		if err != nil {
-			klog.ErrorS(err, "Failed to get local IPNet device", "interface", ifaceName)
-			continue
-		}
-		if !strings.Contains(iface.Flags.String(), MulticastFlag) {
-			klog.ErrorS(fmt.Errorf("failed to get multicast flag for this interface"), "Not a multicast enabled interface", "interface", ifaceName)
-			continue
-		}
-		config := multicastInterfaceConfig{
-			Name:     iface.Name,
-			IPv4Addr: ipv4Addr,
-			IPv6Addr: ipv6Addr,
-		}
-		multicastInterfaceConfigs = append(multicastInterfaceConfigs, config)
-	}
-	c.multicastInterfaceConfigs = multicastInterfaceConfigs
-}
+func (c *MRouteClient) setMulticastInterfaces() { _ = "STUB: not implemented"; return }
 
-func (c *MRouteClient) worker(stopCh <-chan struct{}) {
-	for {
-		select {
-		case msg := <-c.igmpMsgChan:
-			c.processIGMPNocacheMsg(msg)
-		case <-stopCh:
-			return
-		}
-	}
-}
+func (c *MRouteClient) worker(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
 // This struct is result of parsing igmpmsg from the kernel
 // with fields we interest.

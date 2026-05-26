@@ -29,22 +29,6 @@ type fakeAddressGroups struct {
 }
 
 func newFakeAddressGroups(fake *FakeControlplaneV1beta2) controlplanev1beta2.AddressGroupInterface {
-	return &fakeAddressGroups{
-		gentype.NewFakeClientWithList[*v1beta2.AddressGroup, *v1beta2.AddressGroupList](
-			fake.Fake,
-			"",
-			v1beta2.SchemeGroupVersion.WithResource("addressgroups"),
-			v1beta2.SchemeGroupVersion.WithKind("AddressGroup"),
-			func() *v1beta2.AddressGroup { return &v1beta2.AddressGroup{} },
-			func() *v1beta2.AddressGroupList { return &v1beta2.AddressGroupList{} },
-			func(dst, src *v1beta2.AddressGroupList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta2.AddressGroupList) []*v1beta2.AddressGroup {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1beta2.AddressGroupList, items []*v1beta2.AddressGroup) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(controlplanev1beta2.AddressGroupInterface)
 }

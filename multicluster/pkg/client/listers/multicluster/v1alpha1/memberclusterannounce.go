@@ -41,12 +41,14 @@ type memberClusterAnnounceLister struct {
 
 // NewMemberClusterAnnounceLister returns a new MemberClusterAnnounceLister.
 func NewMemberClusterAnnounceLister(indexer cache.Indexer) MemberClusterAnnounceLister {
-	return &memberClusterAnnounceLister{listers.New[*multiclusterv1alpha1.MemberClusterAnnounce](indexer, multiclusterv1alpha1.Resource("memberclusterannounce"))}
+	_ = "STUB: not implemented"
+	return *new(MemberClusterAnnounceLister)
 }
 
 // MemberClusterAnnounces returns an object that can list and get MemberClusterAnnounces.
 func (s *memberClusterAnnounceLister) MemberClusterAnnounces(namespace string) MemberClusterAnnounceNamespaceLister {
-	return memberClusterAnnounceNamespaceLister{listers.NewNamespaced[*multiclusterv1alpha1.MemberClusterAnnounce](s.ResourceIndexer, namespace)}
+	_ = "STUB: not implemented"
+	return *new(MemberClusterAnnounceNamespaceLister)
 }
 
 // MemberClusterAnnounceNamespaceLister helps list and get MemberClusterAnnounces.

@@ -14,13 +14,6 @@
 
 package version
 
-import (
-	"fmt"
-	"runtime"
-
-	"golang.org/x/mod/semver"
-)
-
 // These variables are set at build-time.
 var (
 	// Must follow the rules in https://semver.org/
@@ -37,38 +30,23 @@ var (
 
 // GetVersion returns the Antrea version as a canonical semver string (e.g. "v1.2.3").
 // Returns an empty string if the version has not been set at build time or is not valid.
-func GetVersion() string {
-	return semver.Canonical(Version)
-}
+func GetVersion() string { _ = "STUB: not implemented"; return "" }
 
 func GetGitSHA() string {
-	return GitSHA
+	_ = "STUB: not implemented"
+
+	// GetFullVersion returns the version string to be displayed by Antrea binaries. It will look like
+	// "<major>.<minor>.<patch>" for released versions and "<major>.<minor>.<patch>-<SHA>[.dirty]" for
+	// unreleased versions.
+	return ""
 }
 
-// GetFullVersion returns the version string to be displayed by Antrea binaries. It will look like
-// "<major>.<minor>.<patch>" for released versions and "<major>.<minor>.<patch>-<SHA>[.dirty]" for
-// unreleased versions.
-func GetFullVersion() string {
-	if Version == "" {
-		return "UNKNOWN"
-	}
-	if ReleaseStatus == "released" {
-		return Version
-	}
-	// add build information
-	if GitSHA == "" {
-		return fmt.Sprintf("%s-unknown", Version)
-	}
-	if GitTreeState == "dirty" {
-		return fmt.Sprintf("%s-%s.dirty", Version, GitSHA)
-	}
-	return fmt.Sprintf("%s-%s", Version, GitSHA)
-}
+func GetFullVersion() string { _ = "STUB: not implemented"; return "" }
+
+// add build information
 
 // GetFullVersionWithRuntimeInfo returns the same version string as GetFullVersion but appends
 // "<GOOS>/<GOARCH> <GOVERSION>", where GOOS is the running program's operating system target
 // (e.g. darwin, linux), GOARCH is the the running program's architecture target (e.g. amd64), and
 // GOVERSION is the Go version used to build the current binary.
-func GetFullVersionWithRuntimeInfo() string {
-	return fmt.Sprintf("%s %s/%s %s", GetFullVersion(), runtime.GOOS, runtime.GOARCH, runtime.Version())
-}
+func GetFullVersionWithRuntimeInfo() string { _ = "STUB: not implemented"; return "" }

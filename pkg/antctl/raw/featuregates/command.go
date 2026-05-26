@@ -16,20 +16,14 @@ package featuregates
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"io"
-	"net/url"
 
 	"github.com/spf13/cobra"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
-	"antrea.io/antrea/v2/pkg/antctl/raw"
 	"antrea.io/antrea/v2/pkg/antctl/runtime"
 	"antrea.io/antrea/v2/pkg/apiserver/apis"
-	"antrea.io/antrea/v2/pkg/apiserver/handlers/featuregates"
 	antrea "antrea.io/antrea/v2/pkg/client/clientset/versioned"
 )
 
@@ -59,142 +53,44 @@ func init() {
 	}
 }
 
-func agentRunE(cmd *cobra.Command, _ []string) error {
-	return featureGateRequest(cmd, runtime.ModeAgent)
-}
+func agentRunE(cmd *cobra.Command, _ []string) error { _ = "STUB: not implemented"; return nil }
 
 func controllerLocalRunE(cmd *cobra.Command, _ []string) error {
-	return featureGateRequest(cmd, runtime.ModeController)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func controllerRemoteRunE(cmd *cobra.Command, _ []string) error {
-	return featureGateRequest(cmd, "remote")
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func featureGateRequest(cmd *cobra.Command, mode string) error {
-	ctx := cmd.Context()
-	kubeconfig, k8sClientset, antreaClientset, err := getClients(cmd)
-	if err != nil {
-		return err
-	}
-
-	client, err := getRestClient(ctx, kubeconfig, k8sClientset, antreaClientset, mode)
-	if err != nil {
-		return err
-	}
-
-	var resp []apis.FeatureGateResponse
-	if resp, err = getFeatureGatesRequest(client); err != nil {
-		return err
-	}
-	var agentGates []apis.FeatureGateResponse
-	var agentWindowsGates []apis.FeatureGateResponse
-	var controllerGates []apis.FeatureGateResponse
-	for _, v := range resp {
-		switch v.Component {
-		case featuregates.AgentMode:
-			agentGates = append(agentGates, v)
-		case featuregates.AgentWindowsMode:
-			agentWindowsGates = append(agentWindowsGates, v)
-		case featuregates.ControllerMode:
-			controllerGates = append(controllerGates, v)
-		}
-	}
-	if len(agentGates) > 0 {
-		output(agentGates, featuregates.AgentMode, cmd.OutOrStdout())
-	}
-	if len(agentWindowsGates) > 0 {
-		output(agentWindowsGates, featuregates.AgentWindowsMode, cmd.OutOrStdout())
-	}
-	if len(controllerGates) > 0 {
-		output(controllerGates, featuregates.ControllerMode, cmd.OutOrStdout())
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func getConfigAndClients(cmd *cobra.Command) (*rest.Config, kubernetes.Interface, antrea.Interface, error) {
-	kubeconfig, err := raw.ResolveKubeconfig(cmd)
-	if err != nil {
-		return nil, nil, nil, err
-	}
-	if server, _ := Command.Flags().GetString("server"); server != "" {
-		kubeconfig.Host = server
-	}
-	k8sClientset, antreaClientset, err := raw.SetupClients(kubeconfig)
-	if err != nil {
-		return nil, nil, nil, fmt.Errorf("failed to create clientset: %w", err)
-	}
-	return kubeconfig, k8sClientset, antreaClientset, nil
+	_ = "STUB: not implemented"
+	return nil, *new(kubernetes.Interface), *new(antrea.Interface), nil
 }
 
 func getRestClientByMode(ctx context.Context, kubeconfig *rest.Config, k8sClientset kubernetes.Interface, antreaClientset antrea.Interface, mode string) (*rest.RESTClient, error) {
-	cfg := rest.CopyConfig(kubeconfig)
-	cfg.GroupVersion = &schema.GroupVersion{Group: "", Version: ""}
-	var err error
-	var client *rest.RESTClient
-	switch mode {
-	case runtime.ModeAgent, runtime.ModeController:
-		raw.SetupLocalKubeconfig(cfg)
-		client, err = rest.RESTClientFor(cfg)
-	case "remote":
-		client, err = getControllerClient(ctx, k8sClientset, antreaClientset, cfg, option.insecure)
-	}
-	if err != nil {
-		return nil, fmt.Errorf("failed to create rest client: %w", err)
-	}
-	return client, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func getControllerClient(ctx context.Context, k8sClientset kubernetes.Interface, antreaClientset antrea.Interface, kubeconfig *rest.Config, insecure bool) (*rest.RESTClient, error) {
-	controllerClientCfg, err := raw.CreateControllerClientCfg(ctx, k8sClientset, antreaClientset, kubeconfig, insecure)
-	if err != nil {
-		return nil, fmt.Errorf("error when creating controller client config: %w", err)
-	}
-	controllerClient, err := rest.RESTClientFor(controllerClientCfg)
-	if err != nil {
-		return nil, fmt.Errorf("error when creating controller client: %w", err)
-	}
-	return controllerClient, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func getFeatureGatesRequest(client *rest.RESTClient) ([]apis.FeatureGateResponse, error) {
-	var resp []apis.FeatureGateResponse
-	u := url.URL{Path: "/featuregates"}
-	getter := client.Get().RequestURI(u.RequestURI())
-	rawResp, err := getter.DoRaw(context.TODO())
-	if err != nil {
-		return nil, fmt.Errorf("error when requesting feature gates list: %w", err)
-	}
-	err = json.Unmarshal(rawResp, &resp)
-	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal feature gates list: %w", err)
-	}
-	return resp, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func output(resps []apis.FeatureGateResponse, component string, output io.Writer) {
-	switch component {
-	case featuregates.AgentMode:
-		output.Write([]byte("Antrea Agent Feature Gates\n"))
-	case featuregates.AgentWindowsMode:
-		output.Write([]byte("\n"))
-		output.Write([]byte("Antrea Agent Feature Gates (Windows)\n"))
-	case featuregates.ControllerMode:
-		output.Write([]byte("\n"))
-		output.Write([]byte("Antrea Controller Feature Gates\n"))
-	}
-
-	maxNameLen := len("FEATUREGATE")
-	maxStatusLen := len("STATUS")
-
-	for _, r := range resps {
-		maxNameLen = max(maxNameLen, len(r.Name))
-		maxStatusLen = max(maxStatusLen, len(r.Status))
-	}
-
-	formatter := fmt.Sprintf("%%-%ds%%-%ds%%-s\n", maxNameLen+5, maxStatusLen+5)
-	fmt.Fprintf(output, formatter, "FEATUREGATE", "STATUS", "VERSION")
-	for _, r := range resps {
-		fmt.Fprintf(output, formatter, r.Name, r.Status, r.Version)
-	}
+	_ = "STUB: not implemented"
+	return
 }

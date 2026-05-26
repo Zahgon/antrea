@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	multiclusterv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
-	scheme "antrea.io/antrea/v2/multicluster/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -55,14 +54,6 @@ type resourceExports struct {
 
 // newResourceExports returns a ResourceExports
 func newResourceExports(c *MulticlusterV1alpha1Client, namespace string) *resourceExports {
-	return &resourceExports{
-		gentype.NewClientWithList[*multiclusterv1alpha1.ResourceExport, *multiclusterv1alpha1.ResourceExportList](
-			"resourceexports",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			namespace,
-			func() *multiclusterv1alpha1.ResourceExport { return &multiclusterv1alpha1.ResourceExport{} },
-			func() *multiclusterv1alpha1.ResourceExportList { return &multiclusterv1alpha1.ResourceExportList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

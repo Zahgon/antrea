@@ -15,34 +15,11 @@
 package ndp
 
 import (
-	"fmt"
 	"net"
-	"net/netip"
-
-	"antrea.io/ndp"
 )
 
 // GratuitousNDPOverIface sends a gratuitous NDP from 'iface' using 'srcIP' as the source IP.
 func GratuitousNDPOverIface(srcIP net.IP, iface *net.Interface) error {
-	if srcIP.To4() != nil {
-		return fmt.Errorf("IPv4 is not supported")
-	}
-
-	conn, _, err := ndp.Listen(iface, ndp.LinkLocal)
-	if err != nil {
-		return fmt.Errorf("failed to create NDP responder for %q: %s", iface.Name, err)
-	}
-	defer conn.Close()
-	target, _ := netip.AddrFromSlice(srcIP)
-	na := &ndp.NeighborAdvertisement{
-		Override:      true,
-		TargetAddress: target,
-		Options: []ndp.Option{
-			&ndp.LinkLayerAddress{
-				Direction: ndp.Target,
-				Addr:      iface.HardwareAddr,
-			},
-		},
-	}
-	return conn.WriteTo(na, nil, netip.IPv6LinkLocalAllNodes())
+	_ = "STUB: not implemented"
+	return nil
 }

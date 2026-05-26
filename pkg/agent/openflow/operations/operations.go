@@ -15,12 +15,8 @@
 package operations
 
 import (
-	"fmt"
-	"time"
-
 	"antrea.io/libOpenflow/openflow15"
 
-	"antrea.io/antrea/v2/pkg/agent/metrics"
 	binding "antrea.io/antrea/v2/pkg/ovs/openflow"
 )
 
@@ -32,18 +28,7 @@ const (
 	del
 )
 
-func (a ofAction) String() string {
-	switch a {
-	case add:
-		return "add"
-	case mod:
-		return "modify"
-	case del:
-		return "delete"
-	default:
-		return "unknown"
-	}
-}
+func (a ofAction) String() string { _ = "STUB: not implemented"; return "" }
 
 type OFEntryOperations interface {
 	AddAll(flows []*openflow15.FlowMod) error
@@ -60,92 +45,51 @@ type ofEntryOperations struct {
 }
 
 func NewOFEntryOperations(b binding.Bridge) OFEntryOperations {
-	return &ofEntryOperations{bridge: b}
+	_ = "STUB: not implemented"
+	return *new(OFEntryOperations)
 }
 
 func (c *ofEntryOperations) AddAll(flowMessages []*openflow15.FlowMod) error {
-	return c.changeAll(map[ofAction][]*openflow15.FlowMod{add: flowMessages})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (c *ofEntryOperations) ModifyAll(flowMessages []*openflow15.FlowMod) error {
-	return c.changeAll(map[ofAction][]*openflow15.FlowMod{mod: flowMessages})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (c *ofEntryOperations) DeleteAll(flowMessages []*openflow15.FlowMod) error {
-	return c.changeAll(map[ofAction][]*openflow15.FlowMod{del: flowMessages})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (c *ofEntryOperations) BundleOps(adds, mods, dels []*openflow15.FlowMod) error {
-	return c.changeAll(map[ofAction][]*openflow15.FlowMod{add: adds, mod: mods, del: dels})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (c *ofEntryOperations) AddOFEntries(ofEntries []binding.OFEntry) error {
-	return c.changeOFEntries(ofEntries, add)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (c *ofEntryOperations) ModifyOFEntries(ofEntries []binding.OFEntry) error {
-	return c.changeOFEntries(ofEntries, mod)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (c *ofEntryOperations) DeleteOFEntries(ofEntries []binding.OFEntry) error {
-	return c.changeOFEntries(ofEntries, del)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (c *ofEntryOperations) changeAll(flowsMap map[ofAction][]*openflow15.FlowMod) error {
-	if len(flowsMap) == 0 {
-		return nil
-	}
-
-	startTime := time.Now()
-	defer func() {
-		d := time.Since(startTime)
-		for k, v := range flowsMap {
-			if len(v) != 0 {
-				metrics.OVSFlowOpsLatency.WithLabelValues(k.String()).Observe(float64(d.Milliseconds()))
-			}
-		}
-	}()
-
-	if err := c.bridge.AddFlowsInBundle(flowsMap[add], flowsMap[mod], flowsMap[del]); err != nil {
-		for k, v := range flowsMap {
-			if len(v) != 0 {
-				metrics.OVSFlowOpsErrorCount.WithLabelValues(k.String()).Inc()
-			}
-		}
-		return err
-	}
-	for k, v := range flowsMap {
-		if len(v) != 0 {
-			metrics.OVSFlowOpsCount.WithLabelValues(k.String()).Inc()
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (c *ofEntryOperations) changeOFEntries(ofEntries []binding.OFEntry, action ofAction) error {
-	if len(ofEntries) == 0 {
-		return nil
-	}
-	var adds, mods, dels []binding.OFEntry
-	switch action {
-	case add:
-		adds = ofEntries
-	case mod:
-		mods = ofEntries
-	case del:
-		dels = ofEntries
-	default:
-		return fmt.Errorf("OF Entries Action not exists: %s", action)
-	}
-	startTime := time.Now()
-	defer func() {
-		d := time.Since(startTime)
-		metrics.OVSFlowOpsLatency.WithLabelValues(action.String()).Observe(float64(d.Milliseconds()))
-	}()
-	if err := c.bridge.AddOFEntriesInBundle(adds, mods, dels); err != nil {
-		metrics.OVSFlowOpsErrorCount.WithLabelValues(action.String()).Inc()
-		return err
-	}
-	metrics.OVSFlowOpsCount.WithLabelValues(action.String()).Inc()
+	_ = "STUB: not implemented"
 	return nil
 }

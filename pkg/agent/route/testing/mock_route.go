@@ -27,7 +27,6 @@ package testing
 import (
 	context "context"
 	net "net"
-	reflect "reflect"
 
 	config "antrea.io/antrea/v2/pkg/agent/config"
 	openflow "antrea.io/antrea/v2/pkg/ovs/openflow"
@@ -49,388 +48,328 @@ type MockInterfaceMockRecorder struct {
 
 // NewMockInterface creates a new mock instance.
 func NewMockInterface(ctrl *gomock.Controller) *MockInterface {
-	mock := &MockInterface{ctrl: ctrl}
-	mock.recorder = &MockInterfaceMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddEgressRoutes mocks base method.
+	return nil
 }
 
-// AddEgressRoutes mocks base method.
 func (m *MockInterface) AddEgressRoutes(tableID uint32, dev int, gateway net.IP, prefixLength int) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddEgressRoutes", tableID, dev, gateway, prefixLength)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddEgressRoutes indicates an expected call of AddEgressRoutes.
 func (mr *MockInterfaceMockRecorder) AddEgressRoutes(tableID, dev, gateway, prefixLength any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddEgressRoutes", reflect.TypeOf((*MockInterface)(nil).AddEgressRoutes), tableID, dev, gateway, prefixLength)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddEgressRule mocks base method.
 func (m *MockInterface) AddEgressRule(tableID, mark uint32, isIPv6 bool) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddEgressRule", tableID, mark, isIPv6)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddEgressRule indicates an expected call of AddEgressRule.
 func (mr *MockInterfaceMockRecorder) AddEgressRule(tableID, mark, isIPv6 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddEgressRule", reflect.TypeOf((*MockInterface)(nil).AddEgressRule), tableID, mark, isIPv6)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddExternalIPConfigs mocks base method.
 func (m *MockInterface) AddExternalIPConfigs(svcInfoStr string, externalIP net.IP) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddExternalIPConfigs", svcInfoStr, externalIP)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddExternalIPConfigs indicates an expected call of AddExternalIPConfigs.
 func (mr *MockInterfaceMockRecorder) AddExternalIPConfigs(svcInfoStr, externalIP any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddExternalIPConfigs", reflect.TypeOf((*MockInterface)(nil).AddExternalIPConfigs), svcInfoStr, externalIP)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddLocalAntreaFlexibleIPAMPodRule mocks base method.
 func (m *MockInterface) AddLocalAntreaFlexibleIPAMPodRule(podAddresses []net.IP) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddLocalAntreaFlexibleIPAMPodRule", podAddresses)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddLocalAntreaFlexibleIPAMPodRule indicates an expected call of AddLocalAntreaFlexibleIPAMPodRule.
 func (mr *MockInterfaceMockRecorder) AddLocalAntreaFlexibleIPAMPodRule(podAddresses any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddLocalAntreaFlexibleIPAMPodRule", reflect.TypeOf((*MockInterface)(nil).AddLocalAntreaFlexibleIPAMPodRule), podAddresses)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddNodePortConfigs mocks base method.
 func (m *MockInterface) AddNodePortConfigs(nodePortAddresses []net.IP, port uint16, protocol openflow.Protocol) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddNodePortConfigs", nodePortAddresses, port, protocol)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddNodePortConfigs indicates an expected call of AddNodePortConfigs.
 func (mr *MockInterfaceMockRecorder) AddNodePortConfigs(nodePortAddresses, port, protocol any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddNodePortConfigs", reflect.TypeOf((*MockInterface)(nil).AddNodePortConfigs), nodePortAddresses, port, protocol)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddOrUpdateNodeNetworkPolicyIPSet mocks base method.
 func (m *MockInterface) AddOrUpdateNodeNetworkPolicyIPSet(ipsetName string, ipsetEntries sets.Set[string], isIPv6 bool) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddOrUpdateNodeNetworkPolicyIPSet", ipsetName, ipsetEntries, isIPv6)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddOrUpdateNodeNetworkPolicyIPSet indicates an expected call of AddOrUpdateNodeNetworkPolicyIPSet.
 func (mr *MockInterfaceMockRecorder) AddOrUpdateNodeNetworkPolicyIPSet(ipsetName, ipsetEntries, isIPv6 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddOrUpdateNodeNetworkPolicyIPSet", reflect.TypeOf((*MockInterface)(nil).AddOrUpdateNodeNetworkPolicyIPSet), ipsetName, ipsetEntries, isIPv6)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddOrUpdateNodeNetworkPolicyIPTables mocks base method.
 func (m *MockInterface) AddOrUpdateNodeNetworkPolicyIPTables(iptablesChains []string, iptablesRules [][]string, isIPv6 bool) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddOrUpdateNodeNetworkPolicyIPTables", iptablesChains, iptablesRules, isIPv6)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddOrUpdateNodeNetworkPolicyIPTables indicates an expected call of AddOrUpdateNodeNetworkPolicyIPTables.
 func (mr *MockInterfaceMockRecorder) AddOrUpdateNodeNetworkPolicyIPTables(iptablesChains, iptablesRules, isIPv6 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddOrUpdateNodeNetworkPolicyIPTables", reflect.TypeOf((*MockInterface)(nil).AddOrUpdateNodeNetworkPolicyIPTables), iptablesChains, iptablesRules, isIPv6)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddRouteForLink mocks base method.
 func (m *MockInterface) AddRouteForLink(dstCIDR *net.IPNet, linkIndex int) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddRouteForLink", dstCIDR, linkIndex)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddRouteForLink indicates an expected call of AddRouteForLink.
 func (mr *MockInterfaceMockRecorder) AddRouteForLink(dstCIDR, linkIndex any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddRouteForLink", reflect.TypeOf((*MockInterface)(nil).AddRouteForLink), dstCIDR, linkIndex)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddRoutes mocks base method.
 func (m *MockInterface) AddRoutes(podCIDR *net.IPNet, peerNodeName string, peerNodeIP, peerGwIP net.IP) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddRoutes", podCIDR, peerNodeName, peerNodeIP, peerGwIP)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddRoutes indicates an expected call of AddRoutes.
 func (mr *MockInterfaceMockRecorder) AddRoutes(podCIDR, peerNodeName, peerNodeIP, peerGwIP any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddRoutes", reflect.TypeOf((*MockInterface)(nil).AddRoutes), podCIDR, peerNodeName, peerNodeIP, peerGwIP)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddSNATRule mocks base method.
 func (m *MockInterface) AddSNATRule(snatIP net.IP, mark uint32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddSNATRule", snatIP, mark)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddSNATRule indicates an expected call of AddSNATRule.
 func (mr *MockInterfaceMockRecorder) AddSNATRule(snatIP, mark any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddSNATRule", reflect.TypeOf((*MockInterface)(nil).AddSNATRule), snatIP, mark)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ClearConntrackEntryForService mocks base method.
 func (m *MockInterface) ClearConntrackEntryForService(svcIP net.IP, svcPort uint16, endpointIP net.IP, protocol openflow.Protocol) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ClearConntrackEntryForService", svcIP, svcPort, endpointIP, protocol)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ClearConntrackEntryForService indicates an expected call of ClearConntrackEntryForService.
 func (mr *MockInterfaceMockRecorder) ClearConntrackEntryForService(svcIP, svcPort, endpointIP, protocol any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearConntrackEntryForService", reflect.TypeOf((*MockInterface)(nil).ClearConntrackEntryForService), svcIP, svcPort, endpointIP, protocol)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteEgressRoutes mocks base method.
 func (m *MockInterface) DeleteEgressRoutes(tableID uint32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteEgressRoutes", tableID)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteEgressRoutes indicates an expected call of DeleteEgressRoutes.
 func (mr *MockInterfaceMockRecorder) DeleteEgressRoutes(tableID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteEgressRoutes", reflect.TypeOf((*MockInterface)(nil).DeleteEgressRoutes), tableID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteEgressRule mocks base method.
 func (m *MockInterface) DeleteEgressRule(tableID, mark uint32, isIPv6 bool) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteEgressRule", tableID, mark, isIPv6)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteEgressRule indicates an expected call of DeleteEgressRule.
 func (mr *MockInterfaceMockRecorder) DeleteEgressRule(tableID, mark, isIPv6 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteEgressRule", reflect.TypeOf((*MockInterface)(nil).DeleteEgressRule), tableID, mark, isIPv6)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteExternalIPConfigs mocks base method.
 func (m *MockInterface) DeleteExternalIPConfigs(svcInfoStr string, externalIP net.IP) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteExternalIPConfigs", svcInfoStr, externalIP)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteExternalIPConfigs indicates an expected call of DeleteExternalIPConfigs.
 func (mr *MockInterfaceMockRecorder) DeleteExternalIPConfigs(svcInfoStr, externalIP any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteExternalIPConfigs", reflect.TypeOf((*MockInterface)(nil).DeleteExternalIPConfigs), svcInfoStr, externalIP)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteLocalAntreaFlexibleIPAMPodRule mocks base method.
 func (m *MockInterface) DeleteLocalAntreaFlexibleIPAMPodRule(podAddresses []net.IP) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteLocalAntreaFlexibleIPAMPodRule", podAddresses)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteLocalAntreaFlexibleIPAMPodRule indicates an expected call of DeleteLocalAntreaFlexibleIPAMPodRule.
 func (mr *MockInterfaceMockRecorder) DeleteLocalAntreaFlexibleIPAMPodRule(podAddresses any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteLocalAntreaFlexibleIPAMPodRule", reflect.TypeOf((*MockInterface)(nil).DeleteLocalAntreaFlexibleIPAMPodRule), podAddresses)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteNodeNetworkPolicyIPSet mocks base method.
 func (m *MockInterface) DeleteNodeNetworkPolicyIPSet(ipsetName string, isIPv6 bool) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteNodeNetworkPolicyIPSet", ipsetName, isIPv6)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteNodeNetworkPolicyIPSet indicates an expected call of DeleteNodeNetworkPolicyIPSet.
 func (mr *MockInterfaceMockRecorder) DeleteNodeNetworkPolicyIPSet(ipsetName, isIPv6 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteNodeNetworkPolicyIPSet", reflect.TypeOf((*MockInterface)(nil).DeleteNodeNetworkPolicyIPSet), ipsetName, isIPv6)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteNodeNetworkPolicyIPTables mocks base method.
 func (m *MockInterface) DeleteNodeNetworkPolicyIPTables(iptablesChains []string, isIPv6 bool) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteNodeNetworkPolicyIPTables", iptablesChains, isIPv6)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteNodeNetworkPolicyIPTables indicates an expected call of DeleteNodeNetworkPolicyIPTables.
 func (mr *MockInterfaceMockRecorder) DeleteNodeNetworkPolicyIPTables(iptablesChains, isIPv6 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteNodeNetworkPolicyIPTables", reflect.TypeOf((*MockInterface)(nil).DeleteNodeNetworkPolicyIPTables), iptablesChains, isIPv6)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteNodePortConfigs mocks base method.
 func (m *MockInterface) DeleteNodePortConfigs(nodePortAddresses []net.IP, port uint16, protocol openflow.Protocol) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteNodePortConfigs", nodePortAddresses, port, protocol)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteNodePortConfigs indicates an expected call of DeleteNodePortConfigs.
 func (mr *MockInterfaceMockRecorder) DeleteNodePortConfigs(nodePortAddresses, port, protocol any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteNodePortConfigs", reflect.TypeOf((*MockInterface)(nil).DeleteNodePortConfigs), nodePortAddresses, port, protocol)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteRouteForLink mocks base method.
 func (m *MockInterface) DeleteRouteForLink(dstCIDR *net.IPNet, linkIndex int) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteRouteForLink", dstCIDR, linkIndex)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteRouteForLink indicates an expected call of DeleteRouteForLink.
 func (mr *MockInterfaceMockRecorder) DeleteRouteForLink(dstCIDR, linkIndex any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteRouteForLink", reflect.TypeOf((*MockInterface)(nil).DeleteRouteForLink), dstCIDR, linkIndex)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteRoutes mocks base method.
 func (m *MockInterface) DeleteRoutes(podCIDR *net.IPNet) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteRoutes", podCIDR)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteRoutes indicates an expected call of DeleteRoutes.
 func (mr *MockInterfaceMockRecorder) DeleteRoutes(podCIDR any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteRoutes", reflect.TypeOf((*MockInterface)(nil).DeleteRoutes), podCIDR)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteSNATRule mocks base method.
-func (m *MockInterface) DeleteSNATRule(mark uint32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteSNATRule", mark)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockInterface) DeleteSNATRule(mark uint32) error { _ = "STUB: not implemented"; return nil }
 
 // DeleteSNATRule indicates an expected call of DeleteSNATRule.
 func (mr *MockInterfaceMockRecorder) DeleteSNATRule(mark any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSNATRule", reflect.TypeOf((*MockInterface)(nil).DeleteSNATRule), mark)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Initialize mocks base method.
 func (m *MockInterface) Initialize(nodeConfig *config.NodeConfig, done func()) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Initialize", nodeConfig, done)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Initialize indicates an expected call of Initialize.
 func (mr *MockInterfaceMockRecorder) Initialize(nodeConfig, done any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Initialize", reflect.TypeOf((*MockInterface)(nil).Initialize), nodeConfig, done)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MigrateRoutesToGw mocks base method.
 func (m *MockInterface) MigrateRoutesToGw(linkName string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MigrateRoutesToGw", linkName)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MigrateRoutesToGw indicates an expected call of MigrateRoutesToGw.
 func (mr *MockInterfaceMockRecorder) MigrateRoutesToGw(linkName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MigrateRoutesToGw", reflect.TypeOf((*MockInterface)(nil).MigrateRoutesToGw), linkName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Reconcile mocks base method.
-func (m *MockInterface) Reconcile(podCIDRs []string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Reconcile", podCIDRs)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockInterface) Reconcile(podCIDRs []string) error { _ = "STUB: not implemented"; return nil }
 
 // Reconcile indicates an expected call of Reconcile.
 func (mr *MockInterfaceMockRecorder) Reconcile(podCIDRs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reconcile", reflect.TypeOf((*MockInterface)(nil).Reconcile), podCIDRs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RestoreEgressRoutesAndRules mocks base method.
 func (m *MockInterface) RestoreEgressRoutesAndRules(minTableID, maxTableID int) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RestoreEgressRoutesAndRules", minTableID, maxTableID)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RestoreEgressRoutesAndRules indicates an expected call of RestoreEgressRoutesAndRules.
 func (mr *MockInterfaceMockRecorder) RestoreEgressRoutesAndRules(minTableID, maxTableID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RestoreEgressRoutesAndRules", reflect.TypeOf((*MockInterface)(nil).RestoreEgressRoutesAndRules), minTableID, maxTableID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Run mocks base method.
-func (m *MockInterface) Run(ctx context.Context) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Run", ctx)
-}
+func (m *MockInterface) Run(ctx context.Context) { _ = "STUB: not implemented"; return }
 
 // Run indicates an expected call of Run.
 func (mr *MockInterfaceMockRecorder) Run(ctx any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockInterface)(nil).Run), ctx)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UnMigrateRoutesFromGw mocks base method.
 func (m *MockInterface) UnMigrateRoutesFromGw(route *net.IPNet, linkName string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UnMigrateRoutesFromGw", route, linkName)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UnMigrateRoutesFromGw indicates an expected call of UnMigrateRoutesFromGw.
 func (mr *MockInterfaceMockRecorder) UnMigrateRoutesFromGw(route, linkName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnMigrateRoutesFromGw", reflect.TypeOf((*MockInterface)(nil).UnMigrateRoutesFromGw), route, linkName)
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -18,8 +18,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/spf13/pflag"
 )
 
@@ -29,17 +27,8 @@ type options struct {
 	hostGatewayName string
 }
 
-func newOptions() *options {
-	return &options{}
-}
+func newOptions() *options { _ = "STUB: not implemented"; return nil }
 
-func (o *options) addFlags(fs *pflag.FlagSet) {
-	fs.StringVar(&o.hostGatewayName, "host-gateway-name", "antrea-gw0", "Name of the Antrea host gateway interface")
-}
+func (o *options) addFlags(fs *pflag.FlagSet) { _ = "STUB: not implemented"; return }
 
-func (o *options) validate() error {
-	if o.hostGatewayName == "" {
-		return fmt.Errorf("host-gateway-name must be specified")
-	}
-	return nil
-}
+func (o *options) validate() error { _ = "STUB: not implemented"; return nil }

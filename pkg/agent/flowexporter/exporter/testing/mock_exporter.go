@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	connection "antrea.io/antrea/v2/pkg/agent/flowexporter/connection"
 	exporter "antrea.io/antrea/v2/pkg/agent/flowexporter/exporter"
 	gomock "go.uber.org/mock/gomock"
@@ -46,52 +44,46 @@ type MockInterfaceMockRecorder struct {
 
 // NewMockInterface creates a new mock instance.
 func NewMockInterface(ctrl *gomock.Controller) *MockInterface {
-	mock := &MockInterface{ctrl: ctrl}
-	mock.recorder = &MockInterfaceMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// CloseConnToCollector mocks base method.
+	return nil
 }
 
-// CloseConnToCollector mocks base method.
-func (m *MockInterface) CloseConnToCollector() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CloseConnToCollector")
-}
+func (m *MockInterface) CloseConnToCollector() { _ = "STUB: not implemented"; return }
 
 // CloseConnToCollector indicates an expected call of CloseConnToCollector.
 func (mr *MockInterfaceMockRecorder) CloseConnToCollector() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloseConnToCollector", reflect.TypeOf((*MockInterface)(nil).CloseConnToCollector))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ConnectToCollector mocks base method.
 func (m *MockInterface) ConnectToCollector(addr string, tlsConfig *exporter.TLSConfig) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ConnectToCollector", addr, tlsConfig)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ConnectToCollector indicates an expected call of ConnectToCollector.
 func (mr *MockInterfaceMockRecorder) ConnectToCollector(addr, tlsConfig any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConnectToCollector", reflect.TypeOf((*MockInterface)(nil).ConnectToCollector), addr, tlsConfig)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Export mocks base method.
 func (m *MockInterface) Export(conn *connection.Connection) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Export", conn)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Export indicates an expected call of Export.
 func (mr *MockInterfaceMockRecorder) Export(conn any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Export", reflect.TypeOf((*MockInterface)(nil).Export), conn)
+	_ = "STUB: not implemented"
+	return nil
 }

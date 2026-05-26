@@ -29,20 +29,6 @@ type fakeBGPPolicies struct {
 }
 
 func newFakeBGPPolicies(fake *FakeCrdV1alpha1) crdv1alpha1.BGPPolicyInterface {
-	return &fakeBGPPolicies{
-		gentype.NewFakeClientWithList[*v1alpha1.BGPPolicy, *v1alpha1.BGPPolicyList](
-			fake.Fake,
-			"",
-			v1alpha1.SchemeGroupVersion.WithResource("bgppolicies"),
-			v1alpha1.SchemeGroupVersion.WithKind("BGPPolicy"),
-			func() *v1alpha1.BGPPolicy { return &v1alpha1.BGPPolicy{} },
-			func() *v1alpha1.BGPPolicyList { return &v1alpha1.BGPPolicyList{} },
-			func(dst, src *v1alpha1.BGPPolicyList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.BGPPolicyList) []*v1alpha1.BGPPolicy { return gentype.ToPointerSlice(list.Items) },
-			func(list *v1alpha1.BGPPolicyList, items []*v1alpha1.BGPPolicy) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1alpha1.BGPPolicyInterface)
 }

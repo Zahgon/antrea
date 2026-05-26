@@ -16,15 +16,10 @@ package syscall
 
 import (
 	"net"
-	"net/netip"
-	"os"
-	"strconv"
 	"syscall"
 	"unsafe"
 
 	"golang.org/x/sys/windows"
-
-	utilip "antrea.io/antrea/v2/pkg/util/ip"
 )
 
 const (
@@ -114,51 +109,11 @@ type RawSockAddrInet struct {
 	data   [26]byte
 }
 
-func (a *RawSockAddrInet) IP() net.IP {
-	if a == nil {
-		return nil
-	}
-	if a.Family == AF_INET {
-		addr := (*syscall.RawSockaddrInet4)(unsafe.Pointer(a))
-		return net.IPv4(addr.Addr[0], addr.Addr[1], addr.Addr[2], addr.Addr[3])
-	}
-	if a.Family == AF_INET6 {
-		addr := (*syscall.RawSockaddrInet6)(unsafe.Pointer(a))
-		return addr.Addr[:]
-	}
-	return net.IPv6unspecified
-}
+func (a *RawSockAddrInet) IP() net.IP { _ = "STUB: not implemented"; return *new(net.IP) }
 
-func (a *RawSockAddrInet) String() string {
-	return a.IP().String()
-}
+func (a *RawSockAddrInet) String() string { _ = "STUB: not implemented"; return "" }
 
-func NewRawSockAddrInetFromIP(ip net.IP) *RawSockAddrInet {
-	sockAddrInet := new(RawSockAddrInet)
-	if ip.To4() != nil {
-		addr, _ := netip.AddrFromSlice(ip.To4())
-		addr4 := (*windows.RawSockaddrInet4)(unsafe.Pointer(sockAddrInet))
-		addr4.Family = AF_INET
-		addr4.Addr = addr.As4()
-		addr4.Port = 0
-		addr4.Zero = [8]byte{}
-		return sockAddrInet
-	}
-	addr, _ := netip.AddrFromSlice(ip)
-	addr6 := (*windows.RawSockaddrInet6)(unsafe.Pointer(sockAddrInet))
-	addr6.Family = AF_INET6
-	addr6.Addr = addr.As16()
-	addr6.Port = 0
-	addr6.Flowinfo = 0
-	scopeId := uint32(0)
-	if z := addr.Zone(); z != "" {
-		if s, err := strconv.ParseUint(z, 10, 32); err == nil {
-			scopeId = uint32(s)
-		}
-	}
-	addr6.Scope_id = scopeId
-	return sockAddrInet
-}
+func NewRawSockAddrInetFromIP(ip net.IP) *RawSockAddrInet { _ = "STUB: not implemented"; return nil }
 
 type AddressPrefix struct {
 	Prefix       RawSockAddrInet
@@ -166,52 +121,15 @@ type AddressPrefix struct {
 	_            [2]byte // Add two bytes to keep alignment.
 }
 
-func (p *AddressPrefix) IPNet() *net.IPNet {
-	if p == nil {
-		return nil
-	}
-	sockAddr := p.Prefix
-	if sockAddr.Family == AF_INET {
-		return &net.IPNet{
-			IP:   (&sockAddr).IP().To4(),
-			Mask: net.CIDRMask(int(p.prefixLength), 8*net.IPv4len),
-		}
-	}
-	if p.Prefix.Family == AF_INET6 {
-		return &net.IPNet{
-			IP:   (&sockAddr).IP(),
-			Mask: net.CIDRMask(int(p.prefixLength), 8*net.IPv6len),
-		}
-	}
-	return nil
-}
+func (p *AddressPrefix) IPNet() *net.IPNet { _ = "STUB: not implemented"; return nil }
 
-func (p *AddressPrefix) EqualsTo(ipNet *net.IPNet) bool {
-	if ipNet == nil && p == nil {
-		return true
-	} else if ipNet == nil || p == nil {
-		return false
-	}
-	if p.prefixLength == 0 {
-		return ipNet.IP.Equal(net.IPv4zero) || ipNet.IP.Equal(net.IPv6zero)
-	}
-	return utilip.IPNetEqual(p.IPNet(), ipNet)
-}
+func (p *AddressPrefix) EqualsTo(ipNet *net.IPNet) bool { _ = "STUB: not implemented"; return false }
 
-func (p *AddressPrefix) String() string {
-	return p.IPNet().String()
-}
+func (p *AddressPrefix) String() string { _ = "STUB: not implemented"; return "" }
 
 func NewAddressPrefixFromIPNet(ipnet *net.IPNet) *AddressPrefix {
-	if ipnet == nil {
-		return nil
-	}
-	sockAddr := NewRawSockAddrInetFromIP(ipnet.IP)
-	prefixLength, _ := ipnet.Mask.Size()
-	return &AddressPrefix{
-		Prefix:       *sockAddr,
-		prefixLength: uint8(prefixLength),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NlRouteProtocol defines the routing mechanism that an IP route was added with.
@@ -314,82 +232,41 @@ type netIO struct {
 	getIPForwardTable func(family uint16, ipForwardTable **MibIPForwardTable) (errcode error)
 }
 
-func NewNetIO() NetIOInterface {
-	return &netIO{
-		syscallN:          syscall.SyscallN,
-		getIPForwardTable: getIPForwardTable,
-	}
-}
+func NewNetIO() NetIOInterface { _ = "STUB: not implemented"; return *new(NetIOInterface) }
 
 func (n *netIO) GetIPInterfaceEntry(ipInterfaceRow *MibIPInterfaceRow) (errcode error) {
-	r0, _, _ := n.syscallN(procGetIPInterfaceEntry.Addr(), uintptr(unsafe.Pointer(ipInterfaceRow)))
-	if r0 != 0 {
-		errcode = syscall.Errno(r0)
-	}
-	return
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (n *netIO) SetIPInterfaceEntry(ipInterfaceRow *MibIPInterfaceRow) (errcode error) {
-	r0, _, _ := n.syscallN(procSetIPInterfaceEntry.Addr(), uintptr(unsafe.Pointer(ipInterfaceRow)))
-	if r0 != 0 {
-		errcode = syscall.Errno(r0)
-	}
-	return
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (n *netIO) CreateIPForwardEntry(ipForwardEntry *MibIPForwardRow) (errcode error) {
-	r0, _, _ := n.syscallN(procCreateIPForwardEntry.Addr(), uintptr(unsafe.Pointer(ipForwardEntry)))
-	if r0 != 0 {
-		errcode = syscall.Errno(r0)
-	}
-	return
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (n *netIO) DeleteIPForwardEntry(ipForwardEntry *MibIPForwardRow) (errcode error) {
-	r0, _, _ := n.syscallN(procDeleteIPForwardEntry.Addr(), uintptr(unsafe.Pointer(ipForwardEntry)))
-	if r0 != 0 {
-		errcode = syscall.Errno(r0)
-	}
-	return
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (n *netIO) freeMibTable(table unsafe.Pointer) {
-	n.syscallN(procFreeMibTable.Addr(), uintptr(table))
-}
+func (n *netIO) freeMibTable(table unsafe.Pointer) { _ = "STUB: not implemented"; return }
 
 func getIPForwardTable(family uint16, ipForwardTable **MibIPForwardTable) (errcode error) {
-	r0, _, _ := syscall.SyscallN(procGetIPForwardTable.Addr(), uintptr(family), uintptr(unsafe.Pointer(ipForwardTable)))
-	if r0 != 0 {
-		errcode = syscall.Errno(r0)
-	}
-	return
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (n *netIO) ListIPForwardRows(family uint16) ([]MibIPForwardRow, error) {
-	var table *MibIPForwardTable
-	err := n.getIPForwardTable(family, &table)
-	if err != nil {
-		return nil, os.NewSyscallError("iphlpapi.GetIpForwardTable", err)
-	}
-	defer n.freeMibTable(unsafe.Pointer(table))
-
-	// Copy the rows from the table into a new slice as the table's memory will be freed.
-	// Since MibIPForwardRow contains only value data (no references), the operation performs a deep copy.
-	rows := make([]MibIPForwardRow, 0, table.NumEntries)
-	rows = append(rows, unsafe.Slice(&table.Table[0], table.NumEntries)...)
-	return rows, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func NewIPForwardRow() *MibIPForwardRow {
-	return &MibIPForwardRow{
-		SitePrefixLength:     255,
-		Metric:               0,
-		Loopback:             true,
-		AutoconfigureAddress: true,
-		Publish:              true,
-		Immortal:             true,
-		ValidLifetime:        0xffffffff,
-		PreferredLifetime:    0xffffffff,
-		Protocol:             RouteProtocolOther,
-	}
-}
+// Copy the rows from the table into a new slice as the table's memory will be freed.
+// Since MibIPForwardRow contains only value data (no references), the operation performs a deep copy.
+
+func NewIPForwardRow() *MibIPForwardRow { _ = "STUB: not implemented"; return nil }

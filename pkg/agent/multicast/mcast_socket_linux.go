@@ -19,11 +19,7 @@
 package multicast
 
 import (
-	"fmt"
 	"net"
-	"syscall"
-
-	"k8s.io/klog/v2"
 
 	multicastsyscall "antrea.io/antrea/v2/pkg/agent/util/syscall"
 )
@@ -36,135 +32,47 @@ const (
 
 // setVIFToInterface adds a virtual interface to the multicast socket for interface with index ifIndex.
 func setVIFToInterface(fd int, vif uint16, ifIndex int) error {
-	vc := &multicastsyscall.Vifctl{}
-	vc.Vifi = vif
-	vc.Rate_limit = 0
-	vc.Flags = 0
-	vc.Flags |= multicastsyscall.VIFF_USE_IFINDEX
-	vc.Lcl_ifindex = int32(ifIndex)
-	return multicastsyscall.SetsockoptVifctl(fd, syscall.IPPROTO_IP, multicastsyscall.MRT_ADD_VIF, vc)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (s *Socket) AddMrouteEntry(src net.IP, group net.IP, iif uint16, oifVIFs []uint16) (err error) {
-	mc := &multicastsyscall.Mfcctl{}
-	origin := src.To4()
-	mc.Origin = [4]byte{origin[0], origin[1], origin[2], origin[3]}
-	g := group.To4()
-	mc.Mcastgrp = [4]byte{g[0], g[1], g[2], g[3]}
-	ttls := [32]byte{}
-	for _, v := range oifVIFs {
-		ttls[v] = 1
-	}
-	mc.Ttls = ttls
-	mc.Parent = iif
-	return multicastsyscall.SetsockoptMfcctl(s.GetFD(), syscall.IPPROTO_IP, multicastsyscall.MRT_ADD_MFC, mc)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetMroutePacketCount returns the number of routed packets by the multicast route entry.
 // The current implementation only supports IPv4 multicast routes.
 func (s *Socket) GetMroutePacketCount(src net.IP, group net.IP) (uint32, error) {
-	srcIP := src.To4()
-	groupIP := group.To4()
-	siocSgReq := multicastsyscall.SiocSgReq{
-		Src: [4]byte{srcIP[0], srcIP[1], srcIP[2], srcIP[3]},
-		Grp: [4]byte{groupIP[0], groupIP[1], groupIP[2], groupIP[3]},
-	}
-	err := multicastsyscall.IoctlGetSiocSgReq(s.GetFD(), &siocSgReq)
-	if err != nil {
-		return 0, err
-	}
-	return siocSgReq.Pktcnt, nil
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 func (s *Socket) DelMrouteEntry(src net.IP, group net.IP, iif uint16) error {
-	mc := &multicastsyscall.Mfcctl{}
-	origin := src.To4()
-	mc.Origin = [4]byte{origin[0], origin[1], origin[2], origin[3]}
-	g := group.To4()
-	mc.Mcastgrp = [4]byte{g[0], g[1], g[2], g[3]}
-	mc.Parent = iif
-	return multicastsyscall.SetsockoptMfcctl(s.sockFD, syscall.IPPROTO_IP, multicastsyscall.MRT_DEL_MFC, mc)
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (s *Socket) FlushMRoute() {
-	klog.InfoS("Clearing multicast routing table entries")
-	err := multicastsyscall.SetsockoptVifctl(s.sockFD, syscall.IPPROTO_IP, multicastsyscall.MRT_FLUSH, &multicastsyscall.Vifctl{})
-	if err != nil {
-		klog.ErrorS(err, "Failed to clear multicast routing table entries")
-	}
-}
+func (s *Socket) FlushMRoute() { _ = "STUB: not implemented"; return }
 
-func CreateMulticastSocket() (*Socket, error) {
-	fd, err := syscall.Socket(syscall.AF_INET, syscall.SOCK_RAW, syscall.IPPROTO_IGMP)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create multicast socket")
-	}
-
-	err = syscall.SetsockoptInt(fd, syscall.IPPROTO_IP, multicastsyscall.MRT_INIT, 1)
-	if err != nil {
-		return nil, fmt.Errorf("failed to activate Multicast routing in kernel: %s", err.Error())
-	}
-
-	return &Socket{sockFD: fd}, nil
-}
+func CreateMulticastSocket() (*Socket, error) { _ = "STUB: not implemented"; return nil, nil }
 
 func (s *Socket) AllocateVIFs(interfaceNames []string, startVIF uint16) ([]uint16, error) {
-	ifaces, err := net.Interfaces()
-	if err != nil {
-		return nil, err
-	}
-	vif := startVIF
-	vifs := make([]uint16, 0, len(interfaceNames))
-	for _, name := range interfaceNames {
-		found := false
-		for _, iface := range ifaces {
-			if iface.Name == name {
-				found = true
-				if vif >= MaxVIFs {
-					return nil, fmt.Errorf("VIF reaches MAXVIFS. Failed to allocate available VIF")
-				}
-				err = setVIFToInterface(s.sockFD, vif, iface.Index)
-				if err != nil {
-					return nil, err
-				}
-				vifs = append(vifs, vif)
-				vif += 1
-				break
-			}
-		}
-		if !found {
-			return nil, fmt.Errorf("error finding interface %s to allocate VIF", name)
-		}
-		klog.V(2).InfoS("Successfully allocated VIF", "VIF", vif)
-	}
-	return vifs, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (s *Socket) MulticastInterfaceJoinMgroup(mgroup net.IP, ifaceIP net.IP, ifaceName string) error {
-	err := syscall.SetsockoptIPMreq(s.sockFD, syscall.IPPROTO_IP, syscall.IP_ADD_MEMBERSHIP, &syscall.IPMreq{
-		Multiaddr: [4]byte{mgroup[0], mgroup[1], mgroup[2], mgroup[3]},
-		Interface: [4]byte{ifaceIP[0], ifaceIP[1], ifaceIP[2], ifaceIP[3]},
-	})
-	if err != nil {
-		return fmt.Errorf("failed to join multicast group %s for %s: %s", mgroup.String(), ifaceName, err.Error())
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (s *Socket) MulticastInterfaceLeaveMgroup(mgroup net.IP, ifaceIP net.IP, ifaceName string) error {
-	err := syscall.SetsockoptIPMreq(s.sockFD, syscall.IPPROTO_IP, syscall.IP_DROP_MEMBERSHIP, &syscall.IPMreq{
-		Multiaddr: [4]byte{mgroup[0], mgroup[1], mgroup[2], mgroup[3]},
-		Interface: [4]byte{ifaceIP[0], ifaceIP[1], ifaceIP[2], ifaceIP[3]},
-	})
-	if err != nil {
-		return fmt.Errorf("failed to leave multicast group %s for %s: %s", mgroup.String(), ifaceName, err.Error())
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (s *Socket) GetFD() int {
-	return s.sockFD
-}
+func (s *Socket) GetFD() int { _ = "STUB: not implemented"; return 0 }
 
 type Socket struct {
 	sockFD int

@@ -19,123 +19,50 @@ package portcache
 
 import (
 	"context"
-	"fmt"
-
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/nodeportlocal/rules"
 )
 
 func addRuleForPort(podPortRules rules.PodPortRules, port int, podIP string, podPort int, protocol string) (ProtocolSocketData, error) {
+	_ = "STUB: not implemented"
 	// Only the protocol used here should be returned if NetNatStaticMapping rule
 	// can be inserted to an unused protocol port.
-	err := podPortRules.AddRule(port, podIP, podPort, protocol)
-	if err != nil {
-		klog.ErrorS(err, "Local port cannot be opened", "port", port, "protocol", protocol)
-		return ProtocolSocketData{}, err
-	}
-	protocolData := ProtocolSocketData{
-		Protocol: protocol,
-		socket:   nil,
-	}
-	return protocolData, nil
+	return *new(ProtocolSocketData), nil
 }
 
 func (pt *PortTable) addRuleforFreePort(podIP string, podPort int, protocol string) (int, ProtocolSocketData, error) {
-	klog.V(2).InfoS("Looking for free Node port on Windows", "podIP", podIP, "podPort", podPort, "protocol", protocol)
-	numPorts := pt.EndPort - pt.StartPort + 1
-	for i := 0; i < numPorts; i++ {
-		port := pt.PortSearchStart + i
-		if port > pt.EndPort {
-			// handle wrap around
-			port = port - numPorts
-		}
-		if _, ok := pt.getPortTableCacheFromNodePortIndex(NodePortProtoFormat(port, protocol)); ok {
-			// protocol port is already taken
-			continue
-		}
-
-		protocolData, err := addRuleForPort(pt.PodPortRules, port, podIP, podPort, protocol)
-		if err != nil {
-			klog.ErrorS(err, "Port cannot be reserved, moving on to the next one", "port", port)
-			continue
-		}
-
-		pt.PortSearchStart = port + 1
-		if pt.PortSearchStart > pt.EndPort {
-			pt.PortSearchStart = pt.StartPort
-		}
-		return port, protocolData, nil
-	}
-	return 0, ProtocolSocketData{}, fmt.Errorf("no free port found")
+	_ = "STUB: not implemented"
+	return 0, *new(ProtocolSocketData), nil
 }
+
+// handle wrap around
+
+// protocol port is already taken
 
 func (pt *PortTable) AddRule(podKey string, podPort int, protocol string, podIP string) (int, error) {
-	pt.tableLock.Lock()
-	defer pt.tableLock.Unlock()
-	npData := pt.getEntryByPodKeyPortProto(podKey, podPort, protocol)
-	exists := (npData != nil)
-	if !exists {
-		nodePort, protocolData, err := pt.addRuleforFreePort(podIP, podPort, protocol)
-		//success means port, protocol available.
-		if err != nil {
-			return 0, err
-		}
-		npData = &NodePortData{
-			PodKey:   podKey,
-			NodePort: nodePort,
-			PodIP:    podIP,
-			PodPort:  podPort,
-			Protocol: protocolData,
-		}
-
-		pt.addPortTableCache(npData)
-	} else {
-		// Only add rules if the entry does not exist.
-		return 0, fmt.Errorf("existing Windows Nodeport entry for %s:%d:%s", podIP, podPort, protocol)
-	}
-	return npData.NodePort, nil
+	_ = "STUB: not implemented"
+	return 0, nil
 }
+
+//success means port, protocol available.
+
+// Only add rules if the entry does not exist.
 
 // RestoreRules should be called at Antrea Agent startup to restore a set of NPL rules.
 func (pt *PortTable) RestoreRules(ctx context.Context, allNPLPorts []rules.PodNodePort) {
-	pt.tableLock.Lock()
-	defer pt.tableLock.Unlock()
-	for _, nplPort := range allNPLPorts {
-		protocolData, err := addRuleForPort(pt.PodPortRules, nplPort.NodePort, nplPort.PodIP, nplPort.PodPort, nplPort.Protocol)
-		if err != nil {
-			// This will be handled gracefully by the NPL controller: if there is an
-			// annotation using this port, it will be removed and replaced with a new
-			// one with a valid port mapping.
-			klog.ErrorS(err, "Cannot bind to local port, skipping it", "port", nplPort.NodePort)
-			continue
-		}
-
-		npData := &NodePortData{
-			PodKey:   nplPort.PodKey,
-			NodePort: nplPort.NodePort,
-			PodPort:  nplPort.PodPort,
-			PodIP:    nplPort.PodIP,
-			Protocol: protocolData,
-		}
-		pt.addPortTableCache(npData)
-	}
+	_ = "STUB: not implemented"
+	return
 }
+
+// This will be handled gracefully by the NPL controller: if there is an
+// annotation using this port, it will be removed and replaced with a new
+// one with a valid port mapping.
 
 func (pt *PortTable) DeleteRule(podKey string, podPort int, protocol string) error {
-	pt.tableLock.Lock()
-	defer pt.tableLock.Unlock()
-	data := pt.getEntryByPodKeyPortProto(podKey, podPort, protocol)
-	if data == nil {
-		// Delete not required when the PortTable entry does not exist
-		return nil
-	}
-
-	data.defunct = true
-	// Calling DeleteRule is idempotent.
-	if err := pt.PodPortRules.DeleteRule(data.NodePort, data.PodIP, podPort, protocol); err != nil {
-		return err
-	}
-	pt.deletePortTableCache(data)
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// Delete not required when the PortTable entry does not exist
+
+// Calling DeleteRule is idempotent.

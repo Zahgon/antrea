@@ -15,11 +15,8 @@
 package filter
 
 import (
-	"strings"
-
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/klog/v2"
 )
 
 var inverseServiceProtocolMap = map[corev1.Protocol]uint8{
@@ -34,37 +31,12 @@ type ProtocolFilter struct {
 }
 
 // For a given protocol, return true if the protocol is allowed
-func (p *ProtocolFilter) Allow(protocol uint8) bool {
-	return p.protocolNumbers == nil || p.protocolNumbers.Has(protocol)
-}
+func (p *ProtocolFilter) Allow(protocol uint8) bool { _ = "STUB: not implemented"; return false }
 
 // Returns a new ProtocolFilter with only valid protocols and logs a message
 // if invalid or unsupported protocols are found. When protocols is nil, all
 // protocols will be allowed. When it is empty, no protocols are allowed.
 func NewProtocolFilter(protocols []string) ProtocolFilter {
-	if protocols == nil {
-		return ProtocolFilter{}
-	}
-	validatedProtocols := sets.New[uint8]()
-	invalidProtocols := []string{}
-	for _, protocol := range protocols {
-		protocolNumber, ok := inverseServiceProtocolMap[corev1.Protocol(strings.ToUpper(protocol))]
-		if !ok {
-			invalidProtocols = append(invalidProtocols, protocol)
-		} else {
-			validatedProtocols.Insert(protocolNumber)
-		}
-	}
-
-	if len(invalidProtocols) > 0 {
-		klog.InfoS("Found unsupported protocol(s) in protocolFilter, refer to the docs for supported protocols", "unsupportedProtocols", strings.Join(invalidProtocols, ","))
-	}
-
-	if len(protocols) == 0 {
-		klog.InfoS("protocolFilter is empty and nothing will be exported")
-	}
-
-	return ProtocolFilter{
-		protocolNumbers: validatedProtocols,
-	}
+	_ = "STUB: not implemented"
+	return *new(ProtocolFilter)
 }

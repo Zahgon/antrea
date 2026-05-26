@@ -29,18 +29,6 @@ type fakeEgresses struct {
 }
 
 func newFakeEgresses(fake *FakeCrdV1beta1) crdv1beta1.EgressInterface {
-	return &fakeEgresses{
-		gentype.NewFakeClientWithList[*v1beta1.Egress, *v1beta1.EgressList](
-			fake.Fake,
-			"",
-			v1beta1.SchemeGroupVersion.WithResource("egresses"),
-			v1beta1.SchemeGroupVersion.WithKind("Egress"),
-			func() *v1beta1.Egress { return &v1beta1.Egress{} },
-			func() *v1beta1.EgressList { return &v1beta1.EgressList{} },
-			func(dst, src *v1beta1.EgressList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta1.EgressList) []*v1beta1.Egress { return gentype.ToPointerSlice(list.Items) },
-			func(list *v1beta1.EgressList, items []*v1beta1.Egress) { list.Items = gentype.FromPointerSlice(items) },
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.EgressInterface)
 }

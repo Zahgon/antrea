@@ -18,16 +18,13 @@
 package cniserver
 
 import (
-	"fmt"
 	"net"
 
 	current "github.com/containernetworking/cni/pkg/types/100"
 	"k8s.io/client-go/tools/cache"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/cniserver/ipam"
 	"antrea.io/antrea/v2/pkg/agent/interfacestore"
-	agenttypes "antrea.io/antrea/v2/pkg/agent/types"
 )
 
 // connectInterfaceToOVS connects an existing interface to the OVS bridge.
@@ -37,79 +34,49 @@ func (pc *podConfigurator) connectInterfaceToOVS(
 	ips []*current.IPConfig,
 	vlanID uint16,
 	containerAccess *containerAccessArbitrator) (*interfacestore.InterfaceConfig, error) {
+	_ = "STUB: not implemented"
 	// Use the outer veth interface name as the OVS port name.
-	ovsPortName := hostIface.Name
-	containerConfig := buildContainerConfig(ovsPortName, containerID, podName, podNamespace,
-		netNS, containerIface, ips, vlanID)
-
-	// Create an OVS Port and add container configuration into external_ids.
-	ovsAttachInfo := BuildOVSPortExternalIDs(containerConfig)
-	klog.V(2).InfoS("Adding OVS port for container", "port", ovsPortName, "container", containerID)
-	portUUID, err := pc.createOVSPort(ovsPortName, ovsAttachInfo, containerConfig.VLANID)
-	if err != nil {
-		return nil, fmt.Errorf("failed to add OVS port for container %s: %v", containerID, err)
-	}
-	// Remove OVS port if any failure occurs in later manipulation.
-	defer func() {
-		if err != nil {
-			_ = pc.ovsBridgeClient.DeletePort(portUUID)
-		}
-	}()
-
-	var ofPort int32
-	// Not needed for a secondary network interface.
-	if !pc.isSecondaryNetwork {
-		// GetOFPort will wait for up to 1 second for OVSDB to report the OFPort number.
-		ofPort, err = pc.ovsBridgeClient.GetOFPort(ovsPortName, false)
-		if err != nil {
-			return nil, fmt.Errorf("failed to get of_port of OVS port %s: %v", ovsPortName, err)
-		}
-		klog.V(2).InfoS("Setting up Openflow entries for Pod interface", "container", containerID, "port", ovsPortName)
-		if err = pc.ofClient.InstallPodFlows(ovsPortName, containerConfig.IPs, containerConfig.MAC, uint32(ofPort), containerConfig.VLANID, nil); err != nil {
-			return nil, fmt.Errorf("failed to add Openflow entries for container %s: %v", containerID, err)
-		}
-	}
-
-	containerConfig.OVSPortConfig = &interfacestore.OVSPortConfig{PortUUID: portUUID, OFPort: ofPort}
-	// Add containerConfig into local cache
-	pc.ifaceStore.AddInterface(containerConfig)
-
-	// Not needed for a secondary network interface.
-	if !pc.isSecondaryNetwork {
-		// Notify the Pod update event to required components.
-		event := agenttypes.PodUpdate{
-			PodName:      containerConfig.PodName,
-			PodNamespace: containerConfig.PodNamespace,
-			ContainerID:  containerConfig.ContainerID,
-			NetNS:        netNS,
-			IsAdd:        true,
-		}
-		pc.podUpdateNotifier.Notify(event)
-	}
-	return containerConfig, nil
+	return nil, nil
 }
+
+// Create an OVS Port and add container configuration into external_ids.
+
+// Remove OVS port if any failure occurs in later manipulation.
+
+// Not needed for a secondary network interface.
+
+// GetOFPort will wait for up to 1 second for OVSDB to report the OFPort number.
+
+// Add containerConfig into local cache
+
+// Not needed for a secondary network interface.
+
+// Notify the Pod update event to required components.
 
 func (pc *podConfigurator) configureInterfaces(
 	podName, podNamespace, containerID, containerNetNS string,
 	containerIFDev string, mtu int, sriovVFDeviceID string,
 	result *ipam.IPAMResult, createOVSPort bool, containerAccess *containerAccessArbitrator, mac net.HardwareAddr) error {
-	return pc.configureInterfacesCommon(podName, podNamespace, containerID, containerNetNS,
-		containerIFDev, mtu, sriovVFDeviceID, result, containerAccess, mac)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // reconcileMissingPods is never called on Linux, see reconcile logic.
 func (pc *podConfigurator) reconcileMissingPods(ifConfigs []*interfacestore.InterfaceConfig, containerAccess *containerAccessArbitrator) {
+	_ = "STUB: not implemented"
+
+	// isInterfaceInvalid returns true if the OVS interface's ofport is "-1" which means the host interface is disconnected.
+	return
 }
 
-// isInterfaceInvalid returns true if the OVS interface's ofport is "-1" which means the host interface is disconnected.
 func (pc *podConfigurator) isInterfaceInvalid(ifaceConfig *interfacestore.InterfaceConfig) bool {
-	return ifaceConfig.OFPort == -1
+	_ = "STUB: not implemented"
+	return false
 }
 
 func (pc *podConfigurator) initPortStatusMonitor(_ cache.SharedIndexInformer) {
-
+	_ = "STUB: not implemented"
+	return
 }
 
-func (pc *podConfigurator) Run(stopCh <-chan struct{}) {
-	<-stopCh
-}
+func (pc *podConfigurator) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }

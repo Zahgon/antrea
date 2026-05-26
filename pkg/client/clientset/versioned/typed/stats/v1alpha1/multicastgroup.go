@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	statsv1alpha1 "antrea.io/antrea/v2/pkg/apis/stats/v1alpha1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	watch "k8s.io/apimachinery/pkg/watch"
 	gentype "k8s.io/client-go/gentype"
@@ -47,14 +46,6 @@ type multicastGroups struct {
 
 // newMulticastGroups returns a MulticastGroups
 func newMulticastGroups(c *StatsV1alpha1Client) *multicastGroups {
-	return &multicastGroups{
-		gentype.NewClientWithList[*statsv1alpha1.MulticastGroup, *statsv1alpha1.MulticastGroupList](
-			"multicastgroups",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *statsv1alpha1.MulticastGroup { return &statsv1alpha1.MulticastGroup{} },
-			func() *statsv1alpha1.MulticastGroupList { return &statsv1alpha1.MulticastGroupList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

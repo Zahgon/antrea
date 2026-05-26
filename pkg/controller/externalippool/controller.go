@@ -15,33 +15,21 @@
 package externalippool
 
 import (
-	"context"
 	"errors"
-	"fmt"
 	"net"
 	"sync"
 	"sync/atomic"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/tools/cache"
-	"k8s.io/client-go/util/retry"
 	"k8s.io/client-go/util/workqueue"
-	"k8s.io/klog/v2"
-	utilnet "k8s.io/utils/net"
 
 	antreacrds "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
 	clientset "antrea.io/antrea/v2/pkg/client/clientset/versioned"
 	antreainformers "antrea.io/antrea/v2/pkg/client/informers/externalversions/crd/v1beta1"
 	antrealisters "antrea.io/antrea/v2/pkg/client/listers/crd/v1beta1"
-	"antrea.io/antrea/v2/pkg/controller/metrics"
 	"antrea.io/antrea/v2/pkg/ipam/ipallocator"
-	iputil "antrea.io/antrea/v2/pkg/util/ip"
 )
 
 const (
@@ -123,316 +111,120 @@ type ExternalIPPoolController struct {
 
 // NewExternalIPPoolController returns a new *ExternalIPPoolController.
 func NewExternalIPPoolController(crdClient clientset.Interface, externalIPPoolInformer antreainformers.ExternalIPPoolInformer) *ExternalIPPoolController {
-	c := &ExternalIPPoolController{
-		crdClient:                  crdClient,
-		externalIPPoolLister:       externalIPPoolInformer.Lister(),
-		externalIPPoolListerSynced: externalIPPoolInformer.Informer().HasSynced,
-		queue: workqueue.NewTypedRateLimitingQueueWithConfig(
-			workqueue.NewTypedItemExponentialFailureRateLimiter[string](minRetryDelay, maxRetryDelay),
-			workqueue.TypedRateLimitingQueueConfig[string]{
-				Name: "externalIPPool",
-			},
-		),
-		ipAllocatorInitialized: &atomic.Value{},
-		ipAllocatorMap:         make(map[string]ipallocator.MultiIPAllocator),
-	}
-	externalIPPoolInformer.Informer().AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc:    c.addExternalIPPool,
-			UpdateFunc: c.updateExternalIPPool,
-			DeleteFunc: c.deleteExternalIPPool,
-		},
-		resyncPeriod,
-	)
-	c.ipAllocatorInitialized.Store(false)
-	return c
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (c *ExternalIPPoolController) HasSynced() bool {
-	return c.ipAllocatorInitialized.Load().(bool)
-}
+func (c *ExternalIPPoolController) HasSynced() bool { _ = "STUB: not implemented"; return false }
 
 func (c *ExternalIPPoolController) AddEventHandler(handler ExternalIPPoolEventHandler) {
-	c.handlers = append(c.handlers, handler)
-	c.handlersWaitGroup.Add(1)
+	_ = "STUB: not implemented"
+	return
 }
 
 func (c *ExternalIPPoolController) RestoreIPAllocations(allocations []IPAllocation) []IPAllocation {
-	var succeeded []IPAllocation
-	for _, allocation := range allocations {
-		if err := c.UpdateIPAllocation(allocation.IPPoolName, allocation.IP); err != nil {
-			klog.ErrorS(err, "Failed to restore IP allocation", "ip", allocation.IP, "ipPool", allocation.IPPoolName)
-		} else {
-			succeeded = append(succeeded, allocation)
-		}
-	}
-	c.handlersWaitGroup.Done()
-	return succeeded
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Run begins watching and syncing of the ExternalIPPoolController.
-func (c *ExternalIPPoolController) Run(stopCh <-chan struct{}) {
-	defer c.queue.ShutDown()
+func (c *ExternalIPPoolController) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	klog.Infof("Starting %s", controllerName)
-	defer klog.Infof("Shutting down %s", controllerName)
-
-	cacheSyncs := []cache.InformerSynced{c.externalIPPoolListerSynced}
-	if !cache.WaitForNamedCacheSync(controllerName, stopCh, cacheSyncs...) {
-		return
-	}
-
-	// Initialize the ipAllocatorMap with the existing ExternalIPPools.
-	ipPools, _ := c.externalIPPoolLister.List(labels.Everything())
-	for _, ipPool := range ipPools {
-		c.createOrUpdateIPAllocator(ipPool)
-	}
-
-	c.ipAllocatorInitialized.Store(true)
-
-	for i := 0; i < defaultWorkers; i++ {
-		go wait.Until(c.worker, time.Second, stopCh)
-	}
-	<-stopCh
-}
+// Initialize the ipAllocatorMap with the existing ExternalIPPools.
 
 // createOrUpdateIPAllocator creates or updates the IP allocator based on the provided ExternalIPPool.
 // Currently it's assumed that only new ranges will be added and existing ranges should not be deleted.
 // TODO: Use validation webhook to ensure it.
 func (c *ExternalIPPoolController) createOrUpdateIPAllocator(ipPool *antreacrds.ExternalIPPool) bool {
-	changed := false
-	c.ipAllocatorMutex.Lock()
-	defer c.ipAllocatorMutex.Unlock()
-
-	existingIPRanges := sets.New[string]()
-	multiIPAllocator, exists := c.ipAllocatorMap[ipPool.Name]
-	if !exists {
-		multiIPAllocator = ipallocator.MultiIPAllocator{}
-		changed = true
-	} else {
-		existingIPRanges.Insert(multiIPAllocator.Names()...)
-	}
-
-	for idx := range ipPool.Spec.IPRanges {
-		ipRange := &ipPool.Spec.IPRanges[idx]
-		ipAllocator, err := func() (*ipallocator.SingleIPAllocator, error) {
-			if ipRange.CIDR != "" {
-				_, ipNet, err := net.ParseCIDR(ipRange.CIDR)
-				if err != nil {
-					return nil, err
-				}
-				// Must use normalized IPNet string to check if the IP range exists. Otherwise non-strict CIDR like
-				// 192.168.0.1/24 will be considered new even if it doesn't change.
-				// Validating or normalizing the input CIDR should be a better solution but the externalIPPools that
-				// have been created will still have this issue, so we just normalize the CIDR when using it.
-				if existingIPRanges.Has(ipNet.String()) {
-					return nil, nil
-				}
-				// Don't use the IPv4 network's broadcast address.
-				var reservedIPs []net.IP
-				if utilnet.IsIPv4CIDR(ipNet) {
-					reservedIPs = append(reservedIPs, iputil.GetLocalBroadcastIP(ipNet))
-				}
-				return ipallocator.NewCIDRAllocator(ipNet, reservedIPs)
-			} else {
-				if existingIPRanges.Has(fmt.Sprintf("%s-%s", ipRange.Start, ipRange.End)) {
-					return nil, nil
-				}
-				return ipallocator.NewIPRangeAllocator(net.ParseIP(ipRange.Start), net.ParseIP(ipRange.End))
-			}
-		}()
-		if err != nil {
-			klog.ErrorS(err, "Failed to create IPAllocator", "ipRange", ipRange)
-			continue
-		}
-		// The IP range already exists in multiIPAllocator.
-		if ipAllocator == nil {
-			continue
-		}
-		multiIPAllocator = append(multiIPAllocator, ipAllocator)
-		changed = true
-	}
-	c.ipAllocatorMap[ipPool.Name] = multiIPAllocator
-	c.queue.Add(ipPool.Name)
-	return changed
+	_ = "STUB: not implemented"
+	return false
 }
+
+// Must use normalized IPNet string to check if the IP range exists. Otherwise non-strict CIDR like
+// 192.168.0.1/24 will be considered new even if it doesn't change.
+// Validating or normalizing the input CIDR should be a better solution but the externalIPPools that
+// have been created will still have this issue, so we just normalize the CIDR when using it.
+
+// Don't use the IPv4 network's broadcast address.
+
+// The IP range already exists in multiIPAllocator.
 
 // deleteIPAllocator deletes the IP allocator of the given IP pool.
 func (c *ExternalIPPoolController) deleteIPAllocator(poolName string) {
-	c.ipAllocatorMutex.Lock()
-	defer c.ipAllocatorMutex.Unlock()
-	delete(c.ipAllocatorMap, poolName)
+	_ = "STUB: not implemented"
+	return
 }
 
 // getIPAllocator gets the IP allocator of the given IP pool.
 func (c *ExternalIPPoolController) getIPAllocator(poolName string) (ipallocator.MultiIPAllocator, bool) {
-	c.ipAllocatorMutex.RLock()
-	defer c.ipAllocatorMutex.RUnlock()
-	ipAllocator, exists := c.ipAllocatorMap[poolName]
-	return ipAllocator, exists
+	_ = "STUB: not implemented"
+	return *new(ipallocator.MultiIPAllocator), false
 }
 
 // AllocateIPFromPool allocates an IP from the the given IP pool.
 func (c *ExternalIPPoolController) AllocateIPFromPool(ipPoolName string) (net.IP, error) {
-	c.handlersWaitGroup.Wait()
-	ipAllocator, exists := c.getIPAllocator(ipPoolName)
-	if !exists {
-		return nil, ErrExternalIPPoolNotFound
-	}
-	ip, err := ipAllocator.AllocateNext()
-	if err != nil {
-		return ip, err
-	}
-	c.queue.Add(ipPoolName)
-	return ip, nil
+	_ = "STUB: not implemented"
+	return *new(net.IP), nil
 }
 
 // UpdateIPAllocation sets the IP in the specified ExternalIPPool.
 func (c *ExternalIPPoolController) UpdateIPAllocation(poolName string, ip net.IP) error {
-	ipAllocator, exists := c.getIPAllocator(poolName)
-	if !exists {
-		return ErrExternalIPPoolNotFound
-	}
-	err := ipAllocator.AllocateIP(ip)
-	if err != nil {
-		return err
-	}
-	c.queue.Add(poolName)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (c *ExternalIPPoolController) updateExternalIPPoolStatus(poolName string) error {
-	eip, err := c.externalIPPoolLister.Get(poolName)
-	if err != nil {
-		if apierrors.IsNotFound(err) {
-			return nil
-		}
-		return err
-	}
-	ipAllocator, exists := c.getIPAllocator(eip.Name)
-	if !exists {
-		return ErrExternalIPPoolNotFound
-	}
-	total, used := ipAllocator.Total(), ipAllocator.Used()
-	toUpdate := eip.DeepCopy()
-	var getErr error
-	if err := retry.RetryOnConflict(retry.DefaultRetry, func() error {
-		actualStatus := eip.Status
-		usage := antreacrds.IPPoolUsage{Total: total, Used: used}
-		if actualStatus.Usage == usage {
-			return nil
-		}
-		klog.V(2).InfoS("Updating ExternalIPPool status", "ExternalIPPool", poolName, "usage", usage)
-		toUpdate.Status.Usage = usage
-		if _, updateErr := c.crdClient.CrdV1beta1().ExternalIPPools().UpdateStatus(context.TODO(), toUpdate, metav1.UpdateOptions{}); updateErr != nil && apierrors.IsConflict(updateErr) {
-			toUpdate, getErr = c.crdClient.CrdV1beta1().ExternalIPPools().Get(context.TODO(), poolName, metav1.GetOptions{})
-			if getErr != nil {
-				return getErr
-			}
-			return updateErr
-		}
-		return nil
-	}); err != nil {
-		return fmt.Errorf("updating ExternalIPPool %s status error: %v", poolName, err)
-	}
-	klog.V(2).InfoS("Updated ExternalIPPool status", "ExternalIPPool", poolName)
-	metrics.AntreaExternalIPPoolStatusUpdates.Inc()
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // ReleaseIP releases the IP to the pool.
 func (c *ExternalIPPoolController) ReleaseIP(poolName string, ip net.IP) error {
-	allocator, exists := c.getIPAllocator(poolName)
-	if !exists {
-		return ErrExternalIPPoolNotFound
-	}
-	if err := allocator.Release(ip); err != nil {
-		return err
-	}
-	c.queue.Add(poolName)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (c *ExternalIPPoolController) IPPoolHasIP(poolName string, ip net.IP) bool {
-	allocator, exists := c.getIPAllocator(poolName)
-	if !exists {
-		return false
-	}
-	return allocator.Has(ip)
+	_ = "STUB: not implemented"
+	return false
 }
 
 func (c *ExternalIPPoolController) IPPoolExists(pool string) bool {
-	_, exists := c.getIPAllocator(pool)
-	return exists
+	_ = "STUB: not implemented"
+	return false
 }
 
-func (c *ExternalIPPoolController) worker() {
-	for c.processNextWorkItem() {
-	}
-}
+func (c *ExternalIPPoolController) worker() { _ = "STUB: not implemented"; return }
 
 func (c *ExternalIPPoolController) processNextWorkItem() bool {
-	key, quit := c.queue.Get()
-	if quit {
-		return false
-	}
-	defer c.queue.Done(key)
-
-	if err := c.updateExternalIPPoolStatus(key); err != nil {
-		// Put the item back in the workqueue to handle any transient errors.
-		c.queue.AddRateLimited(key)
-		klog.ErrorS(err, "Failed to sync ExternalIPPool status", "ExternalIPPool", key)
-		return true
-	}
-	// If no error occurs we Forget this item so it does not get queued again until
-	// another change happens.
-	c.queue.Forget(key)
-	return true
+	_ = "STUB: not implemented"
+	return false
 }
+
+// Put the item back in the workqueue to handle any transient errors.
+
+// If no error occurs we Forget this item so it does not get queued again until
+// another change happens.
 
 // addExternalIPPool processes ExternalIPPool ADD events. It creates an IPAllocator for the pool and triggers
 // reconciliation of consumers that refer to the pool.
 func (c *ExternalIPPoolController) addExternalIPPool(obj interface{}) {
-	pool := obj.(*antreacrds.ExternalIPPool)
-	klog.InfoS("Processing ExternalIPPool ADD event", "pool", pool.Name, "ipRanges", pool.Spec.IPRanges)
-	c.createOrUpdateIPAllocator(pool)
-	for _, h := range c.handlers {
-		h(pool.Name)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // updateExternalIPPool processes ExternalIPPool UPDATE events. It updates the IPAllocator for the pool and triggers
 // reconciliation of consumers that refer to the pool if the IPAllocator changes.
 func (c *ExternalIPPoolController) updateExternalIPPool(_, cur interface{}) {
-	pool := cur.(*antreacrds.ExternalIPPool)
-	klog.InfoS("Processing ExternalIPPool UPDATE event", "pool", pool.Name, "ipRanges", pool.Spec.IPRanges)
-	if c.createOrUpdateIPAllocator(pool) {
-		for _, h := range c.handlers {
-			h(pool.Name)
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // deleteExternalIPPool processes ExternalIPPool DELETE events. It deletes the IPAllocator for the pool and triggers
 // reconciliation of all consumers that refer to the pool.
 func (c *ExternalIPPoolController) deleteExternalIPPool(obj interface{}) {
-	pool, ok := obj.(*antreacrds.ExternalIPPool)
-	if !ok {
-		tombstone, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			klog.V(2).InfoS("Error decoding object when deleting ExternalIPPool, invalid type", "object", obj)
-			return
-		}
-		pool, ok = tombstone.Obj.(*antreacrds.ExternalIPPool)
-		if !ok {
-			klog.V(2).InfoS("Error decoding object tombstone when deleting ExternalIPPool, invalid type", "object", tombstone.Obj)
-			return
-		}
-	}
-	klog.InfoS("Processing ExternalIPPool DELETE event", "pool", pool.Name, "ipRanges", pool.Spec.IPRanges)
-	c.deleteIPAllocator(pool.Name)
-	// Call consumers to reclaim the IPs allocated from the pool.
-	for _, h := range c.handlers {
-		h(pool.Name)
-	}
+	_ = "STUB: not implemented"
+	return
 }
+
+// Call consumers to reclaim the IPs allocated from the pool.

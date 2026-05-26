@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	controlplane "antrea.io/antrea/v2/pkg/apis/controlplane"
 	types "antrea.io/antrea/v2/pkg/controller/types"
 	gomock "go.uber.org/mock/gomock"
@@ -46,29 +44,27 @@ type MockEndpointQuerierMockRecorder struct {
 
 // NewMockEndpointQuerier creates a new mock instance.
 func NewMockEndpointQuerier(ctrl *gomock.Controller) *MockEndpointQuerier {
-	mock := &MockEndpointQuerier{ctrl: ctrl}
-	mock.recorder = &MockEndpointQuerierMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockEndpointQuerier) EXPECT() *MockEndpointQuerierMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// QueryNetworkPolicyRules mocks base method.
+	return nil
 }
 
-// QueryNetworkPolicyRules mocks base method.
 func (m *MockEndpointQuerier) QueryNetworkPolicyRules(namespace, podName string) (*types.EndpointNetworkPolicyRules, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "QueryNetworkPolicyRules", namespace, podName)
-	ret0, _ := ret[0].(*types.EndpointNetworkPolicyRules)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // QueryNetworkPolicyRules indicates an expected call of QueryNetworkPolicyRules.
 func (mr *MockEndpointQuerierMockRecorder) QueryNetworkPolicyRules(namespace, podName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueryNetworkPolicyRules", reflect.TypeOf((*MockEndpointQuerier)(nil).QueryNetworkPolicyRules), namespace, podName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockPolicyRuleQuerier is a mock of PolicyRuleQuerier interface.
@@ -85,27 +81,25 @@ type MockPolicyRuleQuerierMockRecorder struct {
 
 // NewMockPolicyRuleQuerier creates a new mock instance.
 func NewMockPolicyRuleQuerier(ctrl *gomock.Controller) *MockPolicyRuleQuerier {
-	mock := &MockPolicyRuleQuerier{ctrl: ctrl}
-	mock.recorder = &MockPolicyRuleQuerierMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockPolicyRuleQuerier) EXPECT() *MockPolicyRuleQuerierMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// QueryNetworkPolicyEvaluation mocks base method.
+	return nil
 }
 
-// QueryNetworkPolicyEvaluation mocks base method.
 func (m *MockPolicyRuleQuerier) QueryNetworkPolicyEvaluation(entities *controlplane.NetworkPolicyEvaluationRequest) (*controlplane.NetworkPolicyEvaluationResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "QueryNetworkPolicyEvaluation", entities)
-	ret0, _ := ret[0].(*controlplane.NetworkPolicyEvaluationResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // QueryNetworkPolicyEvaluation indicates an expected call of QueryNetworkPolicyEvaluation.
 func (mr *MockPolicyRuleQuerierMockRecorder) QueryNetworkPolicyEvaluation(entities any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueryNetworkPolicyEvaluation", reflect.TypeOf((*MockPolicyRuleQuerier)(nil).QueryNetworkPolicyEvaluation), entities)
+	_ = "STUB: not implemented"
+	return nil
 }

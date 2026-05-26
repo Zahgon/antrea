@@ -28,39 +28,40 @@ const (
 )
 
 func (s *Socket) AddMrouteEntry(src net.IP, group net.IP, iif uint16, oifVIFs []uint16) error {
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (s *Socket) GetMroutePacketCount(src net.IP, group net.IP) (uint32, error) {
+	_ = "STUB: not implemented"
 	return 0, nil
 }
 
 func (s *Socket) DelMrouteEntry(src net.IP, group net.IP, iif uint16) error {
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (s *Socket) FlushMRoute() {
-}
+func (s *Socket) FlushMRoute() { _ = "STUB: not implemented"; return }
 
-func CreateMulticastSocket() (*Socket, error) {
-	return nil, nil
-}
+func CreateMulticastSocket() (*Socket, error) { _ = "STUB: not implemented"; return nil, nil }
 
 func (s *Socket) AllocateVIFs(interfaceNames []string, startVIF uint16) ([]uint16, error) {
+	_ = "STUB: not implemented"
 	return nil, nil
 }
 
 func (s *Socket) MulticastInterfaceJoinMgroup(mgroup net.IP, ifaceIP net.IP, ifaceName string) error {
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (s *Socket) MulticastInterfaceLeaveMgroup(mgroup net.IP, ifaceIP net.IP, ifaceName string) error {
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (s *Socket) GetFD() int {
-	return s.sockFD
-}
+func (s *Socket) GetFD() int { _ = "STUB: not implemented"; return 0 }
 
 type Socket struct {
 	sockFD int

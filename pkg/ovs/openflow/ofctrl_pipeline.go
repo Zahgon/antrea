@@ -23,35 +23,17 @@ type ofPipeline struct {
 }
 
 func (p *ofPipeline) GetFirstTableInStage(id StageID) Table {
-	tables, ok := p.tableMap[id]
-	if ok {
-		return tables[0]
-	}
-	return nil
+	_ = "STUB: not implemented"
+	return *new(Table)
 }
 
-func (p *ofPipeline) GetFirstTable() Table {
-	return p.tableList[0]
-}
+func (p *ofPipeline) GetFirstTable() Table { _ = "STUB: not implemented"; return *new(Table) }
 
-func (p *ofPipeline) IsLastTable(t Table) bool {
-	return t.GetID() == p.tableList[len(p.tableList)-1].GetID()
-}
+func (p *ofPipeline) IsLastTable(t Table) bool { _ = "STUB: not implemented"; return false }
 
-func (p *ofPipeline) ListAllTables() []Table {
-	return p.tableList
-}
+func (p *ofPipeline) ListAllTables() []Table { _ = "STUB: not implemented"; return nil }
 
 func NewPipeline(id PipelineID, ofTables []Table) Pipeline {
-	tableMap := make(map[StageID][]Table)
-	for _, t := range ofTables {
-		sid := t.GetStageID()
-		tableMap[sid] = append(tableMap[sid], t)
-	}
-	p := &ofPipeline{pipelineID: id,
-		tableMap:  tableMap,
-		tableList: ofTables,
-	}
-	pipelineCache[id] = p
-	return p
+	_ = "STUB: not implemented"
+	return *new(Pipeline)
 }

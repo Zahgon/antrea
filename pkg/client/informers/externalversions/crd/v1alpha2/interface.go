@@ -38,20 +38,21 @@ type version struct {
 
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
-	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(Interface)
 }
 
 // ExternalEntities returns a ExternalEntityInformer.
 func (v *version) ExternalEntities() ExternalEntityInformer {
-	return &externalEntityInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(ExternalEntityInformer)
 }
 
 // IPPools returns a IPPoolInformer.
-func (v *version) IPPools() IPPoolInformer {
-	return &iPPoolInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
-}
+func (v *version) IPPools() IPPoolInformer { _ = "STUB: not implemented"; return *new(IPPoolInformer) }
 
 // TrafficControls returns a TrafficControlInformer.
 func (v *version) TrafficControls() TrafficControlInformer {
-	return &trafficControlInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(TrafficControlInformer)
 }

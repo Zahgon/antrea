@@ -14,46 +14,17 @@
 
 package runtime
 
-import (
-	"bytes"
-	"fmt"
-	"strings"
-
-	"golang.org/x/mod/semver"
-	"golang.org/x/sys/unix"
-)
-
 func parseKernelVersionStr(kernelVersionStr string) (string, error) {
+	_ = "STUB: not implemented"
 	// "5.4.0-72-generic" is parsed successfully to "v5.4.0-72-generic".
 	// "4.13.18-300.el7.x86_64" is reduced to its first three dot-separated
 	// components ("4.13.18-300") before being returned as "v4.13.18-300".
-	verStrs := strings.Split(kernelVersionStr, ".")
-	if len(verStrs) < 2 {
-		return "", fmt.Errorf("unable to get kernel version from %q", kernelVersionStr)
-	}
-	if len(verStrs) > 3 {
-		verStrs = verStrs[:3]
-	}
-	v := semver.Canonical("v" + strings.Join(verStrs, "."))
-	if v == "" {
-		return "", fmt.Errorf("unable to parse kernel version from %q", kernelVersionStr)
-	}
-	return v, nil
+	return "", nil
 }
 
 // GetKernelVersion returns the Linux kernel version for the current host as a
 // canonical semver string (e.g. "v5.4.0").
-func GetKernelVersion() (string, error) {
-	var unameBuf unix.Utsname
-	if err := unix.Uname(&unameBuf); err != nil {
-		return "", err
-	}
-	// unameBuf.Release is a fixed-size 65-byte array, we need to remove the trailing null
-	// characters from it first.
-	kernelVersionStr := string(bytes.TrimRight(unameBuf.Release[:], "\x00"))
-	v, err := parseKernelVersionStr(kernelVersionStr)
-	if err != nil {
-		return "", fmt.Errorf("error when parsing Linux kernel version string: %v", err)
-	}
-	return v, nil
-}
+func GetKernelVersion() (string, error) { _ = "STUB: not implemented"; return "", nil }
+
+// unameBuf.Release is a fixed-size 65-byte array, we need to remove the trailing null
+// characters from it first.

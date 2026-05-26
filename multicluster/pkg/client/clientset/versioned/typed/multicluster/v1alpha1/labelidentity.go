@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	multiclusterv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
-	scheme "antrea.io/antrea/v2/multicluster/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -53,14 +52,6 @@ type labelIdentities struct {
 
 // newLabelIdentities returns a LabelIdentities
 func newLabelIdentities(c *MulticlusterV1alpha1Client) *labelIdentities {
-	return &labelIdentities{
-		gentype.NewClientWithList[*multiclusterv1alpha1.LabelIdentity, *multiclusterv1alpha1.LabelIdentityList](
-			"labelidentities",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *multiclusterv1alpha1.LabelIdentity { return &multiclusterv1alpha1.LabelIdentity{} },
-			func() *multiclusterv1alpha1.LabelIdentityList { return &multiclusterv1alpha1.LabelIdentityList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

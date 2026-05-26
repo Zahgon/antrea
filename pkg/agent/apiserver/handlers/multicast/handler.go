@@ -15,10 +15,7 @@
 package multicast
 
 import (
-	"encoding/json"
 	"net/http"
-	"reflect"
-	"strconv"
 
 	"antrea.io/antrea/v2/pkg/agent/apis"
 	"antrea.io/antrea/v2/pkg/agent/multicast"
@@ -26,48 +23,13 @@ import (
 )
 
 func generateResponse(podName string, podNamespace string, trafficStats *multicast.PodTrafficStats) apis.MulticastResponse {
-	return apis.MulticastResponse{
-		PodName:      podName,
-		PodNamespace: podNamespace,
-		Inbound:      strconv.FormatUint(trafficStats.Inbound, 10),
-		Outbound:     strconv.FormatUint(trafficStats.Outbound, 10),
-	}
+	_ = "STUB: not implemented"
+	return *new(apis.MulticastResponse)
 }
 
 // HandleFunc returns the function which can handle queries issued by 'antctl get podmulticaststats' command.
 // It will return Pod multicast traffic statistics for the local Node.
 func HandleFunc(mq querier.AgentMulticastInfoQuerier) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if mq == nil || reflect.ValueOf(mq).IsNil() {
-			http.Error(w, "Multicast is not enabled", http.StatusServiceUnavailable)
-			return
-		}
-		name := r.URL.Query().Get("name")
-		ns := r.URL.Query().Get("namespace")
-
-		responses := []apis.MulticastResponse{}
-		if name != "" && ns != "" {
-			podStats := mq.GetPodStats(name, ns)
-			if podStats == nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-			responses = append(responses, generateResponse(name, ns, podStats))
-		} else if ns == "" && name != "" {
-			http.Error(w, "name option should be used with namespace option", http.StatusServiceUnavailable)
-			return
-		} else {
-			allPodStats := mq.GetAllPodsStats()
-			for iface, trafficStats := range allPodStats {
-				if ns == "" || ns == iface.PodNamespace {
-					responses = append(responses, generateResponse(iface.PodName, iface.PodNamespace, trafficStats))
-				}
-			}
-		}
-
-		err := json.NewEncoder(w).Encode(responses)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-		}
-	}
+	_ = "STUB: not implemented"
+	return *new(http.HandlerFunc)
 }

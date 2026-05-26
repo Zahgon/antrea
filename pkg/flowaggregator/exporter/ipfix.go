@@ -16,28 +16,19 @@ package exporter
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"hash/fnv"
-	"net"
-	"path/filepath"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/spf13/afero"
 	ipfixentities "github.com/vmware/go-ipfix/pkg/entities"
 	"github.com/vmware/go-ipfix/pkg/exporter"
-	ipfixregistry "github.com/vmware/go-ipfix/pkg/registry"
 	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/klog/v2"
 
 	flowpb "antrea.io/antrea/v2/pkg/apis/flow/v1alpha1"
 	flowaggregatorconfig "antrea.io/antrea/v2/pkg/config/flowaggregator"
-	"antrea.io/antrea/v2/pkg/flowaggregator/infoelements"
 	"antrea.io/antrea/v2/pkg/flowaggregator/options"
 	"antrea.io/antrea/v2/pkg/flowaggregator/ringbuffer"
 	"antrea.io/antrea/v2/pkg/ipfix"
-	"antrea.io/antrea/v2/pkg/util/env"
 )
 
 var (
@@ -88,42 +79,17 @@ type ipfixExporterTLSConfig struct {
 }
 
 func newIPFIXExporterTLSConfig(config flowaggregatorconfig.FlowCollectorTLSConfig) ipfixExporterTLSConfig {
-	var tlsConfig ipfixExporterTLSConfig
-	if !config.Enable {
-		return tlsConfig
-	}
-	tlsConfig.enable = true
-	// config.MinVersion has already been validated during FA config validation.
-	tlsConfig.minVersion = options.TLSVersionOrDie(config.MinVersion)
-	if config.CASecretName != "" {
-		tlsConfig.externalFlowCollectorCAPath = filepath.Join(flowCollectorCertDir, "ca.crt")
-	}
-	tlsConfig.externalFlowCollectorServerName = config.ServerName
-	if config.ClientSecretName != "" {
-		tlsConfig.exporterCertPath = filepath.Join(flowCollectorCertDir, "tls.crt")
-		tlsConfig.exporterKeyPath = filepath.Join(flowCollectorCertDir, "tls.key")
-	}
-	return tlsConfig
+	_ = "STUB: not implemented"
+	return *new(ipfixExporterTLSConfig)
 }
+
+// config.MinVersion has already been validated during FA config validation.
 
 // genObservationDomainID generates an IPFIX Observation Domain ID when one is not provided by the
 // user through the flow aggregator configuration. It is generated as a hash of the cluster UUID.
-func genObservationDomainID(clusterUUID uuid.UUID) uint32 {
-	h := fnv.New32()
-	h.Write(clusterUUID[:])
-	observationDomainID := h.Sum32()
-	return observationDomainID
-}
+func genObservationDomainID(clusterUUID uuid.UUID) uint32 { _ = "STUB: not implemented"; return 0 }
 
-func newInitBackoff() wait.Backoff {
-	return wait.Backoff{
-		Duration: 1 * time.Second,
-		Factor:   2,
-		Jitter:   0,
-		Steps:    10,
-		Cap:      30 * time.Second,
-	}
-}
+func newInitBackoff() wait.Backoff { _ = "STUB: not implemented"; return *new(wait.Backoff) }
 
 func NewIPFIXExporter(
 	clusterUUID uuid.UUID,
@@ -131,658 +97,145 @@ func NewIPFIXExporter(
 	opt *options.Options,
 	registry ipfix.IPFIXRegistry,
 ) *IPFIXExporter {
-	var sendJSONRecord bool
-	if opt.Config.FlowCollector.RecordFormat == "JSON" {
-		sendJSONRecord = true
-	} else {
-		sendJSONRecord = false
-	}
-
-	var observationDomainID uint32
-	if opt.Config.FlowCollector.ObservationDomainID != nil {
-		observationDomainID = *opt.Config.FlowCollector.ObservationDomainID
-	} else {
-		observationDomainID = genObservationDomainID(clusterUUID)
-	}
-	klog.InfoS("Flow aggregator Observation Domain ID", "domainID", observationDomainID)
-
-	return &IPFIXExporter{
-		config:                     opt.Config.FlowCollector,
-		externalFlowCollectorAddr:  opt.ExternalFlowCollectorAddr,
-		externalFlowCollectorProto: opt.ExternalFlowCollectorProto,
-		sendJSONRecord:             sendJSONRecord,
-		includeK8sNames:            *opt.Config.FlowCollector.IncludeK8sNames,
-		includeK8sUIDs:             *opt.Config.FlowCollector.IncludeK8sUIDs,
-		aggregatorMode:             opt.AggregatorMode,
-		observationDomainID:        observationDomainID,
-		templateRefreshTimeout:     opt.TemplateRefreshTimeout,
-		registry:                   registry,
-		clusterUUID:                clusterUUID,
-		clusterID:                  clusterID,
-		maxIPFIXMsgSize:            int(opt.Config.FlowCollector.MaxIPFIXMsgSize),
-		tls:                        newIPFIXExporterTLSConfig(opt.Config.FlowCollector.TLS),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (e *IPFIXExporter) reset() {
-	e.exportingProcess.CloseConnToCollector()
-	e.exportingProcess = nil
-}
+func (e *IPFIXExporter) reset() { _ = "STUB: not implemented"; return }
 
 // Run consumes flow records from the ring buffer and exports them via IPFIX.
 // It blocks until ctx is cancelled or the consumer signals shutdown.
 func (e *IPFIXExporter) Run(ctx context.Context, buf ringbuffer.BroadcastBuffer[*flowpb.Flow]) {
-	defer func() {
-		if e.exportingProcess != nil {
-			if err := e.flush(); err != nil {
-				klog.ErrorS(err, "Error when flushing buffered IPFIX exporter on shutdown")
-			}
-			e.reset()
-		}
-	}()
-
-	// consumeDeadline must be <= flushInterval so that Consume returns often
-	// enough for the flush ticker to be checked promptly.
-	consumer := buf.NewConsumer(ringbuffer.WithMaxConsumeDeadline(consumeDeadline))
-	flushTicker := time.NewTicker(flushInterval)
-	defer flushTicker.Stop()
-
-	waitCh := make(chan struct{})
-	close(waitCh)
-	var waitTimer *time.Timer
-	waitFor := func(d time.Duration) {
-		// Using AfterFunc makes more sense than After: we want to use a custom
-		// channel and close it when we need the <- waitCh case to act as a
-		// "default" case in the select statement below.
-		waitCh = make(chan struct{})
-		ch := waitCh
-		waitTimer = time.AfterFunc(d, func() {
-			close(ch)
-		})
-	}
-
-	// initBackoff is used to enforce some minimum delay between initialization attempts.
-	initBackoff := newInitBackoff()
-	// initNextAttempt is the time after which the next initialization can be attempted.
-	initNextAttempt := time.Now()
-
-	for {
-		select {
-		case <-ctx.Done():
-			if waitTimer != nil {
-				waitTimer.Stop()
-			}
-			return
-		case <-flushTicker.C:
-			// Note that e.flush() will be a no-op and return nil if the exporting
-			// process is not initialized.
-			if err := e.flush(); err != nil {
-				klog.ErrorS(err, "Error when flushing IPFIX exporter")
-			}
-		case <-waitCh: // if waitCh is closed, this case acts as a "default" case
-			break
-		}
-
-		if e.exportingProcess == nil {
-			now := time.Now()
-			// Safety net: in the normal flow waitFor() is always called with the
-			// exact remaining duration before scheduling the next attempt, so
-			// this branch should not be reached. It protects against any future
-			// code path that reaches the init block without having waited.
-			if initNextAttempt.After(now) {
-				waitFor(initNextAttempt.Sub(now))
-				continue
-			}
-			initNextAttempt = now.Add(initBackoff.Step())
-			if err := e.initExportingProcess(); err != nil {
-				klog.ErrorS(err, "Error when initializing IPFIX exporting process", "nextAttempt", initNextAttempt)
-				waitFor(initNextAttempt.Sub(now))
-				continue
-			}
-			klog.InfoS("Successfully initialized IPFIX exporting process")
-			initBackoff = newInitBackoff()
-			initNextAttempt = now
-		}
-
-		record, n, _, shutdown := consumer.Consume()
-		if n > 0 {
-			isIPv6 := record.Ip.Version == flowpb.IPVersion_IP_VERSION_6
-			if err := e.sendRecord(record, isIPv6); err != nil {
-				// In case of error, we drop the current record and reset the
-				// exporting process. The next iteration of the loop will be
-				// responsible for re-initializing the exporting process.
-				klog.ErrorS(err, "Error when sending IPFIX record")
-				if e.exportingProcess != nil {
-					e.reset()
-				}
-			}
-		}
-		if shutdown {
-			return
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
-func (e *IPFIXExporter) flush() error {
-	if e.exportingProcess == nil {
-		return nil
-	}
-	if err := e.bufferedExporter.Flush(); err != nil {
-		e.reset()
-		return err
-	}
-	return nil
-}
+// consumeDeadline must be <= flushInterval so that Consume returns often
+// enough for the flush ticker to be checked promptly.
+
+// Using AfterFunc makes more sense than After: we want to use a custom
+// channel and close it when we need the <- waitCh case to act as a
+// "default" case in the select statement below.
+
+// initBackoff is used to enforce some minimum delay between initialization attempts.
+
+// initNextAttempt is the time after which the next initialization can be attempted.
+
+// Note that e.flush() will be a no-op and return nil if the exporting
+// process is not initialized.
+
+// if waitCh is closed, this case acts as a "default" case
+
+// Safety net: in the normal flow waitFor() is always called with the
+// exact remaining duration before scheduling the next attempt, so
+// this branch should not be reached. It protects against any future
+// code path that reaches the init block without having waited.
+
+// In case of error, we drop the current record and reset the
+// exporting process. The next iteration of the loop will be
+// responsible for re-initializing the exporting process.
+
+func (e *IPFIXExporter) flush() error { _ = "STUB: not implemented"; return nil }
 
 func (e *IPFIXExporter) makeIPFIXRecord(flow *flowpb.Flow, isIPv6 bool) ipfixentities.Record {
-	var elements []ipfixentities.InfoElementWithValue
-	if isIPv6 {
-		elements = e.elementsV6
-	} else {
-		elements = e.elementsV4
-	}
-	// next is a convenience function to access and write information elements sequentially.
-	// All elements in the slice should be set. In other words, the number of calls to next() in
-	// this function should exactly match the length of the elements slice (created by
-	// prepareElements). We rely on unit testing to ensure this.
-	idx := 0
-	next := func() ipfixentities.InfoElementWithValue {
-		e := elements[idx]
-		idx += 1
-		return e
-	}
-
-	setIPAddress := func(bytes []byte) {
-		if len(bytes) > 0 {
-			next().SetIPAddressValue(bytes)
-			return
-		}
-		if isIPv6 {
-			next().SetIPAddressValue(net.IPv6zero)
-		} else {
-			next().SetIPAddressValue(net.IPv4zero)
-		}
-	}
-
-	setUUID := func(uid string) {
-		if uid == "" {
-			next().SetOctetArrayValue(uuid.Nil[:])
-			return
-		}
-		v, err := uuid.Parse(uid)
-		if err != nil {
-			klog.ErrorS(err, "Error when parsing UID string", "uid", uid)
-			next().SetOctetArrayValue(uuid.Nil[:])
-			return
-		}
-		next().SetOctetArrayValue(v[:])
-	}
-
-	// IANA IEs
-	next().SetUnsigned32Value(uint32(flow.StartTs.Seconds))
-	next().SetUnsigned32Value(uint32(flow.EndTs.Seconds))
-	next().SetUnsigned8Value(uint8(flow.EndReason))
-	next().SetUnsigned16Value(uint16(flow.Transport.SourcePort))
-	next().SetUnsigned16Value(uint16(flow.Transport.DestinationPort))
-	next().SetUnsigned8Value(uint8(flow.Transport.ProtocolNumber))
-	next().SetUnsigned64Value(flow.Stats.PacketTotalCount)
-	next().SetUnsigned64Value(flow.Stats.OctetTotalCount)
-	next().SetUnsigned64Value(flow.Stats.PacketDeltaCount)
-	next().SetUnsigned64Value(flow.Stats.OctetDeltaCount)
-	setIPAddress(flow.Ip.Source)
-	setIPAddress(flow.Ip.Destination)
-	// IANAReverse IEs
-	next().SetUnsigned64Value(flow.ReverseStats.PacketTotalCount)
-	next().SetUnsigned64Value(flow.ReverseStats.OctetTotalCount)
-	next().SetUnsigned64Value(flow.ReverseStats.PacketDeltaCount)
-	next().SetUnsigned64Value(flow.ReverseStats.OctetDeltaCount)
-	// Antrea IEs
-	if e.includeK8sNames {
-		next().SetStringValue(flow.K8S.SourcePodName)
-		next().SetStringValue(flow.K8S.SourcePodNamespace)
-	}
-	if e.includeK8sUIDs {
-		setUUID(flow.K8S.SourcePodUid)
-	}
-	if e.includeK8sNames {
-		next().SetStringValue(flow.K8S.SourceNodeName)
-	}
-	if e.includeK8sUIDs {
-		setUUID(flow.K8S.SourceNodeUid)
-	}
-	if e.includeK8sNames {
-		next().SetStringValue(flow.K8S.DestinationPodName)
-		next().SetStringValue(flow.K8S.DestinationPodNamespace)
-	}
-	if e.includeK8sUIDs {
-		setUUID(flow.K8S.DestinationPodUid)
-	}
-	if e.includeK8sNames {
-		next().SetStringValue(flow.K8S.DestinationNodeName)
-	}
-	if e.includeK8sUIDs {
-		setUUID(flow.K8S.DestinationNodeUid)
-	}
-	next().SetUnsigned16Value(uint16(flow.K8S.DestinationServicePort))
-	if e.includeK8sNames {
-		next().SetStringValue(flow.K8S.DestinationServicePortName)
-	}
-	if e.includeK8sUIDs {
-		setUUID(flow.K8S.DestinationServiceUid)
-	}
-	if e.includeK8sNames {
-		next().SetStringValue(flow.K8S.IngressNetworkPolicyName)
-		next().SetStringValue(flow.K8S.IngressNetworkPolicyNamespace)
-	}
-	if e.includeK8sUIDs {
-		setUUID(flow.K8S.IngressNetworkPolicyUid)
-	}
-	next().SetUnsigned8Value(uint8(flow.K8S.IngressNetworkPolicyType))
-	if e.includeK8sNames || e.includeK8sUIDs {
-		next().SetStringValue(flow.K8S.IngressNetworkPolicyRuleName)
-	}
-	next().SetUnsigned8Value(uint8(flow.K8S.IngressNetworkPolicyRuleAction))
-	if e.includeK8sNames {
-		next().SetStringValue(flow.K8S.EgressNetworkPolicyName)
-		next().SetStringValue(flow.K8S.EgressNetworkPolicyNamespace)
-	}
-	if e.includeK8sUIDs {
-		setUUID(flow.K8S.EgressNetworkPolicyUid)
-	}
-	next().SetUnsigned8Value(uint8(flow.K8S.EgressNetworkPolicyType))
-	if e.includeK8sNames || e.includeK8sUIDs {
-		next().SetStringValue(flow.K8S.EgressNetworkPolicyRuleName)
-	}
-	next().SetUnsigned8Value(uint8(flow.K8S.EgressNetworkPolicyRuleAction))
-	next().SetStringValue(flow.Transport.GetTCP().GetStateName()) // Use Getter functions in case transport is not TCP
-	next().SetUnsigned8Value(uint8(flow.K8S.FlowType))
-	if e.includeK8sNames {
-		next().SetStringValue(flow.K8S.EgressName)
-	}
-	if e.includeK8sUIDs {
-		setUUID(flow.K8S.EgressUid)
-	}
-	if flow.K8S.EgressIp == nil {
-		next().SetStringValue("")
-	} else {
-		next().SetStringValue(net.IP(flow.K8S.EgressIp).String())
-	}
-	if e.includeK8sNames {
-		next().SetStringValue(flow.K8S.EgressNodeName)
-	}
-	if e.includeK8sUIDs {
-		setUUID(flow.K8S.EgressNodeUid)
-	}
-	setIPAddress(flow.K8S.DestinationClusterIp)
-	if e.aggregatorMode == flowaggregatorconfig.AggregatorModeAggregate {
-		// Add Antrea source stats fields
-		next().SetUnsigned64Value(flow.Aggregation.StatsFromSource.PacketTotalCount)
-		next().SetUnsigned64Value(flow.Aggregation.StatsFromSource.OctetTotalCount)
-		next().SetUnsigned64Value(flow.Aggregation.StatsFromSource.PacketDeltaCount)
-		next().SetUnsigned64Value(flow.Aggregation.StatsFromSource.OctetDeltaCount)
-		next().SetUnsigned64Value(flow.Aggregation.ReverseStatsFromSource.PacketTotalCount)
-		next().SetUnsigned64Value(flow.Aggregation.ReverseStatsFromSource.OctetTotalCount)
-		next().SetUnsigned64Value(flow.Aggregation.ReverseStatsFromSource.PacketDeltaCount)
-		next().SetUnsigned64Value(flow.Aggregation.ReverseStatsFromSource.OctetDeltaCount)
-		// Add Antrea destination stats fields
-		next().SetUnsigned64Value(flow.Aggregation.StatsFromDestination.PacketTotalCount)
-		next().SetUnsigned64Value(flow.Aggregation.StatsFromDestination.OctetTotalCount)
-		next().SetUnsigned64Value(flow.Aggregation.StatsFromDestination.PacketDeltaCount)
-		next().SetUnsigned64Value(flow.Aggregation.StatsFromDestination.OctetDeltaCount)
-		next().SetUnsigned64Value(flow.Aggregation.ReverseStatsFromDestination.PacketTotalCount)
-		next().SetUnsigned64Value(flow.Aggregation.ReverseStatsFromDestination.OctetTotalCount)
-		next().SetUnsigned64Value(flow.Aggregation.ReverseStatsFromDestination.PacketDeltaCount)
-		next().SetUnsigned64Value(flow.Aggregation.ReverseStatsFromDestination.OctetDeltaCount)
-		// Add Antrea flow end seconds fields
-		next().SetUnsigned32Value(uint32(flow.Aggregation.EndTsFromSource.Seconds))
-		next().SetUnsigned32Value(uint32(flow.Aggregation.EndTsFromDestination.Seconds))
-		// Add common throughput fields
-		next().SetUnsigned64Value(flow.Aggregation.Throughput)
-		next().SetUnsigned64Value(flow.Aggregation.ReverseThroughput)
-		next().SetUnsigned64Value(flow.Aggregation.ThroughputFromSource)
-		next().SetUnsigned64Value(flow.Aggregation.ReverseThroughputFromSource)
-		next().SetUnsigned64Value(flow.Aggregation.ThroughputFromDestination)
-		next().SetUnsigned64Value(flow.Aggregation.ReverseThroughputFromDestination)
-	}
-
-	// Add Pod label fields
-	var sourcePodLabels string
-	if flow.K8S.SourcePodLabels != nil {
-		// flow.K8S.SourcePodLabels.Labels can be nil or an empty map
-		// both cases should be treated the same
-		if len(flow.K8S.SourcePodLabels.Labels) > 0 {
-			b, err := json.Marshal(flow.K8S.SourcePodLabels.Labels)
-			if err != nil {
-				klog.ErrorS(err, "Error when marshalling sourcePodLabels")
-			} else {
-				sourcePodLabels = string(b)
-			}
-		} else {
-			sourcePodLabels = "{}"
-		}
-	}
-	next().SetStringValue(sourcePodLabels)
-	var destinationPodLabels string
-	if flow.K8S.DestinationPodLabels != nil {
-		if len(flow.K8S.DestinationPodLabels.Labels) > 0 {
-			b, err := json.Marshal(flow.K8S.DestinationPodLabels.Labels)
-			if err != nil {
-				klog.ErrorS(err, "Error when marshalling destinationPodLabels")
-			} else {
-				destinationPodLabels = string(b)
-			}
-		} else {
-			destinationPodLabels = "{}"
-		}
-	}
-	next().SetStringValue(destinationPodLabels)
-
-	next().SetStringValue(e.clusterID)
-
-	// Proxy-mode specific IEs
-	if e.aggregatorMode == flowaggregatorconfig.AggregatorModeProxy {
-		next().SetUnsigned32Value(flow.Ipfix.ObservationDomainId)
-		exporterIP := net.ParseIP(flow.Ipfix.ExporterIp)
-		if ip := exporterIP.To4(); ip != nil {
-			next().SetIPAddressValue(ip)
-		} else {
-			next().SetIPAddressValue(net.IPv4zero)
-		}
-		if exporterIP.To4() == nil {
-			next().SetIPAddressValue(exporterIP)
-		} else {
-			next().SetIPAddressValue(net.IPv6zero)
-		}
-		next().SetUnsigned8Value(uint8(flow.FlowDirection))
-	}
-
-	templateID := e.templateIDv4
-	if isIPv6 {
-		templateID = e.templateIDv6
-	}
-	return ipfixentities.NewDataRecordFromElements(templateID, elements)
+	_ = "STUB: not implemented"
+	return *new(ipfixentities.Record)
 }
+
+// next is a convenience function to access and write information elements sequentially.
+// All elements in the slice should be set. In other words, the number of calls to next() in
+// this function should exactly match the length of the elements slice (created by
+// prepareElements). We rely on unit testing to ensure this.
+
+// IANA IEs
+
+// IANAReverse IEs
+
+// Antrea IEs
+
+// Use Getter functions in case transport is not TCP
+
+// Add Antrea source stats fields
+
+// Add Antrea destination stats fields
+
+// Add Antrea flow end seconds fields
+
+// Add common throughput fields
+
+// Add Pod label fields
+
+// flow.K8S.SourcePodLabels.Labels can be nil or an empty map
+// both cases should be treated the same
+
+// Proxy-mode specific IEs
 
 func (e *IPFIXExporter) sendRecord(flow *flowpb.Flow, isRecordIPv6 bool) error {
+	_ = "STUB: not implemented"
 	// Run() always initializes the exporting process before calling sendRecord,
 	// so this guard should never be triggered in practice.
-	if e.exportingProcess == nil {
-		return fmt.Errorf("exporting process is not initialized")
-	}
-	record := e.makeIPFIXRecord(flow, isRecordIPv6)
-	if err := e.bufferedExporter.AddRecord(record); err != nil {
-		return err
-	}
-	klog.V(7).InfoS("Data record added successfully")
 	return nil
 }
 
-func inPod() bool {
-	return env.GetPodNamespace() != ""
-}
+func inPod() bool { _ = "STUB: not implemented"; return false }
 
-func getMTU(ifaceName string) (int, error) {
-	iface, err := net.InterfaceByName(ifaceName)
-	if err != nil {
-		return 0, err
-	}
-	return iface.MTU, nil
-}
+func getMTU(ifaceName string) (int, error) { _ = "STUB: not implemented"; return 0, nil }
 
 func (e *IPFIXExporter) prepareExportingProcessTLSClientConfig() (*exporter.ExporterTLSClientConfig, error) {
-	if !e.tls.enable {
-		return nil, nil
-	}
-	exporterConfig := &exporter.ExporterTLSClientConfig{
-		ServerName: e.tls.externalFlowCollectorServerName,
-		MinVersion: e.tls.minVersion,
-	}
-	if e.tls.externalFlowCollectorCAPath != "" {
-		caBytes, err := afero.ReadFile(defaultFS, e.tls.externalFlowCollectorCAPath)
-		if err != nil {
-			return nil, fmt.Errorf("error when reading CA cert %q, ensure Secret %q exists in this Namespace and has the 'ca.crt' key: %w", e.tls.externalFlowCollectorCAPath, e.config.TLS.CASecretName, err)
-		}
-		exporterConfig.CAData = caBytes
-	}
-	if e.tls.exporterCertPath != "" {
-		certBytes, err := afero.ReadFile(defaultFS, e.tls.exporterCertPath)
-		if err != nil {
-			return nil, fmt.Errorf("error when reading client cert %q, ensure Secret %q exists in this Namespace and has the 'tls.crt' key: %w", e.tls.exporterCertPath, e.config.TLS.ClientSecretName, err)
-		}
-		exporterConfig.CertData = certBytes
-	}
-	if e.tls.exporterKeyPath != "" {
-		keyBytes, err := afero.ReadFile(defaultFS, e.tls.exporterKeyPath)
-		if err != nil {
-			return nil, fmt.Errorf("error when reading client key %q, ensure Secret %q exists in this Namespace and has the 'tls.key' key: %w", e.tls.exporterKeyPath, e.config.TLS.ClientSecretName, err)
-		}
-		exporterConfig.KeyData = keyBytes
-	}
-	return exporterConfig, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func (e *IPFIXExporter) initExportingProcess() error {
-	return initIPFIXExportingProcess(e)
-}
+func (e *IPFIXExporter) initExportingProcess() error { _ = "STUB: not implemented"; return nil }
 
 func (e *IPFIXExporter) initExportingProcessImpl() error {
+	_ = "STUB: not implemented"
 	// We reload the certificate data every time, in case the files have been updated.
-	tlsClientConfig, err := e.prepareExportingProcessTLSClientConfig()
-	if err != nil {
-		return fmt.Errorf("error when preparing TLS config for exporter: %w", err)
-	}
-	if tlsClientConfig != nil {
-		klog.InfoS("TLS is enabled for IPFIXExporter", "protocol", e.externalFlowCollectorProto, "customRoots", tlsClientConfig.CAData != nil, "clientAuth", tlsClientConfig.CertData != nil)
-	} else {
-		klog.InfoS("TLS is disabled for IPFIXExporter", "protocol", e.externalFlowCollectorProto)
-	}
-	var expInput exporter.ExporterInput
-	if e.externalFlowCollectorProto == "tcp" {
-		expInput = exporter.ExporterInput{
-			CollectorAddress:    e.externalFlowCollectorAddr,
-			CollectorProtocol:   e.externalFlowCollectorProto,
-			ObservationDomainID: e.observationDomainID,
-			// TCP transport does not need any tempRefTimeout, so sending 0.
-			TempRefTimeout:  0,
-			TLSClientConfig: tlsClientConfig,
-			SendJSONRecord:  e.sendJSONRecord,
-		}
-	} else {
-		expInput = exporter.ExporterInput{
-			CollectorAddress:    e.externalFlowCollectorAddr,
-			CollectorProtocol:   e.externalFlowCollectorProto,
-			ObservationDomainID: e.observationDomainID,
-			TempRefTimeout:      uint32(e.templateRefreshTimeout.Seconds()),
-			TLSClientConfig:     tlsClientConfig,
-			SendJSONRecord:      e.sendJSONRecord,
-		}
-		if inPod() {
-			// In a Pod, the primary network interface is always "eth0", and we assume
-			// this is the interface used to connect to the IPFIX collector.
-			// The FlowAggregator is not meant to be run in the host network.
-			mtu, err := getMTU("eth0")
-			if err != nil {
-				klog.ErrorS(err, "Failed to determine uplink MTU")
-			} else {
-				// In practice the only guarantee we have is that PMTU <=
-				// MTU. However, this is a reasonable approximation for most
-				// scenarios. Note that MaxMessageSize is an available override in
-				// the config.
-				expInput.PathMTU = mtu
-			}
-		} else {
-			klog.InfoS("Not running as Pod, cannot determine interface MTU")
-		}
-	}
-	expInput.MaxMsgSize = e.maxIPFIXMsgSize
-
-	ep, err := exporter.InitExportingProcess(expInput)
-	if err != nil {
-		return fmt.Errorf("got error when initializing IPFIX exporting process: %w", err)
-	}
-	e.exportingProcess = ep
-	e.bufferedExporter = exporter.NewBufferedIPFIXExporter(ep)
-	// Currently, we send two templates for IPv4 and IPv6 regardless of the IP families supported by cluster
-	if err = e.createAndSendTemplate(false); err != nil {
-		return err
-	}
-	if err = e.createAndSendTemplate(true); err != nil {
-		return err
-	}
-
 	return nil
 }
+
+// TCP transport does not need any tempRefTimeout, so sending 0.
+
+// In a Pod, the primary network interface is always "eth0", and we assume
+// this is the interface used to connect to the IPFIX collector.
+// The FlowAggregator is not meant to be run in the host network.
+
+// In practice the only guarantee we have is that PMTU <=
+// MTU. However, this is a reasonable approximation for most
+// scenarios. Note that MaxMessageSize is an available override in
+// the config.
+
+// Currently, we send two templates for IPv4 and IPv6 regardless of the IP families supported by cluster
 
 func (e *IPFIXExporter) createAndSendTemplate(isRecordIPv6 bool) error {
-	templateID := e.exportingProcess.NewTemplateID()
-	recordIPFamily := "IPv4"
-	if isRecordIPv6 {
-		recordIPFamily = "IPv6"
-	}
-	if isRecordIPv6 {
-		e.templateIDv6 = templateID
-	} else {
-		e.templateIDv4 = templateID
-	}
-	// These elements will be used for data records as well, to avoid extra memory allocations.
-	elements, err := e.prepareElements(isRecordIPv6)
-	if err != nil {
-		return err
-	}
-	if isRecordIPv6 {
-		e.elementsV6 = elements
-	} else {
-		e.elementsV4 = elements
-	}
-	if err := e.sendTemplateSet(isRecordIPv6); err != nil {
-		// No need to flush first, as no data records should have been sent yet.
-		e.reset()
-		return fmt.Errorf("sending %s template set failed, err: %w", recordIPFamily, err)
-	}
-	klog.V(2).InfoS("Exporting process initialized", "templateSetIPFamily", recordIPFamily)
+	_ = "STUB: not implemented"
 	return nil
 }
 
+// These elements will be used for data records as well, to avoid extra memory allocations.
+
+// No need to flush first, as no data records should have been sent yet.
+
 func (e *IPFIXExporter) prepareElements(isIPv6 bool) ([]ipfixentities.InfoElementWithValue, error) {
-	elements := make([]ipfixentities.InfoElementWithValue, 0)
-	ianaInfoElements := infoelements.IANAInfoElements(isIPv6)
-	antreaInfoElements := infoelements.AntreaInfoElements(e.includeK8sNames, e.includeK8sUIDs, isIPv6)
-
-	for _, ieName := range ianaInfoElements {
-		ie, err := e.createInfoElement(ieName, ipfixregistry.IANAEnterpriseID)
-		if err != nil {
-			return nil, err
-		}
-		elements = append(elements, ie)
-	}
-	for _, ieName := range infoelements.IANAReverseInfoElements {
-		ie, err := e.createInfoElement(ieName, ipfixregistry.IANAReversedEnterpriseID)
-		if err != nil {
-			return nil, err
-		}
-		elements = append(elements, ie)
-	}
-	for _, ieName := range antreaInfoElements {
-		ie, err := e.createInfoElement(ieName, ipfixregistry.AntreaEnterpriseID)
-		if err != nil {
-			return nil, err
-		}
-		elements = append(elements, ie)
-	}
-	if e.aggregatorMode == flowaggregatorconfig.AggregatorModeAggregate {
-		for i := range infoelements.StatsElementList {
-			// Add Antrea source stats fields
-			ieName := infoelements.AntreaSourceStatsElementList[i]
-			ie, err := e.createInfoElement(ieName, ipfixregistry.AntreaEnterpriseID)
-			if err != nil {
-				return nil, err
-			}
-			elements = append(elements, ie)
-			// Add Antrea destination stats fields
-			ieName = infoelements.AntreaDestinationStatsElementList[i]
-			ie, err = e.createInfoElement(ieName, ipfixregistry.AntreaEnterpriseID)
-			if err != nil {
-				return nil, err
-			}
-			elements = append(elements, ie)
-		}
-		for _, ieName := range infoelements.AntreaFlowEndSecondsElementList {
-			ie, err := e.createInfoElement(ieName, ipfixregistry.AntreaEnterpriseID)
-			if err != nil {
-				return nil, err
-			}
-			elements = append(elements, ie)
-		}
-		for i := range infoelements.AntreaThroughputElementList {
-			// Add common throughput fields
-			ieName := infoelements.AntreaThroughputElementList[i]
-			ie, err := e.createInfoElement(ieName, ipfixregistry.AntreaEnterpriseID)
-			if err != nil {
-				return nil, err
-			}
-			elements = append(elements, ie)
-			// Add source node specific throughput fields
-			ieName = infoelements.AntreaSourceThroughputElementList[i]
-			ie, err = e.createInfoElement(ieName, ipfixregistry.AntreaEnterpriseID)
-			if err != nil {
-				return nil, err
-			}
-			elements = append(elements, ie)
-			// Add destination node specific throughput fields
-			ieName = infoelements.AntreaDestinationThroughputElementList[i]
-			ie, err = e.createInfoElement(ieName, ipfixregistry.AntreaEnterpriseID)
-			if err != nil {
-				return nil, err
-			}
-			elements = append(elements, ie)
-		}
-	}
-	for _, ieName := range infoelements.AntreaLabelsElementList {
-		ie, err := e.createInfoElement(ieName, ipfixregistry.AntreaEnterpriseID)
-		if err != nil {
-			return nil, err
-		}
-		elements = append(elements, ie)
-	}
-	ie, err := e.createInfoElement("clusterId", ipfixregistry.AntreaEnterpriseID)
-	if err != nil {
-		return nil, err
-	}
-	elements = append(elements, ie)
-	if e.aggregatorMode == flowaggregatorconfig.AggregatorModeProxy {
-		for _, ieName := range infoelements.IANAProxyModeElementList {
-			ie, err := e.createInfoElement(ieName, ipfixregistry.IANAEnterpriseID)
-			if err != nil {
-				return nil, err
-			}
-			elements = append(elements, ie)
-		}
-	}
-
-	return elements, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func (e *IPFIXExporter) sendTemplateSet(isIPv6 bool) error {
-	elements := e.elementsV4
-	templateID := e.templateIDv4
-	if isIPv6 {
-		elements = e.elementsV6
-		templateID = e.templateIDv6
-	}
-	record := ipfixentities.NewTemplateRecordFromElements(templateID, elements)
-	// Ideally we would not have to do it explicitly, it would be taken care of by the go-ipfix library.
-	record.PrepareRecord()
-	return e.bufferedExporter.AddRecord(record)
-}
+// Add Antrea source stats fields
+
+// Add Antrea destination stats fields
+
+// Add common throughput fields
+
+// Add source node specific throughput fields
+
+// Add destination node specific throughput fields
+
+func (e *IPFIXExporter) sendTemplateSet(isIPv6 bool) error { _ = "STUB: not implemented"; return nil }
+
+// Ideally we would not have to do it explicitly, it would be taken care of by the go-ipfix library.
 
 func (e *IPFIXExporter) createInfoElement(ieName string, enterpriseID uint32) (ipfixentities.InfoElementWithValue, error) {
-	element, err := e.registry.GetInfoElement(ieName, enterpriseID)
-	if err != nil {
-		return nil, fmt.Errorf("%s not present. returned error: %w", ieName, err)
-	}
-	ie, err := ipfixentities.DecodeAndCreateInfoElementWithValue(element, nil)
-	if err != nil {
-		return nil, err
-	}
-	return ie, nil
+	_ = "STUB: not implemented"
+	return *new(ipfixentities.InfoElementWithValue), nil
 }

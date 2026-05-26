@@ -17,17 +17,11 @@
 package v1alpha1
 
 import (
-	context "context"
 	time "time"
 
-	apismulticlusterv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
 	versioned "antrea.io/antrea/v2/multicluster/pkg/client/clientset/versioned"
 	internalinterfaces "antrea.io/antrea/v2/multicluster/pkg/client/informers/externalversions/internalinterfaces"
 	multiclusterv1alpha1 "antrea.io/antrea/v2/multicluster/pkg/client/listers/multicluster/v1alpha1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	runtime "k8s.io/apimachinery/pkg/runtime"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
-	watch "k8s.io/apimachinery/pkg/watch"
 	cache "k8s.io/client-go/tools/cache"
 )
 
@@ -48,67 +42,37 @@ type memberClusterAnnounceInformer struct {
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewMemberClusterAnnounceInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewMemberClusterAnnounceInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 // NewFilteredMemberClusterAnnounceInformer constructs a new informer for MemberClusterAnnounce type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredMemberClusterAnnounceInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewMemberClusterAnnounceInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 // NewMemberClusterAnnounceInformerWithOptions constructs a new informer for MemberClusterAnnounce type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewMemberClusterAnnounceInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "multicluster.crd.antrea.io", Version: "v1alpha1", Resource: "memberclusterannounces"}
-	identifier := options.InformerName.WithResource(gvr)
-	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
-		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
-			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.MulticlusterV1alpha1().MemberClusterAnnounces(namespace).List(context.Background(), opts)
-			},
-			WatchFunc: func(opts v1.ListOptions) (watch.Interface, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.MulticlusterV1alpha1().MemberClusterAnnounces(namespace).Watch(context.Background(), opts)
-			},
-			ListWithContextFunc: func(ctx context.Context, opts v1.ListOptions) (runtime.Object, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.MulticlusterV1alpha1().MemberClusterAnnounces(namespace).List(ctx, opts)
-			},
-			WatchFuncWithContext: func(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.MulticlusterV1alpha1().MemberClusterAnnounces(namespace).Watch(ctx, opts)
-			},
-		}, client),
-		&apismulticlusterv1alpha1.MemberClusterAnnounce{},
-		cache.SharedIndexInformerOptions{
-			ResyncPeriod: options.ResyncPeriod,
-			Indexers:     options.Indexers,
-			Identifier:   identifier,
-		},
-	)
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *memberClusterAnnounceInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewMemberClusterAnnounceInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *memberClusterAnnounceInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apismulticlusterv1alpha1.MemberClusterAnnounce{}, f.defaultInformer)
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *memberClusterAnnounceInformer) Lister() multiclusterv1alpha1.MemberClusterAnnounceLister {
-	return multiclusterv1alpha1.NewMemberClusterAnnounceLister(f.Informer().GetIndexer())
+	_ = "STUB: not implemented"
+	return *new(multiclusterv1alpha1.MemberClusterAnnounceLister)
 }

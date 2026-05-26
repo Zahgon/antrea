@@ -24,32 +24,19 @@ type featureTraceflow struct {
 	cachedFlows *flowCategoryCache
 }
 
-func (f *featureTraceflow) getFeatureName() string {
-	return "Traceflow"
-}
+func (f *featureTraceflow) getFeatureName() string { _ = "STUB: not implemented"; return "" }
 
-func newFeatureTraceflow() *featureTraceflow {
-	return &featureTraceflow{
-		cachedFlows: newFlowCategoryCache(),
-	}
-}
+func newFeatureTraceflow() *featureTraceflow { _ = "STUB: not implemented"; return nil }
 
-func (f *featureTraceflow) initFlows() []*openflow15.FlowMod {
-	return []*openflow15.FlowMod{}
-}
+func (f *featureTraceflow) initFlows() []*openflow15.FlowMod { _ = "STUB: not implemented"; return nil }
 
 func (f *featureTraceflow) replayFlows() []*openflow15.FlowMod {
-	return []*openflow15.FlowMod{}
-}
-
-func (f *featureTraceflow) initGroups() []binding.OFEntry {
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (f *featureTraceflow) replayGroups() []binding.OFEntry {
-	return nil
-}
+func (f *featureTraceflow) initGroups() []binding.OFEntry { _ = "STUB: not implemented"; return nil }
 
-func (f *featureTraceflow) replayMeters() []binding.OFEntry {
-	return nil
-}
+func (f *featureTraceflow) replayGroups() []binding.OFEntry { _ = "STUB: not implemented"; return nil }
+
+func (f *featureTraceflow) replayMeters() []binding.OFEntry { _ = "STUB: not implemented"; return nil }

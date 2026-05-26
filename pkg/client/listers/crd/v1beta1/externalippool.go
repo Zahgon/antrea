@@ -42,5 +42,6 @@ type externalIPPoolLister struct {
 
 // NewExternalIPPoolLister returns a new ExternalIPPoolLister.
 func NewExternalIPPoolLister(indexer cache.Indexer) ExternalIPPoolLister {
-	return &externalIPPoolLister{listers.New[*crdv1beta1.ExternalIPPool](indexer, crdv1beta1.Resource("externalippool"))}
+	_ = "STUB: not implemented"
+	return *new(ExternalIPPoolLister)
 }

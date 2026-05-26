@@ -15,28 +15,19 @@
 package multicluster
 
 import (
-	"fmt"
-	"reflect"
 	"sync"
-	"time"
 
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/wait"
 	coreinformers "k8s.io/client-go/informers/core/v1"
 	corelisters "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
-	"k8s.io/klog/v2"
 
-	"antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
-	"antrea.io/antrea/v2/multicluster/controllers/multicluster/member"
 	mcinformers "antrea.io/antrea/v2/multicluster/pkg/client/informers/externalversions/multicluster/v1alpha1"
 	mclisters "antrea.io/antrea/v2/multicluster/pkg/client/listers/multicluster/v1alpha1"
 	"antrea.io/antrea/v2/pkg/agent/interfacestore"
 	"antrea.io/antrea/v2/pkg/agent/openflow"
-	antreatypes "antrea.io/antrea/v2/pkg/agent/types"
 	"antrea.io/antrea/v2/pkg/util/channel"
 )
 
@@ -82,198 +73,60 @@ func NewMCAgentStretchedNetworkPolicyController(
 	labelIdentityInformer mcinformers.LabelIdentityInformer,
 	podUpdateSubscriber channel.Subscriber,
 ) *StretchedNetworkPolicyController {
-	controller := &StretchedNetworkPolicyController{
-		ofClient:                  client,
-		interfaceStore:            interfaceStore,
-		podInformer:               podInformer,
-		podLister:                 corelisters.NewPodLister(podInformer.GetIndexer()),
-		podListerSynced:           podInformer.HasSynced,
-		namespaceInformer:         namespaceInformer,
-		namespaceLister:           namespaceInformer.Lister(),
-		namespaceListerSynced:     namespaceInformer.Informer().HasSynced,
-		labelIdentityInformer:     labelIdentityInformer,
-		labelIdentityLister:       labelIdentityInformer.Lister(),
-		LabelIdentityListerSynced: labelIdentityInformer.Informer().HasSynced,
-		queue: workqueue.NewTypedRateLimitingQueueWithConfig(
-			workqueue.DefaultTypedItemBasedRateLimiter[types.NamespacedName](),
-			workqueue.TypedRateLimitingQueueConfig[types.NamespacedName]{
-				Name: "stretchedNetworkPolicy",
-			},
-		),
-		labelToPods: map[string]podSet{},
-		podToLabel:  map[types.NamespacedName]string{},
-	}
-
-	controller.podInformer.AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			// Pod add event will be handled by processPodCNIAddEvent.
-			// We choose to use events from podUpdateSubscriber instead of the informer because
-			// the controller can only update the Pod classifier flow when the Pod container
-			// config is available. Events from the Informer may be received way before the Pod
-			// container config is available, which will cause the work item be continually
-			// re-queued with an exponential increased delay time. When the Pod container
-			// config is ready, the work item could wait for a long time to be processed.
-			UpdateFunc: controller.processPodUpdate,
-			DeleteFunc: controller.processPodDelete,
-		},
-		resyncPeriod,
-	)
-	controller.namespaceInformer.Informer().AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			UpdateFunc: controller.processNamespaceUpdate,
-		},
-		resyncPeriod,
-	)
-	controller.labelIdentityInformer.Informer().AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc: controller.processLabelIdentityEvent,
-			UpdateFunc: func(old, cur interface{}) {
-				controller.processLabelIdentityEvent(cur)
-			},
-			DeleteFunc: controller.processLabelIdentityEvent,
-		},
-		resyncPeriod,
-	)
-	podUpdateSubscriber.Subscribe(controller.processPodCNIAddEvent)
-
-	controller.labelIdentityInformer.Informer().AddIndexers(cache.Indexers{
-		labelIndex: func(obj interface{}) ([]string, error) {
-			labelID, ok := obj.(*v1alpha1.LabelIdentity)
-			if !ok {
-				return []string{}, nil
-			}
-			return []string{labelID.Spec.Label}, nil
-		}})
-	return controller
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Pod add event will be handled by processPodCNIAddEvent.
+// We choose to use events from podUpdateSubscriber instead of the informer because
+// the controller can only update the Pod classifier flow when the Pod container
+// config is available. Events from the Informer may be received way before the Pod
+// container config is available, which will cause the work item be continually
+// re-queued with an exponential increased delay time. When the Pod container
+// config is ready, the work item could wait for a long time to be processed.
 
 func (s *StretchedNetworkPolicyController) Run(stopCh <-chan struct{}) {
-	defer s.queue.ShutDown()
-
-	klog.InfoS("Starting controller", "controller", stretchedNetworkPolicyControllerName)
-	defer klog.InfoS("Shutting down controller", "controller", stretchedNetworkPolicyControllerName)
-	cacheSyncs := []cache.InformerSynced{s.podListerSynced, s.namespaceListerSynced, s.LabelIdentityListerSynced}
-	if !cache.WaitForNamedCacheSync(stretchedNetworkPolicyControllerName, stopCh, cacheSyncs...) {
-		return
-	}
-	s.enqueueAllPods()
-	for i := 0; i < stretchedNetworkPolicyWorker; i++ {
-		go wait.Until(s.worker, time.Second, stopCh)
-	}
-	<-stopCh
+	_ = "STUB: not implemented"
+	return
 }
 
-func (s *StretchedNetworkPolicyController) enqueueAllPods() {
-	pods, _ := s.podLister.List(labels.Everything())
-	for _, pod := range pods {
-		if pod.Spec.HostNetwork {
-			continue
-		}
-		s.queue.Add(getPodReference(pod))
-	}
-}
+func (s *StretchedNetworkPolicyController) enqueueAllPods() { _ = "STUB: not implemented"; return }
 
 // worker is a long-running function that will continually call the processNextWorkItem
 // function in order to read and process a message on the workqueue.
-func (s *StretchedNetworkPolicyController) worker() {
-	for s.processNextWorkItem() {
-	}
-}
+func (s *StretchedNetworkPolicyController) worker() { _ = "STUB: not implemented"; return }
 
 func (s *StretchedNetworkPolicyController) processNextWorkItem() bool {
-	podRef, quit := s.queue.Get()
-	if quit {
-		return false
-	}
-	defer s.queue.Done(podRef)
-
-	if err := s.syncPodClassifierFlow(podRef); err == nil {
-		s.queue.Forget(podRef)
-	} else {
-		// Put the item back on the workqueue to handle any transient errors.
-		s.queue.AddRateLimited(podRef)
-		klog.ErrorS(err, "Error syncing Pod classifier flow, requeuing", "name", podRef.Name, "namespace", podRef.Namespace)
-	}
-	return true
+	_ = "STUB: not implemented"
+	return false
 }
+
+// Put the item back on the workqueue to handle any transient errors.
 
 // syncPodClassifierFlow gets containerConfigs and labelIdentity according to a
 // Pod reference and updates this Pod's classifierFlow.
 func (s *StretchedNetworkPolicyController) syncPodClassifierFlow(podRef types.NamespacedName) error {
-	pod, err := s.podLister.Pods(podRef.Namespace).Get(podRef.Name)
-	if err != nil || pod.Spec.HostNetwork {
-		return nil
-	}
-	containerConfigs := s.interfaceStore.GetContainerInterfacesByPod(podRef.Name, podRef.Namespace)
-	if len(containerConfigs) == 0 {
-		klog.InfoS("Pod container config not found, will retry after it's ready", "name", podRef.Name, "namespace", podRef.Namespace)
-		return nil
-	}
-	podNS, err := s.namespaceLister.Get(podRef.Namespace)
-	if err != nil {
-		return fmt.Errorf("can't get Namespace %s: %v", podRef.Namespace, err)
-	}
-	normalizedLabel := member.GetNormalizedLabel(podNS.Labels, pod.Labels, podNS.Name)
-	labelID := s.getLabelIdentity(podRef, normalizedLabel)
-	return s.ofClient.InstallPodFlows(
-		containerConfigs[0].InterfaceName,
-		containerConfigs[0].IPs,
-		containerConfigs[0].MAC,
-		uint32(containerConfigs[0].OFPort),
-		containerConfigs[0].VLANID,
-		&labelID,
-	)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // getLabelIdentity updates labelToPods and podToLabel and returns the
 // LabelIdentity based on the normalizedLabel.
 func (s *StretchedNetworkPolicyController) getLabelIdentity(podRef types.NamespacedName, normalizedLabel string) uint32 {
-	s.lock.Lock()
-	oldNormalizedLabel, ok := s.podToLabel[podRef]
-	if ok && oldNormalizedLabel != normalizedLabel {
-		s.deleteLabelToPod(oldNormalizedLabel, podRef)
-	}
-	if !ok || oldNormalizedLabel != normalizedLabel {
-		s.addLabelToPod(normalizedLabel, podRef)
-		s.podToLabel[podRef] = normalizedLabel
-	}
-	s.lock.Unlock()
-
-	labelID := openflow.UnknownLabelIdentity
-	if objs, err := s.labelIdentityInformer.Informer().GetIndexer().ByIndex(labelIndex, normalizedLabel); err == nil && len(objs) == 1 {
-		labelIdentity := objs[0].(*v1alpha1.LabelIdentity)
-		labelID = labelIdentity.Spec.ID
-	}
-	return labelID
+	_ = "STUB: not implemented"
+	return 0
 }
 
 func (s *StretchedNetworkPolicyController) processPodCNIAddEvent(e interface{}) {
-	podEvent := e.(antreatypes.PodUpdate)
-	if !podEvent.IsAdd {
-		return
-	}
-	podRef := types.NamespacedName{
-		Namespace: podEvent.PodNamespace,
-		Name:      podEvent.PodName,
-	}
-	s.queue.Add(podRef)
+	_ = "STUB: not implemented"
+	return
 }
 
 // processPodUpdate handles Pod update events. It only enqueues the Pod if the
 // Labels of this Pod have been updated.
 func (s *StretchedNetworkPolicyController) processPodUpdate(old, cur interface{}) {
-	oldPod, _ := old.(*v1.Pod)
-	curPod, _ := cur.(*v1.Pod)
-	if curPod.Spec.HostNetwork {
-		klog.V(5).InfoS("Skipped processing hostNetwork Pod update event", "name", curPod.Name, "namespace", curPod.Namespace)
-		return
-	}
-	if reflect.DeepEqual(oldPod.Labels, curPod.Labels) {
-		klog.V(5).InfoS("Pod UpdateFunc received a Pod update event, "+
-			"but labels are the same. Skip it", "name", curPod.Name, "namespace", curPod.Namespace)
-		return
-	}
-	s.queue.Add(getPodReference(curPod))
+	_ = "STUB: not implemented"
+	return
 }
 
 // processPodDelete handles Pod delete events. It deletes the Pod from the
@@ -281,67 +134,35 @@ func (s *StretchedNetworkPolicyController) processPodUpdate(old, cur interface{}
 // be deleted by podConfigurator. So no need to enqueue this Pod to update its
 // classifier flow.
 func (s *StretchedNetworkPolicyController) processPodDelete(old interface{}) {
-	oldPod, _ := old.(*v1.Pod)
-	oldPodRef := getPodReference(oldPod)
-	s.lock.Lock()
-	defer s.lock.Unlock()
-	if podLabel, ok := s.podToLabel[oldPodRef]; ok {
-		s.deleteLabelToPod(podLabel, oldPodRef)
-		delete(s.podToLabel, oldPodRef)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // processNamespaceUpdate handles Namespace update events. It only enqueues all
 // Pods in this Namespace if the Labels of this Namespace have been updated.
 func (s *StretchedNetworkPolicyController) processNamespaceUpdate(old, cur interface{}) {
-	oldNS, _ := old.(*v1.Namespace)
-	curNS, _ := cur.(*v1.Namespace)
-	if reflect.DeepEqual(oldNS.Labels, curNS.Labels) {
-		klog.V(5).InfoS("Namespace UpdateFunc received a Namespace update event, but labels are the same. Skip it", "namespace", curNS.Name)
-		return
-	}
-	allPodsInNS, _ := s.podLister.Pods(curNS.Name).List(labels.Everything())
-	for _, pod := range allPodsInNS {
-		if pod.Spec.HostNetwork {
-			continue
-		}
-		s.queue.Add(getPodReference(pod))
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // processLabelIdentityEvent handles labelIdentity add/update/delete event.
 // It will enqueue all Pods affected by this labelIdentity
 func (s *StretchedNetworkPolicyController) processLabelIdentityEvent(cur interface{}) {
-	labelIdentity, _ := cur.(*v1alpha1.LabelIdentity)
-	s.lock.RLock()
-	defer s.lock.RUnlock()
-	if podSet, ok := s.labelToPods[labelIdentity.Spec.Label]; ok {
-		for podRef := range podSet {
-			s.queue.Add(podRef)
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 func (s *StretchedNetworkPolicyController) addLabelToPod(normalizedLabel string, podRef types.NamespacedName) {
-	if _, ok := s.labelToPods[normalizedLabel]; ok {
-		s.labelToPods[normalizedLabel][podRef] = struct{}{}
-	} else {
-		s.labelToPods[normalizedLabel] = podSet{podRef: struct{}{}}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 func (s *StretchedNetworkPolicyController) deleteLabelToPod(normalizedLabel string, podRef types.NamespacedName) {
-	if _, ok := s.labelToPods[normalizedLabel]; ok {
-		delete(s.labelToPods[normalizedLabel], podRef)
-		if len(s.labelToPods[normalizedLabel]) == 0 {
-			delete(s.labelToPods, normalizedLabel)
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 func getPodReference(pod *v1.Pod) types.NamespacedName {
-	return types.NamespacedName{
-		Name:      pod.Name,
-		Namespace: pod.Namespace,
-	}
+	_ = "STUB: not implemented"
+	return *new(types.NamespacedName)
 }

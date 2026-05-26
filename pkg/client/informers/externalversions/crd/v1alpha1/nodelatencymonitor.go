@@ -17,17 +17,11 @@
 package v1alpha1
 
 import (
-	context "context"
 	time "time"
 
-	apiscrdv1alpha1 "antrea.io/antrea/v2/pkg/apis/crd/v1alpha1"
 	versioned "antrea.io/antrea/v2/pkg/client/clientset/versioned"
 	internalinterfaces "antrea.io/antrea/v2/pkg/client/informers/externalversions/internalinterfaces"
 	crdv1alpha1 "antrea.io/antrea/v2/pkg/client/listers/crd/v1alpha1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	runtime "k8s.io/apimachinery/pkg/runtime"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
-	watch "k8s.io/apimachinery/pkg/watch"
 	cache "k8s.io/client-go/tools/cache"
 )
 
@@ -47,67 +41,37 @@ type nodeLatencyMonitorInformer struct {
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewNodeLatencyMonitorInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewNodeLatencyMonitorInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 // NewFilteredNodeLatencyMonitorInformer constructs a new informer for NodeLatencyMonitor type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredNodeLatencyMonitorInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewNodeLatencyMonitorInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 // NewNodeLatencyMonitorInformerWithOptions constructs a new informer for NodeLatencyMonitor type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewNodeLatencyMonitorInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "crd.antrea.io", Version: "v1alpha1", Resource: "nodelatencymonitors"}
-	identifier := options.InformerName.WithResource(gvr)
-	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
-		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
-			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.CrdV1alpha1().NodeLatencyMonitors().List(context.Background(), opts)
-			},
-			WatchFunc: func(opts v1.ListOptions) (watch.Interface, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.CrdV1alpha1().NodeLatencyMonitors().Watch(context.Background(), opts)
-			},
-			ListWithContextFunc: func(ctx context.Context, opts v1.ListOptions) (runtime.Object, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.CrdV1alpha1().NodeLatencyMonitors().List(ctx, opts)
-			},
-			WatchFuncWithContext: func(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.CrdV1alpha1().NodeLatencyMonitors().Watch(ctx, opts)
-			},
-		}, client),
-		&apiscrdv1alpha1.NodeLatencyMonitor{},
-		cache.SharedIndexInformerOptions{
-			ResyncPeriod: options.ResyncPeriod,
-			Indexers:     options.Indexers,
-			Identifier:   identifier,
-		},
-	)
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *nodeLatencyMonitorInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewNodeLatencyMonitorInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *nodeLatencyMonitorInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiscrdv1alpha1.NodeLatencyMonitor{}, f.defaultInformer)
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *nodeLatencyMonitorInformer) Lister() crdv1alpha1.NodeLatencyMonitorLister {
-	return crdv1alpha1.NewNodeLatencyMonitorLister(f.Informer().GetIndexer())
+	_ = "STUB: not implemented"
+	return *new(crdv1alpha1.NodeLatencyMonitorLister)
 }

@@ -15,19 +15,12 @@
 package ipam
 
 import (
-	"context"
-	"errors"
-	"fmt"
 	"net"
 	"sync"
-	"time"
 
 	"github.com/containernetworking/cni/pkg/invoke"
 	cnitypes "github.com/containernetworking/cni/pkg/types"
 	current "github.com/containernetworking/cni/pkg/types/100"
-	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/klog/v2"
-	utilnet "k8s.io/utils/net"
 
 	"antrea.io/antrea/v2/pkg/agent/cniserver/types"
 	crdv1b1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
@@ -62,99 +55,39 @@ const (
 // Resource needs to be unique since it is used as identifier in Del.
 // Therefore Container ID is used, while Pod/Namespace are shown for visibility.
 func getAllocationPodOwner(args *invoke.Args, k8sArgs *types.K8sArgs, reservedOwner *crdv1b1.IPAddressOwner, secondary bool) *crdv1b1.PodOwner {
-	podOwner := crdv1b1.PodOwner{
-		Name:        string(k8sArgs.K8S_POD_NAME),
-		Namespace:   string(k8sArgs.K8S_POD_NAMESPACE),
-		ContainerID: args.ContainerID,
-	}
-	if secondary {
-		// Add interface name for secondary network to uniquely identify
-		// the secondary network interface.
-		podOwner.IFName = args.IfName
-	}
-	return &podOwner
+	_ = "STUB: not implemented"
+	return nil
 }
 
+// Add interface name for secondary network to uniquely identify
+// the secondary network interface.
+
 func getAllocationOwner(args *invoke.Args, k8sArgs *types.K8sArgs, reservedOwner *crdv1b1.IPAddressOwner, secondary bool) *crdv1b1.IPAddressOwner {
-	podOwner := getAllocationPodOwner(args, k8sArgs, nil, secondary)
-	if reservedOwner != nil {
-		owner := *reservedOwner
-		owner.Pod = podOwner
-		return &owner
-	}
-	return &crdv1b1.IPAddressOwner{Pod: podOwner}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Helper to generate IP config and default route, taking IP version into account
 func generateIPConfig(ip net.IP, prefixLength int, gwIP net.IP) (*current.IPConfig, *cnitypes.Route) {
-	ipAddrBits := 32
-	dstNet := net.IPNet{
-		IP:   net.ParseIP("0.0.0.0"),
-		Mask: net.CIDRMask(0, ipAddrBits),
-	}
-
-	if ip.To4() == nil {
-		ipAddrBits = 128
-
-		dstNet = net.IPNet{
-			IP:   net.ParseIP("::0"),
-			Mask: net.CIDRMask(0, ipAddrBits),
-		}
-	}
-
-	defaultRoute := cnitypes.Route{
-		Dst: dstNet,
-		GW:  gwIP,
-	}
-	ipConfig := current.IPConfig{
-		Address: net.IPNet{IP: ip, Mask: net.CIDRMask(int(prefixLength), ipAddrBits)},
-		Gateway: gwIP,
-	}
-
-	return &ipConfig, &defaultRoute
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func parseStaticAddresses(ipamConfig *types.IPAMConfig) error {
-	for i := range ipamConfig.Addresses {
-		ip, addr, err := net.ParseCIDR(ipamConfig.Addresses[i].Address)
-		if err != nil {
-			return fmt.Errorf("invalid address %s", ipamConfig.Addresses[i].Address)
-		}
-		ipamConfig.Addresses[i].IPNet = *addr
-		ipamConfig.Addresses[i].IPNet.IP = ip
-		if ip.To4() != nil {
-			ipamConfig.Addresses[i].Version = "4"
-		} else {
-			ipamConfig.Addresses[i].Version = "6"
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (d *AntreaIPAM) setController(controller *AntreaIPAMController) {
-	d.controllerMutex.Lock()
-	defer d.controllerMutex.Unlock()
-	d.controller = controller
+	_ = "STUB: not implemented"
+	return
 }
 
 // splitIPsByFamily returns the first IPv4 and IPv6 address found in ips.
 // Additional addresses of the same family are silently ignored.
 func splitIPsByFamily(ips []net.IP) (v4, v6 net.IP) {
-	for _, ip := range ips {
-		if ip.To4() != nil {
-			if v4 == nil {
-				v4 = ip
-			}
-		} else if ip.To16() != nil {
-			if v6 == nil {
-				v6 = ip
-			}
-		}
-		if v4 != nil && v6 != nil {
-			break
-		}
-	}
-	return v4, v6
+	_ = "STUB: not implemented"
+	return *new(net.IP), *new(net.IP)
 }
 
 // Add allocates IP addresses from the associated IP Pools. It supports IPv4,
@@ -175,319 +108,98 @@ func splitIPsByFamily(ips []net.IP) (v4, v6 net.IP) {
 // immediately without trying subsequent Pools.
 // See https://antrea.io/docs/main/docs/antrea-ipam.md for more details.
 func (d *AntreaIPAM) Add(args *invoke.Args, k8sArgs *types.K8sArgs, networkConfig []byte) (bool, *IPAMResult, error) {
-	mine, allocators, ips, reservedOwner, err := d.owns(k8sArgs)
-	if err != nil {
-		return true, nil, err
-	}
-	if mine == mineFalse {
-		// pass this request to next driver
-		return false, nil, nil
-	}
-
-	owner := *getAllocationOwner(args, k8sArgs, reservedOwner, false)
-	result := IPAMResult{Result: current.Result{CNIVersion: current.ImplementedSpecVersion}}
-
-	var allocatedAllocators []*poolallocator.IPPoolAllocator
-	defer func() {
-		if err != nil {
-			// Release already allocated IPs on error.
-			podOwner := getAllocationPodOwner(args, k8sArgs, nil, false)
-			for _, a := range allocatedAllocators {
-				a.ReleaseContainer(podOwner.ContainerID, podOwner.IFName)
-			}
-		}
-	}()
-
-	var requestedV4, requestedV6 net.IP
-	if len(ips) > 0 {
-		requestedV4, requestedV6 = splitIPsByFamily(ips)
-	}
-
-	var hasIPv4Pool, hasIPv6Pool bool
-	var allocatedIPv4, allocatedIPv6 bool
-	for _, allocator := range allocators {
-		var requestedIP net.IP
-		if allocator.IPVersion == utilnet.IPv4 {
-			if allocatedIPv4 {
-				continue
-			}
-			hasIPv4Pool = true
-			requestedIP = requestedV4
-		} else {
-			if allocatedIPv6 {
-				continue
-			}
-			hasIPv6Pool = true
-			requestedIP = requestedV6
-		}
-
-		var ip net.IP
-		var subnetInfo *crdv1b1.SubnetInfo
-		if reservedOwner != nil {
-			ip, subnetInfo, err = allocator.AllocateReservedOrNext(crdv1b1.IPAddressPhaseAllocated, owner)
-		} else if requestedIP != nil {
-			ip = requestedIP
-			subnetInfo, err = allocator.AllocateIP(ip, crdv1b1.IPAddressPhaseAllocated, owner)
-			if err != nil {
-				// For a requested IP, we only attempt allocation from the first matching pool,
-				// and do not fall back to other pools if the allocation fails.
-				return true, nil, err
-			}
-		} else {
-			ip, subnetInfo, err = allocator.AllocateNext(crdv1b1.IPAddressPhaseAllocated, owner)
-		}
-		if err != nil {
-			if errors.Is(err, poolallocator.ErrPoolExhausted) {
-				klog.V(4).InfoS("IPPool exhausted, trying next pool", "IPPool", allocator.Name(), "Pod", string(k8sArgs.K8S_POD_NAME))
-				err = nil
-				continue
-			}
-			return true, nil, err
-		}
-		allocatedAllocators = append(allocatedAllocators, allocator)
-
-		if allocator.IPVersion == utilnet.IPv4 {
-			allocatedIPv4 = true
-		} else {
-			allocatedIPv6 = true
-		}
-
-		klog.V(4).InfoS("IP allocation successful", "IP", ip.String(), "Pod", string(k8sArgs.K8S_POD_NAME))
-
-		gwIP := net.ParseIP(subnetInfo.Gateway)
-		ipConfig, defaultRoute := generateIPConfig(ip, int(subnetInfo.PrefixLength), gwIP)
-
-		result.Routes = append(result.Routes, defaultRoute)
-		result.IPs = append(result.IPs, ipConfig)
-		vlanID := uint16(subnetInfo.VLAN)
-		if result.VLANID == 0 {
-			result.VLANID = vlanID
-		} else if vlanID != 0 && result.VLANID != vlanID {
-			err = fmt.Errorf("IPPools have conflicting VLAN IDs %d and %d for dual-stack allocation", result.VLANID, vlanID)
-			return true, nil, err
-		}
-		if allocatedIPv4 && allocatedIPv6 {
-			break
-		}
-	}
-
-	var allocErrs []error
-	if hasIPv4Pool && !allocatedIPv4 {
-		allocErrs = append(allocErrs, fmt.Errorf("failed to allocate IPv4 address for Pod %s/%s: all IPPools exhausted", string(k8sArgs.K8S_POD_NAMESPACE), string(k8sArgs.K8S_POD_NAME)))
-	}
-	if hasIPv6Pool && !allocatedIPv6 {
-		allocErrs = append(allocErrs, fmt.Errorf("failed to allocate IPv6 address for Pod %s/%s: all IPPools exhausted", string(k8sArgs.K8S_POD_NAMESPACE), string(k8sArgs.K8S_POD_NAME)))
-	}
-	if len(allocErrs) > 0 {
-		return true, nil, errors.Join(allocErrs...)
-	}
-
-	// At this point an IP should have been allocated: we already determined that this Pod matches
-	// at least one Antrea IPPool (otherwise owns / getPoolAllocatorsByPod would have returned an
-	// error), and any allocation failure should have been caught above.
-	if len(result.IPs) == 0 {
-		return true, nil, fmt.Errorf("failed to allocate IP address for Pod %s/%s: no IP was allocated", string(k8sArgs.K8S_POD_NAMESPACE), string(k8sArgs.K8S_POD_NAME))
-	}
-
-	// All allocations successful, clear the deferred release.
-	allocatedAllocators = nil
-	return true, &result, nil
+	_ = "STUB: not implemented"
+	return false, nil, nil
 }
+
+// pass this request to next driver
+
+// Release already allocated IPs on error.
+
+// For a requested IP, we only attempt allocation from the first matching pool,
+// and do not fall back to other pools if the allocation fails.
+
+// At this point an IP should have been allocated: we already determined that this Pod matches
+// at least one Antrea IPPool (otherwise owns / getPoolAllocatorsByPod would have returned an
+// error), and any allocation failure should have been caught above.
+
+// All allocations successful, clear the deferred release.
 
 // Del releases the IP associated with the resource from the IP Pool status.
 func (d *AntreaIPAM) Del(args *invoke.Args, k8sArgs *types.K8sArgs, networkConfig []byte) (bool, error) {
-	podOwner := getAllocationPodOwner(args, k8sArgs, nil, false)
-	foundAllocation, err := d.del(podOwner)
-	if err != nil {
-		// Let the invoker retry at error.
-		return true, err
-	}
-
-	// If no allocation found, pass CNI DEL to the next driver.
-	return foundAllocation, nil
+	_ = "STUB: not implemented"
+	return false, nil
 }
+
+// Let the invoker retry at error.
+
+// If no allocation found, pass CNI DEL to the next driver.
 
 // Check verifies the IP associated with the resource is tracked in the IP Pool status.
 func (d *AntreaIPAM) Check(args *invoke.Args, k8sArgs *types.K8sArgs, networkConfig []byte) (bool, error) {
-	mine, allocators, _, _, err := d.owns(k8sArgs)
-	if err != nil {
-		return true, err
-	}
-	if mine == mineFalse {
-		// pass this request to next driver
-		return false, nil
-	}
-
-	found := false
-	var lastErr error
-	for _, allocator := range allocators {
-		ip, err := allocator.GetContainerIP(args.ContainerID, "")
-		if err != nil {
-			lastErr = err
-			continue
-		}
-		if ip != nil {
-			found = true
-		}
-	}
-	if found {
-		return true, nil
-	}
-	if lastErr != nil {
-		return true, lastErr
-	}
-	return true, fmt.Errorf("no IP Address association found for container %s", string(k8sArgs.K8S_POD_NAME))
+	_ = "STUB: not implemented"
+	return false, nil
 }
+
+// pass this request to next driver
 
 // SecondaryNetworkAllocate allocates IP addresses for a Pod secondary network interface, based on
 // the IPAM configuration of the passed CNI network configuration.
 // It supports IPAM for both Antrea-managed secondary networks and Multus-managed secondary
 // networks.
 func (d *AntreaIPAM) SecondaryNetworkAllocate(podOwner *crdv1b1.PodOwner, networkConfig *types.NetworkConfig) (*IPAMResult, error) {
-	ipamConf := networkConfig.IPAM
-	numPools := len(ipamConf.IPPools)
-
-	if err := parseStaticAddresses(ipamConf); err != nil {
-		return nil, fmt.Errorf("failed to parse static addresses in the IPAM config: %v", err)
-	}
-	if numPools == 0 && len(ipamConf.Addresses) == 0 {
-		return nil, fmt.Errorf("at least one Antrea IPPool or static address must be specified")
-	}
-
-	result := IPAMResult{}
-	if numPools > 0 {
-		if err := d.waitForControllerReady(); err != nil {
-			// Return error to let the invoker retry.
-			return nil, err
-		}
-
-		var allocatorsToRelease []*poolallocator.IPPoolAllocator
-		defer func() {
-			for _, allocator := range allocatorsToRelease {
-				// Try to release the allocated IPs after an error.
-				allocator.ReleaseContainer(podOwner.ContainerID, podOwner.IFName)
-			}
-		}()
-
-		var hasIPv4Pool, hasIPv6Pool bool
-		var allocatedIPv4, allocatedIPv6 bool
-		for _, p := range ipamConf.IPPools {
-			allocator, err := d.controller.getPoolAllocatorByName(p)
-			if err != nil {
-				return nil, err
-			}
-
-			if allocator.IPVersion == utilnet.IPv4 {
-				hasIPv4Pool = true
-			} else {
-				hasIPv6Pool = true
-			}
-
-			var ip net.IP
-			var subnetInfo *crdv1b1.SubnetInfo
-			owner := crdv1b1.IPAddressOwner{Pod: podOwner}
-			ip, subnetInfo, err = allocator.AllocateNext(crdv1b1.IPAddressPhaseAllocated, owner)
-			if err != nil {
-				if errors.Is(err, poolallocator.ErrPoolExhausted) {
-					klog.InfoS("IPPool exhausted, trying next pool", "IPPool", p)
-					continue
-				}
-				return nil, err
-			}
-			if numPools > 1 {
-				allocatorsToRelease = append(allocatorsToRelease, allocator)
-			}
-
-			if allocator.IPVersion == utilnet.IPv4 {
-				allocatedIPv4 = true
-			} else {
-				allocatedIPv6 = true
-			}
-
-			gwIP := net.ParseIP(subnetInfo.Gateway)
-			ipConfig, _ := generateIPConfig(ip, int(subnetInfo.PrefixLength), gwIP)
-			// CNI spec 0.2.0 and below support only one v4 and one v6 address. But we
-			// assume the CNI version >= 0.3.0, and so do not check the number of
-			// addresses.
-			result.IPs = append(result.IPs, ipConfig)
-			vlanID := uint16(subnetInfo.VLAN)
-			if result.VLANID == 0 {
-				result.VLANID = vlanID
-			} else if vlanID != 0 && result.VLANID != vlanID {
-				return nil, fmt.Errorf("IPPools have conflicting VLAN IDs %d and %d for dual-stack allocation", result.VLANID, vlanID)
-			}
-		}
-		var allocErrs []error
-		if hasIPv4Pool && !allocatedIPv4 {
-			allocErrs = append(allocErrs, fmt.Errorf("failed to allocate IPv4 address for Pod %s/%s: all IPPools exhausted", podOwner.Namespace, podOwner.Name))
-		}
-		if hasIPv6Pool && !allocatedIPv6 {
-			allocErrs = append(allocErrs, fmt.Errorf("failed to allocate IPv6 address for Pod %s/%s: all IPPools exhausted", podOwner.Namespace, podOwner.Name))
-		}
-		if len(allocErrs) > 0 {
-			return nil, errors.Join(allocErrs...)
-		}
-		// No failed allocation, so do not release allocated IPs.
-		allocatorsToRelease = nil
-	}
-
-	// Add static addresses.
-	for _, a := range ipamConf.Addresses {
-		result.IPs = append(result.IPs, &current.IPConfig{
-			Address: a.IPNet,
-			Gateway: a.Gateway})
-	}
-
-	// Copy routes and DNS from the input IPAM configuration.
-	result.Routes = ipamConf.Routes
-	result.DNS = ipamConf.DNS
-	return &result, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// Return error to let the invoker retry.
+
+// Try to release the allocated IPs after an error.
+
+// CNI spec 0.2.0 and below support only one v4 and one v6 address. But we
+// assume the CNI version >= 0.3.0, and so do not check the number of
+// addresses.
+
+// No failed allocation, so do not release allocated IPs.
+
+// Add static addresses.
+
+// Copy routes and DNS from the input IPAM configuration.
 
 // SecondaryNetworkRelease releases the IP addresses allocated for a Pod secondary network interface.
 func (d *AntreaIPAM) SecondaryNetworkRelease(owner *crdv1b1.PodOwner) error {
-	_, err := d.del(owner)
-	return err
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (d *AntreaIPAM) secondaryNetworkAdd(args *invoke.Args, k8sArgs *types.K8sArgs, networkConfig *types.NetworkConfig) (*IPAMResult, error) {
-	return d.SecondaryNetworkAllocate(getAllocationPodOwner(args, k8sArgs, nil, true), networkConfig)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (d *AntreaIPAM) secondaryNetworkDel(args *invoke.Args, k8sArgs *types.K8sArgs, networkConfig *types.NetworkConfig) error {
-	return d.SecondaryNetworkRelease(getAllocationPodOwner(args, k8sArgs, nil, true))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (d *AntreaIPAM) secondaryNetworkCheck(args *invoke.Args, k8sArgs *types.K8sArgs, networkConfig *types.NetworkConfig) error {
-	return fmt.Errorf("CNI CHECK is not implemented for secondary network")
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (d *AntreaIPAM) del(podOwner *crdv1b1.PodOwner) (foundAllocation bool, err error) {
-	if err := d.waitForControllerReady(); err != nil {
-		// Return error to let the invoker retry.
-		return false, err
-	}
-	// The Pod resource might have been removed; and for a secondary we
-	// would rely on the passed IPPool for CNI DEL. So, search IPPools with
-	// the matched PodOwner.
-	allocators, err := d.controller.getPoolAllocatorsByOwner(podOwner)
-	if err != nil {
-		return false, err
-	}
-
-	if len(allocators) == 0 {
-		return false, nil
-	}
-	// Multiple allocators can be returned if the network interface has IPs
-	// allocated from more than one IPPools.
-	for _, a := range allocators {
-		err = a.ReleaseContainer(podOwner.ContainerID, podOwner.IFName)
-		if err != nil {
-			return true, err
-		}
-	}
-	return true, nil
+	_ = "STUB: not implemented"
+	return false, nil
 }
+
+// Return error to let the invoker retry.
+
+// The Pod resource might have been removed; and for a secondary we
+// would rely on the passed IPPool for CNI DEL. So, search IPPools with
+// the matched PodOwner.
+
+// Multiple allocators can be returned if the network interface has IPs
+// allocated from more than one IPPools.
 
 // owns checks whether this driver owns the coming IPAM request. This decision is based on Antrea
 // IPAM annotation for the resource (Pod or Namespace). If an annotation is not present, or the
@@ -501,34 +213,14 @@ func (d *AntreaIPAM) del(podOwner *crdv1b1.PodOwner) (foundAllocation bool, err 
 // mineTrue + IPPoolNotFound error
 // mineTrue + nil error
 func (d *AntreaIPAM) owns(k8sArgs *types.K8sArgs) (mineType, []*poolallocator.IPPoolAllocator, []net.IP, *crdv1b1.IPAddressOwner, error) {
+	_ = "STUB: not implemented"
 	// Wait controller ready to avoid inappropriate behaviors on the CNI request.
-	if err := d.waitForControllerReady(); err != nil {
-		// Return mineTrue to make this request fail and kubelet will retry.
-		return mineTrue, nil, nil, nil, err
-	}
-
-	namespace := string(k8sArgs.K8S_POD_NAMESPACE)
-	podName := string(k8sArgs.K8S_POD_NAME)
-	klog.V(2).InfoS("Inspecting IPAM annotation", "Namespace", namespace, "Pod", podName)
-	return d.controller.getPoolAllocatorsByPod(namespace, podName)
+	return *new(mineType), nil, nil, nil, nil
 }
 
-func (d *AntreaIPAM) waitForControllerReady() error {
-	err := wait.PollUntilContextTimeout(context.TODO(), 500*time.Millisecond, 5*time.Second, true, func(ctx context.Context) (bool, error) {
-		d.controllerMutex.RLock()
-		defer d.controllerMutex.RUnlock()
-		if d.controller == nil {
-			klog.InfoS("Antrea IPAM driver is not ready")
-			return false, nil
-		}
-		return true, nil
-	})
+// Return mineTrue to make this request fail and kubelet will retry.
 
-	if err != nil {
-		return fmt.Errorf("Antrea IPAM driver not ready: %v", err)
-	}
-	return nil
-}
+func (d *AntreaIPAM) waitForControllerReady() error { _ = "STUB: not implemented"; return nil }
 
 func init() {
 	// Antrea driver must come first.

@@ -15,8 +15,6 @@
 package k8s
 
 import (
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/client-go/tools/cache"
 )
 
@@ -28,74 +26,23 @@ import (
 // Note: be cautious when adding fields to be trimmed, ensuring they do not inadvertently clear the original values when
 // objects are updated by Antrea to kube-apiserver.
 func NewTrimmer(extraTrimmers ...cache.TransformFunc) cache.TransformFunc {
-	return func(obj interface{}) (interface{}, error) {
-		accessor, err := meta.Accessor(obj)
-		if err != nil {
-			return obj, nil
-		}
-		// It means the objects has been trimmed.
-		if accessor.GetManagedFields() == nil {
-			return obj, nil
-		}
-		// Trim common fields for all objects.
-		// According to https://kubernetes.io/docs/reference/using-api/server-side-apply/#clearing-managedfields,
-		// setting the managedFields to an empty list will not reset the field when the objects are updated, so it's
-		// safe to trim it for all objects.
-		accessor.SetManagedFields(nil)
-
-		// Trim type specific fields for each type.
-		for _, trimmer := range extraTrimmers {
-			trimmer(obj)
-		}
-		return obj, nil
-	}
+	_ = "STUB: not implemented"
+	return *new(cache.TransformFunc)
 }
+
+// It means the objects has been trimmed.
+
+// Trim common fields for all objects.
+// According to https://kubernetes.io/docs/reference/using-api/server-side-apply/#clearing-managedfields,
+// setting the managedFields to an empty list will not reset the field when the objects are updated, so it's
+// safe to trim it for all objects.
+
+// Trim type specific fields for each type.
 
 // TrimPod clears unused fields from a Pod that are not required by Antrea.
 // It's safe to do so because Antrea only patches Pod.
-func TrimPod(obj interface{}) (interface{}, error) {
-	pod, ok := obj.(*corev1.Pod)
-	if !ok {
-		return obj, nil
-	}
-
-	pod.Spec.Volumes = nil
-	pod.Spec.InitContainers = nil
-	for i := range pod.Spec.Containers {
-		container := &pod.Spec.Containers[i]
-		container.Command = nil
-		container.Args = nil
-		container.EnvFrom = nil
-		container.Env = nil
-		container.VolumeMounts = nil
-		container.VolumeDevices = nil
-		container.LivenessProbe = nil
-		container.ReadinessProbe = nil
-		container.StartupProbe = nil
-		container.Lifecycle = nil
-		container.SecurityContext = nil
-	}
-	pod.Spec.EphemeralContainers = nil
-	pod.Spec.Affinity = nil
-	pod.Spec.Tolerations = nil
-	pod.Spec.ResourceClaims = nil
-
-	pod.Status.Conditions = nil
-	pod.Status.StartTime = nil
-	pod.Status.InitContainerStatuses = nil
-	pod.Status.ContainerStatuses = nil
-	pod.Status.EphemeralContainerStatuses = nil
-	pod.Status.ResourceClaimStatuses = nil
-	return pod, nil
-}
+func TrimPod(obj interface{}) (interface{}, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // TrimNode clears unused fields from a Node that are not required by Antrea.
 // It's safe to do so because Antrea only patches Node.
-func TrimNode(obj interface{}) (interface{}, error) {
-	node, ok := obj.(*corev1.Node)
-	if !ok {
-		return obj, nil
-	}
-	node.Status.Images = nil
-	return node, nil
-}
+func TrimNode(obj interface{}) (interface{}, error) { _ = "STUB: not implemented"; return nil, nil }

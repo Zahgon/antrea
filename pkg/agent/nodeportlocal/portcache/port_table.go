@@ -15,15 +15,12 @@
 package portcache
 
 import (
-	"fmt"
 	"io"
-	"net"
 	"sync"
 
 	"antrea.io/antrea/v2/pkg/agent/nodeportlocal/rules"
 
 	"k8s.io/client-go/tools/cache"
-	"k8s.io/klog/v2"
 )
 
 const (
@@ -49,9 +46,7 @@ type NodePortData struct {
 	defunct bool
 }
 
-func (d *NodePortData) Defunct() bool {
-	return d.defunct
-}
+func (d *NodePortData) Defunct() bool { _ = "STUB: not implemented"; return false }
 
 type LocalPortOpener interface {
 	OpenLocalPort(port int, protocol string, isIPv6 bool) (io.Closer, error)
@@ -70,193 +65,97 @@ type PortTable struct {
 	tableLock       sync.RWMutex
 }
 
-func GetPortTableKey(obj interface{}) (string, error) {
-	npData := obj.(*NodePortData)
-	key := fmt.Sprintf("%d:%s:%d:%s", npData.NodePort, npData.PodKey, npData.PodPort, npData.Protocol.Protocol)
-	return key, nil
-}
+func GetPortTableKey(obj interface{}) (string, error) { _ = "STUB: not implemented"; return "", nil }
 
 func (pt *PortTable) addPortTableCache(npData *NodePortData) error {
-	if err := pt.PortTableCache.Add(npData); err != nil {
-		return err
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (pt *PortTable) deletePortTableCache(npData *NodePortData) error {
-	if err := pt.PortTableCache.Delete(npData); err != nil {
-		return err
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (pt *PortTable) getPortTableCacheFromNodePortIndex(index string) (*NodePortData, bool) {
-	objs, _ := pt.PortTableCache.ByIndex(NodePortIndex, index)
-	if len(objs) == 0 {
-		return nil, false
-	}
-	return objs[0].(*NodePortData), true
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 func (pt *PortTable) getPortTableCacheFromPodEndpointIndex(index string) (*NodePortData, bool) {
-	objs, _ := pt.PortTableCache.ByIndex(PodEndpointIndex, index)
-	if len(objs) == 0 {
-		return nil, false
-	}
-	return objs[0].(*NodePortData), true
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 func (pt *PortTable) getPortTableCacheFromPodKeyIndex(index string) ([]*NodePortData, bool) {
-	var npData []*NodePortData
-	objs, _ := pt.PortTableCache.ByIndex(PodKeyIndex, index)
-	if len(objs) == 0 {
-		return nil, false
-	}
-	for _, obj := range objs {
-		npData = append(npData, obj.(*NodePortData))
-	}
-	return npData, true
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
-func (pt *PortTable) releaseDataFromPortTableCache() error {
-	for _, obj := range pt.PortTableCache.List() {
-		data := obj.(*NodePortData)
-		if err := pt.deletePortTableCache(data); err != nil {
-			return err
-		}
-	}
-	return nil
-}
+func (pt *PortTable) releaseDataFromPortTableCache() error { _ = "STUB: not implemented"; return nil }
 
 func NodePortIndexFunc(obj interface{}) ([]string, error) {
-	npData := obj.(*NodePortData)
-	nodePortTuple := NodePortProtoFormat(npData.NodePort, npData.Protocol.Protocol)
-	return []string{nodePortTuple}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func PodEndpointIndexFunc(obj interface{}) ([]string, error) {
-	npData := obj.(*NodePortData)
-	podEndpointTuple := podKeyPortProtoFormat(npData.PodKey, npData.PodPort, npData.Protocol.Protocol)
-	return []string{podEndpointTuple}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func PodKeyIndexFunc(obj interface{}) ([]string, error) {
-	npData := obj.(*NodePortData)
-	return []string{npData.PodKey}, nil
-}
+func PodKeyIndexFunc(obj interface{}) ([]string, error) { _ = "STUB: not implemented"; return nil, nil }
 
 func NewPortTable(start, end int, isIPv6 bool) (*PortTable, error) {
-	ptable := PortTable{
-		PortTableCache: cache.NewIndexer(GetPortTableKey, cache.Indexers{
-			NodePortIndex:    NodePortIndexFunc,
-			PodEndpointIndex: PodEndpointIndexFunc,
-			PodKeyIndex:      PodKeyIndexFunc,
-		}),
-		StartPort:       start,
-		EndPort:         end,
-		PortSearchStart: start,
-		PodPortRules:    rules.InitRules(isIPv6),
-		LocalPortOpener: &localPortOpener{},
-		IsIPv6:          isIPv6,
-	}
-	if err := ptable.PodPortRules.Init(); err != nil {
-		return nil, err
-	}
-	return &ptable, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func (pt *PortTable) CleanupAllEntries() {
-	pt.tableLock.Lock()
-	defer pt.tableLock.Unlock()
-	pt.releaseDataFromPortTableCache()
-}
+func (pt *PortTable) CleanupAllEntries() { _ = "STUB: not implemented"; return }
 
 func (pt *PortTable) GetDataForPod(podKey string) []*NodePortData {
-	pt.tableLock.RLock()
-	defer pt.tableLock.RUnlock()
-	return pt.getDataForPod(podKey)
-}
-
-func (pt *PortTable) getDataForPod(podKey string) []*NodePortData {
-	allData, exist := pt.getPortTableCacheFromPodKeyIndex(podKey)
-	if !exist {
-		return nil
-	}
-	return allData
-}
-
-func (pt *PortTable) GetEntry(podKey string, port int, protocol string) *NodePortData {
-	pt.tableLock.RLock()
-	defer pt.tableLock.RUnlock()
-	// Return pointer to copy of data from the PodEndpointTable.
-	if data := pt.getEntryByPodKeyPortProto(podKey, port, protocol); data != nil {
-		dataCopy := *data
-		return &dataCopy
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
+func (pt *PortTable) getDataForPod(podKey string) []*NodePortData {
+	_ = "STUB: not implemented"
+	return nil
+}
+
+func (pt *PortTable) GetEntry(podKey string, port int, protocol string) *NodePortData {
+	_ = "STUB: not implemented"
+	return nil
+}
+
+// Return pointer to copy of data from the PodEndpointTable.
+
 // podKeyPortProtoFormat formats the podKey, port and protocol to string key:port:protocol.
 func podKeyPortProtoFormat(podKey string, port int, protocol string) string {
-	return fmt.Sprintf("%s:%d:%s", podKey, port, protocol)
+	_ = "STUB: not implemented"
+	return ""
 }
 
 func (pt *PortTable) getEntryByPodKeyPortProto(podKey string, port int, protocol string) *NodePortData {
-	data, ok := pt.getPortTableCacheFromPodEndpointIndex(podKeyPortProtoFormat(podKey, port, protocol))
-	if !ok {
-		return nil
-	}
-	return data
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (pt *PortTable) RuleExists(podKey string, podPort int, protocol string) bool {
-	pt.tableLock.RLock()
-	defer pt.tableLock.RUnlock()
-	data := pt.getEntryByPodKeyPortProto(podKey, podPort, protocol)
-	return data != nil
+	_ = "STUB: not implemented"
+	return false
 }
 
 // nodePortProtoFormat formats the nodeport, protocol to string port:protocol.
 func NodePortProtoFormat(nodeport int, protocol string) string {
-	return fmt.Sprintf("%d:%s", nodeport, protocol)
+	_ = "STUB: not implemented"
+	return ""
 }
 
 // openLocalPort binds to the provided port.
 // This is inspired by the openLocalPort function in kube-proxy:
 // https://github.com/kubernetes/kubernetes/blob/86f8c3ee91b6faec437f97e3991107747d7fc5e8/pkg/proxy/iptables/proxier.go#L1664
 func (lpo *localPortOpener) OpenLocalPort(port int, protocol string, isIPv6 bool) (io.Closer, error) {
-	var network string
-	var socket io.Closer
-	switch protocol {
-	case "tcp":
-		if isIPv6 {
-			network = "tcp6"
-		} else {
-			network = "tcp4"
-		}
-		listener, err := net.Listen(network, fmt.Sprintf(":%d", port))
-		if err != nil {
-			return nil, err
-		}
-		socket = listener
-	case "udp":
-		if isIPv6 {
-			network = "udp6"
-		} else {
-			network = "udp4"
-		}
-		addr, err := net.ResolveUDPAddr(network, fmt.Sprintf(":%d", port))
-		if err != nil {
-			return nil, err
-		}
-		conn, err := net.ListenUDP(network, addr)
-		if err != nil {
-			return nil, err
-		}
-		socket = conn
-	default:
-		return nil, fmt.Errorf("unknown or missing protocol: %q", protocol)
-	}
-	klog.V(2).InfoS("Opened local port", "port", port, "protocol", protocol, "ipv6", isIPv6)
-	return socket, nil
+	_ = "STUB: not implemented"
+	return *new(io.Closer), nil
 }

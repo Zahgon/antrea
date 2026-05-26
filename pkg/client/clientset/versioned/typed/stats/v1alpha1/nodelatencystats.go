@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	statsv1alpha1 "antrea.io/antrea/v2/pkg/apis/stats/v1alpha1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	gentype "k8s.io/client-go/gentype"
 )
@@ -47,14 +46,6 @@ type nodeLatencyStats struct {
 
 // newNodeLatencyStats returns a NodeLatencyStats
 func newNodeLatencyStats(c *StatsV1alpha1Client) *nodeLatencyStats {
-	return &nodeLatencyStats{
-		gentype.NewClientWithList[*statsv1alpha1.NodeLatencyStats, *statsv1alpha1.NodeLatencyStatsList](
-			"nodelatencystats",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *statsv1alpha1.NodeLatencyStats { return &statsv1alpha1.NodeLatencyStats{} },
-			func() *statsv1alpha1.NodeLatencyStatsList { return &statsv1alpha1.NodeLatencyStatsList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

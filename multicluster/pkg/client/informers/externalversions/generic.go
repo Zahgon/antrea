@@ -17,10 +17,6 @@
 package externalversions
 
 import (
-	fmt "fmt"
-
-	v1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
-	v1alpha2 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha2"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
 )
@@ -39,41 +35,24 @@ type genericInformer struct {
 
 // Informer returns the SharedIndexInformer.
 func (f *genericInformer) Informer() cache.SharedIndexInformer {
-	return f.informer
+	_ = "STUB: not implemented"
+
+	// Lister returns the GenericLister.
+	return *new(cache.SharedIndexInformer)
 }
 
-// Lister returns the GenericLister.
 func (f *genericInformer) Lister() cache.GenericLister {
-	return cache.NewGenericLister(f.Informer().GetIndexer(), f.resource)
+	_ = "STUB: not implemented"
+	return *new(cache.GenericLister)
 }
 
 // ForResource gives generic access to a shared informer of the matching type
 // TODO extend this to unknown resources with a client pool
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
-	switch resource {
+	_ = "STUB: not implemented"
+
 	// Group=multicluster.crd.antrea.io, Version=v1alpha1
-	case v1alpha1.SchemeGroupVersion.WithResource("clusterinfoimports"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Multicluster().V1alpha1().ClusterInfoImports().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("clustersets"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Multicluster().V1alpha1().ClusterSets().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("gateways"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Multicluster().V1alpha1().Gateways().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("labelidentities"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Multicluster().V1alpha1().LabelIdentities().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("memberclusterannounces"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Multicluster().V1alpha1().MemberClusterAnnounces().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("resourceexports"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Multicluster().V1alpha1().ResourceExports().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("resourceimports"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Multicluster().V1alpha1().ResourceImports().Informer()}, nil
-
-		// Group=multicluster.crd.antrea.io, Version=v1alpha2
-	case v1alpha2.SchemeGroupVersion.WithResource("clusterclaims"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Multicluster().V1alpha2().ClusterClaims().Informer()}, nil
-	case v1alpha2.SchemeGroupVersion.WithResource("clustersets"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Multicluster().V1alpha2().ClusterSets().Informer()}, nil
-
-	}
-
-	return nil, fmt.Errorf("no informer found for %v", resource)
+	return *new(GenericInformer), nil
 }
+
+// Group=multicluster.crd.antrea.io, Version=v1alpha2

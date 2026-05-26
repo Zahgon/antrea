@@ -18,13 +18,15 @@ package multicast
 
 // nolint: unused
 func (c *MRouteClient) parseIGMPMsg(msg []byte) (*parsedIGMPMsg, error) {
+	_ = "STUB: not implemented"
 	return nil, nil
 }
 
 func (c *MRouteClient) run(stopCh <-chan struct{}) {
+	_ = "STUB: not implemented"
+
+	// nolint: unused
+	return
 }
 
-// nolint: unused
-func (c *MRouteClient) detectVIFMode() error {
-	return nil
-}
+func (c *MRouteClient) detectVIFMode() error { _ = "STUB: not implemented"; return nil }

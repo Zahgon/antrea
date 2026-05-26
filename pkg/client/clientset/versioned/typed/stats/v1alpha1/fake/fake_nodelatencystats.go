@@ -29,22 +29,6 @@ type fakeNodeLatencyStats struct {
 }
 
 func newFakeNodeLatencyStats(fake *FakeStatsV1alpha1) statsv1alpha1.NodeLatencyStatsInterface {
-	return &fakeNodeLatencyStats{
-		gentype.NewFakeClientWithList[*v1alpha1.NodeLatencyStats, *v1alpha1.NodeLatencyStatsList](
-			fake.Fake,
-			"",
-			v1alpha1.SchemeGroupVersion.WithResource("nodelatencystats"),
-			v1alpha1.SchemeGroupVersion.WithKind("NodeLatencyStats"),
-			func() *v1alpha1.NodeLatencyStats { return &v1alpha1.NodeLatencyStats{} },
-			func() *v1alpha1.NodeLatencyStatsList { return &v1alpha1.NodeLatencyStatsList{} },
-			func(dst, src *v1alpha1.NodeLatencyStatsList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.NodeLatencyStatsList) []*v1alpha1.NodeLatencyStats {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha1.NodeLatencyStatsList, items []*v1alpha1.NodeLatencyStats) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(statsv1alpha1.NodeLatencyStatsInterface)
 }

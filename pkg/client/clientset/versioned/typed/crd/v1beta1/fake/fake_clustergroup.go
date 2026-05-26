@@ -29,22 +29,6 @@ type fakeClusterGroups struct {
 }
 
 func newFakeClusterGroups(fake *FakeCrdV1beta1) crdv1beta1.ClusterGroupInterface {
-	return &fakeClusterGroups{
-		gentype.NewFakeClientWithList[*v1beta1.ClusterGroup, *v1beta1.ClusterGroupList](
-			fake.Fake,
-			"",
-			v1beta1.SchemeGroupVersion.WithResource("clustergroups"),
-			v1beta1.SchemeGroupVersion.WithKind("ClusterGroup"),
-			func() *v1beta1.ClusterGroup { return &v1beta1.ClusterGroup{} },
-			func() *v1beta1.ClusterGroupList { return &v1beta1.ClusterGroupList{} },
-			func(dst, src *v1beta1.ClusterGroupList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta1.ClusterGroupList) []*v1beta1.ClusterGroup {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1beta1.ClusterGroupList, items []*v1beta1.ClusterGroup) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.ClusterGroupInterface)
 }

@@ -15,8 +15,6 @@
 package membertoken
 
 import (
-	corev1 "k8s.io/api/core/v1"
-
 	"antrea.io/antrea/v2/pkg/antctl/transform/common"
 )
 
@@ -26,44 +24,21 @@ type Response struct {
 }
 
 func Transform(r interface{}, single bool) (interface{}, error) {
-	if single {
-		return objectTransform(r)
-	}
-	return listTransform(r)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func listTransform(l interface{}) (interface{}, error) {
-	secrets := l.([]corev1.Secret)
-	var result []interface{}
-
-	for i := range secrets {
-		item := secrets[i]
-		o, _ := objectTransform(item)
-		result = append(result, o.(Response))
-	}
-
-	return result, nil
-}
+func listTransform(l interface{}) (interface{}, error) { _ = "STUB: not implemented"; return nil, nil }
 
 func objectTransform(o interface{}) (interface{}, error) {
-	secret := o.(corev1.Secret)
-
-	return Response{
-		Namespace: secret.Namespace,
-		Name:      secret.Name,
-	}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 var _ common.TableOutput = new(Response)
 
-func (r Response) GetTableHeader() []string {
-	return []string{"NAMESPACE", "NAME"}
-}
+func (r Response) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
-func (r Response) GetTableRow(maxColumnLength int) []string {
-	return []string{r.Namespace, r.Name}
-}
+func (r Response) GetTableRow(maxColumnLength int) []string { _ = "STUB: not implemented"; return nil }
 
-func (r Response) SortRows() bool {
-	return true
-}
+func (r Response) SortRows() bool { _ = "STUB: not implemented"; return false }

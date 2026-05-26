@@ -42,5 +42,6 @@ type antreaNodeConfigLister struct {
 
 // NewAntreaNodeConfigLister returns a new AntreaNodeConfigLister.
 func NewAntreaNodeConfigLister(indexer cache.Indexer) AntreaNodeConfigLister {
-	return &antreaNodeConfigLister{listers.New[*crdv1alpha1.AntreaNodeConfig](indexer, crdv1alpha1.Resource("antreanodeconfig"))}
+	_ = "STUB: not implemented"
+	return *new(AntreaNodeConfigLister)
 }

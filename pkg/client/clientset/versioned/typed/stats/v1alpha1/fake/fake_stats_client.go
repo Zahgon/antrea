@@ -27,28 +27,33 @@ type FakeStatsV1alpha1 struct {
 }
 
 func (c *FakeStatsV1alpha1) AntreaClusterNetworkPolicyStats() v1alpha1.AntreaClusterNetworkPolicyStatsInterface {
-	return newFakeAntreaClusterNetworkPolicyStats(c)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.AntreaClusterNetworkPolicyStatsInterface)
 }
 
 func (c *FakeStatsV1alpha1) AntreaNetworkPolicyStats(namespace string) v1alpha1.AntreaNetworkPolicyStatsInterface {
-	return newFakeAntreaNetworkPolicyStats(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.AntreaNetworkPolicyStatsInterface)
 }
 
 func (c *FakeStatsV1alpha1) MulticastGroups() v1alpha1.MulticastGroupInterface {
-	return newFakeMulticastGroups(c)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.MulticastGroupInterface)
 }
 
 func (c *FakeStatsV1alpha1) NetworkPolicyStats(namespace string) v1alpha1.NetworkPolicyStatsInterface {
-	return newFakeNetworkPolicyStats(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.NetworkPolicyStatsInterface)
 }
 
 func (c *FakeStatsV1alpha1) NodeLatencyStats() v1alpha1.NodeLatencyStatsInterface {
-	return newFakeNodeLatencyStats(c)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.NodeLatencyStatsInterface)
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeStatsV1alpha1) RESTClient() rest.Interface {
-	var ret *rest.RESTClient
-	return ret
+	_ = "STUB: not implemented"
+	return *new(rest.Interface)
 }

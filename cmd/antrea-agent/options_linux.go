@@ -22,11 +22,13 @@ const (
 )
 
 func (o *Options) checkUnsupportedFeatures() error {
+	_ = "STUB: not implemented"
 	// All features are supported on a Linux Node.
 	return nil
 }
 
 func (o *Options) validateConfigForPlatform() error {
+	_ = "STUB: not implemented"
 	// No additional validations for Linux Nodes.
 	return nil
 }

@@ -42,5 +42,6 @@ type labelIdentityLister struct {
 
 // NewLabelIdentityLister returns a new LabelIdentityLister.
 func NewLabelIdentityLister(indexer cache.Indexer) LabelIdentityLister {
-	return &labelIdentityLister{listers.New[*multiclusterv1alpha1.LabelIdentity](indexer, multiclusterv1alpha1.Resource("labelidentity"))}
+	_ = "STUB: not implemented"
+	return *new(LabelIdentityLister)
 }

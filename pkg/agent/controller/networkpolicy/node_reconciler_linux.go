@@ -18,24 +18,16 @@
 package networkpolicy
 
 import (
-	"fmt"
-	"net"
-	"sort"
-	"strings"
 	"sync"
 
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/klog/v2"
-	utilnet "k8s.io/utils/net"
 
-	"antrea.io/antrea/v2/pkg/agent/config"
 	"antrea.io/antrea/v2/pkg/agent/route"
 	"antrea.io/antrea/v2/pkg/agent/types"
 	"antrea.io/antrea/v2/pkg/agent/util/ipset"
 	"antrea.io/antrea/v2/pkg/agent/util/iptables"
 	"antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
 	secv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
-	"antrea.io/antrea/v2/pkg/util/ip"
 )
 
 const (
@@ -137,10 +129,8 @@ type chainKey struct {
 }
 
 func newChainKey(name string, isIPv6 bool) chainKey {
-	return chainKey{
-		name:   name,
-		isIPv6: isIPv6,
-	}
+	_ = "STUB: not implemented"
+	return *new(chainKey)
 }
 
 // coreIPTChain caches the sorted iptables rules for a chain where core iptables rules are installed.
@@ -149,9 +139,7 @@ type coreIPTChain struct {
 	sync.Mutex
 }
 
-func newCoreIPTChain() *coreIPTChain {
-	return &coreIPTChain{}
-}
+func newCoreIPTChain() *coreIPTChain { _ = "STUB: not implemented"; return nil }
 
 // nodePolicyLastRealized is the struct cached by nodeReconciler. It's used to track the actual state of iptables rules
 // and chains we have enforced, so that we can know how to reconcile a rule when it's updated/removed.
@@ -169,11 +157,8 @@ type nodePolicyLastRealized struct {
 }
 
 func newNodePolicyLastRealized(rule *CompletedRule) *nodePolicyLastRealized {
-	return &nodePolicyLastRealized{
-		CompletedRule: rule,
-		ipsets:        make(map[iptables.Protocol]string),
-		ipnets:        make(map[iptables.Protocol]string),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 type nodeReconciler struct {
@@ -185,478 +170,144 @@ type nodeReconciler struct {
 }
 
 func newNodeReconciler(routeClient route.Interface, ipv4Enabled, ipv6Enabled bool) *nodeReconciler {
-	var ipProtocols []iptables.Protocol
-	coreIPTChains := make(map[chainKey]*coreIPTChain)
-
-	if ipv4Enabled {
-		ipProtocols = append(ipProtocols, iptables.ProtocolIPv4)
-		coreIPTChains[newChainKey(config.NodeNetworkPolicyIngressRulesChain, false)] = newCoreIPTChain()
-		coreIPTChains[newChainKey(config.NodeNetworkPolicyEgressRulesChain, false)] = newCoreIPTChain()
-	}
-	if ipv6Enabled {
-		ipProtocols = append(ipProtocols, iptables.ProtocolIPv6)
-		coreIPTChains[newChainKey(config.NodeNetworkPolicyIngressRulesChain, true)] = newCoreIPTChain()
-		coreIPTChains[newChainKey(config.NodeNetworkPolicyEgressRulesChain, true)] = newCoreIPTChain()
-	}
-
-	return &nodeReconciler{
-		ipProtocols:   ipProtocols,
-		routeClient:   routeClient,
-		coreIPTChains: coreIPTChains,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Reconcile checks whether the provided rule has been enforced or not, and invoke the add or update method accordingly.
 func (r *nodeReconciler) Reconcile(rule *CompletedRule) error {
-	klog.V(1).InfoS("Reconciling Node NetworkPolicy rule", "rule", rule.ID, "policy", rule.SourceRef.ToString())
-
-	value, exists := r.lastRealizeds.Load(rule.ID)
-	var err error
-	if !exists {
-		err = r.add(rule)
-	} else {
-		err = r.update(value.(*nodePolicyLastRealized), rule)
-	}
-	return err
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (r *nodeReconciler) RunIDAllocatorWorker(stopCh <-chan struct{}) {
-
+	_ = "STUB: not implemented"
+	return
 }
 
 func (r *nodeReconciler) BatchReconcile(rules []*CompletedRule) error {
-	var rulesToInstall []*CompletedRule
-	for _, rule := range rules {
-		if _, exists := r.lastRealizeds.Load(rule.ID); exists {
-			klog.ErrorS(nil, "Rule should not have been realized yet: initialization phase", "rule", rule.ID)
-		} else {
-			rulesToInstall = append(rulesToInstall, rule)
-		}
-	}
-	if err := r.batchAdd(rulesToInstall); err != nil {
-		return err
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (r *nodeReconciler) batchAdd(rules []*CompletedRule) error {
-	lastRealizeds := make(map[string]*nodePolicyLastRealized)
-	serviceIPTChains := make(map[iptables.Protocol][]string)
-	serviceIPTRules := make(map[iptables.Protocol][][]string)
-	ingressCoreIPTRules := make(map[iptables.Protocol][]*coreIPTRule)
-	egressCoreIPTRules := make(map[iptables.Protocol][]*coreIPTRule)
-
-	for _, rule := range rules {
-		iptRules, lastRealized := r.computeIPTRules(rule)
-		ruleID := rule.ID
-		for ipProtocol, iptRule := range iptRules {
-			// Sync all ipsets.
-			if iptRule.IPSet != "" {
-				if err := r.routeClient.AddOrUpdateNodeNetworkPolicyIPSet(iptRule.IPSet, iptRule.IPSetMembers, iptRule.IsIPv6); err != nil {
-					return err
-				}
-			}
-			// Collect all service iptables rules and chains.
-			if iptRule.ServiceIPTChain != "" {
-				serviceIPTChains[ipProtocol] = append(serviceIPTChains[ipProtocol], iptRule.ServiceIPTChain)
-				serviceIPTRules[ipProtocol] = append(serviceIPTRules[ipProtocol], iptRule.ServiceIPTRules)
-			}
-
-			// Collect all core iptables rules.
-			coreIPTRule := &coreIPTRule{ruleID, iptRule.Priority, iptRule.CoreIPTRules}
-			if rule.Direction == v1beta2.DirectionIn {
-				ingressCoreIPTRules[ipProtocol] = append(ingressCoreIPTRules[ipProtocol], coreIPTRule)
-			} else {
-				egressCoreIPTRules[ipProtocol] = append(egressCoreIPTRules[ipProtocol], coreIPTRule)
-			}
-		}
-		lastRealizeds[ruleID] = lastRealized
-	}
-	for _, ipProtocol := range r.ipProtocols {
-		isIPv6 := iptables.IsIPv6Protocol(ipProtocol)
-		if err := r.routeClient.AddOrUpdateNodeNetworkPolicyIPTables(serviceIPTChains[ipProtocol], serviceIPTRules[ipProtocol], isIPv6); err != nil {
-			return err
-		}
-		if err := r.addOrUpdateCoreIPTRules(config.NodeNetworkPolicyIngressRulesChain, isIPv6, false, ingressCoreIPTRules[ipProtocol]...); err != nil {
-			return err
-		}
-		if err := r.addOrUpdateCoreIPTRules(config.NodeNetworkPolicyEgressRulesChain, isIPv6, false, egressCoreIPTRules[ipProtocol]...); err != nil {
-			return err
-		}
-	}
-
-	for ruleID, lastRealized := range lastRealizeds {
-		r.lastRealizeds.Store(ruleID, lastRealized)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (r *nodeReconciler) Forget(ruleID string) error {
-	value, exists := r.lastRealizeds.Load(ruleID)
-	if !exists {
-		// No-op if the rule was not realized before.
-		klog.V(4).InfoS("Trying to forget unrealized Node NetworkPolicy rule, no action needed", "rule", ruleID)
-		return nil
-	}
+// Sync all ipsets.
 
-	lastRealized := value.(*nodePolicyLastRealized)
+// Collect all service iptables rules and chains.
 
-	klog.V(1).InfoS("Forgetting Node NetworkPolicy rule", "rule", ruleID, "policy", lastRealized.CompletedRule.SourceRef.ToString())
+// Collect all core iptables rules.
 
-	coreIPTChain := lastRealized.coreIPTChain
-	for _, ipProtocol := range r.ipProtocols {
-		isIPv6 := iptables.IsIPv6Protocol(ipProtocol)
-		if err := r.deleteCoreIPTRule(ruleID, coreIPTChain, isIPv6); err != nil {
-			return err
-		}
-		if lastRealized.serviceIPTChain != "" {
-			if err := r.routeClient.DeleteNodeNetworkPolicyIPTables([]string{lastRealized.serviceIPTChain}, isIPv6); err != nil {
-				return err
-			}
-		}
-		if lastRealized.ipsets[ipProtocol] != "" {
-			if err := r.routeClient.DeleteNodeNetworkPolicyIPSet(lastRealized.ipsets[ipProtocol], isIPv6); err != nil {
-				return err
-			}
-		}
-	}
+func (r *nodeReconciler) Forget(ruleID string) error { _ = "STUB: not implemented"; return nil }
 
-	r.lastRealizeds.Delete(ruleID)
-	return nil
-}
+// No-op if the rule was not realized before.
 
 func (r *nodeReconciler) GetRuleByFlowID(ruleFlowID uint32) (*types.PolicyRule, bool, error) {
+	_ = "STUB: not implemented"
 	return nil, false, nil
 }
 
 func (r *nodeReconciler) computeIPTRules(rule *CompletedRule) (map[iptables.Protocol]*types.NodePolicyRule, *nodePolicyLastRealized) {
-	ruleID := rule.ID
-	enableLogging := rule.EnableLogging
-	var logLabel string
-	if enableLogging {
-		logLabel = generateLogLabel(rule)
-	}
-	lastRealized := newNodePolicyLastRealized(rule)
-	priority := &types.Priority{
-		TierPriority:   *rule.TierPriority,
-		PolicyPriority: *rule.PolicyPriority,
-		RulePriority:   rule.Priority,
-	}
-
-	var serviceIPTChain, serviceIPTRuleTarget, coreIPTRuleTarget string
-	var service *v1beta2.Service
-	if len(rule.Services) > 1 {
-		// If a rule has multiple services, create a chain to install iptables rules for these services, with the target
-		// of the services determined by the rule's action. The core iptables rule should target the chain.
-		serviceIPTChain = fmt.Sprintf("%s-%s", config.NodeNetworkPolicyPrefix, strings.ToUpper(ruleID))
-		serviceIPTRuleTarget = ruleActionToIPTTarget(rule.Action)
-		coreIPTRuleTarget = serviceIPTChain
-		lastRealized.serviceIPTChain = serviceIPTChain
-	} else {
-		// If a rule has no service or a single service, the target is determined by the rule's action, as there is no
-		// need to create a chain for a single-service iptables rule.
-		coreIPTRuleTarget = ruleActionToIPTTarget(rule.Action)
-		// If a rule has a single service, the core iptables rule directly incorporates the service.
-		if len(rule.Services) == 1 {
-			service = &rule.Services[0]
-		}
-	}
-	var coreIPTChain string
-	if rule.Direction == v1beta2.DirectionIn {
-		coreIPTChain = config.NodeNetworkPolicyIngressRulesChain
-	} else {
-		coreIPTChain = config.NodeNetworkPolicyEgressRulesChain
-	}
-	coreIPTRuleComment := fmt.Sprintf("Antrea: for rule %s, policy %s", rule.Name, rule.SourceRef.ToString())
-	lastRealized.coreIPTChain = coreIPTChain
-
-	nodePolicyRules := make(map[iptables.Protocol]*types.NodePolicyRule)
-	for _, ipProtocol := range r.ipProtocols {
-		isIPv6 := iptables.IsIPv6Protocol(ipProtocol)
-
-		var serviceIPTRules []string
-		if serviceIPTChain != "" {
-			serviceIPTRules = buildServiceIPTRules(ipProtocol,
-				rule.Services,
-				serviceIPTChain,
-				serviceIPTRuleTarget,
-				enableLogging,
-				logLabel)
-		}
-
-		ipnets := getIPNetsFromRule(rule, isIPv6)
-		var ipnet string
-		var ipset string
-		if ipnets.Len() > 1 {
-			// If a rule matches multiple source or destination ipnets, create an ipset which contains these ipnets and
-			// use the ipset in core iptables rule.
-			suffix := "4"
-			if isIPv6 {
-				suffix = "6"
-			}
-			ipset = fmt.Sprintf("%s-%s-%s", config.NodeNetworkPolicyPrefix, strings.ToUpper(ruleID), suffix)
-			lastRealized.ipsets[ipProtocol] = ipset
-		} else if ipnets.Len() == 1 {
-			// If a rule matches single source or destination, use it in core iptables rule directly.
-			ipnet, _ = ipnets.PopAny()
-			lastRealized.ipnets[ipProtocol] = ipnet
-		}
-
-		coreIPTRules := buildCoreIPTRules(ipProtocol,
-			coreIPTChain,
-			ipset,
-			ipnet,
-			coreIPTRuleTarget,
-			coreIPTRuleComment,
-			service,
-			rule.Direction == v1beta2.DirectionIn,
-			// If the target of a core iptables rule is not a service chain, the iptables rule for logging should be
-			// generated along with the core iptables rule. Otherwise, the iptables rules for logging should be generated
-			// along with the service iptables rules.
-			enableLogging && serviceIPTChain == "",
-			logLabel)
-
-		nodePolicyRules[ipProtocol] = &types.NodePolicyRule{
-			IPSet:           ipset,
-			IPSetMembers:    ipnets,
-			Priority:        priority,
-			ServiceIPTChain: serviceIPTChain,
-			ServiceIPTRules: serviceIPTRules,
-			CoreIPTChain:    coreIPTChain,
-			CoreIPTRules:    coreIPTRules,
-			IsIPv6:          isIPv6,
-		}
-	}
-
-	return nodePolicyRules, lastRealized
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func (r *nodeReconciler) add(rule *CompletedRule) error {
-	klog.V(2).InfoS("Adding new rule", "rule", rule)
-	ruleID := rule.ID
-	iptRules, lastRealized := r.computeIPTRules(rule)
-	for _, iptRule := range iptRules {
-		if iptRule.IPSet != "" {
-			if err := r.routeClient.AddOrUpdateNodeNetworkPolicyIPSet(iptRule.IPSet, iptRule.IPSetMembers, iptRule.IsIPv6); err != nil {
-				return err
-			}
-		}
-		if iptRule.ServiceIPTChain != "" {
-			if err := r.routeClient.AddOrUpdateNodeNetworkPolicyIPTables([]string{iptRule.ServiceIPTChain}, [][]string{iptRule.ServiceIPTRules}, iptRule.IsIPv6); err != nil {
-				return err
-			}
-		}
-		if err := r.addOrUpdateCoreIPTRules(iptRule.CoreIPTChain, iptRule.IsIPv6, false, &coreIPTRule{ruleID, iptRule.Priority, iptRule.CoreIPTRules}); err != nil {
-			return err
-		}
-	}
-	r.lastRealizeds.Store(ruleID, lastRealized)
-	return nil
-}
+// If a rule has multiple services, create a chain to install iptables rules for these services, with the target
+// of the services determined by the rule's action. The core iptables rule should target the chain.
+
+// If a rule has no service or a single service, the target is determined by the rule's action, as there is no
+// need to create a chain for a single-service iptables rule.
+
+// If a rule has a single service, the core iptables rule directly incorporates the service.
+
+// If a rule matches multiple source or destination ipnets, create an ipset which contains these ipnets and
+// use the ipset in core iptables rule.
+
+// If a rule matches single source or destination, use it in core iptables rule directly.
+
+// If the target of a core iptables rule is not a service chain, the iptables rule for logging should be
+// generated along with the core iptables rule. Otherwise, the iptables rules for logging should be generated
+// along with the service iptables rules.
+
+func (r *nodeReconciler) add(rule *CompletedRule) error { _ = "STUB: not implemented"; return nil }
 
 func (r *nodeReconciler) update(lastRealized *nodePolicyLastRealized, newRule *CompletedRule) error {
-	klog.V(2).InfoS("Updating existing rule", "rule", newRule)
-	ruleID := newRule.ID
-	newIPTRules, newLastRealized := r.computeIPTRules(newRule)
-
-	for _, ipProtocol := range r.ipProtocols {
-		iptRule := newIPTRules[ipProtocol]
-
-		prevIPNet := lastRealized.ipnets[ipProtocol]
-		ipnet := newLastRealized.ipnets[ipProtocol]
-		prevIPSet := lastRealized.ipsets[ipProtocol]
-		ipset := newLastRealized.ipsets[ipProtocol]
-
-		// Core iptables rules should be updated in the following cases:
-		// - Single IP change: A -> B (prevIPSet = "", ipset = "", prevIPNet = A, ipnet = B).
-		// - Transition from multiple addresses to a single IP: {A, B} -> A (prevIPSet = "ipset name", ipset = "", prevIPNet = "", ipnet = A).
-		// - Transition from a single IP to multiple addresses: A -> {A, B} (prevIPNet = A, ipnet = "", prevIPSet = "", ipset = "ipset name").
-		shouldUpdateCoreIPTRules := prevIPSet != ipset || prevIPNet != ipnet
-		// The name of ipset for a rule will never change during updates.
-		if ipset != "" {
-			// If the current rule uses an ipset, sync the ipset first, then sync the core iptables rule that
-			// references it.
-			if err := r.routeClient.AddOrUpdateNodeNetworkPolicyIPSet(iptRule.IPSet, iptRule.IPSetMembers, iptRule.IsIPv6); err != nil {
-				return err
-			}
-			if shouldUpdateCoreIPTRules {
-				if err := r.addOrUpdateCoreIPTRules(iptRule.CoreIPTChain, iptRule.IsIPv6, true, &coreIPTRule{ruleID, iptRule.Priority, iptRule.CoreIPTRules}); err != nil {
-					return err
-				}
-			}
-		} else if prevIPSet != "" {
-			// If the previous rule used an ipset, sync the new core iptables rule first to remove its reference, then
-			// delete the unused ipset.
-			if shouldUpdateCoreIPTRules {
-				if err := r.addOrUpdateCoreIPTRules(iptRule.CoreIPTChain, iptRule.IsIPv6, true, &coreIPTRule{ruleID, iptRule.Priority, iptRule.CoreIPTRules}); err != nil {
-					return err
-				}
-			}
-			if err := r.routeClient.DeleteNodeNetworkPolicyIPSet(lastRealized.ipsets[ipProtocol], iptRule.IsIPv6); err != nil {
-				return err
-			}
-		} else {
-			if shouldUpdateCoreIPTRules {
-				if err := r.addOrUpdateCoreIPTRules(iptRule.CoreIPTChain, iptRule.IsIPv6, true, &coreIPTRule{ruleID, iptRule.Priority, iptRule.CoreIPTRules}); err != nil {
-					return err
-				}
-			}
-		}
-	}
-
-	r.lastRealizeds.Store(ruleID, newLastRealized)
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// Core iptables rules should be updated in the following cases:
+// - Single IP change: A -> B (prevIPSet = "", ipset = "", prevIPNet = A, ipnet = B).
+// - Transition from multiple addresses to a single IP: {A, B} -> A (prevIPSet = "ipset name", ipset = "", prevIPNet = "", ipnet = A).
+// - Transition from a single IP to multiple addresses: A -> {A, B} (prevIPNet = A, ipnet = "", prevIPSet = "", ipset = "ipset name").
+
+// The name of ipset for a rule will never change during updates.
+
+// If the current rule uses an ipset, sync the ipset first, then sync the core iptables rule that
+// references it.
+
+// If the previous rule used an ipset, sync the new core iptables rule first to remove its reference, then
+// delete the unused ipset.
 
 func (r *nodeReconciler) addOrUpdateCoreIPTRules(chain string, isIPv6 bool, isUpdate bool, newRules ...*coreIPTRule) error {
-	if len(newRules) == 0 {
-		return nil
-	}
-
-	iptChain := r.getCoreIPTChain(chain, isIPv6)
-	iptChain.Lock()
-	defer iptChain.Unlock()
-
-	rules := iptChain.rules
-	if isUpdate {
-		// Build a map to store the mapping of rule ID to rule for the rules to update.
-		rulesToUpdate := make(map[string]*coreIPTRule)
-		for _, rule := range newRules {
-			rulesToUpdate[rule.ruleID] = rule
-		}
-		// Iterate each existing rule. If an existing rule exists in rulesToUpdate, replace it with the new rule.
-		for index, rule := range rules {
-			if _, exists := rulesToUpdate[rule.ruleID]; exists {
-				rules[index] = rulesToUpdate[rule.ruleID]
-			}
-		}
-	} else {
-		// If these are new rules, append the new rules then sort all rules.
-		rules = append(rules, newRules...)
-		sort.Slice(rules, func(i, j int) bool {
-			return !rules[i].priority.Less(*rules[j].priority)
-		})
-	}
-
-	// Get all iptables rules and synchronize them.
-	var ruleStrs []string
-	for _, rule := range rules {
-		ruleStrs = append(ruleStrs, rule.ruleStrs...)
-	}
-	if err := r.routeClient.AddOrUpdateNodeNetworkPolicyIPTables([]string{chain}, [][]string{ruleStrs}, isIPv6); err != nil {
-		return err
-	}
-
-	// cache the updated rules.
-	iptChain.rules = rules
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// Build a map to store the mapping of rule ID to rule for the rules to update.
+
+// Iterate each existing rule. If an existing rule exists in rulesToUpdate, replace it with the new rule.
+
+// If these are new rules, append the new rules then sort all rules.
+
+// Get all iptables rules and synchronize them.
+
+// cache the updated rules.
 
 func (r *nodeReconciler) deleteCoreIPTRule(ruleID string, iptChain string, isIPv6 bool) error {
-	chain := r.getCoreIPTChain(iptChain, isIPv6)
-	chain.Lock()
-	defer chain.Unlock()
-
-	// Get all the cached rules, then delete the rule with the given rule ID.
-	rules := chain.rules
-	indexToDelete := -1
-	for i := 0; i < len(rules); i++ {
-		if rules[i].ruleID == ruleID {
-			indexToDelete = i
-			break
-		}
-	}
-	// If the rule is not found, return directly.
-	if indexToDelete == -1 {
-		return nil
-	}
-	// If the rule is found, delete it from the slice.
-	rules = append(rules[:indexToDelete], rules[indexToDelete+1:]...)
-
-	// Get all the iptables rules and synchronize them.
-	var ruleStrs []string
-	for _, r := range rules {
-		ruleStrs = append(ruleStrs, r.ruleStrs...)
-	}
-	if err := r.routeClient.AddOrUpdateNodeNetworkPolicyIPTables([]string{iptChain}, [][]string{ruleStrs}, isIPv6); err != nil {
-		return err
-	}
-
-	// cache the updated rules.
-	chain.rules = rules
+	_ = "STUB: not implemented"
 	return nil
 }
 
+// Get all the cached rules, then delete the rule with the given rule ID.
+
+// If the rule is not found, return directly.
+
+// If the rule is found, delete it from the slice.
+
+// Get all the iptables rules and synchronize them.
+
+// cache the updated rules.
+
 func (r *nodeReconciler) getCoreIPTChain(iptChain string, isIPv6 bool) *coreIPTChain {
+	_ = "STUB: not implemented"
 	// - For IPv4 ingress rules, iptables rules are installed in chain ANTREA-INGRESS-RULES.
 	// - For IPv6 ingress rules, ip6tables rules are installed in chain ANTREA-INGRESS-RULES.
 	// - For IPv4 egress rules, iptables rules are installed in chain ANTREA-EGRESS-RULES.
 	// - For IPv6 egress rules, ip6tables rules are installed in chain ANTREA-EGRESS-RULES.
-	return r.coreIPTChains[newChainKey(iptChain, isIPv6)]
+	return nil
 }
 
 func groupMembersToIPNets(groups v1beta2.GroupMemberSet, isIPv6 bool) sets.Set[string] {
-	ipnets := sets.New[string]()
-	suffix := "/32"
-	if isIPv6 {
-		suffix = "/128"
-	}
-	for _, member := range groups {
-		for _, ip := range member.IPs {
-			ipAddr := net.IP(ip)
-			if isIPv6 == utilnet.IsIPv6(ipAddr) {
-				ipnets.Insert(ipAddr.String() + suffix)
-			}
-		}
-	}
-	return ipnets
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ipBlocksToIPNets(ipBlocks []v1beta2.IPBlock, isIPv6 bool) []string {
-	var ipnets []string
-	for idx := range ipBlocks {
-		b := &ipBlocks[idx]
-		blockCIDR := ip.IPNetToNetIPNet(&b.CIDR)
-		if isIPv6 != utilnet.IsIPv6CIDR(blockCIDR) {
-			continue
-		}
-		exceptIPNets := make([]*net.IPNet, 0, len(b.Except))
-		for i := range b.Except {
-			c := b.Except[i]
-			except := ip.IPNetToNetIPNet(&c)
-			exceptIPNets = append(exceptIPNets, except)
-		}
-		diffCIDRs, err := ip.DiffFromCIDRs(blockCIDR, exceptIPNets)
-		if err != nil {
-			klog.ErrorS(err, "Error when computing effective CIDRs by removing except IPNets from IPBlock")
-			continue
-		}
-		for _, d := range diffCIDRs {
-			ipnets = append(ipnets, d.String())
-		}
-	}
-	return ipnets
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func getIPNetsFromRule(rule *CompletedRule, isIPv6 bool) sets.Set[string] {
-	var set sets.Set[string]
-	if rule.Direction == v1beta2.DirectionIn {
-		set = groupMembersToIPNets(rule.FromAddresses, isIPv6)
-		set.Insert(ipBlocksToIPNets(rule.From.IPBlocks, isIPv6)...)
-	} else {
-		set = groupMembersToIPNets(rule.ToAddresses, isIPv6)
-		set.Insert(ipBlocksToIPNets(rule.To.IPBlocks, isIPv6)...)
-	}
-	// If the set contains "0.0.0.0/0" or "::/0", it means the rule matches any source or destination IP address, just
-	// return a new set only containing "0.0.0.0/0" or "::/0".
-	if isIPv6 && set.Has(ipv6Any) {
-		return sets.New[string](ipv6Any)
-	}
-	if !isIPv6 && set.Has(ipv4Any) {
-		return sets.New[string](ipv4Any)
-	}
-	return set
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// If the set contains "0.0.0.0/0" or "::/0", it means the rule matches any source or destination IP address, just
+// return a new set only containing "0.0.0.0/0" or "::/0".
 
 func buildCoreIPTRules(ipProtocol iptables.Protocol,
 	iptChain string,
@@ -668,55 +319,13 @@ func buildCoreIPTRules(ipProtocol iptables.Protocol,
 	isIngress bool,
 	enableLogging bool,
 	logLabel string) []string {
-	builder := iptables.NewRuleBuilder(iptChain)
-	var rules []string
-	if isIngress {
-		if ipset != "" {
-			builder = builder.MatchIPSetSrc(ipset, ipsetTypeHashIP)
-		} else if ipnet != "" {
-			builder = builder.MatchCIDRSrc(ipnet)
-		} else {
-			// If no source IP address is matched, return an empty slice since the core iptables will never be matched.
-			return rules
-		}
-	} else {
-		if ipset != "" {
-			builder = builder.MatchIPSetDst(ipset, ipsetTypeHashIP)
-		} else if ipnet != "" {
-			builder = builder.MatchCIDRDst(ipnet)
-		} else {
-			// If no destination IP address is matched, return an empty slice since the core iptables will never be matched.
-			return rules
-		}
-	}
-	if service != nil {
-		transProtocol := getServiceTransProtocol(service.Protocol)
-		switch transProtocol {
-		case "tcp":
-			fallthrough
-		case "udp":
-			fallthrough
-		case "sctp":
-			builder = builder.MatchTransProtocol(transProtocol).
-				MatchPortSrc(service.SrcPort, service.SrcEndPort).
-				MatchPortDst(service.Port, service.EndPort)
-		case "icmp":
-			builder = builder.MatchICMP(service.ICMPType, service.ICMPCode, ipProtocol)
-		}
-	}
-	if enableLogging {
-		rules = append(rules, builder.CopyBuilder().
-			SetTarget(iptables.LOGTarget).
-			SetLogPrefix(logLabel).
-			Done().
-			GetRule())
-	}
-	rules = append(rules, builder.SetTarget(iptRuleTarget).
-		SetComment(iptRuleComment).
-		Done().
-		GetRule())
-	return rules
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// If no source IP address is matched, return an empty slice since the core iptables will never be matched.
+
+// If no destination IP address is matched, return an empty slice since the core iptables will never be matched.
 
 func buildServiceIPTRules(ipProtocol iptables.Protocol,
 	services []v1beta2.Service,
@@ -724,74 +333,29 @@ func buildServiceIPTRules(ipProtocol iptables.Protocol,
 	ruleTarget string,
 	enableLogging bool,
 	logLabel string) []string {
-	var rules []string
-	builder := iptables.NewRuleBuilder(chain)
-	for _, svc := range services {
-		copiedBuilder := builder.CopyBuilder()
-		transProtocol := getServiceTransProtocol(svc.Protocol)
-		switch transProtocol {
-		case "tcp":
-			fallthrough
-		case "udp":
-			fallthrough
-		case "sctp":
-			copiedBuilder = copiedBuilder.MatchTransProtocol(transProtocol).
-				MatchPortSrc(svc.SrcPort, svc.SrcEndPort).
-				MatchPortDst(svc.Port, svc.EndPort)
-		case "icmp":
-			copiedBuilder = copiedBuilder.MatchICMP(svc.ICMPType, svc.ICMPCode, ipProtocol)
-		}
-		if enableLogging {
-			rules = append(rules, copiedBuilder.CopyBuilder().
-				SetTarget(iptables.LOGTarget).
-				SetLogPrefix(logLabel).
-				Done().
-				GetRule())
-		}
-		rules = append(rules, copiedBuilder.SetTarget(ruleTarget).
-			Done().
-			GetRule())
-	}
-	return rules
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ruleActionToIPTTarget(ruleAction *secv1beta1.RuleAction) string {
-	var target string
-	switch *ruleAction {
-	case secv1beta1.RuleActionDrop:
-		target = iptables.DropTarget
-	case secv1beta1.RuleActionReject:
-		target = iptables.RejectTarget
-	case secv1beta1.RuleActionAllow:
-		target = iptables.AcceptTarget
-	}
-	return target
+	_ = "STUB: not implemented"
+	return ""
 }
 
 func getServiceTransProtocol(protocol *v1beta2.Protocol) string {
-	if protocol == nil {
-		return "tcp"
-	}
-	return strings.ToLower(string(*protocol))
+	_ = "STUB: not implemented"
+	return ""
 }
 
 func generateLogLabel(rule *CompletedRule) string {
+	_ = "STUB: not implemented"
 	// Construct the log label used as iptables log prefix. According to https://ipset.netfilter.org/iptables-extensions.man.html,
 	// the log prefix is up to 29 letters long. The log label should include essential information to help filter the
 	// generated iptables kernel log. As a result, the user-provided log label is limited to 12 characters.
 	// The log label format:
 	// |Antrea|:|I|:|Reject|:|user-provided label|:|
 	// |6     |1|1|1|4-6   |1|1-12               |1|
-	logLabel := fmt.Sprintf("%s:%s:%s", logLabelPrefix, rule.Direction[:1], *rule.Action)
-	if rule.LogLabel != "" {
-		ruleLogLabel := rule.LogLabel
-		// Truncate the user-provided log label if it exceeds 12 characters.
-		if len(ruleLogLabel) > 12 {
-			klog.InfoS("The rule log label that exceeds 12 characters will be truncated", "rule.LogLabel", rule.LogLabel)
-			ruleLogLabel = ruleLogLabel[:12]
-		}
-		logLabel = fmt.Sprintf("%s:%s", logLabel, ruleLogLabel)
-	}
-	logLabel += ":"
-	return logLabel
+	return ""
 }
+
+// Truncate the user-provided log label if it exceeds 12 characters.

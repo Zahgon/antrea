@@ -15,13 +15,6 @@
 package monitor
 
 import (
-	"context"
-	"time"
-
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/klog/v2"
-
 	agentquerier "antrea.io/antrea/v2/pkg/agent/querier"
 	"antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
 	clientset "antrea.io/antrea/v2/pkg/client/clientset/versioned"
@@ -39,59 +32,27 @@ type agentMonitor struct {
 
 // NewAgentMonitor creates a new agent monitor.
 func NewAgentMonitor(client clientset.Interface, querier agentquerier.AgentQuerier, apiCertData []byte) *agentMonitor {
-	return &agentMonitor{
-		client:      client,
-		querier:     querier,
-		apiCertData: apiCertData,
-		agentCRD:    nil,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Run creates AntreaAgentInfo CRD first after controller is running.
 // Then updates AntreaAgentInfo CRD every 60 seconds.
-func (monitor *agentMonitor) Run(stopCh <-chan struct{}) {
-	klog.Info("Starting Antrea Agent Monitor")
+func (monitor *agentMonitor) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	// Sync agent monitoring CRD every minute util stopCh is closed.
-	wait.Until(monitor.syncAgentCRD, time.Minute, stopCh)
-}
+// Sync agent monitoring CRD every minute util stopCh is closed.
 
-func (monitor *agentMonitor) syncAgentCRD() {
-	var err error
-	if monitor.agentCRD != nil {
-		if monitor.agentCRD, err = monitor.updateAgentCRD(true); err == nil {
-			return
-		}
-		klog.ErrorS(err, "Failed to partially update agent monitoring CRD")
-		monitor.agentCRD = nil
-	}
-
-	monitor.agentCRD, err = monitor.getAgentCRD()
-	if err != nil {
-		klog.ErrorS(err, "Failed to get agent monitoring CRD")
-		monitor.agentCRD = nil
-		return
-	}
-
-	monitor.agentCRD, err = monitor.updateAgentCRD(false)
-	if err != nil {
-		klog.ErrorS(err, "Failed to entirely update agent monitoring CRD")
-		monitor.agentCRD = nil
-	}
-}
+func (monitor *agentMonitor) syncAgentCRD() { _ = "STUB: not implemented"; return }
 
 // getAgentCRD is used to check the existence of agent monitoring CRD.
 // So when the pod restarts, it will update this monitoring CRD instead of creating a new one.
 func (monitor *agentMonitor) getAgentCRD() (*v1beta1.AntreaAgentInfo, error) {
-	crdName := monitor.querier.GetNodeConfig().Name
-	klog.V(2).InfoS("Getting agent monitoring CRD", "name", crdName)
-	return monitor.client.CrdV1beta1().AntreaAgentInfos().Get(context.TODO(), crdName, metav1.GetOptions{})
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // updateAgentCRD updates the monitoring CRD.
 func (monitor *agentMonitor) updateAgentCRD(partial bool) (*v1beta1.AntreaAgentInfo, error) {
-	monitor.querier.GetAgentInfo(monitor.agentCRD, partial)
-	monitor.agentCRD.APICABundle = monitor.apiCertData
-	klog.V(2).InfoS("Updating agent monitoring CRD", "name", klog.KObj(monitor.agentCRD), "partial", partial)
-	return monitor.client.CrdV1beta1().AntreaAgentInfos().Update(context.TODO(), monitor.agentCRD, metav1.UpdateOptions{})
+	_ = "STUB: not implemented"
+	return nil, nil
 }

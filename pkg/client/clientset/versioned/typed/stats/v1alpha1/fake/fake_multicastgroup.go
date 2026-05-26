@@ -29,22 +29,6 @@ type fakeMulticastGroups struct {
 }
 
 func newFakeMulticastGroups(fake *FakeStatsV1alpha1) statsv1alpha1.MulticastGroupInterface {
-	return &fakeMulticastGroups{
-		gentype.NewFakeClientWithList[*v1alpha1.MulticastGroup, *v1alpha1.MulticastGroupList](
-			fake.Fake,
-			"",
-			v1alpha1.SchemeGroupVersion.WithResource("multicastgroups"),
-			v1alpha1.SchemeGroupVersion.WithKind("MulticastGroup"),
-			func() *v1alpha1.MulticastGroup { return &v1alpha1.MulticastGroup{} },
-			func() *v1alpha1.MulticastGroupList { return &v1alpha1.MulticastGroupList{} },
-			func(dst, src *v1alpha1.MulticastGroupList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.MulticastGroupList) []*v1alpha1.MulticastGroup {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha1.MulticastGroupList, items []*v1alpha1.MulticastGroup) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(statsv1alpha1.MulticastGroupInterface)
 }

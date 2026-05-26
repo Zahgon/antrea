@@ -26,7 +26,6 @@ package testing
 
 import (
 	net "net"
-	reflect "reflect"
 	time "time"
 
 	ovsconfig "antrea.io/antrea/v2/pkg/ovs/ovsconfig"
@@ -47,504 +46,418 @@ type MockOVSBridgeClientMockRecorder struct {
 
 // NewMockOVSBridgeClient creates a new mock instance.
 func NewMockOVSBridgeClient(ctrl *gomock.Controller) *MockOVSBridgeClient {
-	mock := &MockOVSBridgeClient{ctrl: ctrl}
-	mock.recorder = &MockOVSBridgeClientMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOVSBridgeClient) EXPECT() *MockOVSBridgeClientMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddBridgeOtherConfig mocks base method.
+	return nil
 }
 
-// AddBridgeOtherConfig mocks base method.
 func (m *MockOVSBridgeClient) AddBridgeOtherConfig(configs map[string]any) ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddBridgeOtherConfig", configs)
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // AddBridgeOtherConfig indicates an expected call of AddBridgeOtherConfig.
 func (mr *MockOVSBridgeClientMockRecorder) AddBridgeOtherConfig(configs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddBridgeOtherConfig", reflect.TypeOf((*MockOVSBridgeClient)(nil).AddBridgeOtherConfig), configs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddOVSOtherConfig mocks base method.
 func (m *MockOVSBridgeClient) AddOVSOtherConfig(configs map[string]any) ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddOVSOtherConfig", configs)
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // AddOVSOtherConfig indicates an expected call of AddOVSOtherConfig.
 func (mr *MockOVSBridgeClientMockRecorder) AddOVSOtherConfig(configs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddOVSOtherConfig", reflect.TypeOf((*MockOVSBridgeClient)(nil).AddOVSOtherConfig), configs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Create mocks base method.
 func (m *MockOVSBridgeClient) Create() ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create")
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // Create indicates an expected call of Create.
 func (mr *MockOVSBridgeClientMockRecorder) Create() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockOVSBridgeClient)(nil).Create))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // CreateAccessPort mocks base method.
 func (m *MockOVSBridgeClient) CreateAccessPort(name, ifDev string, externalIDs map[string]any, vlanID uint16) (string, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAccessPort", name, ifDev, externalIDs, vlanID)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", *new(ovsconfig.Error)
 }
 
 // CreateAccessPort indicates an expected call of CreateAccessPort.
 func (mr *MockOVSBridgeClientMockRecorder) CreateAccessPort(name, ifDev, externalIDs, vlanID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccessPort", reflect.TypeOf((*MockOVSBridgeClient)(nil).CreateAccessPort), name, ifDev, externalIDs, vlanID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // CreateInternalPort mocks base method.
 func (m *MockOVSBridgeClient) CreateInternalPort(name string, ofPortRequest int32, mac string, externalIDs map[string]any) (string, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateInternalPort", name, ofPortRequest, mac, externalIDs)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", *new(ovsconfig.Error)
 }
 
 // CreateInternalPort indicates an expected call of CreateInternalPort.
 func (mr *MockOVSBridgeClientMockRecorder) CreateInternalPort(name, ofPortRequest, mac, externalIDs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInternalPort", reflect.TypeOf((*MockOVSBridgeClient)(nil).CreateInternalPort), name, ofPortRequest, mac, externalIDs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // CreatePort mocks base method.
 func (m *MockOVSBridgeClient) CreatePort(name, ifDev string, externalIDs map[string]any) (string, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreatePort", name, ifDev, externalIDs)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", *new(ovsconfig.Error)
 }
 
 // CreatePort indicates an expected call of CreatePort.
 func (mr *MockOVSBridgeClientMockRecorder) CreatePort(name, ifDev, externalIDs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePort", reflect.TypeOf((*MockOVSBridgeClient)(nil).CreatePort), name, ifDev, externalIDs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // CreateTunnelPort mocks base method.
 func (m *MockOVSBridgeClient) CreateTunnelPort(name string, tunnelType ovsconfig.TunnelType, ofPortRequest int32) (string, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateTunnelPort", name, tunnelType, ofPortRequest)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", *new(ovsconfig.Error)
 }
 
 // CreateTunnelPort indicates an expected call of CreateTunnelPort.
 func (mr *MockOVSBridgeClientMockRecorder) CreateTunnelPort(name, tunnelType, ofPortRequest any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTunnelPort", reflect.TypeOf((*MockOVSBridgeClient)(nil).CreateTunnelPort), name, tunnelType, ofPortRequest)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // CreateTunnelPortExt mocks base method.
 func (m *MockOVSBridgeClient) CreateTunnelPortExt(name string, tunnelType ovsconfig.TunnelType, ofPortRequest int32, csum bool, localIP, remoteIP, remoteName, psk string, extraOptions, externalIDs map[string]any) (string, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateTunnelPortExt", name, tunnelType, ofPortRequest, csum, localIP, remoteIP, remoteName, psk, extraOptions, externalIDs)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", *new(ovsconfig.Error)
 }
 
 // CreateTunnelPortExt indicates an expected call of CreateTunnelPortExt.
 func (mr *MockOVSBridgeClientMockRecorder) CreateTunnelPortExt(name, tunnelType, ofPortRequest, csum, localIP, remoteIP, remoteName, psk, extraOptions, externalIDs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTunnelPortExt", reflect.TypeOf((*MockOVSBridgeClient)(nil).CreateTunnelPortExt), name, tunnelType, ofPortRequest, csum, localIP, remoteIP, remoteName, psk, extraOptions, externalIDs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // CreateUplinkPort mocks base method.
 func (m *MockOVSBridgeClient) CreateUplinkPort(name string, ofPortRequest int32, externalIDs map[string]any) (string, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateUplinkPort", name, ofPortRequest, externalIDs)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", *new(ovsconfig.Error)
 }
 
 // CreateUplinkPort indicates an expected call of CreateUplinkPort.
 func (mr *MockOVSBridgeClientMockRecorder) CreateUplinkPort(name, ofPortRequest, externalIDs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUplinkPort", reflect.TypeOf((*MockOVSBridgeClient)(nil).CreateUplinkPort), name, ofPortRequest, externalIDs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Delete mocks base method.
 func (m *MockOVSBridgeClient) Delete() ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete")
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // Delete indicates an expected call of Delete.
 func (mr *MockOVSBridgeClientMockRecorder) Delete() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockOVSBridgeClient)(nil).Delete))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteOVSOtherConfig mocks base method.
 func (m *MockOVSBridgeClient) DeleteOVSOtherConfig(configs map[string]any) ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteOVSOtherConfig", configs)
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // DeleteOVSOtherConfig indicates an expected call of DeleteOVSOtherConfig.
 func (mr *MockOVSBridgeClientMockRecorder) DeleteOVSOtherConfig(configs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOVSOtherConfig", reflect.TypeOf((*MockOVSBridgeClient)(nil).DeleteOVSOtherConfig), configs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeletePort mocks base method.
 func (m *MockOVSBridgeClient) DeletePort(portUUID string) ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeletePort", portUUID)
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // DeletePort indicates an expected call of DeletePort.
 func (mr *MockOVSBridgeClientMockRecorder) DeletePort(portUUID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePort", reflect.TypeOf((*MockOVSBridgeClient)(nil).DeletePort), portUUID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeletePorts mocks base method.
 func (m *MockOVSBridgeClient) DeletePorts(portUUIDList []string) ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeletePorts", portUUIDList)
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // DeletePorts indicates an expected call of DeletePorts.
 func (mr *MockOVSBridgeClientMockRecorder) DeletePorts(portUUIDList any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePorts", reflect.TypeOf((*MockOVSBridgeClient)(nil).DeletePorts), portUUIDList)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetBridgeName mocks base method.
-func (m *MockOVSBridgeClient) GetBridgeName() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBridgeName")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
+func (m *MockOVSBridgeClient) GetBridgeName() string { _ = "STUB: not implemented"; return "" }
 
 // GetBridgeName indicates an expected call of GetBridgeName.
 func (mr *MockOVSBridgeClientMockRecorder) GetBridgeName() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBridgeName", reflect.TypeOf((*MockOVSBridgeClient)(nil).GetBridgeName))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetDatapathID mocks base method.
 func (m *MockOVSBridgeClient) GetDatapathID() (string, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDatapathID")
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", *new(ovsconfig.Error)
 }
 
 // GetDatapathID indicates an expected call of GetDatapathID.
 func (mr *MockOVSBridgeClientMockRecorder) GetDatapathID() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDatapathID", reflect.TypeOf((*MockOVSBridgeClient)(nil).GetDatapathID))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetExternalIDs mocks base method.
 func (m *MockOVSBridgeClient) GetExternalIDs() (map[string]string, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetExternalIDs")
-	ret0, _ := ret[0].(map[string]string)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, *new(ovsconfig.Error)
 }
 
 // GetExternalIDs indicates an expected call of GetExternalIDs.
 func (mr *MockOVSBridgeClientMockRecorder) GetExternalIDs() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetExternalIDs", reflect.TypeOf((*MockOVSBridgeClient)(nil).GetExternalIDs))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetInterfaceOptions mocks base method.
 func (m *MockOVSBridgeClient) GetInterfaceOptions(name string) (map[string]string, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInterfaceOptions", name)
-	ret0, _ := ret[0].(map[string]string)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, *new(ovsconfig.Error)
 }
 
 // GetInterfaceOptions indicates an expected call of GetInterfaceOptions.
 func (mr *MockOVSBridgeClientMockRecorder) GetInterfaceOptions(name any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInterfaceOptions", reflect.TypeOf((*MockOVSBridgeClient)(nil).GetInterfaceOptions), name)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetOFPort mocks base method.
 func (m *MockOVSBridgeClient) GetOFPort(ifName string, waitUntilValid bool) (int32, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOFPort", ifName, waitUntilValid)
-	ret0, _ := ret[0].(int32)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return 0, *new(ovsconfig.Error)
 }
 
 // GetOFPort indicates an expected call of GetOFPort.
 func (mr *MockOVSBridgeClientMockRecorder) GetOFPort(ifName, waitUntilValid any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOFPort", reflect.TypeOf((*MockOVSBridgeClient)(nil).GetOFPort), ifName, waitUntilValid)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetOVSDatapathType mocks base method.
 func (m *MockOVSBridgeClient) GetOVSDatapathType() ovsconfig.OVSDatapathType {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOVSDatapathType")
-	ret0, _ := ret[0].(ovsconfig.OVSDatapathType)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.OVSDatapathType)
 }
 
 // GetOVSDatapathType indicates an expected call of GetOVSDatapathType.
 func (mr *MockOVSBridgeClientMockRecorder) GetOVSDatapathType() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOVSDatapathType", reflect.TypeOf((*MockOVSBridgeClient)(nil).GetOVSDatapathType))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetOVSOtherConfig mocks base method.
 func (m *MockOVSBridgeClient) GetOVSOtherConfig() (map[string]string, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOVSOtherConfig")
-	ret0, _ := ret[0].(map[string]string)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, *new(ovsconfig.Error)
 }
 
 // GetOVSOtherConfig indicates an expected call of GetOVSOtherConfig.
 func (mr *MockOVSBridgeClientMockRecorder) GetOVSOtherConfig() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOVSOtherConfig", reflect.TypeOf((*MockOVSBridgeClient)(nil).GetOVSOtherConfig))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetOVSVersion mocks base method.
 func (m *MockOVSBridgeClient) GetOVSVersion() (string, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOVSVersion")
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", *new(ovsconfig.Error)
 }
 
 // GetOVSVersion indicates an expected call of GetOVSVersion.
 func (mr *MockOVSBridgeClientMockRecorder) GetOVSVersion() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOVSVersion", reflect.TypeOf((*MockOVSBridgeClient)(nil).GetOVSVersion))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetPortData mocks base method.
 func (m *MockOVSBridgeClient) GetPortData(portUUID, ifName string) (*ovsconfig.OVSPortData, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPortData", portUUID, ifName)
-	ret0, _ := ret[0].(*ovsconfig.OVSPortData)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, *new(ovsconfig.Error)
 }
 
 // GetPortData indicates an expected call of GetPortData.
 func (mr *MockOVSBridgeClientMockRecorder) GetPortData(portUUID, ifName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPortData", reflect.TypeOf((*MockOVSBridgeClient)(nil).GetPortData), portUUID, ifName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetPortExternalIDs mocks base method.
 func (m *MockOVSBridgeClient) GetPortExternalIDs(portName string) (map[string]string, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPortExternalIDs", portName)
-	ret0, _ := ret[0].(map[string]string)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, *new(ovsconfig.Error)
 }
 
 // GetPortExternalIDs indicates an expected call of GetPortExternalIDs.
 func (mr *MockOVSBridgeClientMockRecorder) GetPortExternalIDs(portName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPortExternalIDs", reflect.TypeOf((*MockOVSBridgeClient)(nil).GetPortExternalIDs), portName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetPortList mocks base method.
 func (m *MockOVSBridgeClient) GetPortList() ([]ovsconfig.OVSPortData, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPortList")
-	ret0, _ := ret[0].([]ovsconfig.OVSPortData)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, *new(ovsconfig.Error)
 }
 
 // GetPortList indicates an expected call of GetPortList.
 func (mr *MockOVSBridgeClientMockRecorder) GetPortList() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPortList", reflect.TypeOf((*MockOVSBridgeClient)(nil).GetPortList))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // IsHardwareOffloadEnabled mocks base method.
 func (m *MockOVSBridgeClient) IsHardwareOffloadEnabled() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsHardwareOffloadEnabled")
-	ret0, _ := ret[0].(bool)
-	return ret0
+	_ = "STUB: not implemented"
+	return false
 }
 
 // IsHardwareOffloadEnabled indicates an expected call of IsHardwareOffloadEnabled.
 func (mr *MockOVSBridgeClientMockRecorder) IsHardwareOffloadEnabled() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsHardwareOffloadEnabled", reflect.TypeOf((*MockOVSBridgeClient)(nil).IsHardwareOffloadEnabled))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetDatapathID mocks base method.
 func (m *MockOVSBridgeClient) SetDatapathID(datapathID string) ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetDatapathID", datapathID)
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // SetDatapathID indicates an expected call of SetDatapathID.
 func (mr *MockOVSBridgeClientMockRecorder) SetDatapathID(datapathID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDatapathID", reflect.TypeOf((*MockOVSBridgeClient)(nil).SetDatapathID), datapathID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetExternalIDs mocks base method.
 func (m *MockOVSBridgeClient) SetExternalIDs(externalIDs map[string]any) ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetExternalIDs", externalIDs)
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // SetExternalIDs indicates an expected call of SetExternalIDs.
 func (mr *MockOVSBridgeClientMockRecorder) SetExternalIDs(externalIDs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetExternalIDs", reflect.TypeOf((*MockOVSBridgeClient)(nil).SetExternalIDs), externalIDs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetInterfaceMAC mocks base method.
 func (m *MockOVSBridgeClient) SetInterfaceMAC(name string, mac net.HardwareAddr) ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetInterfaceMAC", name, mac)
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // SetInterfaceMAC indicates an expected call of SetInterfaceMAC.
 func (mr *MockOVSBridgeClientMockRecorder) SetInterfaceMAC(name, mac any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetInterfaceMAC", reflect.TypeOf((*MockOVSBridgeClient)(nil).SetInterfaceMAC), name, mac)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetInterfaceMTU mocks base method.
 func (m *MockOVSBridgeClient) SetInterfaceMTU(name string, MTU int) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetInterfaceMTU", name, MTU)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetInterfaceMTU indicates an expected call of SetInterfaceMTU.
 func (mr *MockOVSBridgeClientMockRecorder) SetInterfaceMTU(name, MTU any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetInterfaceMTU", reflect.TypeOf((*MockOVSBridgeClient)(nil).SetInterfaceMTU), name, MTU)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetInterfaceOptions mocks base method.
 func (m *MockOVSBridgeClient) SetInterfaceOptions(name string, options map[string]any) ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetInterfaceOptions", name, options)
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // SetInterfaceOptions indicates an expected call of SetInterfaceOptions.
 func (mr *MockOVSBridgeClientMockRecorder) SetInterfaceOptions(name, options any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetInterfaceOptions", reflect.TypeOf((*MockOVSBridgeClient)(nil).SetInterfaceOptions), name, options)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetInterfaceType mocks base method.
 func (m *MockOVSBridgeClient) SetInterfaceType(name, ifType string) ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetInterfaceType", name, ifType)
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // SetInterfaceType indicates an expected call of SetInterfaceType.
 func (mr *MockOVSBridgeClientMockRecorder) SetInterfaceType(name, ifType any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetInterfaceType", reflect.TypeOf((*MockOVSBridgeClient)(nil).SetInterfaceType), name, ifType)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetPortExternalIDs mocks base method.
 func (m *MockOVSBridgeClient) SetPortExternalIDs(portName string, externalIDs map[string]any) ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetPortExternalIDs", portName, externalIDs)
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // SetPortExternalIDs indicates an expected call of SetPortExternalIDs.
 func (mr *MockOVSBridgeClientMockRecorder) SetPortExternalIDs(portName, externalIDs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPortExternalIDs", reflect.TypeOf((*MockOVSBridgeClient)(nil).SetPortExternalIDs), portName, externalIDs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UpdateOVSOtherConfig mocks base method.
 func (m *MockOVSBridgeClient) UpdateOVSOtherConfig(configs map[string]any) ovsconfig.Error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateOVSOtherConfig", configs)
-	ret0, _ := ret[0].(ovsconfig.Error)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(ovsconfig.Error)
 }
 
 // UpdateOVSOtherConfig indicates an expected call of UpdateOVSOtherConfig.
 func (mr *MockOVSBridgeClientMockRecorder) UpdateOVSOtherConfig(configs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOVSOtherConfig", reflect.TypeOf((*MockOVSBridgeClient)(nil).UpdateOVSOtherConfig), configs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // WaitForDatapathID mocks base method.
 func (m *MockOVSBridgeClient) WaitForDatapathID(timeout time.Duration) (string, ovsconfig.Error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "WaitForDatapathID", timeout)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(ovsconfig.Error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", *new(ovsconfig.Error)
 }
 
 // WaitForDatapathID indicates an expected call of WaitForDatapathID.
 func (mr *MockOVSBridgeClientMockRecorder) WaitForDatapathID(timeout any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WaitForDatapathID", reflect.TypeOf((*MockOVSBridgeClient)(nil).WaitForDatapathID), timeout)
+	_ = "STUB: not implemented"
+	return nil
 }

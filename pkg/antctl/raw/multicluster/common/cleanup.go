@@ -18,8 +18,6 @@
 package common
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -30,34 +28,9 @@ type CleanOptions struct {
 	K8sClient  client.Client
 }
 
-func (o *CleanOptions) validate(cmd *cobra.Command) error {
-	if o.ClusterSet == "" {
-		return fmt.Errorf("ClusterSet must be provided")
-	}
-
-	if o.Namespace == "" {
-		return fmt.Errorf("Namespace must be specified")
-	}
-
-	var err error
-	if o.K8sClient == nil {
-		o.K8sClient, err = NewClient(cmd)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
+func (o *CleanOptions) validate(cmd *cobra.Command) error { _ = "STUB: not implemented"; return nil }
 
 func Cleanup(cmd *cobra.Command, cleanOpts *CleanOptions) error {
-	if err := cleanOpts.validate(cmd); err != nil {
-		return err
-	}
-
-	deleteClusterSet(cmd, cleanOpts.K8sClient, cleanOpts.Namespace, cleanOpts.ClusterSet)
-	deleteSecrets(cmd, cleanOpts.K8sClient, cleanOpts.Namespace)
-	deleteServiceAccounts(cmd, cleanOpts.K8sClient, cleanOpts.Namespace)
-	deleteRoleBindings(cmd, cleanOpts.K8sClient, cleanOpts.Namespace)
-
+	_ = "STUB: not implemented"
 	return nil
 }

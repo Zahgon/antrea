@@ -27,20 +27,23 @@ type FakeCrdV1alpha2 struct {
 }
 
 func (c *FakeCrdV1alpha2) ExternalEntities(namespace string) v1alpha2.ExternalEntityInterface {
-	return newFakeExternalEntities(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1alpha2.ExternalEntityInterface)
 }
 
 func (c *FakeCrdV1alpha2) IPPools() v1alpha2.IPPoolInterface {
-	return newFakeIPPools(c)
+	_ = "STUB: not implemented"
+	return *new(v1alpha2.IPPoolInterface)
 }
 
 func (c *FakeCrdV1alpha2) TrafficControls() v1alpha2.TrafficControlInterface {
-	return newFakeTrafficControls(c)
+	_ = "STUB: not implemented"
+	return *new(v1alpha2.TrafficControlInterface)
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeCrdV1alpha2) RESTClient() rest.Interface {
-	var ret *rest.RESTClient
-	return ret
+	_ = "STUB: not implemented"
+	return *new(rest.Interface)
 }

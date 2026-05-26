@@ -19,8 +19,6 @@ package v1alpha1
 import (
 	http "net/http"
 
-	multiclusterv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
-	scheme "antrea.io/antrea/v2/multicluster/pkg/client/clientset/versioned/scheme"
 	rest "k8s.io/client-go/rest"
 )
 
@@ -41,89 +39,70 @@ type MulticlusterV1alpha1Client struct {
 }
 
 func (c *MulticlusterV1alpha1Client) ClusterInfoImports(namespace string) ClusterInfoImportInterface {
-	return newClusterInfoImports(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(ClusterInfoImportInterface)
 }
 
 func (c *MulticlusterV1alpha1Client) ClusterSets(namespace string) ClusterSetInterface {
-	return newClusterSets(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(ClusterSetInterface)
 }
 
 func (c *MulticlusterV1alpha1Client) Gateways(namespace string) GatewayInterface {
-	return newGateways(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(GatewayInterface)
 }
 
 func (c *MulticlusterV1alpha1Client) LabelIdentities() LabelIdentityInterface {
-	return newLabelIdentities(c)
+	_ = "STUB: not implemented"
+	return *new(LabelIdentityInterface)
 }
 
 func (c *MulticlusterV1alpha1Client) MemberClusterAnnounces(namespace string) MemberClusterAnnounceInterface {
-	return newMemberClusterAnnounces(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(MemberClusterAnnounceInterface)
 }
 
 func (c *MulticlusterV1alpha1Client) ResourceExports(namespace string) ResourceExportInterface {
-	return newResourceExports(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(ResourceExportInterface)
 }
 
 func (c *MulticlusterV1alpha1Client) ResourceImports(namespace string) ResourceImportInterface {
-	return newResourceImports(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(ResourceImportInterface)
 }
 
 // NewForConfig creates a new MulticlusterV1alpha1Client for the given config.
 // NewForConfig is equivalent to NewForConfigAndClient(c, httpClient),
 // where httpClient was generated with rest.HTTPClientFor(c).
 func NewForConfig(c *rest.Config) (*MulticlusterV1alpha1Client, error) {
-	config := *c
-	setConfigDefaults(&config)
-	httpClient, err := rest.HTTPClientFor(&config)
-	if err != nil {
-		return nil, err
-	}
-	return NewForConfigAndClient(&config, httpClient)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // NewForConfigAndClient creates a new MulticlusterV1alpha1Client for the given config and http client.
 // Note the http client provided takes precedence over the configured transport values.
 func NewForConfigAndClient(c *rest.Config, h *http.Client) (*MulticlusterV1alpha1Client, error) {
-	config := *c
-	setConfigDefaults(&config)
-	client, err := rest.RESTClientForConfigAndClient(&config, h)
-	if err != nil {
-		return nil, err
-	}
-	return &MulticlusterV1alpha1Client{client}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // NewForConfigOrDie creates a new MulticlusterV1alpha1Client for the given config and
 // panics if there is an error in the config.
 func NewForConfigOrDie(c *rest.Config) *MulticlusterV1alpha1Client {
-	client, err := NewForConfig(c)
-	if err != nil {
-		panic(err)
-	}
-	return client
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // New creates a new MulticlusterV1alpha1Client for the given RESTClient.
-func New(c rest.Interface) *MulticlusterV1alpha1Client {
-	return &MulticlusterV1alpha1Client{c}
-}
+func New(c rest.Interface) *MulticlusterV1alpha1Client { _ = "STUB: not implemented"; return nil }
 
-func setConfigDefaults(config *rest.Config) {
-	gv := multiclusterv1alpha1.SchemeGroupVersion
-	config.GroupVersion = &gv
-	config.APIPath = "/apis"
-	config.NegotiatedSerializer = rest.CodecFactoryForGeneratedClient(scheme.Scheme, scheme.Codecs).WithoutConversion()
-
-	if config.UserAgent == "" {
-		config.UserAgent = rest.DefaultKubernetesUserAgent()
-	}
-}
+func setConfigDefaults(config *rest.Config) { _ = "STUB: not implemented"; return }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *MulticlusterV1alpha1Client) RESTClient() rest.Interface {
-	if c == nil {
-		return nil
-	}
-	return c.restClient
+	_ = "STUB: not implemented"
+	return *new(rest.Interface)
 }

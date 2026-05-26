@@ -26,27 +26,13 @@ type OnceWithNoError struct {
 // f are not possible. If there has not been a successful call to f yet, a new call to Do will wait until the current
 // call to f completes, then if this call is not successful, it will call f again itself.
 func (o *OnceWithNoError) Do(f func() error) error {
+	_ = "STUB: not implemented"
 	// Use a read lock to quickly check if f has already succeeded.
-	o.mu.RLock()
-	if o.done {
-		o.mu.RUnlock()
-		return nil
-	}
-	o.mu.RUnlock()
-
-	// Acquire a write lock to ensure exclusive execution of f.
-	o.mu.Lock()
-	defer o.mu.Unlock()
-
-	// Double-check the done flag in case another goroutine succeeded while we were waiting.
-	if o.done {
-		return nil
-	}
-
-	// Call f; if it returns nil, mark the operation as completed.
-	err := f()
-	if err == nil {
-		o.done = true
-	}
-	return err
+	return nil
 }
+
+// Acquire a write lock to ensure exclusive execution of f.
+
+// Double-check the done flag in case another goroutine succeeded while we were waiting.
+
+// Call f; if it returns nil, mark the operation as completed.

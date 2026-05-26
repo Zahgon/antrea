@@ -25,5 +25,6 @@ type SupportBundleCollectionExpansion interface {
 }
 
 func (c *supportBundleCollections) UpdateStatus(ctx context.Context, name string, status *v1beta2.SupportBundleCollectionStatus) error {
-	return c.GetClient().Post().Resource("supportbundlecollections").Name(name).SubResource("status").Body(status).Do(ctx).Error()
+	_ = "STUB: not implemented"
+	return nil
 }

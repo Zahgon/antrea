@@ -41,16 +41,12 @@ package healthcheck
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"sync"
 	"time"
 
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/klog/v2"
 	"k8s.io/utils/clock"
-	"k8s.io/utils/ptr"
 
 	"antrea.io/antrea/v2/third_party/proxy"
 )
@@ -106,185 +102,81 @@ type ProxyHealthServer struct {
 
 // NewProxyHealthServer returns a proxy health http server.
 func NewProxyHealthServer(addr string, healthTimeout time.Duration, nodeManager *proxy.NodeManager) *ProxyHealthServer {
-	return newProxyHealthServer(stdNetListener{}, stdHTTPServerFactory{}, clock.RealClock{}, addr, healthTimeout, nodeManager)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func newProxyHealthServer(listener listener, httpServerFactory httpServerFactory, c clock.Clock, addr string, healthTimeout time.Duration, nodeManager *proxy.NodeManager) *ProxyHealthServer {
-	return &ProxyHealthServer{
-		listener:      listener,
-		httpFactory:   httpServerFactory,
-		clock:         c,
-		addr:          addr,
-		healthTimeout: healthTimeout,
-		nodeManager:   nodeManager,
-
-		lastUpdatedMap:         make(map[v1.IPFamily]time.Time),
-		oldestPendingQueuedMap: make(map[v1.IPFamily]time.Time),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Updated should be called when the proxier of the given IP family has successfully updated
 // the service rules to reflect the current state and should be considered healthy now.
-func (hs *ProxyHealthServer) Updated(ipFamily v1.IPFamily) {
-	hs.lock.Lock()
-	defer hs.lock.Unlock()
-	delete(hs.oldestPendingQueuedMap, ipFamily)
-	hs.lastUpdatedMap[ipFamily] = hs.clock.Now()
-}
+func (hs *ProxyHealthServer) Updated(ipFamily v1.IPFamily) { _ = "STUB: not implemented"; return }
 
 // QueuedUpdate should be called when the proxier receives a Service or Endpoints event
 // from API Server containing information that requires updating service rules. It
 // indicates that the proxier for the given IP family has received changes but has not
 // yet pushed them to its backend. If the proxier does not call Updated within the
 // healthTimeout time then it will be considered unhealthy.
-func (hs *ProxyHealthServer) QueuedUpdate(ipFamily v1.IPFamily) {
-	hs.lock.Lock()
-	defer hs.lock.Unlock()
-	// Set oldestPendingQueuedMap[ipFamily] only if it's currently unset
-	if _, set := hs.oldestPendingQueuedMap[ipFamily]; !set {
-		hs.oldestPendingQueuedMap[ipFamily] = hs.clock.Now()
-	}
-}
+func (hs *ProxyHealthServer) QueuedUpdate(ipFamily v1.IPFamily) { _ = "STUB: not implemented"; return }
+
+// Set oldestPendingQueuedMap[ipFamily] only if it's currently unset
 
 // Health returns proxy health status.
 func (hs *ProxyHealthServer) Health() ProxyHealth {
-	var health = ProxyHealth{
-		Healthy: true,
-		Status:  make(map[v1.IPFamily]ProxierHealth),
-	}
-	hs.lock.RLock()
-	defer hs.lock.RUnlock()
-
-	var lastUpdated time.Time
-	for ipFamily, proxierLastUpdated := range hs.lastUpdatedMap {
-		if proxierLastUpdated.After(lastUpdated) {
-			lastUpdated = proxierLastUpdated
-		}
-		// initialize the health status of each proxier
-		// with healthy=true and the last updated time
-		// of the proxier.
-		health.Status[ipFamily] = ProxierHealth{
-			LastUpdated: proxierLastUpdated,
-			Healthy:     true,
-		}
-	}
-
-	currentTime := hs.clock.Now()
-	health.CurrentTime = currentTime
-	for ipFamily, proxierLastUpdated := range hs.lastUpdatedMap {
-		if _, set := hs.oldestPendingQueuedMap[ipFamily]; !set {
-			// the proxier is healthy while it's starting up
-			// or the proxier is fully synced.
-			continue
-		}
-
-		if currentTime.Sub(hs.oldestPendingQueuedMap[ipFamily]) < hs.healthTimeout {
-			// there's an unprocessed update queued for this proxier, but it's not late yet.
-			continue
-		}
-
-		// mark the status unhealthy.
-		health.Healthy = false
-		health.Status[ipFamily] = ProxierHealth{
-			LastUpdated: proxierLastUpdated,
-			Healthy:     false,
-		}
-	}
-	health.LastUpdated = lastUpdated
-	return health
+	_ = "STUB: not implemented"
+	return *new(ProxyHealth)
 }
+
+// initialize the health status of each proxier
+// with healthy=true and the last updated time
+// of the proxier.
+
+// the proxier is healthy while it's starting up
+// or the proxier is fully synced.
+
+// there's an unprocessed update queued for this proxier, but it's not late yet.
+
+// mark the status unhealthy.
 
 // NodeEligible returns if node is eligible or not. Eligible is defined
 // as being: not tainted by ToBeDeletedTaint and not deleted.
-func (hs *ProxyHealthServer) NodeEligible() bool {
-	hs.lock.Lock()
-	defer hs.lock.Unlock()
-
-	node := hs.nodeManager.Node()
-	if node == nil {
-		return false
-	}
-	if !node.DeletionTimestamp.IsZero() {
-		return false
-	}
-	for _, taint := range node.Spec.Taints {
-		if taint.Key == ToBeDeletedTaint {
-			return false
-		}
-	}
-	return true
-}
+func (hs *ProxyHealthServer) NodeEligible() bool { _ = "STUB: not implemented"; return false }
 
 // Run starts the healthz HTTP server and blocks until it exits.
-func (hs *ProxyHealthServer) Run(ctx context.Context) error {
-	serveMux := http.NewServeMux()
-	serveMux.Handle("/healthz", healthzHandler{hs: hs})
-	serveMux.Handle("/livez", livezHandler{hs: hs})
-	server := hs.httpFactory.New(serveMux)
-
-	listener, err := hs.listener.Listen(ctx, hs.addr)
-	if err != nil {
-		return fmt.Errorf("failed to start proxy healthz on %s: %w", hs.addr, err)
-	}
-
-	klog.V(3).InfoS("Starting healthz HTTP server", "address", hs.addr)
-
-	if err := server.Serve(listener); err != nil {
-		return fmt.Errorf("proxy healthz closed with error: %w", err)
-	}
-	return nil
-}
+func (hs *ProxyHealthServer) Run(ctx context.Context) error { _ = "STUB: not implemented"; return nil }
 
 type healthzHandler struct {
 	hs *ProxyHealthServer
 }
 
 func (h healthzHandler) ServeHTTP(resp http.ResponseWriter, _ *http.Request) {
-	health := h.hs.Health()
-	nodeEligible := h.hs.NodeEligible()
-	healthy := health.Healthy && nodeEligible
-	// updating the node eligibility here (outside of Health() call) as we only want responses
-	// of /healthz calls (not /livez) to have that.
-	health.NodeEligible = ptr.To(nodeEligible)
-
-	resp.Header().Set("Content-Type", "application/json")
-	resp.Header().Set("X-Content-Type-Options", "nosniff")
-	if !healthy {
-		resp.WriteHeader(http.StatusServiceUnavailable)
-	} else {
-		resp.WriteHeader(http.StatusOK)
-		// In older releases, the returned "lastUpdated" time indicated the last
-		// time the proxier sync loop ran, even if nothing had changed. To
-		// preserve compatibility, we use the same semantics: the returned
-		// lastUpdated value is "recent" if the server is healthy. The kube-proxy
-		// metrics provide more detailed information.
-		health.LastUpdated = h.hs.clock.Now()
-	}
-
-	output, _ := json.Marshal(health)
-	_, _ = fmt.Fprint(resp, string(output))
+	_ = "STUB: not implemented"
+	return
 }
+
+// updating the node eligibility here (outside of Health() call) as we only want responses
+// of /healthz calls (not /livez) to have that.
+
+// In older releases, the returned "lastUpdated" time indicated the last
+// time the proxier sync loop ran, even if nothing had changed. To
+// preserve compatibility, we use the same semantics: the returned
+// lastUpdated value is "recent" if the server is healthy. The kube-proxy
+// metrics provide more detailed information.
 
 type livezHandler struct {
 	hs *ProxyHealthServer
 }
 
 func (h livezHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
-	health := h.hs.Health()
-
-	resp.Header().Set("Content-Type", "application/json")
-	resp.Header().Set("X-Content-Type-Options", "nosniff")
-	if !health.Healthy {
-		resp.WriteHeader(http.StatusServiceUnavailable)
-	} else {
-		resp.WriteHeader(http.StatusOK)
-		// In older releases, the returned "lastUpdated" time indicated the last
-		// time the proxier sync loop ran, even if nothing had changed. To
-		// preserve compatibility, we use the same semantics: the returned
-		// lastUpdated value is "recent" if the server is healthy. The kube-proxy
-		// metrics provide more detailed information.
-		health.LastUpdated = h.hs.clock.Now()
-	}
-	output, _ := json.Marshal(health)
-	_, _ = fmt.Fprint(resp, string(output))
+	_ = "STUB: not implemented"
+	return
 }
+
+// In older releases, the returned "lastUpdated" time indicated the last
+// time the proxier sync loop ran, even if nothing had changed. To
+// preserve compatibility, we use the same semantics: the returned
+// lastUpdated value is "recent" if the server is healthy. The kube-proxy
+// metrics provide more detailed information.

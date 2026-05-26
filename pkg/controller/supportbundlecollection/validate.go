@@ -15,94 +15,20 @@
 package supportbundlecollection
 
 import (
-	"encoding/json"
-	"fmt"
-	"reflect"
-
-	"golang.org/x/crypto/ssh"
 	admv1 "k8s.io/api/admission/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/klog/v2"
-
-	crdv1alpha1 "antrea.io/antrea/v2/pkg/apis/crd/v1alpha1"
 )
 
 func (c *Controller) Validate(review *admv1.AdmissionReview) *admv1.AdmissionResponse {
-	klog.V(2).Info("Validating SupportBundleCollection", "request", review.Request)
-	var newObj, oldObj crdv1alpha1.SupportBundleCollection
-	if review.Request.Object.Raw != nil {
-		if err := json.Unmarshal(review.Request.Object.Raw, &newObj); err != nil {
-			klog.ErrorS(err, "Error de-serializing current SupportBundleCollection")
-			return newAdmissionResponseForErr(err)
-		}
-	}
-	if review.Request.OldObject.Raw != nil {
-		if err := json.Unmarshal(review.Request.OldObject.Raw, &oldObj); err != nil {
-			klog.ErrorS(err, "Error de-serializing old IPPool")
-			return newAdmissionResponseForErr(err)
-		}
-	}
-
-	validate := func(bundle *crdv1alpha1.SupportBundleCollection) error {
-		if bundle.Spec.FileServer.HostPublicKey != nil {
-			if _, err := ssh.ParsePublicKey(bundle.Spec.FileServer.HostPublicKey); err != nil {
-				return fmt.Errorf("invalid host public key: %w", err)
-			}
-		}
-		return nil
-	}
-
-	validateProcessingCollection := func() *admv1.AdmissionResponse {
-		var msg string
-		allowed := true
-		_, exists, _ := c.supportBundleCollectionStore.Get(oldObj.Name)
-		if exists {
-			allowed = reflect.DeepEqual(oldObj.Spec, newObj.Spec)
-			if !allowed {
-				msg = fmt.Sprintf("SupportBundleCollection %s is started, cannot be updated", oldObj.Name)
-			}
-		}
-		return validationResult(allowed, msg)
-	}
-
-	switch review.Request.Operation {
-	case admv1.Create:
-		klog.V(2).Info("Validating CREATE request for SupportBundleCollection")
-		if err := validate(&newObj); err != nil {
-			return newAdmissionResponseForErr(err)
-		}
-	case admv1.Update:
-		klog.V(2).Info("Validating UPDATE request for SupportBundleCollection")
-		if err := validate(&newObj); err != nil {
-			return newAdmissionResponseForErr(err)
-		}
-		if isCollectionCompleted(&oldObj) {
-			return validationResult(false, fmt.Sprintf("SupportBundleCollection %s is completed, cannot be updated", oldObj.Name))
-		}
-		return validateProcessingCollection()
-	}
-
-	return &admv1.AdmissionResponse{Allowed: true}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func newAdmissionResponseForErr(err error) *admv1.AdmissionResponse {
-	return &admv1.AdmissionResponse{
-		Result: &metav1.Status{
-			Message: err.Error(),
-		},
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func validationResult(allowed bool, msg string) *admv1.AdmissionResponse {
-	var result *metav1.Status
-
-	if msg != "" {
-		result = &metav1.Status{
-			Message: msg,
-		}
-	}
-	return &admv1.AdmissionResponse{
-		Allowed: allowed,
-		Result:  result,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

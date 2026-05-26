@@ -15,19 +15,13 @@
 package connections
 
 import (
-	"fmt"
 	"time"
-
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/flowexporter/connection"
 	"antrea.io/antrea/v2/pkg/agent/flowexporter/filter"
 	"antrea.io/antrea/v2/pkg/agent/flowexporter/priorityqueue"
-	"antrea.io/antrea/v2/pkg/agent/metrics"
-	"antrea.io/antrea/v2/pkg/agent/openflow"
 	"antrea.io/antrea/v2/pkg/agent/proxy"
 	"antrea.io/antrea/v2/pkg/querier"
-	"antrea.io/antrea/v2/pkg/util/ip"
 	"antrea.io/antrea/v2/pkg/util/objectstore"
 )
 
@@ -42,132 +36,49 @@ func NewDenyConnectionStore(
 	proxier proxy.ProxyQuerier,
 	cfg ConnectionStoreConfig,
 ) *DenyConnectionStore {
-	return &DenyConnectionStore{
-		connectionStore: NewConnectionStore(npQuerier, podStore, proxier, cfg),
-		protocolFilter:  filter.NewProtocolFilter(cfg.AllowedProtocols),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (ds *DenyConnectionStore) RunPeriodicDeletion(stopCh <-chan struct{}) {
-	pollTicker := time.NewTicker(periodicDeleteInterval)
-	defer pollTicker.Stop()
-
-	for {
-		select {
-		case <-stopCh:
-			return
-		case <-pollTicker.C:
-			deleteIfStaleConn := func(key connection.ConnectionKey, conn *connection.Connection) error {
-				if conn.ReadyToDelete || time.Since(conn.LastExportTime) >= ds.staleConnectionTimeout {
-					if removedItem := ds.expirePriorityQueue.Remove(key); removedItem != nil {
-						// In case ReadyToDelete is true, item should already have been removed from pq
-						klog.V(4).InfoS("Conn removed from ds pq due to stale timeout",
-							"key", key, "conn", removedItem.Conn)
-					}
-					if err := ds.deleteConnWithoutLock(key); err != nil {
-						return err
-					}
-				}
-				return nil
-			}
-			ds.ForAllConnectionsDo(deleteIfStaleConn)
-			klog.V(2).Infof("Stale connections in the Deny Connection Store are successfully deleted.")
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }
+
+// In case ReadyToDelete is true, item should already have been removed from pq
 
 // AddOrUpdateConn updates the connection if it is already present, i.e., update timestamp, counters etc.,
 // or adds a new connection with the resolved K8s metadata.
 func (ds *DenyConnectionStore) AddOrUpdateConn(conn *connection.Connection) {
-	if !ds.protocolFilter.Allow(conn.FlowKey.Protocol) {
-		return
-	}
-
-	connKey := connection.NewConnectionKey(conn)
-	ds.mutex.Lock()
-	defer ds.mutex.Unlock()
-
-	if existingConn, exist := ds.connections[connKey]; exist {
-		if conn.ReadyToDelete {
-			return
-		}
-		existingConn.OriginalBytes += conn.OriginalBytes
-		existingConn.OriginalPackets += 1
-		existingConn.StopTime = conn.StartTime
-		existingConn.IsActive = true
-		existingItem, exists := ds.expirePriorityQueue.KeyToItem[connKey]
-		if !exists {
-			ds.expirePriorityQueue.WriteItemToQueue(connKey, existingConn)
-		} else {
-			ds.connectionStore.expirePriorityQueue.Update(existingItem, existingItem.ActiveExpireTime,
-				time.Now().Add(ds.connectionStore.expirePriorityQueue.IdleFlowTimeout))
-		}
-		klog.V(4).InfoS("Deny connection has been updated", "connection", existingConn)
-	} else {
-		connCopy := *conn
-		conn := &connCopy
-		conn.OriginalPackets = 1
-		conn.StopTime = conn.StartTime
-		conn.LastExportTime = conn.StartTime
-		ds.fillPodInfo(conn)
-		if conn.SourcePodName == "" && conn.DestinationPodName == "" {
-			// We don't add connections to connection map or expirePriorityQueue if we can't find the pod
-			// information for both srcPod and dstPod
-			klog.V(5).InfoS("Skip this connection as we cannot map any of the connection IPs to a local Pod", "srcIP", conn.FlowKey.SourceAddress.String(), "dstIP", conn.FlowKey.DestinationAddress.String())
-			return
-		}
-		protocolStr := ip.IPProtocolNumberToString(conn.FlowKey.Protocol, "UnknownProtocol")
-		serviceStr := fmt.Sprintf("%s:%d/%s", conn.OriginalDestinationAddress, conn.OriginalDestinationPort, protocolStr)
-		if conn.Mark&openflow.ServiceCTMark.GetRange().ToNXRange().ToUint32Mask() == openflow.ServiceCTMark.GetValue() {
-			ds.fillServiceInfo(conn, serviceStr)
-		}
-		// For intra-Node flows which are denied by an ingress policy rule, we can retrieve
-		// egress policy information from the CT labels.
-		ds.addNetworkPolicyMetadata(conn)
-		metrics.TotalDenyConnections.Inc()
-		conn.IsActive = true
-		ds.connections[connKey] = conn
-		ds.expirePriorityQueue.WriteItemToQueue(connKey, conn)
-		klog.V(4).InfoS("New deny connection added", "connection", conn)
-	}
+	_ = "STUB: not implemented"
+	return
 }
+
+// We don't add connections to connection map or expirePriorityQueue if we can't find the pod
+// information for both srcPod and dstPod
+
+// For intra-Node flows which are denied by an ingress policy rule, we can retrieve
+// egress policy information from the CT labels.
 
 func (ds *DenyConnectionStore) GetExpiredConns(expiredConns []connection.Connection, currTime time.Time, maxSize int) ([]connection.Connection, time.Duration) {
-	ds.AcquireConnStoreLock()
-	defer ds.ReleaseConnStoreLock()
-	for i := 0; i < maxSize; i++ {
-		pqItem := ds.connectionStore.expirePriorityQueue.GetTopExpiredItem(currTime)
-		if pqItem == nil {
-			break
-		}
-		expiredConns = append(expiredConns, *pqItem.Conn)
-		if pqItem.IdleExpireTime.Before(currTime) {
-			// If a deny connection item is idle time out, we set the ReadyToDelete
-			// flag to true to do the deletion later.
-			pqItem.Conn.ReadyToDelete = true
-		}
-		if pqItem.Conn.OriginalPackets <= pqItem.Conn.PrevPackets {
-			// If a deny connection doesn't have increase in packet count,
-			// we consider the connection to be inactive.
-			pqItem.Conn.IsActive = false
-		}
-		ds.UpdateConnAndQueue(pqItem, currTime)
-	}
-	return expiredConns, ds.connectionStore.expirePriorityQueue.GetExpiryFromExpirePriorityQueue()
+	_ = "STUB: not implemented"
+	return nil, *new(time.Duration)
 }
+
+// If a deny connection item is idle time out, we set the ReadyToDelete
+// flag to true to do the deletion later.
+
+// If a deny connection doesn't have increase in packet count,
+// we consider the connection to be inactive.
 
 // deleteConnWithoutLock deletes the connection from the connection map given
 // the connection key without grabbing the lock. Caller is expected to grab lock.
 func (ds *DenyConnectionStore) deleteConnWithoutLock(connKey connection.ConnectionKey) error {
-	_, exists := ds.connections[connKey]
-	if !exists {
-		return fmt.Errorf("connection with key %v doesn't exist in map", connKey)
-	}
-	delete(ds.connections, connKey)
-	metrics.TotalDenyConnections.Dec()
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (ds *DenyConnectionStore) GetPriorityQueue() *priorityqueue.ExpirePriorityQueue {
-	return ds.connectionStore.expirePriorityQueue
+	_ = "STUB: not implemented"
+	return nil
 }

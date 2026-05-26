@@ -15,26 +15,14 @@
 package networkpolicy
 
 import (
-	"fmt"
 	"log"
-	"os"
-	"path/filepath"
-	"strconv"
-	"strings"
 	"sync"
 	"time"
 
 	"antrea.io/ofnet/ofctrl"
-	"gopkg.in/natefinch/lumberjack.v2"
-	"k8s.io/klog/v2"
 	"k8s.io/utils/clock"
 
-	"antrea.io/antrea/v2/pkg/agent/interfacestore"
-	"antrea.io/antrea/v2/pkg/agent/openflow"
-	"antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
 	binding "antrea.io/antrea/v2/pkg/ovs/openflow"
-	"antrea.io/antrea/v2/pkg/util/ip"
-	"antrea.io/antrea/v2/pkg/util/logdir"
 )
 
 const (
@@ -92,242 +80,84 @@ type logRecordDedupMap struct {
 
 // getLogKey returns the log record in logDeduplication map by logMsg.
 func (l *AuditLogger) getLogKey(logMsg string) *logDedupRecord {
-	l.logDeduplication.logMutex.Lock()
-	defer l.logDeduplication.logMutex.Unlock()
-	return l.logDeduplication.logMap[logMsg]
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // logAfterTimer runs concurrently until buffer timer stops, then call terminateLogKey.
-func (l *AuditLogger) logAfterTimer(logMsg string) {
-	ch := l.getLogKey(logMsg).bufferTimerCh
-	<-ch
-	l.terminateLogKey(logMsg)
-}
+func (l *AuditLogger) logAfterTimer(logMsg string) { _ = "STUB: not implemented"; return }
 
 // terminateLogKey logs and deletes the log record in logDeduplication map by logMsg.
-func (l *AuditLogger) terminateLogKey(logMsg string) {
-	l.logDeduplication.logMutex.Lock()
-	defer l.logDeduplication.logMutex.Unlock()
-	logRecord := l.logDeduplication.logMap[logMsg]
-	if logRecord.count == 1 {
-		l.npLogger.Print(logMsg)
-	} else {
-		l.npLogger.Printf("%s [%d packets in %s]", logMsg, logRecord.count, time.Since(logRecord.initTime))
-	}
-	delete(l.logDeduplication.logMap, logMsg)
-}
+func (l *AuditLogger) terminateLogKey(logMsg string) { _ = "STUB: not implemented"; return }
 
 // updateLogKey initiates record or increases the count in logDeduplication corresponding to given logMsg.
 func (l *AuditLogger) updateLogKey(logMsg string, bufferLength time.Duration) bool {
-	l.logDeduplication.logMutex.Lock()
-	defer l.logDeduplication.logMutex.Unlock()
-	_, exists := l.logDeduplication.logMap[logMsg]
-	if exists {
-		l.logDeduplication.logMap[logMsg].count++
-	} else {
-		record := logDedupRecord{1, l.clock.Now(), l.clock.After(bufferLength)}
-		l.logDeduplication.logMap[logMsg] = &record
-	}
-	return exists
+	_ = "STUB: not implemented"
+	return false
 }
 
-func buildLogMsg(ob *logInfo) string {
-	return strings.Join([]string{
-		ob.tableName,
-		ob.npRef,
-		ob.ruleName,
-		ob.direction,
-		ob.disposition,
-		ob.ofPriority,
-		ob.appliedToRef,
-		ob.srcIP,
-		ob.srcPort,
-		ob.destIP,
-		ob.destPort,
-		ob.protocolStr,
-		ob.pktLength,
-		ob.logLabel,
-	}, " ")
-}
+func buildLogMsg(ob *logInfo) string { _ = "STUB: not implemented"; return "" }
 
 // LogDedupPacket logs information in ob based on disposition and duplication conditions.
 func (l *AuditLogger) LogDedupPacket(ob *logInfo) {
+	_ = "STUB: not implemented"
 	// Deduplicate non-Allow packet log.
-	logMsg := buildLogMsg(ob)
-	if ob.disposition == openflow.DispositionToString[openflow.DispositionAllow] {
-		l.npLogger.Print(logMsg)
-	} else {
-		// Increase count if duplicated within 1 sec, create buffer otherwise.
-		exists := l.updateLogKey(logMsg, l.bufferLength)
-		if !exists {
-			// Go routine for logging when buffer timer stops.
-			go l.logAfterTimer(logMsg)
-		}
-	}
+	return
 }
+
+// Increase count if duplicated within 1 sec, create buffer otherwise.
+
+// Go routine for logging when buffer timer stops.
 
 // newAuditLogger is called while newing network policy agent controller.
 // Customize AuditLogger specifically for audit logging through agent configuration.
 func newAuditLogger(options *AuditLoggerOptions) (*AuditLogger, error) {
-	logDir := filepath.Join(logdir.GetLogDir(), logfileSubdir)
-	logFile := filepath.Join(logDir, logfileName)
-	_, err := os.Stat(logDir)
-	if os.IsNotExist(err) {
-		os.Mkdir(logDir, 0755)
-	} else if err != nil {
-		return nil, fmt.Errorf("received error while accessing network policy log directory: %v", err)
-	}
-
-	// Use lumberjack log file rotation.
-	logOutput := &lumberjack.Logger{
-		Filename:   logFile,
-		MaxSize:    options.MaxSize,
-		MaxBackups: options.MaxBackups,
-		MaxAge:     options.MaxAge,
-		Compress:   options.Compress,
-	}
-
-	auditLogger := &AuditLogger{
-		bufferLength:     time.Second,
-		clock:            clock.RealClock{},
-		npLogger:         log.New(logOutput, "", log.Ldate|log.Lmicroseconds),
-		logDeduplication: logRecordDedupMap{logMap: make(map[string]*logDedupRecord)},
-	}
-	klog.InfoS("Initialized Antrea-native Policy Logger for audit logging", "logFile", logFile, "options", options)
-	return auditLogger, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// Use lumberjack log file rotation.
 
 // getNetworkPolicyInfo fills in tableName, npName, ofPriority, disposition of logInfo ob.
 func getNetworkPolicyInfo(pktIn *ofctrl.PacketIn, packet *binding.Packet, c *Controller, ob *logInfo) error {
-	matchers := pktIn.GetMatches()
-	var match *ofctrl.MatchField
-	// Get table name.
-	tableID := getPacketInTableID(pktIn)
-	ob.tableName = openflow.GetFlowTableName(tableID)
-
-	var localIP string
-	// We use the tableID to determine the direction of the NP rule.
-	// The advantage of this method is that it should work for all NP types.
-	if isAntreaPolicyIngressTable(tableID) || tableID == openflow.IngressRuleTable.GetID() {
-		ob.direction = "Ingress"
-		localIP = packet.DestinationIP.String()
-	} else if isAntreaPolicyEgressTable(tableID) || tableID == openflow.EgressRuleTable.GetID() {
-		ob.direction = "Egress"
-		localIP = packet.SourceIP.String()
-	} else {
-		// this case should not be possible
-		klog.InfoS("Cannot determine direction of NetworkPolicy rule")
-		ob.direction = nullPlaceholder
-	}
-
-	if localIP != "" {
-		iface, ok := c.ifaceStore.GetInterfaceByIP(localIP)
-		if ok && iface.Type == interfacestore.ContainerInterface {
-			ob.appliedToRef = fmt.Sprintf("%s/%s", iface.ContainerInterfaceConfig.PodNamespace, iface.ContainerInterfaceConfig.PodName)
-		}
-	}
-	if ob.appliedToRef == "" {
-		klog.InfoS("Cannot determine namespace/name of appliedTo Pod", "ip", localIP)
-		ob.appliedToRef = nullPlaceholder
-	}
-
-	// Get disposition Allow or Drop.
-	match = getMatchRegField(matchers, openflow.APDispositionField)
-	disposition, err := getInfoInReg(match, openflow.APDispositionField.GetRange().ToNXRange())
-	if err != nil {
-		return fmt.Errorf("received error while unloading disposition from reg: %v", err)
-	}
-	ob.disposition = openflow.DispositionToString[disposition]
-
-	// Get layer 7 NetworkPolicy redirect action, if traffic is redirected, disposition log should be overwritten.
-	if match = getMatchRegField(matchers, openflow.L7NPRegField); match != nil {
-		l7NPRegVal, err := getInfoInReg(match, openflow.L7NPRegField.GetRange().ToNXRange())
-		if err != nil {
-			return fmt.Errorf("received error while unloading l7 NP redirect value from reg: %v", err)
-		}
-		if l7NPRegVal == openflow.DispositionL7NPRedirect {
-			ob.disposition = "Redirect"
-		}
-	}
-
-	// Get K8s default deny action, if traffic is default deny, no conjunction could be matched.
-	if match = getMatchRegField(matchers, openflow.APDenyRegMark.GetField()); match != nil {
-		apDenyRegVal, err := getInfoInReg(match, openflow.APDenyRegMark.GetField().GetRange().ToNXRange())
-		if err != nil {
-			return fmt.Errorf("received error while unloading deny mark from reg: %v", err)
-		}
-		isK8sDefaultDeny := (apDenyRegVal == 0) && (disposition == openflow.DispositionDrop || disposition == openflow.DispositionRej)
-		if isK8sDefaultDeny {
-			// For K8s NetworkPolicy implicit drop action, we cannot get Namespace/name.
-			ob.npRef = string(v1beta2.K8sNetworkPolicy)
-			fillLogInfoPlaceholders([]*string{&ob.ruleName, &ob.logLabel, &ob.ofPriority})
-			return nil
-		}
-	}
-
-	// Set match to corresponding conjunction ID field according to disposition.
-	match = getMatch(matchers, tableID, disposition)
-
-	// Get NetworkPolicy full name and OF priority of the conjunction.
-	conjID, err := getInfoInReg(match, nil)
-	if err != nil {
-		return fmt.Errorf("received error while unloading conjunction id from reg: %v", err)
-	}
-	ok, npRef, ofPriority, ruleName, logLabel := c.ofClient.GetPolicyInfoFromConjunction(conjID)
-	if !ok {
-		return fmt.Errorf("networkpolicy not found for conjunction id: %v", conjID)
-	}
-	ob.npRef = npRef.ToString()
-	ob.ofPriority = ofPriority
-	ob.ruleName = ruleName
-	ob.logLabel = logLabel
-	// Fill in placeholders for Antrea-native policies without log labels,
-	// K8s NetworkPolicies without rule names or log labels.
-	fillLogInfoPlaceholders([]*string{&ob.ruleName, &ob.logLabel, &ob.ofPriority})
+	_ = "STUB: not implemented"
 	return nil
 }
 
-// getPacketInfo fills in IP, packet length, protocol, port number of logInfo ob.
-func getPacketInfo(packet *binding.Packet, ob *logInfo) {
-	ob.srcIP = packet.SourceIP.String()
-	ob.destIP = packet.DestinationIP.String()
-	ob.pktLength = strconv.FormatUint(uint64(packet.IPLength), 10)
-	ob.protocolStr = ip.IPProtocolNumberToString(packet.IPProto, "UnknownProtocol")
-	if ob.protocolStr == "TCP" || ob.protocolStr == "UDP" {
-		ob.srcPort = strconv.FormatUint(uint64(packet.SourcePort), 10)
-		ob.destPort = strconv.FormatUint(uint64(packet.DestinationPort), 10)
-	} else {
-		// Placeholders for ICMP packets without port numbers.
-		fillLogInfoPlaceholders([]*string{&ob.srcPort, &ob.destPort})
-	}
-}
+// Get table name.
 
-func fillLogInfoPlaceholders(logItems []*string) {
-	for i, v := range logItems {
-		if *v == "" {
-			*logItems[i] = nullPlaceholder
-		}
-	}
-}
+// We use the tableID to determine the direction of the NP rule.
+// The advantage of this method is that it should work for all NP types.
+
+// this case should not be possible
+
+// Get disposition Allow or Drop.
+
+// Get layer 7 NetworkPolicy redirect action, if traffic is redirected, disposition log should be overwritten.
+
+// Get K8s default deny action, if traffic is default deny, no conjunction could be matched.
+
+// For K8s NetworkPolicy implicit drop action, we cannot get Namespace/name.
+
+// Set match to corresponding conjunction ID field according to disposition.
+
+// Get NetworkPolicy full name and OF priority of the conjunction.
+
+// Fill in placeholders for Antrea-native policies without log labels,
+// K8s NetworkPolicies without rule names or log labels.
+
+// getPacketInfo fills in IP, packet length, protocol, port number of logInfo ob.
+func getPacketInfo(packet *binding.Packet, ob *logInfo) { _ = "STUB: not implemented"; return }
+
+// Placeholders for ICMP packets without port numbers.
+
+func fillLogInfoPlaceholders(logItems []*string) { _ = "STUB: not implemented"; return }
 
 // logPacket retrieves information from openflow reg, controller cache, packet-in
 // packet to log. Log is deduplicated for non-Allow packets from record in logDeduplication.
 // Deduplication is safe guarded by logRecordDedupMap mutex.
-func (c *Controller) logPacket(pktIn *ofctrl.PacketIn) error {
-	ob := new(logInfo)
-	packet, err := binding.ParsePacketIn(pktIn)
-	if err != nil {
-		return fmt.Errorf("received error while parsing packetin: %v", err)
-	}
+func (c *Controller) logPacket(pktIn *ofctrl.PacketIn) error { _ = "STUB: not implemented"; return nil }
 
-	// Set Network Policy and packet info to log.
-	err = getNetworkPolicyInfo(pktIn, packet, c, ob)
-	if err != nil {
-		return fmt.Errorf("received error while retrieving NetworkPolicy info: %v", err)
-	}
-	getPacketInfo(packet, ob)
+// Set Network Policy and packet info to log.
 
-	// Log the ob info to corresponding file w/ deduplication.
-	c.auditLogger.LogDedupPacket(ob)
-	return nil
-}
+// Log the ob info to corresponding file w/ deduplication.

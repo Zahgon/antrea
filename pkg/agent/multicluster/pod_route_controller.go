@@ -15,24 +15,14 @@
 package multicluster
 
 import (
-	"errors"
-	"fmt"
-	"net"
 	"sync"
-	"time"
 
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/fields"
-	"k8s.io/apimachinery/pkg/util/wait"
-	coreinformers "k8s.io/client-go/informers/core/v1"
 	"k8s.io/client-go/kubernetes"
 	corelisters "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
-	"k8s.io/klog/v2"
 
-	mcv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
 	"antrea.io/antrea/v2/multicluster/pkg/client/informers/externalversions/multicluster/v1alpha1"
 	mclisters "antrea.io/antrea/v2/multicluster/pkg/client/listers/multicluster/v1alpha1"
 	"antrea.io/antrea/v2/pkg/agent/config"
@@ -75,310 +65,55 @@ func NewMCPodRouteController(
 	client openflow.Client,
 	nodeConfig *config.NodeConfig,
 ) *MCPodRouteController {
-	controller := &MCPodRouteController{
-		k8sClient:  k8sClient,
-		ofClient:   client,
-		nodeConfig: nodeConfig,
-		podQueue: workqueue.NewTypedRateLimitingQueueWithConfig(
-			workqueue.NewTypedItemExponentialFailureRateLimiter[string](minRetryDelay, maxRetryDelay),
-			workqueue.TypedRateLimitingQueueConfig[string]{
-				Name: "MCPodRouteControllerForPod",
-			},
-		),
-		gwQueue: workqueue.NewTypedRateLimitingQueueWithConfig(
-			workqueue.NewTypedItemExponentialFailureRateLimiter[string](minRetryDelay, maxRetryDelay),
-			workqueue.TypedRateLimitingQueueConfig[string]{
-				Name: "MCPodRouteControllerForGateway",
-			},
-		),
-		gwInformer:      gwInformer.Informer(),
-		gwLister:        gwInformer.Lister(),
-		podWorkerStopCh: make(chan struct{}),
-	}
-
-	controller.gwInformer.AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc: func(cur interface{}) {
-				controller.enqueueGateway(cur)
-			},
-			// Gateway UPDATE event doesn't impact Pod flows, so ignore it.
-			DeleteFunc: func(old interface{}) {
-				controller.enqueueGateway(old)
-			},
-		},
-		resyncPeriod,
-	)
-	return controller
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func podIPIndexFunc(obj interface{}) ([]string, error) {
-	pod, ok := obj.(*corev1.Pod)
-	if !ok {
-		return nil, fmt.Errorf("obj is not Pod: %+v", obj)
-	}
-	if isValidPod(pod) {
-		return []string{pod.Status.PodIP}, nil
-	}
-	return []string{}, nil
-}
+// Gateway UPDATE event doesn't impact Pod flows, so ignore it.
 
-func (c *MCPodRouteController) createPodInformer() {
-	listOptions := func(options *metav1.ListOptions) {
-		options.FieldSelector = fields.OneTermNotEqualSelector("spec.nodeName", c.nodeConfig.Name).String()
-	}
-	c.podInformer = coreinformers.NewFilteredPodInformer(
-		c.k8sClient,
-		metav1.NamespaceAll,
-		0,
-		cache.Indexers{podIndexKey: podIPIndexFunc},
-		listOptions,
-	)
-	c.podInformer.AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc: func(cur interface{}) {
-				c.createPod(cur)
-			},
-			UpdateFunc: func(old, cur interface{}) {
-				c.updatePod(old, cur)
-			},
-			DeleteFunc: func(old interface{}) {
-				c.deletePod(old)
-			},
-		},
-		resyncPeriod,
-	)
-	c.podLister = corelisters.NewPodLister(c.podInformer.GetIndexer())
-}
+func podIPIndexFunc(obj interface{}) ([]string, error) { _ = "STUB: not implemented"; return nil, nil }
 
-func (c *MCPodRouteController) enqueueGateway(obj interface{}) {
-	_, isGW := obj.(*mcv1alpha1.Gateway)
-	if !isGW {
-		deletedState, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			klog.ErrorS(nil, "Received unexpected object", "object", obj)
-			return
-		}
-		_, ok = deletedState.Obj.(*mcv1alpha1.Gateway)
-		if !ok {
-			klog.ErrorS(nil, "DeletedFinalStateUnknown contains non-Gateway object", "object", deletedState.Obj)
-			return
-		}
-	}
-	c.gwQueue.Add(dummyKey)
-}
+func (c *MCPodRouteController) createPodInformer() { _ = "STUB: not implemented"; return }
 
-func (c *MCPodRouteController) createPod(obj interface{}) {
-	pod := obj.(*corev1.Pod)
-	if !isValidPod(pod) {
-		return
-	}
-	c.podQueue.Add(pod.Status.PodIP)
-}
+func (c *MCPodRouteController) enqueueGateway(obj interface{}) { _ = "STUB: not implemented"; return }
 
-func (c *MCPodRouteController) updatePod(old, cur interface{}) {
-	oldPod := old.(*corev1.Pod)
-	curPod := cur.(*corev1.Pod)
+func (c *MCPodRouteController) createPod(obj interface{}) { _ = "STUB: not implemented"; return }
 
-	isOldPodValid := isValidPod(oldPod)
-	isCurPodValid := isValidPod(curPod)
-	if !isCurPodValid && !isOldPodValid {
-		return
-	}
+func (c *MCPodRouteController) updatePod(old, cur interface{}) { _ = "STUB: not implemented"; return }
 
-	if !isOldPodValid {
-		c.podQueue.Add(curPod.Status.PodIP)
-		return
-	}
+func (c *MCPodRouteController) deletePod(obj interface{}) { _ = "STUB: not implemented"; return }
 
-	if !isCurPodValid {
-		c.podQueue.Add(oldPod.Status.PodIP)
-		return
-	}
+func isValidPod(pod *corev1.Pod) bool { _ = "STUB: not implemented"; return false }
 
-	if oldPod.Status.PodIP != curPod.Status.PodIP {
-		c.podQueue.Add(oldPod.Status.PodIP)
-		c.podQueue.Add(curPod.Status.PodIP)
-		return
-	}
+func (c *MCPodRouteController) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	if oldPod.Status.HostIP != curPod.Status.HostIP {
-		c.podQueue.Add(curPod.Status.PodIP)
-	}
-}
+// Run a single routine to handle Gateway events.
 
-func (c *MCPodRouteController) deletePod(obj interface{}) {
-	pod, isPod := obj.(*corev1.Pod)
-	if !isPod {
-		deletedState, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			klog.ErrorS(nil, "Received unexpected object", "object", obj)
-			return
-		}
-		pod, ok = deletedState.Obj.(*corev1.Pod)
-		if !ok {
-			klog.ErrorS(nil, "DeletedFinalStateUnknown contains non-Pod object", "object", deletedState.Obj)
-			return
-		}
-	}
+func (c *MCPodRouteController) gatewayWorker() { _ = "STUB: not implemented"; return }
 
-	if isValidPod(pod) {
-		c.podQueue.Add(pod.Status.PodIP)
-	}
-}
-
-func isValidPod(pod *corev1.Pod) bool {
-	if pod.Status.PodIP != "" && pod.Status.HostIP != "" && !pod.Spec.HostNetwork {
-		return true
-	}
+func (c *MCPodRouteController) processGatewayNextWorkItem() bool {
+	_ = "STUB: not implemented"
 	return false
 }
 
-func (c *MCPodRouteController) Run(stopCh <-chan struct{}) {
-	defer c.gwQueue.ShutDown()
-	defer c.podQueue.ShutDown()
+func (c *MCPodRouteController) syncGateway() error { _ = "STUB: not implemented"; return nil }
 
-	klog.InfoS("Starting controller", "controller", podRouteControllerName)
-	defer klog.InfoS("Shutting down controller", "controller", podRouteControllerName)
-	if !cache.WaitForNamedCacheSync(podRouteControllerName, stopCh, c.gwInformer.HasSynced) {
-		return
-	}
-	// Run a single routine to handle Gateway events.
-	go wait.Until(c.gatewayWorker, time.Second, stopCh)
-	<-stopCh
-}
+// Stop Pod flow controller and clean up all installed Multi-cluster Pod flows,
+// if the Node was a Gateway before.
 
-func (c *MCPodRouteController) gatewayWorker() {
-	for c.processGatewayNextWorkItem() {
-	}
-}
+// Do nothing when the Pod flow controller is already started since
+// Pod flow controller will be responsible for handling Pod events to install flows.
 
-func (c *MCPodRouteController) processGatewayNextWorkItem() bool {
-	key, quit := c.gwQueue.Get()
-	if quit {
-		return false
-	}
-	defer c.gwQueue.Done(key)
-
-	if err := c.syncGateway(); err == nil {
-		c.gwQueue.Forget(key)
-	} else {
-		c.gwQueue.AddRateLimited(key)
-		klog.ErrorS(err, "Error syncing Gateway, requeuing", "key", key)
-	}
-	return true
-}
-
-func (c *MCPodRouteController) syncGateway() error {
-	activeGW, err := getActiveGateway(c.gwLister)
-	if err != nil {
-		klog.ErrorS(err, "Failed to get an active Gateway")
-		return err
-	}
-
-	c.podWorkersStartedMutex.Lock()
-	defer c.podWorkersStartedMutex.Unlock()
-
-	amIGateway := activeGW != nil && c.nodeConfig.Name == activeGW.Name
-	// Stop Pod flow controller and clean up all installed Multi-cluster Pod flows,
-	// if the Node was a Gateway before.
-	if !amIGateway {
-		if c.podWorkersStarted {
-			klog.InfoS("Shutting down Multi-cluster PodFlowController")
-			close(c.podWorkerStopCh)
-			c.podWorkerStopCh = nil
-			c.podInformer = nil
-			c.podLister = nil
-			c.podWorkersStarted = false
-		}
-	}
-
-	if !amIGateway || (amIGateway && !c.podWorkersStarted) {
-		err := c.ofClient.UninstallMulticlusterPodFlows("")
-		if err != nil {
-			return err
-		}
-	}
-
-	if amIGateway {
-		if !c.podWorkersStarted {
-			klog.InfoS("Starting Multi-cluster PodFlowController")
-			c.podWorkerStopCh = make(chan struct{})
-			c.createPodInformer()
-			go c.podInformer.Run(c.podWorkerStopCh)
-			if !cache.WaitForNamedCacheSync(podRouteControllerName, c.podWorkerStopCh, c.podInformer.HasSynced) {
-				c.podWorkerStopCh = nil
-				c.podInformer = nil
-				c.podLister = nil
-				return errors.New("failed to sync Pod cache")
-			}
-
-			for i := 0; i < podWorkerNum; i++ {
-				go wait.Until(c.podWorker, time.Second, c.podWorkerStopCh)
-			}
-			c.podWorkersStarted = true
-			return nil
-		}
-		// Do nothing when the Pod flow controller is already started since
-		// Pod flow controller will be responsible for handling Pod events to install flows.
-	}
-	return nil
-}
-
-func (c *MCPodRouteController) podWorker() {
-	for c.processPodNextWorkItem() {
-	}
-}
+func (c *MCPodRouteController) podWorker() { _ = "STUB: not implemented"; return }
 
 func (c *MCPodRouteController) processPodNextWorkItem() bool {
-	key, quit := c.podQueue.Get()
-	if quit {
-		return false
-	}
-	defer c.podQueue.Done(key)
-
-	if err := c.syncPod(key); err == nil {
-		c.podQueue.Forget(key)
-	} else {
-		c.podQueue.AddRateLimited(key)
-		klog.ErrorS(err, "Error syncing key, requeuing", "key", key)
-	}
-	return true
+	_ = "STUB: not implemented"
+	return false
 }
 
-func (c *MCPodRouteController) syncPod(podIP string) error {
-	c.podWorkersStartedMutex.RLock()
-	defer c.podWorkersStartedMutex.RUnlock()
-	if !c.podWorkersStarted {
-		return nil
-	}
-
-	pods, _ := c.podInformer.GetIndexer().ByIndex(podIndexKey, podIP)
-	if len(pods) == 0 {
-		klog.V(2).InfoS("Deleting Multi-cluster flows for Pod", "podIP", podIP)
-		if err := c.ofClient.UninstallMulticlusterPodFlows(podIP); err != nil {
-			klog.ErrorS(err, "Failed to uninstall Multi-cluster flows for Pod", "podIP", podIP)
-			return err
-		}
-		return nil
-	}
-
-	latestPod := c.getLatestPod(pods)
-	nodeIP := latestPod.Status.HostIP
-	klog.V(2).InfoS("Adding Multi-cluster flows for Pod", "podIP", podIP, "nodeIP", nodeIP)
-	if err := c.ofClient.InstallMulticlusterPodFlows(net.ParseIP(podIP), net.ParseIP(nodeIP)); err != nil {
-		klog.ErrorS(err, "Failed to install Multi-cluster flows for Pod", "podIP", podIP, "nodeIP", nodeIP)
-		return err
-	}
-	return nil
-}
+func (c *MCPodRouteController) syncPod(podIP string) error { _ = "STUB: not implemented"; return nil }
 
 func (c *MCPodRouteController) getLatestPod(pods []interface{}) *corev1.Pod {
-	lastCreatedPod := pods[0].(*corev1.Pod)
-	for _, podObj := range pods {
-		pod := podObj.(*corev1.Pod)
-		if lastCreatedPod.CreationTimestamp.Before(&pod.CreationTimestamp) {
-			lastCreatedPod = pod
-		}
-	}
-	return lastCreatedPod
+	_ = "STUB: not implemented"
+	return nil
 }

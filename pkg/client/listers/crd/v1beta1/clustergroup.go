@@ -42,5 +42,6 @@ type clusterGroupLister struct {
 
 // NewClusterGroupLister returns a new ClusterGroupLister.
 func NewClusterGroupLister(indexer cache.Indexer) ClusterGroupLister {
-	return &clusterGroupLister{listers.New[*crdv1beta1.ClusterGroup](indexer, crdv1beta1.Resource("clustergroup"))}
+	_ = "STUB: not implemented"
+	return *new(ClusterGroupLister)
 }

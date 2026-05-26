@@ -27,52 +27,63 @@ type FakeControlplaneV1beta2 struct {
 }
 
 func (c *FakeControlplaneV1beta2) AddressGroups() v1beta2.AddressGroupInterface {
-	return newFakeAddressGroups(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta2.AddressGroupInterface)
 }
 
 func (c *FakeControlplaneV1beta2) AppliedToGroups() v1beta2.AppliedToGroupInterface {
-	return newFakeAppliedToGroups(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta2.AppliedToGroupInterface)
 }
 
 func (c *FakeControlplaneV1beta2) ClusterGroupMembers() v1beta2.ClusterGroupMembersInterface {
-	return newFakeClusterGroupMembers(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta2.ClusterGroupMembersInterface)
 }
 
 func (c *FakeControlplaneV1beta2) EgressGroups() v1beta2.EgressGroupInterface {
-	return newFakeEgressGroups(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta2.EgressGroupInterface)
 }
 
 func (c *FakeControlplaneV1beta2) GroupAssociations(namespace string) v1beta2.GroupAssociationInterface {
-	return newFakeGroupAssociations(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1beta2.GroupAssociationInterface)
 }
 
 func (c *FakeControlplaneV1beta2) GroupMembers(namespace string) v1beta2.GroupMembersInterface {
-	return newFakeGroupMembers(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1beta2.GroupMembersInterface)
 }
 
 func (c *FakeControlplaneV1beta2) IPGroupAssociations() v1beta2.IPGroupAssociationInterface {
-	return newFakeIPGroupAssociations(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta2.IPGroupAssociationInterface)
 }
 
 func (c *FakeControlplaneV1beta2) NetworkPolicies() v1beta2.NetworkPolicyInterface {
-	return newFakeNetworkPolicies(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta2.NetworkPolicyInterface)
 }
 
 func (c *FakeControlplaneV1beta2) NetworkPolicyEvaluations() v1beta2.NetworkPolicyEvaluationInterface {
-	return newFakeNetworkPolicyEvaluations(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta2.NetworkPolicyEvaluationInterface)
 }
 
 func (c *FakeControlplaneV1beta2) NodeStatsSummaries() v1beta2.NodeStatsSummaryInterface {
-	return newFakeNodeStatsSummaries(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta2.NodeStatsSummaryInterface)
 }
 
 func (c *FakeControlplaneV1beta2) SupportBundleCollections() v1beta2.SupportBundleCollectionInterface {
-	return newFakeSupportBundleCollections(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta2.SupportBundleCollectionInterface)
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeControlplaneV1beta2) RESTClient() rest.Interface {
-	var ret *rest.RESTClient
-	return ret
+	_ = "STUB: not implemented"
+	return *new(rest.Interface)
 }

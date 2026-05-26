@@ -15,7 +15,6 @@
 package objectstore
 
 import (
-	"fmt"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
@@ -40,30 +39,17 @@ type nodeStore struct {
 var _ NodeStore = &nodeStore{}
 
 func NewNodeStore(nodeInformer cache.SharedIndexInformer) *nodeStore {
-	config := StoreConfig[*corev1.Node]{
-		DeleteQueueName: "nodeStoreNodesToDelete",
-		Indexers:        cache.Indexers{nodeNameIndex: nodeNameIndexFunc},
-		GetObjectCreationTimestamp: func(node *corev1.Node, now time.Time) time.Time {
-			if node.Status.Phase == corev1.NodePending {
-				return now
-			}
-			return node.GetCreationTimestamp().Time
-		},
-	}
-	return &nodeStore{
-		ObjectStore: NewObjectStore(nodeInformer, config),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNodeByNameAndTime provides a Node-specific method for getting Nodes by name and time
 func (s *nodeStore) GetNodeByNameAndTime(name string, startTime time.Time) (*corev1.Node, bool) {
-	return s.GetObjectByIndexAndTime(nodeNameIndex, name, startTime)
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 func nodeNameIndexFunc(obj interface{}) ([]string, error) {
-	node, ok := obj.(*corev1.Node)
-	if !ok {
-		return nil, fmt.Errorf("obj is not Node: %+v", obj)
-	}
-	return []string{node.Name}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }

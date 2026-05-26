@@ -14,28 +14,14 @@
 
 package openflow
 
-import (
-	binding "antrea.io/antrea/v2/pkg/ovs/openflow"
-)
-
 // InitMockTables is used to init mock tables.
-func InitMockTables(tableMap map[*Table]uint8) {
-	for ft, id := range tableMap {
-		ft.ofTable = binding.NewOFTable(id, ft.name, 0, 0, 0)
-	}
-}
+func InitMockTables(tableMap map[*Table]uint8) { _ = "STUB: not implemented"; return }
 
 // InitOFTableCache is used to update ofTableCache in tests.
-func InitOFTableCache(tableMap map[*Table]uint8) {
-	for ft := range tableMap {
-		tableCache.Update(ft)
-	}
-}
+func InitOFTableCache(tableMap map[*Table]uint8) { _ = "STUB: not implemented"; return }
 
 // ResetOFTable is used for integration tests.
-func ResetOFTable() {
-	binding.ResetTableID()
-}
+func ResetOFTable() { _ = "STUB: not implemented"; return }
 
 // CleanOFTableCache is used to reset ofTableCache and only used in integration tests. When all integration tests about
 // openflow run in batch, unexpected flows could be installed on OVS due to stale ofTableCache, which may cause some tests
@@ -47,9 +33,4 @@ func ResetOFTable() {
 // test/integration/agent/openflow_test.go) is used to check the flow number of every installed table. The expected table
 // list is read from the map tableCache of OFBridge, but the actual table list is dumped from OVS bridge (including the
 // unexpected flow). They are different, and as a result, TestFuncB will fail.
-func CleanOFTableCache() {
-	objs := tableCache.List()
-	for i := 0; i < len(objs); i++ {
-		tableCache.Delete(objs[i])
-	}
-}
+func CleanOFTableCache() { _ = "STUB: not implemented"; return }

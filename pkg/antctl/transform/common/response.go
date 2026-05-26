@@ -15,8 +15,6 @@
 package common
 
 import (
-	"net"
-
 	cpv1beta "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
 )
 
@@ -30,14 +28,8 @@ type GroupMember struct {
 }
 
 func GroupMemberTransform(member cpv1beta.GroupMember) GroupMember {
-	var ipStr string
-	for i, ip := range member.IPs {
-		if i != 0 {
-			ipStr += ", "
-		}
-		ipStr += net.IP(ip).String()
-	}
-	return GroupMember{Pod: member.Pod, IP: ipStr, Ports: member.Ports, Node: member.Node}
+	_ = "STUB: not implemented"
+	return *new(GroupMember)
 }
 
 type TableOutput interface {

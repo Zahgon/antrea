@@ -15,21 +15,12 @@
 package flowaggregator
 
 import (
-	"bytes"
-	"context"
-	"fmt"
-	"os"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/spf13/cobra"
-	"go.yaml.in/yaml/v3"
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 
-	"antrea.io/antrea/v2/pkg/antctl/raw"
 	flowaggregatorconfig "antrea.io/antrea/v2/pkg/config/flowaggregator"
 )
 
@@ -61,134 +52,25 @@ var example = strings.Trim(`
   $ antctl set flow-aggregator flowCollector.enable=true
 `, "\n")
 
-func NewFlowAggregatorSetCommand() *cobra.Command {
-	Command = &cobra.Command{
-		Use:     "flow-aggregator",
-		Short:   "Update configuration parameters used in Flow Aggregator",
-		Example: example,
-		RunE:    updateRunE,
-	}
-	mutators = map[string]FlowAggregatorConfigMutator{
-		"clickHouse.enable": func(c *flowaggregatorconfig.FlowAggregatorConfig, value string) error {
-			return setBoolOrFail(&c.ClickHouse.Enable, value)
-		},
-		"clickHouse.database": func(c *flowaggregatorconfig.FlowAggregatorConfig, value string) error {
-			return setStringOrFail(&c.ClickHouse.Database, value)
-		},
-		"clickHouse.databaseURL": func(c *flowaggregatorconfig.FlowAggregatorConfig, value string) error {
-			return setStringOrFail(&c.ClickHouse.DatabaseURL, value)
-		},
-		"clickHouse.debug": func(c *flowaggregatorconfig.FlowAggregatorConfig, value string) error {
-			return setBoolOrFail(&c.ClickHouse.Debug, value)
-		},
-		"clickHouse.compress": func(c *flowaggregatorconfig.FlowAggregatorConfig, value string) error {
-			if c.ClickHouse.Compress == nil {
-				c.ClickHouse.Compress = new(bool)
-			}
-			return setBoolOrFail(c.ClickHouse.Compress, value)
-		},
-		"clickHouse.commitInterval": func(c *flowaggregatorconfig.FlowAggregatorConfig, value string) error {
-			return setCommitIntervalOrFail(&c.ClickHouse.CommitInterval, value)
-		},
-		"flowCollector.enable": func(c *flowaggregatorconfig.FlowAggregatorConfig, value string) error {
-			return setBoolOrFail(&c.FlowCollector.Enable, value)
-		},
-		"flowCollector.address": func(c *flowaggregatorconfig.FlowAggregatorConfig, value string) error {
-			return setStringOrFail(&c.FlowCollector.Address, value)
-		},
-	}
-	return Command
-}
+func NewFlowAggregatorSetCommand() *cobra.Command { _ = "STUB: not implemented"; return nil }
 
 func getk8sClient(cmd *cobra.Command) (kubernetes.Interface, error) {
-	kubeconfig, err := raw.ResolveKubeconfig(cmd)
-	if err != nil {
-		return nil, err
-	}
-	k8sClient, _, err := raw.SetupClients(kubeconfig)
-	return k8sClient, err
+	_ = "STUB: not implemented"
+	return *new(kubernetes.Interface), nil
 }
 
-func updateRunE(cmd *cobra.Command, args []string) error {
-	k8sClient, err := getClients(cmd)
-	if err != nil {
-		return fmt.Errorf("failed to create clientset: %w", err)
-	}
-	configMapName := os.Getenv("FA_CONFIG_MAP_NAME")
-	configMap, err := GetFAConfigMap(k8sClient, configMapName)
-	if err != nil {
-		return err
-	}
-	var flowAggregatorConf flowaggregatorconfig.FlowAggregatorConfig
-	if err := yaml.Unmarshal([]byte(configMap.Data["flow-aggregator.conf"]), &flowAggregatorConf); err != nil {
-		return err
-	}
-	for _, query := range args {
-		pair := strings.Split(query, "=")
-		if len(pair) != 2 {
-			return fmt.Errorf("query should contain exactly one '='")
-		}
-		mutatorFn, ok := mutators[pair[0]]
-		if !ok {
-			return fmt.Errorf("unknown configuration parameter, please check antctl set flow-aggregator -h")
-		}
-		if err := mutatorFn(&flowAggregatorConf, pair[1]); err != nil {
-			return err
-		}
-	}
-	// marshal back the changed parameters to configmap
-	var buf bytes.Buffer
-	enc := yaml.NewEncoder(&buf)
-	enc.SetIndent(2)
-	if err := enc.Encode(&flowAggregatorConf); err != nil {
-		return err
-	}
-	b := buf.Bytes()
+func updateRunE(cmd *cobra.Command, args []string) error { _ = "STUB: not implemented"; return nil }
 
-	if configMap.Data == nil {
-		configMap.Data = make(map[string]string)
-	}
-	configMap.Data["flow-aggregator.conf"] = string(b)
-	if _, err := k8sClient.CoreV1().ConfigMaps(os.Getenv("POD_NAMESPACE")).Update(context.TODO(), configMap, metav1.UpdateOptions{}); err != nil {
-		return err
-	}
-	return nil
-}
+// marshal back the changed parameters to configmap
 
-func setBoolOrFail(b *bool, value string) error {
-	boolValue, err := strconv.ParseBool(value)
-	if err != nil {
-		return err
-	}
-	*b = boolValue
-	return nil
-}
+func setBoolOrFail(b *bool, value string) error { _ = "STUB: not implemented"; return nil }
 
-func setStringOrFail(b *string, value string) error {
-	*b = value
-	return nil
-}
+func setStringOrFail(b *string, value string) error { _ = "STUB: not implemented"; return nil }
 
-func setCommitIntervalOrFail(b *string, value string) error {
-	commitInterval, err := time.ParseDuration(value)
-	if err != nil {
-		return err
-	}
-	if commitInterval < flowaggregatorconfig.MinClickHouseCommitInterval {
-		return fmt.Errorf("commitInterval %s is too small: shortest supported interval is %s", commitInterval, flowaggregatorconfig.MinClickHouseCommitInterval)
-	}
-	*b = value
-	return nil
-}
+func setCommitIntervalOrFail(b *string, value string) error { _ = "STUB: not implemented"; return nil }
 
 // GetFAConfigMap is used to get and return the flow-aggregator configmap
 func GetFAConfigMap(k8sClient kubernetes.Interface, configMapName string) (*corev1.ConfigMap, error) {
-	if len(configMapName) == 0 {
-		return nil, fmt.Errorf("failed to locate %s ConfigMap volume", "flow-aggregator-config")
-	}
-	configMap, err := k8sClient.CoreV1().ConfigMaps("flow-aggregator").Get(context.TODO(), configMapName, metav1.GetOptions{})
-	if err != nil {
-		return nil, fmt.Errorf("failed to get ConfigMap %s: %v", configMapName, err)
-	}
-	return configMap, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }

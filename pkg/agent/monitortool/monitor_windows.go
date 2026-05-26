@@ -33,9 +33,13 @@ func NewNodeLatencyMonitor(
 	nodeConfig *config.NodeConfig,
 	trafficEncapMode config.TrafficEncapModeType,
 ) *NodeLatencyMonitor {
-	return &NodeLatencyMonitor{}
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (m *NodeLatencyMonitor) Run(stopCh <-chan struct{}) {}
+func (m *NodeLatencyMonitor) Run(stopCh <-chan struct{}) {
+	_ = "STUB: not implemented"
 
-// Not supported on Windows.
+	// Not supported on Windows.
+	return
+}

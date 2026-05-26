@@ -15,11 +15,9 @@
 package winnet
 
 import (
-	"fmt"
 	"net"
 
 	binding "antrea.io/antrea/v2/pkg/ovs/openflow"
-	iputil "antrea.io/antrea/v2/pkg/util/ip"
 )
 
 type Route struct {
@@ -45,23 +43,10 @@ type NetNatStaticMapping struct {
 	Protocol     binding.Protocol
 }
 
-func (r *Route) String() string {
-	return fmt.Sprintf("LinkIndex: %d, DestinationSubnet: %s, GatewayAddress: %s, RouteMetric: %d",
-		r.LinkIndex, r.DestinationSubnet, r.GatewayAddress, r.RouteMetric)
-}
+func (r *Route) String() string { _ = "STUB: not implemented"; return "" }
 
-func (r *Route) Equal(x Route) bool {
-	return x.LinkIndex == r.LinkIndex &&
-		x.DestinationSubnet != nil &&
-		r.DestinationSubnet != nil &&
-		iputil.IPNetEqual(x.DestinationSubnet, r.DestinationSubnet) &&
-		x.GatewayAddress.Equal(r.GatewayAddress)
-}
+func (r *Route) Equal(x Route) bool { _ = "STUB: not implemented"; return false }
 
-func (n *Neighbor) String() string {
-	return fmt.Sprintf("LinkIndex: %d, IPAddress: %s, LinkLayerAddress: %s", n.LinkIndex, n.IPAddress, n.LinkLayerAddress)
-}
+func (n *Neighbor) String() string { _ = "STUB: not implemented"; return "" }
 
-func (n *NetNatStaticMapping) String() string {
-	return fmt.Sprintf("Name: %s, ExternalIP %s, ExternalPort: %d, InternalIP: %s, InternalPort: %d, Protocol: %s", n.Name, n.ExternalIP, n.ExternalPort, n.InternalIP, n.InternalPort, n.Protocol)
-}
+func (n *NetNatStaticMapping) String() string { _ = "STUB: not implemented"; return "" }

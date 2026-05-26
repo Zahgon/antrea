@@ -13,11 +13,7 @@
 // limitations under the License.
 package runtime
 
-import "runtime"
-
 // WindowsOS is not defined as a constant because we need to hack the value in integration test.
 var WindowsOS = "windows"
 
-func IsWindowsPlatform() bool {
-	return runtime.GOOS == WindowsOS
-}
+func IsWindowsPlatform() bool { _ = "STUB: not implemented"; return false }

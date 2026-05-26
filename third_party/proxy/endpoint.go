@@ -39,9 +39,6 @@ Modifies:
 package proxy
 
 import (
-	"net"
-	"strconv"
-
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
@@ -111,62 +108,47 @@ type BaseEndpointInfo struct {
 var _ Endpoint = &BaseEndpointInfo{}
 
 // String is part of proxy.Endpoint interface.
-func (info *BaseEndpointInfo) String() string {
-	return info.endpoint
-}
+func (info *BaseEndpointInfo) String() string { _ = "STUB: not implemented"; return "" }
 
 // IP returns just the IP part of the endpoint, it's a part of proxy.Endpoint interface.
 func (info *BaseEndpointInfo) IP() string {
-	return info.ip
+	_ = "STUB: not implemented"
+
+	// Port returns just the Port part of the endpoint.
+	return ""
 }
 
-// Port returns just the Port part of the endpoint.
 func (info *BaseEndpointInfo) Port() int {
-	return info.port
+	_ = "STUB: not implemented"
+
+	// IsLocal is part of proxy.Endpoint interface.
+	return 0
 }
 
-// IsLocal is part of proxy.Endpoint interface.
-func (info *BaseEndpointInfo) IsLocal() bool {
-	return info.isLocal
-}
+func (info *BaseEndpointInfo) IsLocal() bool { _ = "STUB: not implemented"; return false }
 
 // IsReady returns true if an endpoint is ready and not terminating.
 func (info *BaseEndpointInfo) IsReady() bool {
-	return info.ready
+	_ = "STUB: not implemented"
+
+	// IsServing returns true if an endpoint is ready, regardless of if the
+	// endpoint is terminating.
+	return false
 }
 
-// IsServing returns true if an endpoint is ready, regardless of if the
-// endpoint is terminating.
-func (info *BaseEndpointInfo) IsServing() bool {
-	return info.serving
-}
+func (info *BaseEndpointInfo) IsServing() bool { _ = "STUB: not implemented"; return false }
 
 // IsTerminating retruns true if an endpoint is terminating. For pods,
 // that is any pod with a deletion timestamp.
-func (info *BaseEndpointInfo) IsTerminating() bool {
-	return info.terminating
-}
+func (info *BaseEndpointInfo) IsTerminating() bool { _ = "STUB: not implemented"; return false }
 
 // ZoneHints returns the zone hints for the endpoint.
-func (info *BaseEndpointInfo) ZoneHints() sets.Set[string] {
-	return info.zoneHints
-}
+func (info *BaseEndpointInfo) ZoneHints() sets.Set[string] { _ = "STUB: not implemented"; return nil }
 
 // NodeHints returns the node hints for the endpoint.
-func (info *BaseEndpointInfo) NodeHints() sets.Set[string] {
-	return info.nodeHints
-}
+func (info *BaseEndpointInfo) NodeHints() sets.Set[string] { _ = "STUB: not implemented"; return nil }
 
 func NewBaseEndpointInfo(ip string, port int, isLocal, ready, serving, terminating bool, zoneHints, nodeHints sets.Set[string]) *BaseEndpointInfo {
-	return &BaseEndpointInfo{
-		ip:          ip,
-		port:        port,
-		endpoint:    net.JoinHostPort(ip, strconv.Itoa(port)),
-		isLocal:     isLocal,
-		ready:       ready,
-		serving:     serving,
-		terminating: terminating,
-		zoneHints:   zoneHints,
-		nodeHints:   nodeHints,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

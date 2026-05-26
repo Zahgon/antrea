@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	controlplanev1beta2 "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	gentype "k8s.io/client-go/gentype"
 )
@@ -44,13 +43,6 @@ type clusterGroupMembers struct {
 
 // newClusterGroupMembers returns a ClusterGroupMembers
 func newClusterGroupMembers(c *ControlplaneV1beta2Client) *clusterGroupMembers {
-	return &clusterGroupMembers{
-		gentype.NewClient[*controlplanev1beta2.ClusterGroupMembers](
-			"clustergroupmembers",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *controlplanev1beta2.ClusterGroupMembers { return &controlplanev1beta2.ClusterGroupMembers{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

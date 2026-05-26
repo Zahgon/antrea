@@ -17,17 +17,11 @@
 package v1alpha1
 
 import (
-	context "context"
 	time "time"
 
-	apismulticlusterv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
 	versioned "antrea.io/antrea/v2/multicluster/pkg/client/clientset/versioned"
 	internalinterfaces "antrea.io/antrea/v2/multicluster/pkg/client/informers/externalversions/internalinterfaces"
 	multiclusterv1alpha1 "antrea.io/antrea/v2/multicluster/pkg/client/listers/multicluster/v1alpha1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	runtime "k8s.io/apimachinery/pkg/runtime"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
-	watch "k8s.io/apimachinery/pkg/watch"
 	cache "k8s.io/client-go/tools/cache"
 )
 
@@ -47,67 +41,37 @@ type labelIdentityInformer struct {
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewLabelIdentityInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewLabelIdentityInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 // NewFilteredLabelIdentityInformer constructs a new informer for LabelIdentity type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredLabelIdentityInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewLabelIdentityInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 // NewLabelIdentityInformerWithOptions constructs a new informer for LabelIdentity type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewLabelIdentityInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "multicluster.crd.antrea.io", Version: "v1alpha1", Resource: "labelidentitys"}
-	identifier := options.InformerName.WithResource(gvr)
-	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
-		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
-			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.MulticlusterV1alpha1().LabelIdentities().List(context.Background(), opts)
-			},
-			WatchFunc: func(opts v1.ListOptions) (watch.Interface, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.MulticlusterV1alpha1().LabelIdentities().Watch(context.Background(), opts)
-			},
-			ListWithContextFunc: func(ctx context.Context, opts v1.ListOptions) (runtime.Object, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.MulticlusterV1alpha1().LabelIdentities().List(ctx, opts)
-			},
-			WatchFuncWithContext: func(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.MulticlusterV1alpha1().LabelIdentities().Watch(ctx, opts)
-			},
-		}, client),
-		&apismulticlusterv1alpha1.LabelIdentity{},
-		cache.SharedIndexInformerOptions{
-			ResyncPeriod: options.ResyncPeriod,
-			Indexers:     options.Indexers,
-			Identifier:   identifier,
-		},
-	)
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *labelIdentityInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewLabelIdentityInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *labelIdentityInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apismulticlusterv1alpha1.LabelIdentity{}, f.defaultInformer)
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *labelIdentityInformer) Lister() multiclusterv1alpha1.LabelIdentityLister {
-	return multiclusterv1alpha1.NewLabelIdentityLister(f.Informer().GetIndexer())
+	_ = "STUB: not implemented"
+	return *new(multiclusterv1alpha1.LabelIdentityLister)
 }

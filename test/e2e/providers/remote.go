@@ -16,13 +16,10 @@ package providers
 
 import (
 	"flag"
-	"fmt"
 	"os"
 	"path"
 
 	"github.com/kevinburke/ssh_config"
-
-	"antrea.io/antrea/v2/test/e2e/providers/exec"
 )
 
 var (
@@ -31,53 +28,32 @@ var (
 	remoteKubeconfig = flag.String("remote.kubeconfig", path.Join(homedir, ".kube", "config"), "Path of the kubeconfig of the cluster")
 )
 
-func getSSHConfig() (*ssh_config.Config, error) {
-	info, err := os.Stat(*sshConfig)
-	if err != nil {
-		return nil, err
-	}
-	if info.IsDir() {
-		return nil, fmt.Errorf("%s is not a file", *sshConfig)
-	}
-	f, err := os.Open(*sshConfig)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	return ssh_config.Decode(f)
-}
+func getSSHConfig() (*ssh_config.Config, error) { _ = "STUB: not implemented"; return nil, nil }
 
 type RemoteProvider struct {
 	sshConfig *ssh_config.Config
 }
 
 func (p *RemoteProvider) RunCommandOnNode(nodeName string, cmd string) (code int, stdout string, stderr string, err error) {
-	host, clientCfg, err := convertConfig(p.sshConfig, nodeName)
-	if err != nil {
-		return 0, "", "", err
-	}
-	return exec.RunSSHCommand(host, clientCfg, cmd, nil, "", false)
+	_ = "STUB: not implemented"
+	return 0, "", "", nil
 }
 
 func (p *RemoteProvider) RunCommandOnNodeExt(nodeName, cmd string, envs map[string]string, stdin string, sudo bool) (
 	code int, stdout, stderr string, err error) {
-	host, clientCfg, err := convertConfig(p.sshConfig, nodeName)
-	if err != nil {
-		return 0, "", "", err
-	}
-	return exec.RunSSHCommand(host, clientCfg, cmd, envs, stdin, sudo)
+	_ = "STUB: not implemented"
+	return 0, "", "", nil
 }
 
 func (p *RemoteProvider) GetKubeconfigPath() (string, error) {
-	return *remoteKubeconfig, nil
+	_ = "STUB: not implemented"
+	return "", nil
+
+	// NewRemoteProvider returns an implementation of ProviderInterface which enables tests to run on a remote cluster.
+	// configPath is unused for the remote provider
 }
 
-// NewRemoteProvider returns an implementation of ProviderInterface which enables tests to run on a remote cluster.
-// configPath is unused for the remote provider
 func NewRemoteProvider(configPath string) (ProviderInterface, error) {
-	sshConfig, err := getSSHConfig()
-	if err != nil {
-		return nil, err
-	}
-	return &RemoteProvider{sshConfig: sshConfig}, nil
+	_ = "STUB: not implemented"
+	return *new(ProviderInterface), nil
 }

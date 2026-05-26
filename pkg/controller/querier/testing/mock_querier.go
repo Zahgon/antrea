@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	v1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,24 +43,25 @@ type MockControllerQuerierMockRecorder struct {
 
 // NewMockControllerQuerier creates a new mock instance.
 func NewMockControllerQuerier(ctrl *gomock.Controller) *MockControllerQuerier {
-	mock := &MockControllerQuerier{ctrl: ctrl}
-	mock.recorder = &MockControllerQuerierMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockControllerQuerier) EXPECT() *MockControllerQuerierMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetControllerInfo mocks base method.
+	return nil
 }
 
-// GetControllerInfo mocks base method.
 func (m *MockControllerQuerier) GetControllerInfo(controllerInfo *v1beta1.AntreaControllerInfo, partial bool) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "GetControllerInfo", controllerInfo, partial)
+	_ = "STUB: not implemented"
+	return
 }
 
 // GetControllerInfo indicates an expected call of GetControllerInfo.
 func (mr *MockControllerQuerierMockRecorder) GetControllerInfo(controllerInfo, partial any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetControllerInfo", reflect.TypeOf((*MockControllerQuerier)(nil).GetControllerInfo), controllerInfo, partial)
+	_ = "STUB: not implemented"
+	return nil
 }

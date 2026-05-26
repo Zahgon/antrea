@@ -21,44 +21,37 @@ import (
 
 // updateResultDNSConfig updates the DNS config from CNIConfig.
 func updateResultDNSConfig(result *current.Result, cniConfig *CNIConfig) {
-	result.DNS = cniConfig.DNS
+	_ = "STUB: not implemented"
+	return
 }
 
 // When running in a container, the host's /proc directory is mounted under s.hostProcPathPrefix, so
 // we need to prepend s.hostProcPathPrefix to the network namespace path provided by the cni. When
 // running as a simple process, s.hostProcPathPrefix will be empty.
-func (s *CNIServer) hostNetNsPath(netNS string) string {
-	if netNS == "" {
-		return ""
-	}
-	return s.hostProcPathPrefix + netNS
-}
+func (s *CNIServer) hostNetNsPath(netNS string) string { _ = "STUB: not implemented"; return "" }
 
 // isInfraContainer returns true if a container is infra container according to the network namespace path.
 // Always return true on Linux platform, because kubelet only call CNI request for infra container.
 func isInfraContainer(netNS string) bool {
-	return true
+	_ = "STUB: not implemented"
+
+	// validateRuntime returns nil if the container runtime is supported by Antrea.
+	// Always return nil on Linux platform, because all container runtimes are supported.
+	return false
 }
 
-// validateRuntime returns nil if the container runtime is supported by Antrea.
-// Always return nil on Linux platform, because all container runtimes are supported.
 func validateRuntime(netNS string) error {
+	_ = "STUB: not implemented"
+
+	// getInfraContainer returns the sandbox container ID of a Pod.
+	// On Linux, it's always the ContainerID in the request.
 	return nil
 }
 
-// getInfraContainer returns the sandbox container ID of a Pod.
-// On Linux, it's always the ContainerID in the request.
-func (c *CNIConfig) getInfraContainer() string {
-	return c.ContainerId
-}
+func (c *CNIConfig) getInfraContainer() string { _ = "STUB: not implemented"; return "" }
 
 // filterPodsForReconcile returns Pods that should be reconciled.
 func (s *CNIServer) filterPodsForReconcile(pods *corev1.PodList) []corev1.Pod {
-	validPods := make([]corev1.Pod, 0)
-	for _, pod := range pods.Items {
-		if !pod.Spec.HostNetwork {
-			validPods = append(validPods, pod)
-		}
-	}
-	return validPods
+	_ = "STUB: not implemented"
+	return nil
 }

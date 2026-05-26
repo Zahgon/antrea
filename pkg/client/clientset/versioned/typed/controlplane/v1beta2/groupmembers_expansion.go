@@ -16,12 +16,10 @@ package v1beta2
 
 import (
 	"context"
-	"fmt"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	"antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 )
 
 // The GroupMembersExpansion interface allows manually adding extra methods to the GroupMembersInterface.
@@ -30,15 +28,6 @@ type GroupMembersExpansion interface {
 }
 
 func (c *groupMembers) PaginatedGet(ctx context.Context, name string, pagination v1beta2.PaginationGetOptions, options v1.GetOptions) (result *v1beta2.GroupMembers, err error) {
-	result = &v1beta2.GroupMembers{}
-	err = c.GetClient().Get().
-		Namespace(c.GetNamespace()).
-		Resource("groupmembers").
-		Name(name).
-		Param("limit", fmt.Sprint(pagination.Limit)).
-		Param("page", fmt.Sprint(pagination.Page)).
-		VersionedParams(&options, scheme.ParameterCodec).
-		Do(ctx).
-		Into(result)
-	return
+	_ = "STUB: not implemented"
+	return nil, nil
 }

@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	rules "antrea.io/antrea/v2/pkg/agent/nodeportlocal/rules"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,82 +43,64 @@ type MockPodPortRulesMockRecorder struct {
 
 // NewMockPodPortRules creates a new mock instance.
 func NewMockPodPortRules(ctrl *gomock.Controller) *MockPodPortRules {
-	mock := &MockPodPortRules{ctrl: ctrl}
-	mock.recorder = &MockPodPortRulesMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockPodPortRules) EXPECT() *MockPodPortRulesMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddAllRules mocks base method.
+	return nil
 }
 
-// AddAllRules mocks base method.
 func (m *MockPodPortRules) AddAllRules(nplList []rules.PodNodePort) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddAllRules", nplList)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddAllRules indicates an expected call of AddAllRules.
 func (mr *MockPodPortRulesMockRecorder) AddAllRules(nplList any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddAllRules", reflect.TypeOf((*MockPodPortRules)(nil).AddAllRules), nplList)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddRule mocks base method.
 func (m *MockPodPortRules) AddRule(nodePort int, podIP string, podPort int, protocol string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddRule", nodePort, podIP, podPort, protocol)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddRule indicates an expected call of AddRule.
 func (mr *MockPodPortRulesMockRecorder) AddRule(nodePort, podIP, podPort, protocol any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddRule", reflect.TypeOf((*MockPodPortRules)(nil).AddRule), nodePort, podIP, podPort, protocol)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteAllRules mocks base method.
-func (m *MockPodPortRules) DeleteAllRules() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteAllRules")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockPodPortRules) DeleteAllRules() error { _ = "STUB: not implemented"; return nil }
 
 // DeleteAllRules indicates an expected call of DeleteAllRules.
 func (mr *MockPodPortRulesMockRecorder) DeleteAllRules() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAllRules", reflect.TypeOf((*MockPodPortRules)(nil).DeleteAllRules))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteRule mocks base method.
 func (m *MockPodPortRules) DeleteRule(nodePort int, podIP string, podPort int, protocol string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteRule", nodePort, podIP, podPort, protocol)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteRule indicates an expected call of DeleteRule.
 func (mr *MockPodPortRulesMockRecorder) DeleteRule(nodePort, podIP, podPort, protocol any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteRule", reflect.TypeOf((*MockPodPortRules)(nil).DeleteRule), nodePort, podIP, podPort, protocol)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Init mocks base method.
-func (m *MockPodPortRules) Init() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Init")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockPodPortRules) Init() error { _ = "STUB: not implemented"; return nil }
 
 // Init indicates an expected call of Init.
-func (mr *MockPodPortRulesMockRecorder) Init() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Init", reflect.TypeOf((*MockPodPortRules)(nil).Init))
-}
+func (mr *MockPodPortRulesMockRecorder) Init() *gomock.Call { _ = "STUB: not implemented"; return nil }

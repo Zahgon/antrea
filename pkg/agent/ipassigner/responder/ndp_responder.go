@@ -15,17 +15,13 @@
 package responder
 
 import (
-	"fmt"
 	"net"
 	"net/netip"
 	"sync"
-	"time"
 
 	"antrea.io/ndp"
 	"golang.org/x/net/ipv6"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/klog/v2"
 )
 
 var (
@@ -53,226 +49,51 @@ type ndpResponder struct {
 var _ Responder = (*ndpResponder)(nil)
 
 func parseIPv6SolicitedNodeMulticastAddress(ip netip.Addr) netip.Addr {
-	target := ip.As16()
-	prefix := solicitedNodeMulticastAddressPrefix.As16()
-	// copy lower 24 bits
-	copy(prefix[13:], target[13:])
-	return netip.AddrFrom16(prefix)
+	_ = "STUB: not implemented"
+	return *new(netip.Addr)
 }
 
-func (r *ndpResponder) InterfaceName() string {
-	return r.linkName
-}
+// copy lower 24 bits
+
+func (r *ndpResponder) InterfaceName() string { _ = "STUB: not implemented"; return "" }
 
 func (r *ndpResponder) handleNeighborSolicitation(conn ndpConn, link *net.Interface) error {
-	pkt, _, srcIP, err := conn.ReadFrom()
-	if err != nil {
-		return err
-	}
-	ns, ok := pkt.(*ndp.NeighborSolicitation)
-	if !ok {
-		return nil
-	}
-	var nsSourceHWAddr net.HardwareAddr
-	for _, o := range ns.Options {
-		addr, ok := o.(*ndp.LinkLayerAddress)
-		if !ok {
-			continue
-		}
-		if addr.Direction != ndp.Source {
-			continue
-		}
-		nsSourceHWAddr = addr.Addr
-		break
-	}
-	if nsSourceHWAddr == nil {
-		return nil
-	}
-	if !r.isIPAssigned(ns.TargetAddress) {
-		klog.V(4).InfoS("Ignored Neighbor Solicitation", "ip", ns.TargetAddress, "interface", r.linkName)
-		return nil
-	}
-	na := &ndp.NeighborAdvertisement{
-		Solicited:     true,
-		Override:      true,
-		TargetAddress: ns.TargetAddress,
-		Options: []ndp.Option{
-			&ndp.LinkLayerAddress{
-				Direction: ndp.Target,
-				Addr:      link.HardwareAddr,
-			},
-		},
-	}
-	if err := conn.WriteTo(na, nil, srcIP); err != nil {
-		return err
-	}
-	klog.V(4).InfoS("Sent Neighbor Advertisement", "ip", ns.TargetAddress.String(), "interface", r.linkName)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (r *ndpResponder) Run(stopCh <-chan struct{}) {
+	_ = "STUB: not implemented"
 	// The responder instance is created by the factory and can be shared by multiple callers.
 	// Using once.Do here ensures it is started only once.
-	r.once.Do(func() {
-		go wait.NonSlidingUntil(func() {
-			r.dialAndHandleRequests(stopCh)
-		}, time.Second, stopCh)
-	})
-	<-stopCh
+	return
 }
 
 func (r *ndpResponder) dialAndHandleRequests(stopCh <-chan struct{}) {
-	transportInterface, err := net.InterfaceByName(r.linkName)
-	if err != nil {
-		klog.ErrorS(err, "Failed to get interface", "interface", r.linkName)
-		return
-	}
-
-	// It may take time for the interface to be ready for socket binding. For example, IPv6 introduces Duplicate Address Detection,
-	// which may take time to allow the address to be used for socket binding. EADDRNOTAVAIL (bind: cannot assign requested address)
-	// may be returned for such cases.
-	klog.InfoS("Binding NDP responder on interface", "interface", r.linkName)
-	conn, _, err := ndp.Listen(transportInterface, ndp.LinkLocal)
-	if err != nil {
-		klog.ErrorS(err, "Failed to create NDP responder", "interface", r.linkName)
-		return
-	}
-
-	r.mutex.Lock()
-	r.conn = conn
-	for ip := range r.assignedIPs {
-		if err := r.joinMulticastGroup(ip); err != nil {
-			klog.ErrorS(err, "Failed to join multicast group", "ip", ip, "interface", r.linkName)
-		}
-	}
-	r.mutex.Unlock()
-
-	reloadCh := make(chan struct{})
-
-	klog.InfoS("NDP responder started", "interface", transportInterface.Name, "index", transportInterface.Index)
-	defer klog.InfoS("NDP responder stopped", "interface", transportInterface.Name, "index", transportInterface.Index)
-
-	go func() {
-		defer conn.Close()
-		defer close(reloadCh)
-
-		for {
-			select {
-			case <-stopCh:
-				return
-			case <-r.linkEventCh:
-				newTransportInterface, err := net.InterfaceByName(r.linkName)
-				if err != nil {
-					klog.ErrorS(err, "Failed to get interface by name", "name", r.linkName)
-					continue
-				}
-				if transportInterface.Index != newTransportInterface.Index {
-					klog.InfoS("Transport interface index changed, restarting NDP responder", "name", transportInterface.Name, "oldIndex", transportInterface.Index, "newIndex", newTransportInterface.Index)
-					return
-				}
-				klog.V(4).InfoS("Transport interface not changed")
-			}
-		}
-	}()
-
-	for {
-		select {
-		case <-reloadCh:
-			return
-		default:
-			err := r.handleNeighborSolicitation(conn, transportInterface)
-			if err != nil {
-				klog.ErrorS(err, "Failed to handle Neighbor Solicitation", "deviceName", r.linkName)
-			}
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
-func (r *ndpResponder) AddIP(ip netip.Addr) error {
-	if !ip.Is6() {
-		return fmt.Errorf("only IPv6 is supported")
-	}
+// It may take time for the interface to be ready for socket binding. For example, IPv6 introduces Duplicate Address Detection,
+// which may take time to allow the address to be used for socket binding. EADDRNOTAVAIL (bind: cannot assign requested address)
+// may be returned for such cases.
 
-	r.mutex.Lock()
-	defer r.mutex.Unlock()
-
-	if r.assignedIPs.Has(ip) {
-		return nil
-	}
-	if err := r.joinMulticastGroup(ip); err != nil {
-		return err
-	}
-	r.assignedIPs.Insert(ip)
-
-	return nil
-}
+func (r *ndpResponder) AddIP(ip netip.Addr) error { _ = "STUB: not implemented"; return nil }
 
 func (r *ndpResponder) joinMulticastGroup(ip netip.Addr) error {
-	if r.conn == nil {
-		klog.InfoS("NDP responder is not initialized")
-		return nil
-	}
-	group := parseIPv6SolicitedNodeMulticastAddress(ip)
-	if r.multicastGroups[group] > 0 {
-		r.multicastGroups[group]++
-		return nil
-	}
-	if err := r.conn.JoinGroup(group); err != nil {
-		return fmt.Errorf("joining multicast group %s failed: %v", group, err)
-	}
-	klog.InfoS("Joined multicast group", "group", group, "interface", r.linkName)
-	r.multicastGroups[group]++
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (r *ndpResponder) leaveMulticastGroup(ip netip.Addr) error {
-	if r.conn == nil {
-		klog.InfoS("NDP responder is not initialized")
-		return nil
-	}
-	group := parseIPv6SolicitedNodeMulticastAddress(ip)
-	if r.multicastGroups[group] > 1 {
-		r.multicastGroups[group]--
-		return nil
-	}
-	if err := r.conn.LeaveGroup(group); err != nil {
-		return fmt.Errorf("leaving multicast group %s failed: %v", group, err)
-	}
-	klog.InfoS("Left multicast group", "group", group, "interface", r.linkName)
-	delete(r.multicastGroups, group)
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (r *ndpResponder) RemoveIP(ip netip.Addr) error {
-	if !ip.Is6() {
-		return fmt.Errorf("only IPv6 is supported")
-	}
-	r.mutex.Lock()
-	defer r.mutex.Unlock()
+func (r *ndpResponder) RemoveIP(ip netip.Addr) error { _ = "STUB: not implemented"; return nil }
 
-	if !r.assignedIPs.Has(ip) {
-		return nil
-	}
-	if err := r.leaveMulticastGroup(ip); err != nil {
-		return err
-	}
-	r.assignedIPs.Delete(ip)
+func (r *ndpResponder) isIPAssigned(ip netip.Addr) bool { _ = "STUB: not implemented"; return false }
 
-	klog.InfoS("Removed IP from NDP responder", "ip", ip, "interface", r.linkName)
-	return nil
-}
+func (r *ndpResponder) onLinkUpdate(linkName string) { _ = "STUB: not implemented"; return }
 
-func (r *ndpResponder) isIPAssigned(ip netip.Addr) bool {
-	r.mutex.Lock()
-	defer r.mutex.Unlock()
-	return r.assignedIPs.Has(ip)
-}
-
-func (r *ndpResponder) onLinkUpdate(linkName string) {
-	klog.V(4).InfoS("Received link update event", "name", linkName)
-	select {
-	// if an event is already present in the channel, we can drop this new one as we only monitor one link
-	case r.linkEventCh <- struct{}{}:
-	default:
-	}
-}
+// if an event is already present in the channel, we can drop this new one as we only monitor one link

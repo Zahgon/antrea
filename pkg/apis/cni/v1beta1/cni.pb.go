@@ -21,12 +21,11 @@
 package v1beta1
 
 import (
+	sync "sync"
+
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
 )
 
 const (
@@ -93,32 +92,27 @@ var (
 	}
 )
 
-func (x ErrorCode) Enum() *ErrorCode {
-	p := new(ErrorCode)
-	*p = x
-	return p
-}
+func (x ErrorCode) Enum() *ErrorCode { _ = "STUB: not implemented"; return nil }
 
-func (x ErrorCode) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
+func (x ErrorCode) String() string { _ = "STUB: not implemented"; return "" }
 
 func (ErrorCode) Descriptor() protoreflect.EnumDescriptor {
-	return file_pkg_apis_cni_v1beta1_cni_proto_enumTypes[0].Descriptor()
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumDescriptor)
 }
 
 func (ErrorCode) Type() protoreflect.EnumType {
-	return &file_pkg_apis_cni_v1beta1_cni_proto_enumTypes[0]
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumType)
 }
 
 func (x ErrorCode) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.EnumNumber)
 }
 
 // Deprecated: Use ErrorCode.Descriptor instead.
-func (ErrorCode) EnumDescriptor() ([]byte, []int) {
-	return file_pkg_apis_cni_v1beta1_cni_proto_rawDescGZIP(), []int{0}
-}
+func (ErrorCode) EnumDescriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
 type CniCmdArgs struct {
 	state                protoimpl.MessageState `protogen:"open.v1"`
@@ -132,77 +126,31 @@ type CniCmdArgs struct {
 	sizeCache            protoimpl.SizeCache
 }
 
-func (x *CniCmdArgs) Reset() {
-	*x = CniCmdArgs{}
-	mi := &file_pkg_apis_cni_v1beta1_cni_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *CniCmdArgs) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *CniCmdArgs) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *CniCmdArgs) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*CniCmdArgs) ProtoMessage() {}
+func (*CniCmdArgs) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *CniCmdArgs) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_cni_v1beta1_cni_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use CniCmdArgs.ProtoReflect.Descriptor instead.
-func (*CniCmdArgs) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_cni_v1beta1_cni_proto_rawDescGZIP(), []int{0}
-}
+func (*CniCmdArgs) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *CniCmdArgs) GetContainerId() string {
-	if x != nil {
-		return x.ContainerId
-	}
-	return ""
-}
+func (x *CniCmdArgs) GetContainerId() string { _ = "STUB: not implemented"; return "" }
 
-func (x *CniCmdArgs) GetNetns() string {
-	if x != nil {
-		return x.Netns
-	}
-	return ""
-}
+func (x *CniCmdArgs) GetNetns() string { _ = "STUB: not implemented"; return "" }
 
-func (x *CniCmdArgs) GetIfname() string {
-	if x != nil {
-		return x.Ifname
-	}
-	return ""
-}
+func (x *CniCmdArgs) GetIfname() string { _ = "STUB: not implemented"; return "" }
 
-func (x *CniCmdArgs) GetArgs() string {
-	if x != nil {
-		return x.Args
-	}
-	return ""
-}
+func (x *CniCmdArgs) GetArgs() string { _ = "STUB: not implemented"; return "" }
 
-func (x *CniCmdArgs) GetPath() string {
-	if x != nil {
-		return x.Path
-	}
-	return ""
-}
+func (x *CniCmdArgs) GetPath() string { _ = "STUB: not implemented"; return "" }
 
-func (x *CniCmdArgs) GetNetworkConfiguration() []byte {
-	if x != nil {
-		return x.NetworkConfiguration
-	}
-	return nil
-}
+func (x *CniCmdArgs) GetNetworkConfiguration() []byte { _ = "STUB: not implemented"; return nil }
 
 type CniCmdRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -211,42 +159,21 @@ type CniCmdRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CniCmdRequest) Reset() {
-	*x = CniCmdRequest{}
-	mi := &file_pkg_apis_cni_v1beta1_cni_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *CniCmdRequest) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *CniCmdRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *CniCmdRequest) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*CniCmdRequest) ProtoMessage() {}
+func (*CniCmdRequest) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *CniCmdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_cni_v1beta1_cni_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use CniCmdRequest.ProtoReflect.Descriptor instead.
-func (*CniCmdRequest) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_cni_v1beta1_cni_proto_rawDescGZIP(), []int{1}
-}
+func (*CniCmdRequest) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *CniCmdRequest) GetCniArgs() *CniCmdArgs {
-	if x != nil {
-		return x.CniArgs
-	}
-	return nil
-}
+func (x *CniCmdRequest) GetCniArgs() *CniCmdArgs { _ = "STUB: not implemented"; return nil }
 
 type Error struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -257,56 +184,25 @@ type Error struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Error) Reset() {
-	*x = Error{}
-	mi := &file_pkg_apis_cni_v1beta1_cni_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *Error) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *Error) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *Error) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*Error) ProtoMessage() {}
+func (*Error) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *Error) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_cni_v1beta1_cni_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use Error.ProtoReflect.Descriptor instead.
-func (*Error) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_cni_v1beta1_cni_proto_rawDescGZIP(), []int{2}
-}
+func (*Error) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *Error) GetCode() ErrorCode {
-	if x != nil {
-		return x.Code
-	}
-	return ErrorCode_UNKNOWN
-}
+func (x *Error) GetCode() ErrorCode { _ = "STUB: not implemented"; return *new(ErrorCode) }
 
-func (x *Error) GetMessage() string {
-	if x != nil {
-		return x.Message
-	}
-	return ""
-}
+func (x *Error) GetMessage() string { _ = "STUB: not implemented"; return "" }
 
-func (x *Error) GetDetails() []*anypb.Any {
-	if x != nil {
-		return x.Details
-	}
-	return nil
-}
+func (x *Error) GetDetails() []*anypb.Any { _ = "STUB: not implemented"; return nil }
 
 type CniCmdResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -316,49 +212,23 @@ type CniCmdResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CniCmdResponse) Reset() {
-	*x = CniCmdResponse{}
-	mi := &file_pkg_apis_cni_v1beta1_cni_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *CniCmdResponse) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *CniCmdResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *CniCmdResponse) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*CniCmdResponse) ProtoMessage() {}
+func (*CniCmdResponse) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *CniCmdResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_cni_v1beta1_cni_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use CniCmdResponse.ProtoReflect.Descriptor instead.
-func (*CniCmdResponse) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_cni_v1beta1_cni_proto_rawDescGZIP(), []int{3}
-}
+func (*CniCmdResponse) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *CniCmdResponse) GetCniResult() []byte {
-	if x != nil {
-		return x.CniResult
-	}
-	return nil
-}
+func (x *CniCmdResponse) GetCniResult() []byte { _ = "STUB: not implemented"; return nil }
 
-func (x *CniCmdResponse) GetError() *Error {
-	if x != nil {
-		return x.Error
-	}
-	return nil
-}
+func (x *CniCmdResponse) GetError() *Error { _ = "STUB: not implemented"; return nil }
 
 var File_pkg_apis_cni_v1beta1_cni_proto protoreflect.FileDescriptor
 
@@ -410,10 +280,8 @@ var (
 )
 
 func file_pkg_apis_cni_v1beta1_cni_proto_rawDescGZIP() []byte {
-	file_pkg_apis_cni_v1beta1_cni_proto_rawDescOnce.Do(func() {
-		file_pkg_apis_cni_v1beta1_cni_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_pkg_apis_cni_v1beta1_cni_proto_rawDesc), len(file_pkg_apis_cni_v1beta1_cni_proto_rawDesc)))
-	})
-	return file_pkg_apis_cni_v1beta1_cni_proto_rawDescData
+	_ = "STUB: not implemented"
+	return nil
 }
 
 var file_pkg_apis_cni_v1beta1_cni_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
@@ -444,27 +312,5 @@ var file_pkg_apis_cni_v1beta1_cni_proto_depIdxs = []int32{
 	0, // [0:4] is the sub-list for field type_name
 }
 
-func init() { file_pkg_apis_cni_v1beta1_cni_proto_init() }
-func file_pkg_apis_cni_v1beta1_cni_proto_init() {
-	if File_pkg_apis_cni_v1beta1_cni_proto != nil {
-		return
-	}
-	type x struct{}
-	out := protoimpl.TypeBuilder{
-		File: protoimpl.DescBuilder{
-			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_pkg_apis_cni_v1beta1_cni_proto_rawDesc), len(file_pkg_apis_cni_v1beta1_cni_proto_rawDesc)),
-			NumEnums:      1,
-			NumMessages:   4,
-			NumExtensions: 0,
-			NumServices:   1,
-		},
-		GoTypes:           file_pkg_apis_cni_v1beta1_cni_proto_goTypes,
-		DependencyIndexes: file_pkg_apis_cni_v1beta1_cni_proto_depIdxs,
-		EnumInfos:         file_pkg_apis_cni_v1beta1_cni_proto_enumTypes,
-		MessageInfos:      file_pkg_apis_cni_v1beta1_cni_proto_msgTypes,
-	}.Build()
-	File_pkg_apis_cni_v1beta1_cni_proto = out.File
-	file_pkg_apis_cni_v1beta1_cni_proto_goTypes = nil
-	file_pkg_apis_cni_v1beta1_cni_proto_depIdxs = nil
-}
+func init()                                     { file_pkg_apis_cni_v1beta1_cni_proto_init() }
+func file_pkg_apis_cni_v1beta1_cni_proto_init() { _ = "STUB: not implemented"; return }

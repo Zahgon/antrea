@@ -26,7 +26,6 @@ package testing
 
 import (
 	net "net"
-	reflect "reflect"
 
 	types "antrea.io/antrea/v2/pkg/agent/types"
 	gomock "go.uber.org/mock/gomock"
@@ -46,29 +45,27 @@ type MockMcastNetworkPolicyControllerMockRecorder struct {
 
 // NewMockMcastNetworkPolicyController creates a new mock instance.
 func NewMockMcastNetworkPolicyController(ctrl *gomock.Controller) *MockMcastNetworkPolicyController {
-	mock := &MockMcastNetworkPolicyController{ctrl: ctrl}
-	mock.recorder = &MockMcastNetworkPolicyControllerMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockMcastNetworkPolicyController) EXPECT() *MockMcastNetworkPolicyControllerMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetIGMPNPRuleInfo mocks base method.
+	return nil
 }
 
-// GetIGMPNPRuleInfo mocks base method.
 func (m *MockMcastNetworkPolicyController) GetIGMPNPRuleInfo(podname, podNamespace string, groupAddress net.IP, igmpType uint8) (*types.IGMPNPRuleInfo, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetIGMPNPRuleInfo", podname, podNamespace, groupAddress, igmpType)
-	ret0, _ := ret[0].(*types.IGMPNPRuleInfo)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetIGMPNPRuleInfo indicates an expected call of GetIGMPNPRuleInfo.
 func (mr *MockMcastNetworkPolicyControllerMockRecorder) GetIGMPNPRuleInfo(podname, podNamespace, groupAddress, igmpType any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetIGMPNPRuleInfo", reflect.TypeOf((*MockMcastNetworkPolicyController)(nil).GetIGMPNPRuleInfo), podname, podNamespace, groupAddress, igmpType)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockCNIDeleteChecker is a mock of CNIDeleteChecker interface.
@@ -85,26 +82,25 @@ type MockCNIDeleteCheckerMockRecorder struct {
 
 // NewMockCNIDeleteChecker creates a new mock instance.
 func NewMockCNIDeleteChecker(ctrl *gomock.Controller) *MockCNIDeleteChecker {
-	mock := &MockCNIDeleteChecker{ctrl: ctrl}
-	mock.recorder = &MockCNIDeleteCheckerMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockCNIDeleteChecker) EXPECT() *MockCNIDeleteCheckerMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AllowCNIDelete mocks base method.
+	return nil
 }
 
-// AllowCNIDelete mocks base method.
 func (m *MockCNIDeleteChecker) AllowCNIDelete(podName, podNamespace string) bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AllowCNIDelete", podName, podNamespace)
-	ret0, _ := ret[0].(bool)
-	return ret0
+	_ = "STUB: not implemented"
+	return false
 }
 
 // AllowCNIDelete indicates an expected call of AllowCNIDelete.
 func (mr *MockCNIDeleteCheckerMockRecorder) AllowCNIDelete(podName, podNamespace any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllowCNIDelete", reflect.TypeOf((*MockCNIDeleteChecker)(nil).AllowCNIDelete), podName, podNamespace)
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	intermediate "antrea.io/antrea/v2/pkg/flowaggregator/intermediate"
 	querier "antrea.io/antrea/v2/pkg/flowaggregator/querier"
 	gomock "go.uber.org/mock/gomock"
@@ -46,40 +44,37 @@ type MockFlowAggregatorQuerierMockRecorder struct {
 
 // NewMockFlowAggregatorQuerier creates a new mock instance.
 func NewMockFlowAggregatorQuerier(ctrl *gomock.Controller) *MockFlowAggregatorQuerier {
-	mock := &MockFlowAggregatorQuerier{ctrl: ctrl}
-	mock.recorder = &MockFlowAggregatorQuerierMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockFlowAggregatorQuerier) EXPECT() *MockFlowAggregatorQuerierMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetFlowRecords mocks base method.
+	return nil
 }
 
-// GetFlowRecords mocks base method.
 func (m *MockFlowAggregatorQuerier) GetFlowRecords(flowKey *intermediate.FlowKey) []map[string]any {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetFlowRecords", flowKey)
-	ret0, _ := ret[0].([]map[string]any)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetFlowRecords indicates an expected call of GetFlowRecords.
 func (mr *MockFlowAggregatorQuerierMockRecorder) GetFlowRecords(flowKey any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlowRecords", reflect.TypeOf((*MockFlowAggregatorQuerier)(nil).GetFlowRecords), flowKey)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetRecordMetrics mocks base method.
 func (m *MockFlowAggregatorQuerier) GetRecordMetrics() querier.Metrics {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetRecordMetrics")
-	ret0, _ := ret[0].(querier.Metrics)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(querier.Metrics)
 }
 
 // GetRecordMetrics indicates an expected call of GetRecordMetrics.
 func (mr *MockFlowAggregatorQuerierMockRecorder) GetRecordMetrics() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRecordMetrics", reflect.TypeOf((*MockFlowAggregatorQuerier)(nil).GetRecordMetrics))
+	_ = "STUB: not implemented"
+	return nil
 }

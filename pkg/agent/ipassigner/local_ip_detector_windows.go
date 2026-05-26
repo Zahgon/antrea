@@ -17,20 +17,15 @@ package ipassigner
 // Not implemented yet. The feature gate verification will protect this from being run.
 type localIPDetector struct{}
 
-func (d *localIPDetector) IsLocalIP(ip string) bool {
-	return false
-}
+func (d *localIPDetector) IsLocalIP(ip string) bool { _ = "STUB: not implemented"; return false }
 
-func (d *localIPDetector) Run(stopCh <-chan struct{}) {
-}
+func (d *localIPDetector) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
 func (d *localIPDetector) AddEventHandler(handler LocalIPEventHandler) {
+	_ = "STUB: not implemented"
+	return
 }
 
-func (d *localIPDetector) HasSynced() bool {
-	return false
-}
+func (d *localIPDetector) HasSynced() bool { _ = "STUB: not implemented"; return false }
 
-func NewLocalIPDetector() *localIPDetector {
-	return &localIPDetector{}
-}
+func NewLocalIPDetector() *localIPDetector { _ = "STUB: not implemented"; return nil }

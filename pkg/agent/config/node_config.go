@@ -15,7 +15,6 @@
 package config
 
 import (
-	"fmt"
 	"net"
 
 	"antrea.io/antrea/v2/pkg/ovs/ovsconfig"
@@ -95,15 +94,7 @@ const (
 	ExternalNode
 )
 
-func (t NodeType) String() string {
-	switch t {
-	case K8sNode:
-		return "k8sNode"
-	case ExternalNode:
-		return "externalNode"
-	}
-	return "unknown"
-}
+func (t NodeType) String() string { _ = "STUB: not implemented"; return "" }
 
 type GatewayConfig struct {
 	// Name is the name of host gateway, e.g. antrea-gw0.
@@ -119,9 +110,7 @@ type GatewayConfig struct {
 	OFPort uint32
 }
 
-func (g *GatewayConfig) String() string {
-	return fmt.Sprintf("Name %s: IPv4 %s, IPv6 %s, MAC %s", g.Name, g.IPv4, g.IPv6, g.MAC)
-}
+func (g *GatewayConfig) String() string { _ = "STUB: not implemented"; return "" }
 
 type AdapterNetConfig struct {
 	Name       string
@@ -197,10 +186,7 @@ type NodeConfig struct {
 	EgressConfig *EgressConfig
 }
 
-func (n *NodeConfig) String() string {
-	return fmt.Sprintf("NodeName: %s, OVSBridge: %s, PodIPv4CIDR: %s, PodIPv6CIDR: %s, NodeIPv4: %s, NodeIPv6: %s, TransportIPv4: %s, TransportIPv6: %s, Gateway: %s",
-		n.Name, n.OVSBridge, n.PodIPv4CIDR, n.PodIPv6CIDR, n.NodeIPv4Addr, n.NodeIPv6Addr, n.NodeTransportIPv4Addr, n.NodeTransportIPv6Addr, n.GatewayConfig)
-}
+func (n *NodeConfig) String() string { _ = "STUB: not implemented"; return "" }
 
 // IPsecConfig includes IPsec related configurations.
 type IPsecConfig struct {
@@ -244,15 +230,7 @@ type NetworkConfig struct {
 // - Non-NetworkPolicyOnly, PodIPv4CIDR != nil, NodeIPv4Addr != nil, IPv4 is enabled
 // - Non-NetworkPolicyOnly, PodIPv4CIDR == nil, IPv4 is disabled
 func IsIPv4Enabled(nodeConfig *NodeConfig, trafficEncapMode TrafficEncapModeType) (bool, error) {
-	if trafficEncapMode.IsNetworkPolicyOnly() {
-		return nodeConfig.NodeIPv4Addr != nil, nil
-	}
-	if nodeConfig.PodIPv4CIDR != nil {
-		if nodeConfig.NodeIPv4Addr != nil {
-			return true, nil
-		}
-		return false, fmt.Errorf("K8s Node should have an IPv4 address if IPv4 Pod CIDR is defined")
-	}
+	_ = "STUB: not implemented"
 	return false, nil
 }
 
@@ -262,87 +240,46 @@ func IsIPv4Enabled(nodeConfig *NodeConfig, trafficEncapMode TrafficEncapModeType
 // - Non-NetworkPolicyOnly, PodIPv6CIDR != nil, NodeIPv6Addr != nil, IPv6 is enabled
 // - Non-NetworkPolicyOnly, PodIPv6CIDR == nil, IPv6 is disabled
 func IsIPv6Enabled(nodeConfig *NodeConfig, trafficEncapMode TrafficEncapModeType) (bool, error) {
-	if trafficEncapMode.IsNetworkPolicyOnly() {
-		return nodeConfig.NodeIPv6Addr != nil, nil
-	}
-	if nodeConfig.PodIPv6CIDR != nil {
-		if nodeConfig.NodeIPv6Addr != nil {
-			return true, nil
-		}
-		return false, fmt.Errorf("K8s Node should have an IPv6 address if IPv6 Pod CIDR is defined")
-	}
+	_ = "STUB: not implemented"
 	return false, nil
 }
 
 // NeedsTunnelToPeer returns true if Pod traffic to peer Node needs to be encapsulated by OVS tunneling.
 func (nc *NetworkConfig) NeedsTunnelToPeer(peerIP net.IP, localIP *net.IPNet) bool {
-	if nc.TrafficEncryptionMode == TrafficEncryptionModeWireGuard {
-		return false
-	}
-	return nc.TrafficEncapMode == TrafficEncapModeEncap || (nc.TrafficEncapMode == TrafficEncapModeHybrid && !localIP.Contains(peerIP))
+	_ = "STUB: not implemented"
+	return false
 }
 
 func (nc *NetworkConfig) NeedsTunnelInterface() bool {
+	_ = "STUB: not implemented"
 	// For encap or hybrid mode, we need to create the tunnel interface.
 	// If multi-cluster gateway is enabled, we always need the tunnel interface. For example,
 	// cross-cluster traffic from a regular Node to the gateway Node for the source cluster
 	// always goes through antrea-tun0, regardless of the actual "traffic mode" for the source
 	// cluster.
-	return nc.TrafficEncapMode.SupportsEncap() || nc.EnableMulticlusterGW
+	return false
 }
 
 // NeedsDirectRoutingToPeer returns true if Pod traffic to peer Node needs a direct route installed to the routing table.
 func (nc *NetworkConfig) NeedsDirectRoutingToPeer(peerIP net.IP, localIP *net.IPNet) bool {
-	return (nc.TrafficEncapMode == TrafficEncapModeNoEncap || nc.TrafficEncapMode == TrafficEncapModeHybrid) && localIP.Contains(peerIP)
+	_ = "STUB: not implemented"
+	return false
 }
 
-func (nc *NetworkConfig) getEncapMTUDeduction(isIPv6 bool) int {
-	var deduction int
-	switch nc.TunnelType {
-	case ovsconfig.VXLANTunnel:
-		deduction = vxlanOverhead
-	case ovsconfig.GeneveTunnel:
-		deduction = geneveOverhead
-	case ovsconfig.GRETunnel:
-		deduction = greOverhead
-	default:
-		return 0
-	}
-	if isIPv6 {
-		deduction += ipv6ExtraOverhead
-	}
-	return deduction
-}
+func (nc *NetworkConfig) getEncapMTUDeduction(isIPv6 bool) int { _ = "STUB: not implemented"; return 0 }
 
 func (nc *NetworkConfig) CalculateMTUDeduction(isIPv6 bool) int {
-	nc.WireGuardMTUDeduction = WireGuardOverhead
-	if isIPv6 {
-		nc.WireGuardMTUDeduction += ipv6ExtraOverhead
-	}
-
-	if nc.EnableMulticlusterGW {
-		nc.MTUDeduction = nc.getEncapMTUDeduction(isIPv6)
-		// When multi-cluster WireGuard is enabled, cross-cluster traffic will be encapsulated and encrypted, we need to
-		// reduce MTU for both encapsulation and encryption.
-		if nc.MulticlusterEncryptionMode == TrafficEncryptionModeWireGuard {
-			nc.MTUDeduction += nc.WireGuardMTUDeduction
-		}
-		return nc.MTUDeduction
-	}
-	if nc.TrafficEncapMode.SupportsEncap() {
-		nc.MTUDeduction = nc.getEncapMTUDeduction(isIPv6)
-	}
-	switch nc.TrafficEncryptionMode {
-	case TrafficEncryptionModeWireGuard:
-		// When WireGuard is enabled, cross-node traffic will only be encrypted, just reduce MTU for encryption.
-		nc.MTUDeduction = nc.WireGuardMTUDeduction
-	case TrafficEncryptionModeIPSec:
-		// When IPsec is enabled, cross-node traffic will be encapsulated and encrypted, we need to reduce MTU for both
-		// encapsulation and encryption.
-		nc.MTUDeduction += IPSecESPOverhead
-	}
-	return nc.MTUDeduction
+	_ = "STUB: not implemented"
+	return 0
 }
+
+// When multi-cluster WireGuard is enabled, cross-cluster traffic will be encapsulated and encrypted, we need to
+// reduce MTU for both encapsulation and encryption.
+
+// When WireGuard is enabled, cross-node traffic will only be encrypted, just reduce MTU for encryption.
+
+// When IPsec is enabled, cross-node traffic will be encapsulated and encrypted, we need to reduce MTU for both
+// encapsulation and encryption.
 
 // ServiceConfig includes K8s Service CIDR and available IP addresses for NodePort.
 type ServiceConfig struct {

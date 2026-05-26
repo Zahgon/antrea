@@ -15,7 +15,6 @@
 package v1alpha1
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
@@ -28,7 +27,8 @@ var SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v1alpha
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
 func Resource(resource string) schema.GroupResource {
-	return SchemeGroupVersion.WithResource(resource).GroupResource()
+	_ = "STUB: not implemented"
+	return *new(schema.GroupResource)
 }
 
 var (
@@ -39,19 +39,4 @@ var (
 	AddToScheme = SchemeBuilder.AddToScheme
 )
 
-func addKnownTypes(scheme *runtime.Scheme) error {
-	scheme.AddKnownTypes(SchemeGroupVersion,
-		&AntreaClusterNetworkPolicyStats{},
-		&AntreaClusterNetworkPolicyStatsList{},
-		&AntreaNetworkPolicyStats{},
-		&AntreaNetworkPolicyStatsList{},
-		&NetworkPolicyStats{},
-		&NetworkPolicyStatsList{},
-		&MulticastGroup{},
-		&MulticastGroupList{},
-		&NodeLatencyStats{},
-		&NodeLatencyStatsList{},
-	)
-	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
-	return nil
-}
+func addKnownTypes(scheme *runtime.Scheme) error { _ = "STUB: not implemented"; return nil }

@@ -14,10 +14,6 @@
 
 package cookie
 
-import (
-	"fmt"
-)
-
 const (
 	BitwidthRound           = 16
 	BitwidthCategory        = 8
@@ -41,30 +37,7 @@ const (
 	ExternalNodeConnectivity
 )
 
-func (c Category) String() string {
-	switch c {
-	case Default:
-		return "Default"
-	case PodConnectivity:
-		return "PodConnectivity"
-	case NetworkPolicy:
-		return "NetworkPolicy"
-	case Service:
-		return "Service"
-	case Egress:
-		return "Egress"
-	case Multicast:
-		return "Multicast"
-	case Multicluster:
-		return "Multicluster"
-	case Traceflow:
-		return "Traceflow"
-	case ExternalNodeConnectivity:
-		return "ExternalNodeConnectivity"
-	default:
-		return "Invalid"
-	}
-}
+func (c Category) String() string { _ = "STUB: not implemented"; return "" }
 
 // ID defines segments a cookie ID contains. An ID is composed like:
 //
@@ -76,38 +49,29 @@ func (c Category) String() string {
 type ID uint64
 
 func newID(round uint64, cat Category, objectID uint32) ID {
-	r := uint64(0)
-	r |= round << (64 - BitwidthRound)
-	r |= (uint64(cat) << BitwidthReserved) & CategoryMask
-	r |= uint64(objectID)
-	return ID(r)
+	_ = "STUB: not implemented"
+	return *new(ID)
 }
 
 // CookieMaskForRound returns a cookie and mask value that can be used to select
 // all flows belonging to the provided round.
-func CookieMaskForRound(round uint64) (uint64, uint64) {
-	return round << (64 - BitwidthRound), RoundMask
-}
+func CookieMaskForRound(round uint64) (uint64, uint64) { _ = "STUB: not implemented"; return 0, 0 }
 
 // Raw returns the unit64 type value of the ID.
 func (i ID) Raw() uint64 {
-	return uint64(i)
+	_ = "STUB: not implemented"
+
+	// Round returns the round number of the ID.
+	return 0
 }
 
-// Round returns the round number of the ID.
-func (i ID) Round() uint64 {
-	return i.Raw() >> (64 - BitwidthRound)
-}
+func (i ID) Round() uint64 { _ = "STUB: not implemented"; return 0 }
 
 // Category returns the category of the ID.
-func (i ID) Category() Category {
-	return Category((i.Raw() & CategoryMask) >> BitwidthReserved)
-}
+func (i ID) Category() Category { _ = "STUB: not implemented"; return *new(Category) }
 
 // String returns the string representation of the ID.
-func (i ID) String() string {
-	return fmt.Sprintf("<round:%d,category:%s>", i.Round(), i.Category().String())
-}
+func (i ID) String() string { _ = "STUB: not implemented"; return "" }
 
 // Allocator defines operations of a cookie ID allocator.
 type Allocator interface {
@@ -122,17 +86,13 @@ type allocator struct {
 }
 
 // Request returns a ID with the given category.
-func (a *allocator) Request(cat Category) ID {
-	return newID(a.round, cat, 0)
-}
+func (a *allocator) Request(cat Category) ID { _ = "STUB: not implemented"; return *new(ID) }
 
 func (a *allocator) RequestWithObjectID(cat Category, objectID uint32) ID {
-	return newID(a.round, cat, objectID)
+	_ = "STUB: not implemented"
+	return *new(ID)
 }
 
 // NewAllocator creates a cookie ID allocator by using the given round number.
 // Only last 16 bits of the round number would be used.
-func NewAllocator(round uint64) Allocator {
-	a := &allocator{round: round}
-	return a
-}
+func NewAllocator(round uint64) Allocator { _ = "STUB: not implemented"; return *new(Allocator) }

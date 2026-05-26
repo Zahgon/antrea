@@ -15,7 +15,6 @@
 package podinterface
 
 import (
-	"encoding/json"
 	"net"
 	"net/http"
 
@@ -25,48 +24,14 @@ import (
 )
 
 func generateResponse(i *interfacestore.InterfaceConfig) apis.PodInterfaceResponse {
-	return apis.PodInterfaceResponse{
-		PodName:       i.ContainerInterfaceConfig.PodName,
-		PodNamespace:  i.ContainerInterfaceConfig.PodNamespace,
-		InterfaceName: i.InterfaceName,
-		IPs:           getPodIPs(i.IPs),
-		MAC:           i.MAC.String(),
-		PortUUID:      i.OVSPortConfig.PortUUID,
-		OFPort:        i.OVSPortConfig.OFPort,
-		ContainerID:   i.ContainerInterfaceConfig.ContainerID,
-	}
+	_ = "STUB: not implemented"
+	return *new(apis.PodInterfaceResponse)
 }
 
-func getPodIPs(ips []net.IP) []string {
-	ipStrs := make([]string, len(ips))
-	for i := range ips {
-		ipStrs[i] = ips[i].String()
-	}
-	return ipStrs
-}
+func getPodIPs(ips []net.IP) []string { _ = "STUB: not implemented"; return nil }
 
 // HandleFunc returns the function which can handle queries issued by the pod-interface command.
 func HandleFunc(aq querier.AgentQuerier) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		name := r.URL.Query().Get("name")
-		ns := r.URL.Query().Get("namespace")
-
-		var pods []apis.PodInterfaceResponse
-		for _, v := range aq.GetInterfaceStore().GetInterfacesByType(interfacestore.ContainerInterface) {
-			podName := (*v.ContainerInterfaceConfig).PodName
-			podNS := (*v.ContainerInterfaceConfig).PodNamespace
-			if (len(name) == 0 || name == podName) && (len(ns) == 0 || ns == podNS) {
-				pods = append(pods, generateResponse(v))
-			}
-		}
-
-		if len(name) > 0 && len(pods) == 0 {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		err := json.NewEncoder(w).Encode(pods)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-		}
-	}
+	_ = "STUB: not implemented"
+	return *new(http.HandlerFunc)
 }

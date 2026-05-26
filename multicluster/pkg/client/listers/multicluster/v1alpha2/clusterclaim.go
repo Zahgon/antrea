@@ -41,12 +41,14 @@ type clusterClaimLister struct {
 
 // NewClusterClaimLister returns a new ClusterClaimLister.
 func NewClusterClaimLister(indexer cache.Indexer) ClusterClaimLister {
-	return &clusterClaimLister{listers.New[*multiclusterv1alpha2.ClusterClaim](indexer, multiclusterv1alpha2.Resource("clusterclaim"))}
+	_ = "STUB: not implemented"
+	return *new(ClusterClaimLister)
 }
 
 // ClusterClaims returns an object that can list and get ClusterClaims.
 func (s *clusterClaimLister) ClusterClaims(namespace string) ClusterClaimNamespaceLister {
-	return clusterClaimNamespaceLister{listers.NewNamespaced[*multiclusterv1alpha2.ClusterClaim](s.ResourceIndexer, namespace)}
+	_ = "STUB: not implemented"
+	return *new(ClusterClaimNamespaceLister)
 }
 
 // ClusterClaimNamespaceLister helps list and get ClusterClaims.

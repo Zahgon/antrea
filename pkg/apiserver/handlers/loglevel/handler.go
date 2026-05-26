@@ -15,35 +15,8 @@
 package loglevel
 
 import (
-	"encoding/json"
 	"net/http"
-	"strconv"
-
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/log"
 )
 
 // HandleFunc returns the function which can handle the /loglevel API request.
-func HandleFunc() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		level := r.URL.Query().Get("level")
-		if level != "" {
-			if levelNum, err := strconv.Atoi(level); err != nil || levelNum < 0 {
-				http.Error(w, "log level must be a positive integer", http.StatusBadRequest)
-				return
-			}
-			if err := log.SetLogLevel(level); err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-		} else {
-			levelNum, _ := strconv.Atoi(log.GetCurrentLogLevel())
-			err := json.NewEncoder(w).Encode(levelNum)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				klog.ErrorS(err, "Error when encoding log level to json")
-			}
-		}
-	}
-}
+func HandleFunc() http.HandlerFunc { _ = "STUB: not implemented"; return *new(http.HandlerFunc) }

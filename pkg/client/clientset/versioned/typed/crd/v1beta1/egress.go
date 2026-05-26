@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	crdv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -54,15 +53,4 @@ type egresses struct {
 }
 
 // newEgresses returns a Egresses
-func newEgresses(c *CrdV1beta1Client) *egresses {
-	return &egresses{
-		gentype.NewClientWithList[*crdv1beta1.Egress, *crdv1beta1.EgressList](
-			"egresses",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *crdv1beta1.Egress { return &crdv1beta1.Egress{} },
-			func() *crdv1beta1.EgressList { return &crdv1beta1.EgressList{} },
-		),
-	}
-}
+func newEgresses(c *CrdV1beta1Client) *egresses { _ = "STUB: not implemented"; return nil }

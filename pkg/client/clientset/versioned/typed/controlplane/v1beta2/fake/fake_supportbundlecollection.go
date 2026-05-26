@@ -29,22 +29,6 @@ type fakeSupportBundleCollections struct {
 }
 
 func newFakeSupportBundleCollections(fake *FakeControlplaneV1beta2) controlplanev1beta2.SupportBundleCollectionInterface {
-	return &fakeSupportBundleCollections{
-		gentype.NewFakeClientWithList[*v1beta2.SupportBundleCollection, *v1beta2.SupportBundleCollectionList](
-			fake.Fake,
-			"",
-			v1beta2.SchemeGroupVersion.WithResource("supportbundlecollections"),
-			v1beta2.SchemeGroupVersion.WithKind("SupportBundleCollection"),
-			func() *v1beta2.SupportBundleCollection { return &v1beta2.SupportBundleCollection{} },
-			func() *v1beta2.SupportBundleCollectionList { return &v1beta2.SupportBundleCollectionList{} },
-			func(dst, src *v1beta2.SupportBundleCollectionList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta2.SupportBundleCollectionList) []*v1beta2.SupportBundleCollection {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1beta2.SupportBundleCollectionList, items []*v1beta2.SupportBundleCollection) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(controlplanev1beta2.SupportBundleCollectionInterface)
 }

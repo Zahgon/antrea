@@ -15,55 +15,20 @@
 package testing
 
 import (
-	"net"
-	"strings"
-
 	"github.com/containernetworking/cni/pkg/types"
 	current "github.com/containernetworking/cni/pkg/types/100"
 )
 
 func GenerateIPAMResult(ipConfig []string, routeConfig []string, dnsConfig []string) *current.Result {
-	ipamResult := &current.Result{CNIVersion: current.ImplementedSpecVersion}
-	ipamResult.IPs = parseIPs(ipConfig)
-	ipamResult.Routes = parseRoute(routeConfig)
-	ipamResult.DNS = types.DNS{Nameservers: dnsConfig}
-	return ipamResult
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func parseRoute(routeConfig []string) []*types.Route {
-	routes := make([]*types.Route, 0)
-	for _, rt := range routeConfig {
-		route := strings.Split(rt, ",")
-		_, dst, _ := net.ParseCIDR(strings.Trim(route[0], " "))
-		routeCfg := &types.Route{Dst: *dst}
-		if len(route) == 2 {
-			gw := net.ParseIP(strings.Trim(route[1], " "))
-			routeCfg.GW = gw
-		}
-		routes = append(routes, routeCfg)
-	}
-	return routes
-}
+func parseRoute(routeConfig []string) []*types.Route { _ = "STUB: not implemented"; return nil }
 
-func parseIPs(ips []string) []*current.IPConfig {
-	ipConfigs := make([]*current.IPConfig, 0)
-	for _, ipc := range ips {
-		configs := strings.Split(ipc, ",")
-		addr := strings.Trim(configs[0], " ")
-		gw := strings.Trim(configs[1], " ")
-		version := strings.Trim(configs[2], " ")
-		ipConfigs = append(ipConfigs, parseIPConfig(addr, gw, version))
-	}
-	return ipConfigs
-}
+func parseIPs(ips []string) []*current.IPConfig { _ = "STUB: not implemented"; return nil }
 
 func parseIPConfig(ipAddress string, gw string, version string) *current.IPConfig {
-	ip, ipv4Net, _ := net.ParseCIDR(ipAddress)
-	ipv4Net.IP = ip
-	ipConfig := &current.IPConfig{Address: *ipv4Net}
-	if gw != "" {
-		gateway := net.ParseIP(gw)
-		ipConfig.Gateway = gateway
-	}
-	return ipConfig
+	_ = "STUB: not implemented"
+	return nil
 }

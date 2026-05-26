@@ -29,24 +29,6 @@ type fakeAntreaClusterNetworkPolicyStats struct {
 }
 
 func newFakeAntreaClusterNetworkPolicyStats(fake *FakeStatsV1alpha1) statsv1alpha1.AntreaClusterNetworkPolicyStatsInterface {
-	return &fakeAntreaClusterNetworkPolicyStats{
-		gentype.NewFakeClientWithList[*v1alpha1.AntreaClusterNetworkPolicyStats, *v1alpha1.AntreaClusterNetworkPolicyStatsList](
-			fake.Fake,
-			"",
-			v1alpha1.SchemeGroupVersion.WithResource("antreaclusternetworkpolicystats"),
-			v1alpha1.SchemeGroupVersion.WithKind("AntreaClusterNetworkPolicyStats"),
-			func() *v1alpha1.AntreaClusterNetworkPolicyStats { return &v1alpha1.AntreaClusterNetworkPolicyStats{} },
-			func() *v1alpha1.AntreaClusterNetworkPolicyStatsList {
-				return &v1alpha1.AntreaClusterNetworkPolicyStatsList{}
-			},
-			func(dst, src *v1alpha1.AntreaClusterNetworkPolicyStatsList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.AntreaClusterNetworkPolicyStatsList) []*v1alpha1.AntreaClusterNetworkPolicyStats {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha1.AntreaClusterNetworkPolicyStatsList, items []*v1alpha1.AntreaClusterNetworkPolicyStats) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(statsv1alpha1.AntreaClusterNetworkPolicyStatsInterface)
 }

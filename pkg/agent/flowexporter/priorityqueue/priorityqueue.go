@@ -14,7 +14,6 @@
 package priorityqueue
 
 import (
-	"container/heap"
 	"time"
 
 	"antrea.io/antrea/v2/pkg/agent/flowexporter/connection"
@@ -34,138 +33,76 @@ type ExpirePriorityQueue struct {
 }
 
 func NewExpirePriorityQueue(activeFlowTimeout time.Duration, idleFlowTimeout time.Duration) *ExpirePriorityQueue {
-	return &ExpirePriorityQueue{
-		items:             make([]*ItemToExpire, 0),
-		ActiveFlowTimeout: activeFlowTimeout,
-		IdleFlowTimeout:   idleFlowTimeout,
-		KeyToItem:         make(map[connection.ConnectionKey]*ItemToExpire),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (pq *ExpirePriorityQueue) Len() int {
-	return len(pq.items)
-}
+func (pq *ExpirePriorityQueue) Len() int { _ = "STUB: not implemented"; return 0 }
 
 func (pq *ExpirePriorityQueue) minExpireTime(i int) time.Time {
-	if pq.items[i].ActiveExpireTime.Before(pq.items[i].IdleExpireTime) {
-		return pq.items[i].ActiveExpireTime
-	} else {
-		return pq.items[i].IdleExpireTime
-	}
+	_ = "STUB: not implemented"
+	return *new(time.Time)
 }
 
-func (pq *ExpirePriorityQueue) Less(i, j int) bool {
-	return pq.minExpireTime(i).Before(pq.minExpireTime(j))
-}
+func (pq *ExpirePriorityQueue) Less(i, j int) bool { _ = "STUB: not implemented"; return false }
 
-func (pq *ExpirePriorityQueue) Swap(i, j int) {
-	pq.items[i], pq.items[j] = pq.items[j], pq.items[i]
-	pq.items[i].Index = i
-	pq.items[j].Index = j
-}
+func (pq *ExpirePriorityQueue) Swap(i, j int) { _ = "STUB: not implemented"; return }
 
-func (pq *ExpirePriorityQueue) Push(x interface{}) {
-	n := len((*pq).items)
-	item := x.(*ItemToExpire)
-	item.Index = n
-	(*pq).items = append((*pq).items, item)
-}
+func (pq *ExpirePriorityQueue) Push(x interface{}) { _ = "STUB: not implemented"; return }
 
-func (pq *ExpirePriorityQueue) Pop() interface{} {
-	n := len((*pq).items)
-	item := ((*pq).items)[n-1]
-	item.Index = -1
-	(*pq).items = ((*pq).items)[0:(n - 1)]
-	return item
-}
+func (pq *ExpirePriorityQueue) Pop() interface{} { _ = "STUB: not implemented"; return nil }
 
 // Peek returns the item at the beginning of the queue, without removing the
 // item or otherwise mutating the queue. It is safe to call directly.
-func (pq *ExpirePriorityQueue) Peek() *ItemToExpire {
-	if pq.Len() == 0 {
-		return nil
-	}
-	return pq.items[0]
-}
+func (pq *ExpirePriorityQueue) Peek() *ItemToExpire { _ = "STUB: not implemented"; return nil }
 
 // Update modifies the priority of an Item in the queue.
 func (pq *ExpirePriorityQueue) Update(item *ItemToExpire, activeExpireTime time.Time, idleExpireTime time.Time) {
-	item.ActiveExpireTime = activeExpireTime
-	item.IdleExpireTime = idleExpireTime
-
-	heap.Fix(pq, item.Index)
+	_ = "STUB: not implemented"
+	return
 }
 
 // Remove removes and returns an Item by key from priority queue if it exists.
 func (pq *ExpirePriorityQueue) Remove(connKey connection.ConnectionKey) *ItemToExpire {
-	item, exists := pq.KeyToItem[connKey]
-	if !exists {
-		return nil
-	}
-
-	removedItem := heap.Remove(pq, item.Index)
-	delete(pq.KeyToItem, connKey)
-	return removedItem.(*ItemToExpire)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Clear removes all items from the queue and key index map.
-func (pq *ExpirePriorityQueue) Clear() {
-	clear(pq.items)
-	pq.items = pq.items[:0]
-	clear(pq.KeyToItem)
-}
+func (pq *ExpirePriorityQueue) Clear() { _ = "STUB: not implemented"; return }
 
 // GetExpiryFromExpirePriorityQueue returns the shortest expire time duration
 // from expire priority queue.
 func (pq *ExpirePriorityQueue) GetExpiryFromExpirePriorityQueue() time.Duration {
-	currTime := time.Now()
-	if pq.Len() > 0 {
-		// Get the minExpireTime of the top item in ExpirePriorityQueue.
-		expiryDuration := minExpiryTime + pq.minExpireTime(0).Sub(currTime)
-		if expiryDuration < 0 {
-			return minExpiryTime
-		}
-		return expiryDuration
-	}
-	if pq.ActiveFlowTimeout < pq.IdleFlowTimeout {
-		return pq.ActiveFlowTimeout
-	}
-	return pq.IdleFlowTimeout
+	_ = "STUB: not implemented"
+	return *new(time.Duration)
 }
+
+// Get the minExpireTime of the top item in ExpirePriorityQueue.
 
 // WriteItemToQueue adds conn with connKey into the queue. If an existing item
 // has the same connKey, it will be overwritten by the new item.
 func (pq *ExpirePriorityQueue) WriteItemToQueue(connKey connection.ConnectionKey, conn *connection.Connection) {
-	currTime := time.Now()
-	pqItem := &ItemToExpire{
-		Conn:             conn,
-		ActiveExpireTime: currTime.Add(pq.ActiveFlowTimeout),
-		IdleExpireTime:   currTime.Add(pq.IdleFlowTimeout),
-	}
-	// If connKey exists in pq, it is removed first to avoid having multiple pqItems with same key
-	// in the queue, which can cause memory leak as the previous one can't be updated or removed.
-	pq.Remove(connKey)
-	heap.Push(pq, pqItem)
-	pq.KeyToItem[connKey] = pqItem
+	_ = "STUB: not implemented"
+	return
 }
 
+// If connKey exists in pq, it is removed first to avoid having multiple pqItems with same key
+// in the queue, which can cause memory leak as the previous one can't be updated or removed.
+
 func (pq *ExpirePriorityQueue) ResetActiveExpireTimeAndPush(pqItem *ItemToExpire, currTime time.Time) {
-	pqItem.ActiveExpireTime = currTime.Add(pq.ActiveFlowTimeout)
-	heap.Push(pq, pqItem)
+	_ = "STUB: not implemented"
+	return
 }
 
 func (pq *ExpirePriorityQueue) RemoveItemFromMap(conn *connection.Connection) {
-	connKey := connection.NewConnectionKey(conn)
-	delete(pq.KeyToItem, connKey)
+	_ = "STUB: not implemented"
+	return
 }
 
 func (pq *ExpirePriorityQueue) GetTopExpiredItem(currTime time.Time) *ItemToExpire {
+	_ = "STUB: not implemented"
 	// If the queue is empty or top item is not timeout, then we do not have to
 	// check the following items.
-	topItem := pq.Peek()
-	if topItem == nil || (topItem.ActiveExpireTime.After(currTime) && topItem.IdleExpireTime.After(currTime)) {
-		return nil
-	}
-	pqItem := heap.Pop(pq).(*ItemToExpire)
-	return pqItem
+	return nil
 }

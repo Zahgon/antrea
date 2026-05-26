@@ -29,23 +29,6 @@ var destroyExamples = strings.Trim(`
   antctl mc destroy --clusterset clusterset1 -n antrea-multicluster
 `, "\n")
 
-func NewDestroyCommand() *cobra.Command {
-	command := &cobra.Command{
-		Use:     "destroy",
-		Short:   "Destroy the ClusterSet in the given Namespace of the leader cluster",
-		Args:    cobra.MaximumNArgs(0),
-		Example: destroyExamples,
-		RunE:    destroyRunE,
-	}
+func NewDestroyCommand() *cobra.Command { _ = "STUB: not implemented"; return nil }
 
-	o := common.CleanOptions{}
-	destroyOpts = &o
-	command.Flags().StringVarP(&o.Namespace, "namespace", "n", "", "Namespace of the ClusterSet")
-	command.Flags().StringVarP(&o.ClusterSet, "clusterset", "", "", "ClusterSet ID")
-
-	return command
-}
-
-func destroyRunE(cmd *cobra.Command, args []string) error {
-	return common.Cleanup(cmd, destroyOpts)
-}
+func destroyRunE(cmd *cobra.Command, args []string) error { _ = "STUB: not implemented"; return nil }

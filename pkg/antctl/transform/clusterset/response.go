@@ -29,60 +29,24 @@ type Response struct {
 }
 
 func Transform(r interface{}, single bool) (interface{}, error) {
-	if single {
-		return listTransform([]mcv1alpha2.ClusterSet{r.(mcv1alpha2.ClusterSet)})
-	}
-	return listTransform(r)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func listTransform(l interface{}) (interface{}, error) {
-	clusterSets := l.([]mcv1alpha2.ClusterSet)
-	var result []interface{}
+func listTransform(l interface{}) (interface{}, error) { _ = "STUB: not implemented"; return nil, nil }
 
-	for _, clusterSet := range clusterSets {
-		if len(clusterSet.Status.ClusterStatuses) > 0 {
-			for i := range clusterSet.Status.ClusterStatuses {
-				r := clusterSet.Status.ClusterStatuses[i]
-				for j := range r.Conditions {
-					condition := r.Conditions[j]
-					o, _ := objectTransform(clusterSet, r, condition)
-					result = append(result, o.(Response))
-				}
-			}
-		} else {
-			// When the ClusterSet has no status, we should print it with empty status.
-			o, _ := objectTransform(clusterSet, mcv1alpha2.ClusterStatus{},
-				mcv1alpha2.ClusterCondition{})
-			result = append(result, o.(Response))
-		}
-	}
-
-	return result, nil
-}
+// When the ClusterSet has no status, we should print it with empty status.
 
 func objectTransform(clusterSet mcv1alpha2.ClusterSet, status mcv1alpha2.ClusterStatus,
 	condition mcv1alpha2.ClusterCondition) (interface{}, error) {
-
-	return Response{
-		ClusterID:    status.ClusterID,
-		Namespace:    clusterSet.Namespace,
-		ClusterSetID: clusterSet.Name,
-		Type:         string(condition.Type),
-		Status:       string(condition.Status),
-		Reason:       condition.Reason,
-	}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 var _ common.TableOutput = new(Response)
 
-func (r Response) GetTableHeader() []string {
-	return []string{"CLUSTER-ID", "NAMESPACE", "CLUSTERSET-ID", "TYPE", "STATUS", "REASON"}
-}
+func (r Response) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
-func (r Response) GetTableRow(maxColumnLength int) []string {
-	return []string{r.ClusterID, r.Namespace, r.ClusterSetID, r.Type, r.Status, r.Reason}
-}
+func (r Response) GetTableRow(maxColumnLength int) []string { _ = "STUB: not implemented"; return nil }
 
-func (r Response) SortRows() bool {
-	return true
-}
+func (r Response) SortRows() bool { _ = "STUB: not implemented"; return false }

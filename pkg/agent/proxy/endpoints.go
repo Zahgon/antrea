@@ -20,7 +20,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	discovery "k8s.io/api/discovery/v1"
 
-	"antrea.io/antrea/v2/pkg/agent/proxy/types"
 	k8sproxy "antrea.io/antrea/v2/third_party/proxy"
 )
 
@@ -34,29 +33,21 @@ type endpointsChangesTracker struct {
 }
 
 func newEndpointsChangesTracker(hostname string, ipFamily v1.IPFamily) *endpointsChangesTracker {
-	tracker := k8sproxy.NewEndpointsChangeTracker(ipFamily, hostname, types.NewEndpointInfo, nil)
-	return &endpointsChangesTracker{tracker: tracker}
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (t *endpointsChangesTracker) OnEndpointsSynced() {
-	t.Lock()
-	defer t.Unlock()
-
-	t.initialized = true
-}
+func (t *endpointsChangesTracker) OnEndpointsSynced() { _ = "STUB: not implemented"; return }
 
 func (t *endpointsChangesTracker) OnEndpointSliceUpdate(endpointSlice *discovery.EndpointSlice, removeSlice bool) bool {
-	return t.tracker.EndpointSliceUpdate(endpointSlice, removeSlice)
+	_ = "STUB: not implemented"
+	return false
 }
 
-func (t *endpointsChangesTracker) Synced() bool {
-	t.RLock()
-	defer t.RUnlock()
-
-	return t.initialized
-}
+func (t *endpointsChangesTracker) Synced() bool { _ = "STUB: not implemented"; return false }
 
 // Update updates an EndpointsMap and numLocalEndpoints based on current changes.
 func (t *endpointsChangesTracker) Update(em k8sproxy.EndpointsMap) k8sproxy.UpdateEndpointsMapResult {
-	return em.Update(t.tracker)
+	_ = "STUB: not implemented"
+	return *new(k8sproxy.UpdateEndpointsMapResult)
 }

@@ -41,12 +41,14 @@ type clusterInfoImportLister struct {
 
 // NewClusterInfoImportLister returns a new ClusterInfoImportLister.
 func NewClusterInfoImportLister(indexer cache.Indexer) ClusterInfoImportLister {
-	return &clusterInfoImportLister{listers.New[*multiclusterv1alpha1.ClusterInfoImport](indexer, multiclusterv1alpha1.Resource("clusterinfoimport"))}
+	_ = "STUB: not implemented"
+	return *new(ClusterInfoImportLister)
 }
 
 // ClusterInfoImports returns an object that can list and get ClusterInfoImports.
 func (s *clusterInfoImportLister) ClusterInfoImports(namespace string) ClusterInfoImportNamespaceLister {
-	return clusterInfoImportNamespaceLister{listers.NewNamespaced[*multiclusterv1alpha1.ClusterInfoImport](s.ResourceIndexer, namespace)}
+	_ = "STUB: not implemented"
+	return *new(ClusterInfoImportNamespaceLister)
 }
 
 // ClusterInfoImportNamespaceLister helps list and get ClusterInfoImports.

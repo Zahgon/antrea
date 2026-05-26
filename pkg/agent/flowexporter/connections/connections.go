@@ -15,17 +15,13 @@
 package connections
 
 import (
-	"encoding/binary"
-	"fmt"
 	"sync"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/flowexporter/connection"
 	"antrea.io/antrea/v2/pkg/agent/flowexporter/priorityqueue"
-	"antrea.io/antrea/v2/pkg/agent/flowexporter/utils"
 	"antrea.io/antrea/v2/pkg/agent/proxy"
 	"antrea.io/antrea/v2/pkg/agent/types"
 	"antrea.io/antrea/v2/pkg/querier"
@@ -60,204 +56,98 @@ func NewConnectionStore(
 	podStore objectstore.PodStore,
 	proxier proxy.ProxyQuerier,
 	cfg ConnectionStoreConfig) connectionStore {
-	return connectionStore{
-		connections:            make(map[connection.ConnectionKey]*connection.Connection),
-		networkPolicyQuerier:   npQuerier,
-		podStore:               podStore,
-		antreaProxier:          proxier,
-		expirePriorityQueue:    priorityqueue.NewExpirePriorityQueue(cfg.ActiveFlowTimeout, cfg.IdleFlowTimeout),
-		staleConnectionTimeout: cfg.StaleConnectionTimeout,
-	}
+	_ = "STUB: not implemented"
+	return *new(connectionStore)
 }
 
 // GetConnByKey gets the connection in connection map given the connection key.
 func (cs *connectionStore) GetConnByKey(connKey connection.ConnectionKey) (*connection.Connection, bool) {
-	cs.mutex.Lock()
-	defer cs.mutex.Unlock()
-	conn, found := cs.connections[connKey]
-	return conn, found
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
-func (cs *connectionStore) NumConnections() int {
-	cs.mutex.Lock()
-	defer cs.mutex.Unlock()
-	return len(cs.connections)
-}
+func (cs *connectionStore) NumConnections() int { _ = "STUB: not implemented"; return 0 }
 
 // ForAllConnectionsDo execute the callback for each connection in connection map.
 func (cs *connectionStore) ForAllConnectionsDo(callback connection.ConnectionMapCallBack) error {
-	cs.mutex.Lock()
-	defer cs.mutex.Unlock()
-	for k, v := range cs.connections {
-		err := callback(k, v)
-		if err != nil {
-			klog.ErrorS(err, "Callback execution failed for flow", "key", k, "conn", v)
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // ForAllConnectionsDoWithoutLock execute the callback for each connection in connection
 // map, without grabbing the lock. Caller is expected to grab lock.
 func (cs *connectionStore) ForAllConnectionsDoWithoutLock(callback connection.ConnectionMapCallBack) error {
-	for k, v := range cs.connections {
-		err := callback(k, v)
-		if err != nil {
-			klog.ErrorS(err, "Callback execution failed for flow", "key", k, "conn", v)
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // AddConnToMap adds the connection to connections map given connection key.
 // This is used only for unit tests.
 func (cs *connectionStore) AddConnToMap(connKey *connection.ConnectionKey, conn *connection.Connection) {
-	cs.mutex.Lock()
-	defer cs.mutex.Unlock()
-	cs.connections[*connKey] = conn
+	_ = "STUB: not implemented"
+	return
 }
 
 func (cs *connectionStore) fillPodInfo(conn *connection.Connection) {
-	if cs.podStore == nil {
-		klog.V(4).Info("Pod store is not available to retrieve local Pods information.")
-		return
-	}
-	// sourceIP/destinationIP are mapped only to local pods and not remote pods.
-	srcIP := conn.FlowKey.SourceAddress.String()
-	dstIP := conn.FlowKey.DestinationAddress.String()
-
-	srcPod, srcFound := cs.podStore.GetPodByIPAndTime(srcIP, conn.StartTime)
-	dstPod, dstFound := cs.podStore.GetPodByIPAndTime(dstIP, conn.StartTime)
-	if srcFound {
-		conn.SourcePodName = srcPod.Name
-		conn.SourcePodNamespace = srcPod.Namespace
-		conn.SourcePodUID = string(srcPod.UID)
-	}
-	if dstFound {
-		conn.DestinationPodName = dstPod.Name
-		conn.DestinationPodNamespace = dstPod.Namespace
-		conn.DestinationPodUID = string(dstPod.UID)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
+// sourceIP/destinationIP are mapped only to local pods and not remote pods.
+
 func (cs *connectionStore) fillServiceInfo(conn *connection.Connection, serviceStr string) {
+	_ = "STUB: not implemented"
 	// resolve destination Service information
-	if cs.antreaProxier != nil {
-		servicePortName, exists := cs.antreaProxier.GetServiceByIP(serviceStr)
-		if exists {
-			conn.DestinationServicePortName = servicePortName.String()
-		} else {
-			klog.InfoS("Could not retrieve the Service info from antrea-agent-proxier", "serviceStr", serviceStr)
-		}
-	}
+	return
 }
 
 // LookupServiceProtocol returns the corresponding Service protocol string for a given protocol identifier
 func lookupServiceProtocol(protoID uint8) (corev1.Protocol, error) {
-	serviceProto, found := serviceProtocolMap[protoID]
-	if !found {
-		return "", fmt.Errorf("unknown protocol identifier: %d", protoID)
-	}
-	return serviceProto, nil
+	_ = "STUB: not implemented"
+	return *new(corev1.Protocol), nil
 }
 
 func (cs *connectionStore) getPolicyRuleMetadata(conn *connection.Connection, ruleID uint32, labelsStart, labelsEnd int) (*types.PolicyRule, uint8, bool) {
-	var rule *types.PolicyRule
-	var disposition uint8
-
-	if ruleID != 0 {
-		// deny connections have their ruleIDs set
-		rule = cs.networkPolicyQuerier.GetRuleByFlowID(ruleID)
-		disposition = utils.RuleActionToUint8(conn.Disposition)
-	} else if len(conn.Labels) >= labelsEnd {
-		// allow connections have their flowIDs set in the labels
-		flowID := binary.BigEndian.Uint32(conn.Labels[labelsStart:labelsEnd])
-		if flowID != 0 {
-			rule = cs.networkPolicyQuerier.GetRuleByFlowID(flowID)
-			disposition = utils.NetworkPolicyRuleActionAllow
-		}
-	} else {
-		klog.V(4).InfoS("Failed to lookup policy rule for connection", "connectionLabels", conn.Labels)
-	}
-
-	if rule == nil {
-		klog.V(4).InfoS("Cannot find NetworkPolicy rule", "ruleID", ruleID)
-		return nil, 0, false
-	}
-	if rule.PolicyRef == nil {
-		klog.V(4).InfoS("Found NetworkPolicy rule with nil PolicyRef", "ruleID", ruleID)
-		return nil, 0, false
-	}
-
-	if klog.V(4).Enabled() {
-		klog.InfoS("Found NetworkPolicy rule", "ruleID", ruleID, "policy", klog.KRef(rule.PolicyRef.Namespace, rule.PolicyRef.Name), "ruleName", rule.Name)
-	}
-
-	return rule, disposition, true
+	_ = "STUB: not implemented"
+	return nil, 0, false
 }
-func (cs *connectionStore) addIngressNetworkPolicyMetadata(conn *connection.Connection) {
-	rule, disposition, ok := cs.getPolicyRuleMetadata(conn, conn.IngressRuleID, 12, 16)
-	if !ok {
-		return
-	}
 
-	policy := rule.PolicyRef
-	conn.IngressNetworkPolicyName = policy.Name
-	conn.IngressNetworkPolicyNamespace = policy.Namespace
-	conn.IngressNetworkPolicyUID = string(policy.UID)
-	conn.IngressNetworkPolicyType = utils.PolicyTypeToUint8(policy.Type)
-	conn.IngressNetworkPolicyRuleName = rule.Name
-	conn.IngressNetworkPolicyRuleAction = disposition
+// deny connections have their ruleIDs set
+
+// allow connections have their flowIDs set in the labels
+
+func (cs *connectionStore) addIngressNetworkPolicyMetadata(conn *connection.Connection) {
+	_ = "STUB: not implemented"
+	return
 }
 
 func (cs *connectionStore) addEgressNetworkPolicyMetadata(conn *connection.Connection) {
-	rule, disposition, ok := cs.getPolicyRuleMetadata(conn, conn.EgressRuleID, 8, 12)
-	if !ok {
-		return
-	}
-
-	policy := rule.PolicyRef
-	conn.EgressNetworkPolicyName = policy.Name
-	conn.EgressNetworkPolicyNamespace = policy.Namespace
-	conn.EgressNetworkPolicyUID = string(policy.UID)
-	conn.EgressNetworkPolicyType = utils.PolicyTypeToUint8(policy.Type)
-	conn.EgressNetworkPolicyRuleName = rule.Name
-	conn.EgressNetworkPolicyRuleAction = disposition
+	_ = "STUB: not implemented"
+	return
 }
 
 func (cs *connectionStore) addNetworkPolicyMetadata(conn *connection.Connection) {
-	cs.addIngressNetworkPolicyMetadata(conn)
-	cs.addEgressNetworkPolicyMetadata(conn)
+	_ = "STUB: not implemented"
+	return
 }
 
-func (cs *connectionStore) AcquireConnStoreLock() {
-	cs.mutex.Lock()
-}
+func (cs *connectionStore) AcquireConnStoreLock() { _ = "STUB: not implemented"; return }
 
 func (cs *connectionStore) ReleaseConnStoreLock() {
-	cs.mutex.Unlock()
+	_ = "STUB: not implemented"
+
+	// UpdateConnAndQueue deletes the inactive connection from keyToItem map,
+	// without adding it back to the PQ. In this way, we can avoid to reset the
+	// item's expire time every time we encounter it in the PQ. The method also
+	// updates active connection's stats fields and adds it back to the PQ. Layer 7
+	// fields should be set to default to prevent from re-exporting same values.
+	return
 }
 
-// UpdateConnAndQueue deletes the inactive connection from keyToItem map,
-// without adding it back to the PQ. In this way, we can avoid to reset the
-// item's expire time every time we encounter it in the PQ. The method also
-// updates active connection's stats fields and adds it back to the PQ. Layer 7
-// fields should be set to default to prevent from re-exporting same values.
 func (cs *connectionStore) UpdateConnAndQueue(pqItem *priorityqueue.ItemToExpire, currTime time.Time) {
-	conn := pqItem.Conn
-	conn.LastExportTime = currTime
-	if conn.ReadyToDelete || !conn.IsActive {
-		cs.expirePriorityQueue.RemoveItemFromMap(conn)
-	} else {
-		// For active connections, we update their "prev" stats fields,
-		// reset active expire time and push back into the PQ.
-		conn.PrevBytes = conn.OriginalBytes
-		conn.PrevPackets = conn.OriginalPackets
-		conn.PrevTCPState = conn.TCPState
-		conn.PrevReverseBytes = conn.ReverseBytes
-		conn.PrevReversePackets = conn.ReversePackets
-		cs.expirePriorityQueue.ResetActiveExpireTimeAndPush(pqItem, currTime)
-	}
+	_ = "STUB: not implemented"
+	return
 }
+
+// For active connections, we update their "prev" stats fields,
+// reset active expire time and push back into the PQ.

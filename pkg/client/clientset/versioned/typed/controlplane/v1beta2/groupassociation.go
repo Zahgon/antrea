@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	controlplanev1beta2 "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	gentype "k8s.io/client-go/gentype"
 )
@@ -44,13 +43,6 @@ type groupAssociations struct {
 
 // newGroupAssociations returns a GroupAssociations
 func newGroupAssociations(c *ControlplaneV1beta2Client, namespace string) *groupAssociations {
-	return &groupAssociations{
-		gentype.NewClient[*controlplanev1beta2.GroupAssociation](
-			"groupassociations",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			namespace,
-			func() *controlplanev1beta2.GroupAssociation { return &controlplanev1beta2.GroupAssociation{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

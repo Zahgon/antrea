@@ -37,14 +37,11 @@ type IPFIXRegistry interface {
 
 type ipfixRegistry struct{}
 
-func NewIPFIXRegistry() *ipfixRegistry {
-	return &ipfixRegistry{}
-}
+func NewIPFIXRegistry() *ipfixRegistry { _ = "STUB: not implemented"; return nil }
 
-func (reg *ipfixRegistry) LoadRegistry() {
-	loadRegistry()
-}
+func (reg *ipfixRegistry) LoadRegistry() { _ = "STUB: not implemented"; return }
 
 func (reg *ipfixRegistry) GetInfoElement(name string, enterpriseID uint32) (*ipfixentities.InfoElement, error) {
-	return ipfixregistry.GetInfoElement(name, enterpriseID)
+	_ = "STUB: not implemented"
+	return nil, nil
 }

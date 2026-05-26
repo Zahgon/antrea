@@ -17,19 +17,13 @@
 package monitortool
 
 import (
-	"errors"
 	"net"
 	"sync"
 	"time"
 
-	"github.com/containernetworking/plugins/pkg/ip"
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/klog/v2"
 
 	statsv1alpha1 "antrea.io/antrea/v2/pkg/apis/stats/v1alpha1"
-	"antrea.io/antrea/v2/pkg/util/k8s"
 )
 
 // LatencyStore is a store for latency information of connections between Nodes.
@@ -58,237 +52,76 @@ type NodeIPLatencyEntry struct {
 }
 
 // NewLatencyStore creates a new LatencyStore.
-func NewLatencyStore(isNetworkPolicyOnly bool) *LatencyStore {
-	store := &LatencyStore{
-		nodeIPLatencyMap:    make(map[string]*NodeIPLatencyEntry),
-		nodeTargetIPsMap:    make(map[string][]net.IP),
-		isNetworkPolicyOnly: isNetworkPolicyOnly,
-	}
-
-	return store
-}
+func NewLatencyStore(isNetworkPolicyOnly bool) *LatencyStore { _ = "STUB: not implemented"; return nil }
 
 // getNodeIPLatencyEntry returns the NodeIPLatencyEntry for the given Node IP
 // For now, it is only used for testing purposes.
 func (s *LatencyStore) getNodeIPLatencyEntry(nodeIP string) (NodeIPLatencyEntry, bool) {
-	s.mutex.RLock()
-	defer s.mutex.RUnlock()
-
-	entry, ok := s.nodeIPLatencyMap[nodeIP]
-	if !ok {
-		return NodeIPLatencyEntry{}, ok
-	}
-
-	return *entry, ok
+	_ = "STUB: not implemented"
+	return *new(NodeIPLatencyEntry), false
 }
 
 // getNodeIPLatencyKeys returns the list of Node IPs for which we currently have
 // latency measurements.
 // It is only used for testing purposes.
-func (s *LatencyStore) getNodeIPLatencyKeys() []string {
-	s.mutex.RLock()
-	defer s.mutex.RUnlock()
-
-	keys := make([]string, 0, len(s.nodeIPLatencyMap))
-	for key := range s.nodeIPLatencyMap {
-		keys = append(keys, key)
-	}
-
-	return keys
-}
+func (s *LatencyStore) getNodeIPLatencyKeys() []string { _ = "STUB: not implemented"; return nil }
 
 // SetNodeIPLatencyEntry sets the NodeIPLatencyEntry for the given Node IP
 func (s *LatencyStore) SetNodeIPLatencyEntry(nodeIP string, mutator func(entry *NodeIPLatencyEntry)) {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
-
-	entry, ok := s.nodeIPLatencyMap[nodeIP]
-	if !ok {
-		entry = &NodeIPLatencyEntry{}
-		s.nodeIPLatencyMap[nodeIP] = entry
-	}
-
-	mutator(entry)
+	_ = "STUB: not implemented"
+	return
 }
 
 // addNode adds a Node to the latency store
-func (s *LatencyStore) addNode(node *corev1.Node) {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
-
-	s.updateNodeMap(node)
-}
+func (s *LatencyStore) addNode(node *corev1.Node) { _ = "STUB: not implemented"; return }
 
 // deleteNode deletes a Node from the latency store
-func (s *LatencyStore) deleteNode(node *corev1.Node) {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
-
-	delete(s.nodeTargetIPsMap, node.Name)
-}
+func (s *LatencyStore) deleteNode(node *corev1.Node) { _ = "STUB: not implemented"; return }
 
 // updateNode updates a Node name in the latency store
-func (s *LatencyStore) updateNode(new *corev1.Node) {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
+func (s *LatencyStore) updateNode(new *corev1.Node) { _ = "STUB: not implemented"; return }
 
-	// Node name will not be changed in the same Node update operation.
-	s.updateNodeMap(new)
-}
+// Node name will not be changed in the same Node update operation.
 
 // updateNodeMap updates the nodeTargetIPsMap with the IPs of the given Node.
-func (s *LatencyStore) updateNodeMap(node *corev1.Node) {
-	nodeIPs, err := s.getNodeIPs(node)
-	if err != nil {
-		klog.ErrorS(err, "Failed to get IPs for Node", "nodeName", node.Name)
-		return
-	}
-
-	s.nodeTargetIPsMap[node.Name] = nodeIPs
-}
+func (s *LatencyStore) updateNodeMap(node *corev1.Node) { _ = "STUB: not implemented"; return }
 
 // getNodeIPs returns the target IPs of the given Node based on the agent mode.
 func (s *LatencyStore) getNodeIPs(node *corev1.Node) ([]net.IP, error) {
-	if s.isNetworkPolicyOnly {
-		transportIPs, err := getTransportIPs(node)
-		if err != nil {
-			return nil, err
-		}
-
-		return transportIPs, nil
-	} else {
-		gw0IPs, err := getGWIPs(node)
-		if err != nil {
-			return nil, err
-		}
-
-		return gw0IPs, nil
-	}
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // getTransportIPs returns the transport IPs of the given Node.
 func getTransportIPs(node *corev1.Node) ([]net.IP, error) {
-	var transportIPs []net.IP
-	ips, err := k8s.GetNodeTransportAddrs(node)
-	if err != nil {
-		return transportIPs, err
-	}
-
-	if ips.IPv4 != nil {
-		transportIPs = append(transportIPs, ips.IPv4)
-	}
-	if ips.IPv6 != nil {
-		transportIPs = append(transportIPs, ips.IPv6)
-	}
-
-	return transportIPs, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // getGWIPs returns the gateway IPs of the given Node.
-func getGWIPs(node *corev1.Node) ([]net.IP, error) {
-	var gwIPs []net.IP
+func getGWIPs(node *corev1.Node) ([]net.IP, error) { _ = "STUB: not implemented"; return nil, nil }
 
-	podCIDRStrs := getPodCIDRsOnNode(node)
-	if len(podCIDRStrs) == 0 {
-		return nil, errors.New("node does not have a PodCIDR")
-	}
-
-	for _, podCIDR := range podCIDRStrs {
-		peerPodCIDRAddr, _, err := net.ParseCIDR(podCIDR)
-		if err != nil {
-			return nil, err
-		}
-
-		// Add first IP in CIDR to the map
-		peerGatewayIP := ip.NextIP(peerPodCIDRAddr)
-		gwIPs = append(gwIPs, peerGatewayIP)
-	}
-
-	return gwIPs, nil
-}
+// Add first IP in CIDR to the map
 
 // getPodCIDRsOnNode returns the PodCIDRs of the given Node.
-func getPodCIDRsOnNode(node *corev1.Node) []string {
-	if node.Spec.PodCIDRs != nil {
-		return node.Spec.PodCIDRs
-	}
-
-	if node.Spec.PodCIDR == "" {
-		return nil
-	}
-	return []string{node.Spec.PodCIDR}
-}
+func getPodCIDRsOnNode(node *corev1.Node) []string { _ = "STUB: not implemented"; return nil }
 
 // ListNodeIPs returns the list of all Node IPs in the latency store.
-func (s *LatencyStore) ListNodeIPs() []net.IP {
-	s.mutex.RLock()
-	defer s.mutex.RUnlock()
+func (s *LatencyStore) ListNodeIPs() []net.IP { _ = "STUB: not implemented"; return nil }
 
-	// Allocate a slice with a capacity equal to twice the size of the map,
-	// as we can have up to 2 IP addresses per Node in dual-stack case.
-	nodeIPs := make([]net.IP, 0, 2*len(s.nodeTargetIPsMap))
-	for _, ips := range s.nodeTargetIPsMap {
-		nodeIPs = append(nodeIPs, ips...)
-	}
-
-	return nodeIPs
-}
+// Allocate a slice with a capacity equal to twice the size of the map,
+// as we can have up to 2 IP addresses per Node in dual-stack case.
 
 // DeleteStaleNodeIPs deletes the stale Node IPs from the nodeIPLatencyMap.
-func (s *LatencyStore) DeleteStaleNodeIPs() {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
-
-	nodeIPSet := sets.New[string]()
-	for _, ips := range s.nodeTargetIPsMap {
-		for _, ip := range ips {
-			nodeIPSet.Insert(ip.String())
-		}
-	}
-
-	for nodeIP := range s.nodeIPLatencyMap {
-		if !nodeIPSet.Has(nodeIP) {
-			delete(s.nodeIPLatencyMap, nodeIP)
-		}
-	}
-}
+func (s *LatencyStore) DeleteStaleNodeIPs() { _ = "STUB: not implemented"; return }
 
 // ConvertList converts the latency store to a list of PeerNodeLatencyStats.
 func (l *LatencyStore) ConvertList(currentNodeName string) []statsv1alpha1.PeerNodeLatencyStats {
-	l.mutex.RLock()
-	defer l.mutex.RUnlock()
-
-	// PeerNodeLatencyStats should be a list of size N-1, where N is the number of Nodes in the cluster.
-	// TargetIPLatencyStats will be a list of size 1 (single-stack case) or 2 (dual-stack case).
-	peerNodeLatencyStatsList := make([]statsv1alpha1.PeerNodeLatencyStats, 0, len(l.nodeIPLatencyMap))
-	for nodeName, nodeIPs := range l.nodeTargetIPsMap {
-		// Even though the current Node should already be excluded from the map, we add an extra check as an additional guarantee.
-		if nodeName == currentNodeName {
-			continue
-		}
-
-		targetIPLatencyStats := make([]statsv1alpha1.TargetIPLatencyStats, 0, len(nodeIPs))
-		for _, nodeIP := range nodeIPs {
-			nodeIPStr := nodeIP.String()
-			latencyEntry, ok := l.nodeIPLatencyMap[nodeIPStr]
-			if !ok {
-				continue
-			}
-			entry := statsv1alpha1.TargetIPLatencyStats{
-				TargetIP:                   nodeIPStr,
-				LastSendTime:               metav1.NewTime(latencyEntry.LastSendTime),
-				LastRecvTime:               metav1.NewTime(latencyEntry.LastRecvTime),
-				LastMeasuredRTTNanoseconds: latencyEntry.LastMeasuredRTT.Nanoseconds(),
-			}
-			targetIPLatencyStats = append(targetIPLatencyStats, entry)
-		}
-
-		peerNodeLatencyStats := statsv1alpha1.PeerNodeLatencyStats{
-			NodeName:             nodeName,
-			TargetIPLatencyStats: targetIPLatencyStats,
-		}
-		peerNodeLatencyStatsList = append(peerNodeLatencyStatsList, peerNodeLatencyStats)
-	}
-
-	return peerNodeLatencyStatsList
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// PeerNodeLatencyStats should be a list of size N-1, where N is the number of Nodes in the cluster.
+// TargetIPLatencyStats will be a list of size 1 (single-stack case) or 2 (dual-stack case).
+
+// Even though the current Node should already be excluded from the map, we add an extra check as an additional guarantee.

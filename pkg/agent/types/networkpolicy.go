@@ -38,23 +38,20 @@ type MatchKey struct {
 }
 
 func (m *MatchKey) GetOFProtocol() binding.Protocol {
-	return m.ofProtocol
+	_ = "STUB: not implemented"
+	return *new(binding.Protocol)
 }
 
 func (m *MatchKey) GetValueCategory() AddressCategory {
-	return m.valueCategory
+	_ = "STUB: not implemented"
+	return *new(AddressCategory)
 }
 
-func (m *MatchKey) GetKeyString() string {
-	return m.keyString
-}
+func (m *MatchKey) GetKeyString() string { _ = "STUB: not implemented"; return "" }
 
 func NewMatchKey(proto binding.Protocol, valueCategory AddressCategory, keyString string) *MatchKey {
-	return &MatchKey{
-		keyString:     keyString,
-		ofProtocol:    proto,
-		valueCategory: valueCategory,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 type AddressCategory uint8
@@ -116,9 +113,7 @@ type PolicyRule struct {
 }
 
 // IsAntreaNetworkPolicyRule returns if a PolicyRule is created for Antrea NetworkPolicy types.
-func (r *PolicyRule) IsAntreaNetworkPolicyRule() bool {
-	return r.PolicyRef.Type != v1beta2.K8sNetworkPolicy
-}
+func (r *PolicyRule) IsAntreaNetworkPolicyRule() bool { _ = "STUB: not implemented"; return false }
 
 // Priority is a struct that is composed of Antrea NetworkPolicy priority, rule priority and Tier priority.
 // It is used as the basic unit for priority sorting.
@@ -128,50 +123,29 @@ type Priority struct {
 	RulePriority   int32
 }
 
-func (p *Priority) Less(p2 Priority) bool {
-	if p.TierPriority == p2.TierPriority {
-		if p.PolicyPriority == p2.PolicyPriority {
-			return p.RulePriority > p2.RulePriority
-		}
-		return p.PolicyPriority > p2.PolicyPriority
-	}
-	return p.TierPriority > p2.TierPriority
-}
+func (p *Priority) Less(p2 Priority) bool { _ = "STUB: not implemented"; return false }
 
-func (p *Priority) Equals(p2 Priority) bool {
-	return p.TierPriority == p2.TierPriority && p.PolicyPriority == p2.PolicyPriority && p.RulePriority == p2.RulePriority
-}
+func (p *Priority) Equals(p2 Priority) bool { _ = "STUB: not implemented"; return false }
 
 // InSamePriorityZone returns true if two Priorities are of the same Tier and same priority at policy level.
-func (p *Priority) InSamePriorityZone(p2 Priority) bool {
-	return p.PolicyPriority == p2.PolicyPriority && p.TierPriority == p2.TierPriority
-}
+func (p *Priority) InSamePriorityZone(p2 Priority) bool { _ = "STUB: not implemented"; return false }
 
 // IsConsecutive returns true if two Priorties are immediately next to each other.
-func (p *Priority) IsConsecutive(p2 Priority) bool {
-	if !p.InSamePriorityZone(p2) {
-		return false
-	}
-	return p.RulePriority-p2.RulePriority == 1 || p2.RulePriority-p.RulePriority == 1
-}
+func (p *Priority) IsConsecutive(p2 Priority) bool { _ = "STUB: not implemented"; return false }
 
 // ByPriority sorts a list of Priority by their relative TierPriority, PolicyPriority and RulePriority, in that order.
 // It implements sort.Interface.
 type ByPriority []Priority
 
-func (bp ByPriority) Len() int           { return len(bp) }
-func (bp ByPriority) Swap(i, j int)      { bp[i], bp[j] = bp[j], bp[i] }
-func (bp ByPriority) Less(i, j int) bool { return bp[i].Less(bp[j]) }
+func (bp ByPriority) Len() int           { _ = "STUB: not implemented"; return 0 }
+func (bp ByPriority) Swap(i, j int)      { _ = "STUB: not implemented"; return }
+func (bp ByPriority) Less(i, j int) bool { _ = "STUB: not implemented"; return false }
 
 type RuleMetric struct {
 	Bytes, Packets, Sessions uint64
 }
 
-func (m *RuleMetric) Merge(m1 *RuleMetric) {
-	m.Bytes += m1.Bytes
-	m.Packets += m1.Packets
-	m.Sessions += m1.Sessions
-}
+func (m *RuleMetric) Merge(m1 *RuleMetric) { _ = "STUB: not implemented"; return }
 
 // A BitRange is a representation of a range of values from base value with a
 // bitmask applied.

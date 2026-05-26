@@ -17,17 +17,11 @@
 package v1alpha1
 
 import (
-	context "context"
 	time "time"
 
-	apiscrdv1alpha1 "antrea.io/antrea/v2/pkg/apis/crd/v1alpha1"
 	versioned "antrea.io/antrea/v2/pkg/client/clientset/versioned"
 	internalinterfaces "antrea.io/antrea/v2/pkg/client/informers/externalversions/internalinterfaces"
 	crdv1alpha1 "antrea.io/antrea/v2/pkg/client/listers/crd/v1alpha1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	runtime "k8s.io/apimachinery/pkg/runtime"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
-	watch "k8s.io/apimachinery/pkg/watch"
 	cache "k8s.io/client-go/tools/cache"
 )
 
@@ -48,67 +42,37 @@ type externalNodeInformer struct {
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewExternalNodeInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewExternalNodeInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 // NewFilteredExternalNodeInformer constructs a new informer for ExternalNode type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredExternalNodeInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewExternalNodeInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 // NewExternalNodeInformerWithOptions constructs a new informer for ExternalNode type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewExternalNodeInformerWithOptions(client versioned.Interface, namespace string, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "crd.antrea.io", Version: "v1alpha1", Resource: "externalnodes"}
-	identifier := options.InformerName.WithResource(gvr)
-	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
-		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
-			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.CrdV1alpha1().ExternalNodes(namespace).List(context.Background(), opts)
-			},
-			WatchFunc: func(opts v1.ListOptions) (watch.Interface, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.CrdV1alpha1().ExternalNodes(namespace).Watch(context.Background(), opts)
-			},
-			ListWithContextFunc: func(ctx context.Context, opts v1.ListOptions) (runtime.Object, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.CrdV1alpha1().ExternalNodes(namespace).List(ctx, opts)
-			},
-			WatchFuncWithContext: func(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.CrdV1alpha1().ExternalNodes(namespace).Watch(ctx, opts)
-			},
-		}, client),
-		&apiscrdv1alpha1.ExternalNode{},
-		cache.SharedIndexInformerOptions{
-			ResyncPeriod: options.ResyncPeriod,
-			Indexers:     options.Indexers,
-			Identifier:   identifier,
-		},
-	)
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *externalNodeInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewExternalNodeInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *externalNodeInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiscrdv1alpha1.ExternalNode{}, f.defaultInformer)
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *externalNodeInformer) Lister() crdv1alpha1.ExternalNodeLister {
-	return crdv1alpha1.NewExternalNodeLister(f.Informer().GetIndexer())
+	_ = "STUB: not implemented"
+	return *new(crdv1alpha1.ExternalNodeLister)
 }

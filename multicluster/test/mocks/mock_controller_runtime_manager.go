@@ -26,7 +26,6 @@ package mocks
 import (
 	context "context"
 	http "net/http"
-	reflect "reflect"
 
 	logr "github.com/go-logr/logr"
 	gomock "go.uber.org/mock/gomock"
@@ -57,293 +56,209 @@ type MockManagerMockRecorder struct {
 }
 
 // NewMockManager creates a new mock instance.
-func NewMockManager(ctrl *gomock.Controller) *MockManager {
-	mock := &MockManager{ctrl: ctrl}
-	mock.recorder = &MockManagerMockRecorder{mock}
-	return mock
-}
+func NewMockManager(ctrl *gomock.Controller) *MockManager { _ = "STUB: not implemented"; return nil }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockManager) EXPECT() *MockManagerMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// Add mocks base method.
+	return nil
 }
 
-// Add mocks base method.
-func (m *MockManager) Add(arg0 manager.Runnable) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Add", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockManager) Add(arg0 manager.Runnable) error { _ = "STUB: not implemented"; return nil }
 
 // Add indicates an expected call of Add.
 func (mr *MockManagerMockRecorder) Add(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockManager)(nil).Add), arg0)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddHealthzCheck mocks base method.
 func (m *MockManager) AddHealthzCheck(name string, check healthz.Checker) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddHealthzCheck", name, check)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddHealthzCheck indicates an expected call of AddHealthzCheck.
 func (mr *MockManagerMockRecorder) AddHealthzCheck(name, check any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddHealthzCheck", reflect.TypeOf((*MockManager)(nil).AddHealthzCheck), name, check)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddMetricsServerExtraHandler mocks base method.
 func (m *MockManager) AddMetricsServerExtraHandler(path string, handler http.Handler) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddMetricsServerExtraHandler", path, handler)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddMetricsServerExtraHandler indicates an expected call of AddMetricsServerExtraHandler.
 func (mr *MockManagerMockRecorder) AddMetricsServerExtraHandler(path, handler any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddMetricsServerExtraHandler", reflect.TypeOf((*MockManager)(nil).AddMetricsServerExtraHandler), path, handler)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddReadyzCheck mocks base method.
 func (m *MockManager) AddReadyzCheck(name string, check healthz.Checker) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddReadyzCheck", name, check)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddReadyzCheck indicates an expected call of AddReadyzCheck.
 func (mr *MockManagerMockRecorder) AddReadyzCheck(name, check any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddReadyzCheck", reflect.TypeOf((*MockManager)(nil).AddReadyzCheck), name, check)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Elected mocks base method.
-func (m *MockManager) Elected() <-chan struct{} {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Elected")
-	ret0, _ := ret[0].(<-chan struct{})
-	return ret0
-}
+func (m *MockManager) Elected() <-chan struct{} { _ = "STUB: not implemented"; return nil }
 
 // Elected indicates an expected call of Elected.
-func (mr *MockManagerMockRecorder) Elected() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Elected", reflect.TypeOf((*MockManager)(nil).Elected))
-}
+func (mr *MockManagerMockRecorder) Elected() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GetAPIReader mocks base method.
 func (m *MockManager) GetAPIReader() client.Reader {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAPIReader")
-	ret0, _ := ret[0].(client.Reader)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(client.Reader)
 }
 
 // GetAPIReader indicates an expected call of GetAPIReader.
 func (mr *MockManagerMockRecorder) GetAPIReader() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAPIReader", reflect.TypeOf((*MockManager)(nil).GetAPIReader))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetCache mocks base method.
-func (m *MockManager) GetCache() cache.Cache {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCache")
-	ret0, _ := ret[0].(cache.Cache)
-	return ret0
-}
+func (m *MockManager) GetCache() cache.Cache { _ = "STUB: not implemented"; return *new(cache.Cache) }
 
 // GetCache indicates an expected call of GetCache.
-func (mr *MockManagerMockRecorder) GetCache() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCache", reflect.TypeOf((*MockManager)(nil).GetCache))
-}
+func (mr *MockManagerMockRecorder) GetCache() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GetClient mocks base method.
 func (m *MockManager) GetClient() client.Client {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetClient")
-	ret0, _ := ret[0].(client.Client)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(client.Client)
 }
 
 // GetClient indicates an expected call of GetClient.
-func (mr *MockManagerMockRecorder) GetClient() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClient", reflect.TypeOf((*MockManager)(nil).GetClient))
-}
+func (mr *MockManagerMockRecorder) GetClient() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GetConfig mocks base method.
-func (m *MockManager) GetConfig() *rest.Config {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetConfig")
-	ret0, _ := ret[0].(*rest.Config)
-	return ret0
-}
+func (m *MockManager) GetConfig() *rest.Config { _ = "STUB: not implemented"; return nil }
 
 // GetConfig indicates an expected call of GetConfig.
-func (mr *MockManagerMockRecorder) GetConfig() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetConfig", reflect.TypeOf((*MockManager)(nil).GetConfig))
-}
+func (mr *MockManagerMockRecorder) GetConfig() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GetControllerOptions mocks base method.
 func (m *MockManager) GetControllerOptions() config.Controller {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetControllerOptions")
-	ret0, _ := ret[0].(config.Controller)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(config.Controller)
 }
 
 // GetControllerOptions indicates an expected call of GetControllerOptions.
 func (mr *MockManagerMockRecorder) GetControllerOptions() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetControllerOptions", reflect.TypeOf((*MockManager)(nil).GetControllerOptions))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetConverterRegistry mocks base method.
 func (m *MockManager) GetConverterRegistry() conversion.Registry {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetConverterRegistry")
-	ret0, _ := ret[0].(conversion.Registry)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(conversion.Registry)
 }
 
 // GetConverterRegistry indicates an expected call of GetConverterRegistry.
 func (mr *MockManagerMockRecorder) GetConverterRegistry() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetConverterRegistry", reflect.TypeOf((*MockManager)(nil).GetConverterRegistry))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetEventRecorder mocks base method.
 func (m *MockManager) GetEventRecorder(name string) events.EventRecorder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetEventRecorder", name)
-	ret0, _ := ret[0].(events.EventRecorder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(events.EventRecorder)
 }
 
 // GetEventRecorder indicates an expected call of GetEventRecorder.
 func (mr *MockManagerMockRecorder) GetEventRecorder(name any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEventRecorder", reflect.TypeOf((*MockManager)(nil).GetEventRecorder), name)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetEventRecorderFor mocks base method.
 func (m *MockManager) GetEventRecorderFor(name string) record.EventRecorder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetEventRecorderFor", name)
-	ret0, _ := ret[0].(record.EventRecorder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(record.EventRecorder)
 }
 
 // GetEventRecorderFor indicates an expected call of GetEventRecorderFor.
 func (mr *MockManagerMockRecorder) GetEventRecorderFor(name any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEventRecorderFor", reflect.TypeOf((*MockManager)(nil).GetEventRecorderFor), name)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetFieldIndexer mocks base method.
 func (m *MockManager) GetFieldIndexer() client.FieldIndexer {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetFieldIndexer")
-	ret0, _ := ret[0].(client.FieldIndexer)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(client.FieldIndexer)
 }
 
 // GetFieldIndexer indicates an expected call of GetFieldIndexer.
 func (mr *MockManagerMockRecorder) GetFieldIndexer() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFieldIndexer", reflect.TypeOf((*MockManager)(nil).GetFieldIndexer))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetHTTPClient mocks base method.
-func (m *MockManager) GetHTTPClient() *http.Client {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetHTTPClient")
-	ret0, _ := ret[0].(*http.Client)
-	return ret0
-}
+func (m *MockManager) GetHTTPClient() *http.Client { _ = "STUB: not implemented"; return nil }
 
 // GetHTTPClient indicates an expected call of GetHTTPClient.
 func (mr *MockManagerMockRecorder) GetHTTPClient() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHTTPClient", reflect.TypeOf((*MockManager)(nil).GetHTTPClient))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetLogger mocks base method.
-func (m *MockManager) GetLogger() logr.Logger {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetLogger")
-	ret0, _ := ret[0].(logr.Logger)
-	return ret0
-}
+func (m *MockManager) GetLogger() logr.Logger { _ = "STUB: not implemented"; return *new(logr.Logger) }
 
 // GetLogger indicates an expected call of GetLogger.
-func (mr *MockManagerMockRecorder) GetLogger() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLogger", reflect.TypeOf((*MockManager)(nil).GetLogger))
-}
+func (mr *MockManagerMockRecorder) GetLogger() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GetRESTMapper mocks base method.
 func (m *MockManager) GetRESTMapper() meta.RESTMapper {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetRESTMapper")
-	ret0, _ := ret[0].(meta.RESTMapper)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(meta.RESTMapper)
 }
 
 // GetRESTMapper indicates an expected call of GetRESTMapper.
 func (mr *MockManagerMockRecorder) GetRESTMapper() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRESTMapper", reflect.TypeOf((*MockManager)(nil).GetRESTMapper))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetScheme mocks base method.
-func (m *MockManager) GetScheme() *runtime.Scheme {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetScheme")
-	ret0, _ := ret[0].(*runtime.Scheme)
-	return ret0
-}
+func (m *MockManager) GetScheme() *runtime.Scheme { _ = "STUB: not implemented"; return nil }
 
 // GetScheme indicates an expected call of GetScheme.
-func (mr *MockManagerMockRecorder) GetScheme() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetScheme", reflect.TypeOf((*MockManager)(nil).GetScheme))
-}
+func (mr *MockManagerMockRecorder) GetScheme() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GetWebhookServer mocks base method.
 func (m *MockManager) GetWebhookServer() webhook.Server {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetWebhookServer")
-	ret0, _ := ret[0].(webhook.Server)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(webhook.Server)
 }
 
 // GetWebhookServer indicates an expected call of GetWebhookServer.
 func (mr *MockManagerMockRecorder) GetWebhookServer() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWebhookServer", reflect.TypeOf((*MockManager)(nil).GetWebhookServer))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Start mocks base method.
-func (m *MockManager) Start(ctx context.Context) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Start", ctx)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockManager) Start(ctx context.Context) error { _ = "STUB: not implemented"; return nil }
 
 // Start indicates an expected call of Start.
 func (mr *MockManagerMockRecorder) Start(ctx any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Start", reflect.TypeOf((*MockManager)(nil).Start), ctx)
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -19,19 +19,13 @@ package leader
 
 import (
 	"context"
-	"fmt"
-	"slices"
 	"sync"
 	"time"
 
-	v1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	mcv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
 	mcv1alpha2 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha2"
 	"antrea.io/antrea/v2/multicluster/controllers/multicluster/common"
 )
@@ -65,11 +59,8 @@ type MemberClusterStatusManager interface {
 }
 
 func NewMemberClusterAnnounceReconciler(client client.Client, scheme *runtime.Scheme) *MemberClusterAnnounceReconciler {
-	return &MemberClusterAnnounceReconciler{
-		Client:          client,
-		Scheme:          scheme,
-		memberStatusMap: make(map[common.ClusterID]*memberData),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 //+kubebuilder:rbac:groups=multicluster.crd.antrea.io,resources=memberclusterannounces,verbs=get;list;watch;create;update;patch;delete
@@ -78,153 +69,45 @@ func NewMemberClusterAnnounceReconciler(client client.Client, scheme *runtime.Sc
 
 // Reconcile implements cluster status management on the leader cluster
 func (r *MemberClusterAnnounceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	memberAnnounce := &mcv1alpha1.MemberClusterAnnounce{}
-	err := r.Get(ctx, req.NamespacedName, memberAnnounce)
-	if err != nil {
-		// If MemberClusterAnnounce is deleted, no further processing is needed, as cleanup
-		// must have been done when the Finalizer was removed.
-		return ctrl.Result{}, client.IgnoreNotFound(err)
-	}
-
-	memberID := common.ClusterID(memberAnnounce.ClusterID)
-	finalizer := fmt.Sprintf("%s/%s", MemberClusterAnnounceFinalizer, memberAnnounce.ClusterID)
-	if !memberAnnounce.DeletionTimestamp.IsZero() {
-		r.removeMemberStatus(memberID)
-		return ctrl.Result{}, nil
-	}
-
-	r.addOrUpdateMemberStatus(memberID)
-	if slices.Contains(memberAnnounce.Finalizers, finalizer) {
-		return ctrl.Result{}, nil
-	}
-	klog.InfoS("Adding finalizer to MemberClusterAnnounce", "MemberClusterAnnounce", klog.KObj(memberAnnounce))
-	memberAnnounce.Finalizers = append(memberAnnounce.Finalizers, finalizer)
-	if err := r.Update(context.TODO(), memberAnnounce); err != nil {
-		klog.ErrorS(err, "Failed to update MemberClusterAnnounce", "MemberClusterAnnounce", klog.KObj(memberAnnounce))
-		return ctrl.Result{}, err
-	}
-
-	return ctrl.Result{}, nil
+	_ = "STUB: not implemented"
+	return *new(ctrl.Result), nil
 }
+
+// If MemberClusterAnnounce is deleted, no further processing is needed, as cleanup
+// must have been done when the Finalizer was removed.
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *MemberClusterAnnounceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	go func() {
-		// Running background task here.
-		for {
-			<-time.After(TimerInterval)
-			r.processMCSStatus()
-		}
-	}()
+	_ = "STUB: not implemented"
 
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&mcv1alpha1.MemberClusterAnnounce{}).
-		Named("memberclusterannounce").
-		Complete(r)
+	// Running background task here.
+	return nil
 }
 
-func (r *MemberClusterAnnounceReconciler) processMCSStatus() {
-	r.mapLock.Lock()
-	defer r.mapLock.Unlock()
+func (r *MemberClusterAnnounceReconciler) processMCSStatus() { _ = "STUB: not implemented"; return }
 
-	for member, data := range r.memberStatusMap {
-		status := r.memberStatusMap[member].status
-		// Check if the member has connected at least once in the last 3 intervals.
-		duration := time.Since(data.lastUpdateTime)
-		klog.V(2).InfoS("Timer processing", "cluster", member, "duration", duration)
-		if duration <= ConnectionTimeout {
-			// Member has updated MemberClusterStatus at least once in the last 3 intervals.
-			// If last status is not connected, then update the status.
-			for index := range status.Conditions {
-				condition := &status.Conditions[index]
-				switch condition.Type {
-				case mcv1alpha2.ClusterReady:
-					{
-						if condition.Status != v1.ConditionTrue {
-							condition.Status = v1.ConditionTrue
-							condition.LastTransitionTime = metav1.Now()
-							condition.Message = "Member Connected"
-							condition.Reason = ReasonConnected
-						}
-					}
-				}
-			}
-		} else {
-			// Member has not updated MemberClusterStatus in the last 3 intervals, assume it is disconnected
-			for index := range status.Conditions {
-				condition := &status.Conditions[index]
-				switch condition.Type {
-				case mcv1alpha2.ClusterReady:
-					{
-						if condition.Status != v1.ConditionFalse {
-							condition.Status = v1.ConditionFalse
-							condition.LastTransitionTime = metav1.Now()
-							condition.Message = fmt.Sprintf("No MemberClusterAnnounce update after %s", data.lastUpdateTime.Format(time.UnixDate))
-							condition.Reason = ReasonDisconnected
-						}
-					}
-				}
-			}
-		}
-	}
-}
+// Check if the member has connected at least once in the last 3 intervals.
+
+// Member has updated MemberClusterStatus at least once in the last 3 intervals.
+// If last status is not connected, then update the status.
+
+// Member has not updated MemberClusterStatus in the last 3 intervals, assume it is disconnected
 
 func (r *MemberClusterAnnounceReconciler) addOrUpdateMemberStatus(memberID common.ClusterID) {
-	r.mapLock.Lock()
-	defer r.mapLock.Unlock()
-	if data, ok := r.memberStatusMap[memberID]; ok {
-		klog.V(2).InfoS("Reset lastUpdateTime", "cluster", memberID)
-		// Reset lastUpdateTime for this member.
-		data.lastUpdateTime = time.Now()
-		for i, c := range data.status.Conditions {
-			if c.Type == mcv1alpha2.ClusterConnected && data.status.Conditions[i].Reason != ReasonConnected {
-				data.status.Conditions[i].LastTransitionTime = metav1.Now()
-				data.status.Conditions[i].Message = "Member Connected"
-				data.status.Conditions[i].Reason = ReasonConnected
-			}
-		}
-		return
-	}
-
-	conditions := make([]mcv1alpha2.ClusterCondition, 0, 1)
-	conditions = append(conditions, mcv1alpha2.ClusterCondition{
-		Type:               mcv1alpha2.ClusterReady,
-		Status:             v1.ConditionTrue,
-		LastTransitionTime: metav1.Now(),
-		Message:            "Member Connected",
-		Reason:             ReasonConnected,
-	})
-
-	status := &mcv1alpha2.ClusterStatus{
-		ClusterID:  string(memberID),
-		Conditions: conditions,
-	}
-	r.memberStatusMap[memberID] = &memberData{status: status, lastUpdateTime: time.Now()}
-
-	klog.InfoS("Added member cluster", "cluster", memberID)
+	_ = "STUB: not implemented"
+	return
 }
 
-func (r *MemberClusterAnnounceReconciler) removeMemberStatus(memberID common.ClusterID) {
-	r.mapLock.Lock()
-	defer r.mapLock.Unlock()
+// Reset lastUpdateTime for this member.
 
-	delete(r.memberStatusMap, memberID)
-	klog.InfoS("Removed member cluster", "cluster", memberID)
+func (r *MemberClusterAnnounceReconciler) removeMemberStatus(memberID common.ClusterID) {
+	_ = "STUB: not implemented"
+	return
 }
 
 /******************************* MemberClusterStatusManager methods *******************************/
 
 func (r *MemberClusterAnnounceReconciler) GetMemberClusterStatuses() []mcv1alpha2.ClusterStatus {
-	r.mapLock.RLock()
-	defer r.mapLock.RUnlock()
-
-	status := make([]mcv1alpha2.ClusterStatus, len(r.memberStatusMap))
-
-	index := 0
-	for _, v := range r.memberStatusMap {
-		status[index] = *v.status.DeepCopy()
-		index += 1
-	}
-
-	return status
+	_ = "STUB: not implemented"
+	return nil
 }

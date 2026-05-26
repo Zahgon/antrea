@@ -29,20 +29,6 @@ type fakeEgressGroups struct {
 }
 
 func newFakeEgressGroups(fake *FakeControlplaneV1beta2) controlplanev1beta2.EgressGroupInterface {
-	return &fakeEgressGroups{
-		gentype.NewFakeClientWithList[*v1beta2.EgressGroup, *v1beta2.EgressGroupList](
-			fake.Fake,
-			"",
-			v1beta2.SchemeGroupVersion.WithResource("egressgroups"),
-			v1beta2.SchemeGroupVersion.WithKind("EgressGroup"),
-			func() *v1beta2.EgressGroup { return &v1beta2.EgressGroup{} },
-			func() *v1beta2.EgressGroupList { return &v1beta2.EgressGroupList{} },
-			func(dst, src *v1beta2.EgressGroupList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta2.EgressGroupList) []*v1beta2.EgressGroup { return gentype.ToPointerSlice(list.Items) },
-			func(list *v1beta2.EgressGroupList, items []*v1beta2.EgressGroup) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(controlplanev1beta2.EgressGroupInterface)
 }

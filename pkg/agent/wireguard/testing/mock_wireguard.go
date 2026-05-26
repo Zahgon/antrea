@@ -26,7 +26,6 @@ package testing
 
 import (
 	net "net"
-	reflect "reflect"
 
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,83 +44,64 @@ type MockInterfaceMockRecorder struct {
 
 // NewMockInterface creates a new mock instance.
 func NewMockInterface(ctrl *gomock.Controller) *MockInterface {
-	mock := &MockInterface{ctrl: ctrl}
-	mock.recorder = &MockInterfaceMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// CleanUp mocks base method.
+	return nil
 }
 
-// CleanUp mocks base method.
-func (m *MockInterface) CleanUp() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CleanUp")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockInterface) CleanUp() error { _ = "STUB: not implemented"; return nil }
 
 // CleanUp indicates an expected call of CleanUp.
-func (mr *MockInterfaceMockRecorder) CleanUp() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CleanUp", reflect.TypeOf((*MockInterface)(nil).CleanUp))
-}
+func (mr *MockInterfaceMockRecorder) CleanUp() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // DeletePeer mocks base method.
-func (m *MockInterface) DeletePeer(nodeName string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeletePeer", nodeName)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockInterface) DeletePeer(nodeName string) error { _ = "STUB: not implemented"; return nil }
 
 // DeletePeer indicates an expected call of DeletePeer.
 func (mr *MockInterfaceMockRecorder) DeletePeer(nodeName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePeer", reflect.TypeOf((*MockInterface)(nil).DeletePeer), nodeName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Init mocks base method.
 func (m *MockInterface) Init(ipv4, ipv6 net.IP) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Init", ipv4, ipv6)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 // Init indicates an expected call of Init.
 func (mr *MockInterfaceMockRecorder) Init(ipv4, ipv6 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Init", reflect.TypeOf((*MockInterface)(nil).Init), ipv4, ipv6)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RemoveStalePeers mocks base method.
 func (m *MockInterface) RemoveStalePeers(currentPeerPublickeys map[string]string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RemoveStalePeers", currentPeerPublickeys)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RemoveStalePeers indicates an expected call of RemoveStalePeers.
 func (mr *MockInterfaceMockRecorder) RemoveStalePeers(currentPeerPublickeys any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveStalePeers", reflect.TypeOf((*MockInterface)(nil).RemoveStalePeers), currentPeerPublickeys)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UpdatePeer mocks base method.
 func (m *MockInterface) UpdatePeer(nodeName, publicKeyString string, peerNodeIP net.IP, allowedIPs []*net.IPNet) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdatePeer", nodeName, publicKeyString, peerNodeIP, allowedIPs)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UpdatePeer indicates an expected call of UpdatePeer.
 func (mr *MockInterfaceMockRecorder) UpdatePeer(nodeName, publicKeyString, peerNodeIP, allowedIPs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePeer", reflect.TypeOf((*MockInterface)(nil).UpdatePeer), nodeName, publicKeyString, peerNodeIP, allowedIPs)
+	_ = "STUB: not implemented"
+	return nil
 }

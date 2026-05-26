@@ -17,29 +17,13 @@
 
 package openflow
 
-import (
-	"golang.org/x/mod/semver"
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/util/runtime"
-)
-
 func OVSMetersAreSupported() bool {
+	_ = "STUB: not implemented"
 	// According to the OVS documentation, meters are supported in the kernel module since 4.15
 	// (https://docs.openvswitch.org/en/latest/faq/releases/). However, it turns out that
 	// because of a bug meters cannot be used with kernel versions older than 4.18, which is
 	// when this patch was merged: https://github.com/torvalds/linux/commit/25432eba9cd.
 	// To avoid increasing the minimum required kernel version for Antrea, we will avoid using
 	// meters altogether if they are not supported, instead of erroring out.
-	const minKernelVersion = "v4.18.0"
-	kernelVersion, err := runtime.GetKernelVersion()
-	if err != nil {
-		klog.ErrorS(err, "Cannot retrieve Linux kernel version, cannot use OVS meters")
-		return false
-	}
-	if semver.Compare(kernelVersion, minKernelVersion) >= 0 {
-		return true
-	}
-	klog.Infof("Linux kernel version (%s) is less than %s and therefore the OVS kernel datapath does not support meters", kernelVersion, minKernelVersion)
 	return false
 }

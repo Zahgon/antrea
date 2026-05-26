@@ -15,13 +15,10 @@
 package objectstore
 
 import (
-	"fmt"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/tools/cache"
-
-	"antrea.io/antrea/v2/pkg/util/k8s"
 )
 
 const podIPIndex = "podIP"
@@ -42,40 +39,14 @@ type podStore struct {
 var _ PodStore = &podStore{}
 
 func NewPodStore(podInformer cache.SharedIndexInformer) *podStore {
-	config := StoreConfig[*corev1.Pod]{
-		DeleteQueueName: "podStorePodsToDelete",
-		Indexers:        cache.Indexers{podIPIndex: podIPIndexFunc},
-		FilterFunc: func(pod *corev1.Pod) bool {
-			return !pod.Spec.HostNetwork && !k8s.IsPodTerminated(pod)
-		},
-		GetObjectCreationTimestamp: func(pod *corev1.Pod, now time.Time) time.Time {
-			if pod.Status.Phase == corev1.PodPending {
-				return now
-			}
-			return pod.GetCreationTimestamp().Time
-		},
-	}
-	return &podStore{
-		ObjectStore: NewObjectStore(podInformer, config),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetPodByIPAndTime provides a Pod-specific method for getting Pods by IP and time
 func (s *podStore) GetPodByIPAndTime(ip string, startTime time.Time) (*corev1.Pod, bool) {
-	return s.GetObjectByIndexAndTime(podIPIndex, ip, startTime)
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
-func podIPIndexFunc(obj interface{}) ([]string, error) {
-	pod, ok := obj.(*corev1.Pod)
-	if !ok {
-		return nil, fmt.Errorf("obj is not Pod: %+v", obj)
-	}
-	if len(pod.Status.PodIPs) > 0 {
-		indexes := make([]string, len(pod.Status.PodIPs))
-		for i := range pod.Status.PodIPs {
-			indexes[i] = pod.Status.PodIPs[i].IP
-		}
-		return indexes, nil
-	}
-	return nil, nil
-}
+func podIPIndexFunc(obj interface{}) ([]string, error) { _ = "STUB: not implemented"; return nil, nil }

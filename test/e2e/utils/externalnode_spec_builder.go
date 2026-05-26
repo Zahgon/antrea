@@ -15,8 +15,6 @@
 package utils
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
 	crdv1alpha1 "antrea.io/antrea/v2/pkg/apis/crd/v1alpha1"
 )
 
@@ -28,36 +26,21 @@ type ExternalNodeSpecBuilder struct {
 }
 
 func (t *ExternalNodeSpecBuilder) SetName(namespace string, name string) *ExternalNodeSpecBuilder {
-	t.namespace = namespace
-	t.name = name
-	return t
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (t *ExternalNodeSpecBuilder) AddInterface(name string, ips []string) *ExternalNodeSpecBuilder {
-	t.spec.Interfaces = append(t.spec.Interfaces, crdv1alpha1.NetworkInterface{
-		Name: name,
-		IPs:  ips,
-	})
-	return t
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (t *ExternalNodeSpecBuilder) AddLabels(labels map[string]string) *ExternalNodeSpecBuilder {
-	if t.labels == nil {
-		t.labels = make(map[string]string)
-	}
-	for k, v := range labels {
-		t.labels[k] = v
-	}
-	return t
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (t *ExternalNodeSpecBuilder) Get() *crdv1alpha1.ExternalNode {
-	return &crdv1alpha1.ExternalNode{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      t.name,
-			Namespace: t.namespace,
-			Labels:    t.labels,
-		},
-		Spec: t.spec,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

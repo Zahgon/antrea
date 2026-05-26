@@ -46,7 +46,6 @@ import (
 	discovery "k8s.io/api/discovery/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/klog/v2"
 )
 
 // EndpointsChangeTracker carries state about uncommitted changes to an arbitrary number of
@@ -81,18 +80,8 @@ type processEndpointsMapChangeFunc func(oldEndpointsMap, newEndpointsMap Endpoin
 
 // NewEndpointsChangeTracker initializes an EndpointsChangeTracker
 func NewEndpointsChangeTracker(ipFamily v1.IPFamily, nodeName string, makeEndpointInfo makeEndpointFunc, processEndpointsMapChange processEndpointsMapChangeFunc) *EndpointsChangeTracker {
-	addressType := discovery.AddressTypeIPv4
-	if ipFamily == v1.IPv6Protocol {
-		addressType = discovery.AddressTypeIPv6
-	}
-
-	return &EndpointsChangeTracker{
-		addressType:               addressType,
-		lastChangeTriggerTimes:    make(map[types.NamespacedName][]time.Time),
-		trackerStartTime:          time.Now(),
-		processEndpointsMapChange: processEndpointsMapChange,
-		endpointSliceCache:        NewEndpointSliceCache(nodeName, makeEndpointInfo),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EndpointSliceUpdate updates the EndpointsChangeTracker by adding/updating or removing
@@ -100,60 +89,28 @@ func NewEndpointsChangeTracker(ipFamily v1.IPFamily, nodeName string, makeEndpoi
 // change that needs to be synced; note that this is different from the return value of
 // ServiceChangeTracker.Update().
 func (ect *EndpointsChangeTracker) EndpointSliceUpdate(endpointSlice *discovery.EndpointSlice, removeSlice bool) bool {
-	if endpointSlice.AddressType != ect.addressType {
-		klog.V(4).InfoS("Ignoring unsupported EndpointSlice", "endpointSlice", klog.KObj(endpointSlice), "type", endpointSlice.AddressType, "expected", ect.addressType)
-		return false
-	}
-
-	namespacedName, _, err := endpointSliceCacheKeys(endpointSlice)
-	if err != nil {
-		klog.InfoS("Error getting endpoint slice cache keys", "err", err)
-		return false
-	}
-
-	ect.lock.Lock()
-	defer ect.lock.Unlock()
-
-	changeNeeded := ect.endpointSliceCache.updatePending(endpointSlice, removeSlice)
-
-	if changeNeeded {
-		// In case of Endpoints deletion, the LastChangeTriggerTime annotation is
-		// by-definition coming from the time of last update, which is not what
-		// we want to measure. So we simply ignore it in this cases.
-		// TODO(wojtek-t, robscott): Address the problem for EndpointSlice deletion
-		// when other EndpointSlice for that service still exist.
-		if removeSlice {
-			delete(ect.lastChangeTriggerTimes, namespacedName)
-		} else if t := getLastChangeTriggerTime(endpointSlice.Annotations); !t.IsZero() && t.After(ect.trackerStartTime) {
-			ect.lastChangeTriggerTimes[namespacedName] =
-				append(ect.lastChangeTriggerTimes[namespacedName], t)
-		}
-	}
-
-	return changeNeeded
+	_ = "STUB: not implemented"
+	return false
 }
+
+// In case of Endpoints deletion, the LastChangeTriggerTime annotation is
+// by-definition coming from the time of last update, which is not what
+// we want to measure. So we simply ignore it in this cases.
+// TODO(wojtek-t, robscott): Address the problem for EndpointSlice deletion
+// when other EndpointSlice for that service still exist.
 
 // checkoutChanges returns a map of pending endpointsChanges and marks them as
 // applied.
 func (ect *EndpointsChangeTracker) checkoutChanges() map[types.NamespacedName]*endpointsChange {
-	return ect.endpointSliceCache.checkoutChanges()
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // checkoutTriggerTimes applies the locally cached trigger times to a map of
 // trigger times that have been passed in and empties the local cache.
 func (ect *EndpointsChangeTracker) checkoutTriggerTimes(lastChangeTriggerTimes *map[types.NamespacedName][]time.Time) {
-	ect.lock.Lock()
-	defer ect.lock.Unlock()
-
-	for k, v := range ect.lastChangeTriggerTimes {
-		prev, ok := (*lastChangeTriggerTimes)[k]
-		if !ok {
-			(*lastChangeTriggerTimes)[k] = v
-		} else {
-			(*lastChangeTriggerTimes)[k] = append(prev, v...)
-		}
-	}
-	ect.lastChangeTriggerTimes = make(map[types.NamespacedName][]time.Time)
+	_ = "STUB: not implemented"
+	return
 }
 
 // getLastChangeTriggerTime returns the time.Time value of the
@@ -161,21 +118,16 @@ func (ect *EndpointsChangeTracker) checkoutTriggerTimes(lastChangeTriggerTimes *
 // object or the "zero" time if the annotation wasn't set or was set
 // incorrectly.
 func getLastChangeTriggerTime(annotations map[string]string) time.Time {
+	_ = "STUB: not implemented"
 	// TODO(#81360): ignore case when Endpoint is deleted.
-	if _, ok := annotations[v1.EndpointsLastChangeTriggerTime]; !ok {
-		// It's possible that the Endpoints object won't have the
-		// EndpointsLastChangeTriggerTime annotation set. In that case return
-		// the 'zero value', which is ignored in the upstream code.
-		return time.Time{}
-	}
-	val, err := time.Parse(time.RFC3339Nano, annotations[v1.EndpointsLastChangeTriggerTime])
-	if err != nil {
-		klog.ErrorS(err, "Error while parsing EndpointsLastChangeTriggerTimeAnnotation",
-			"value", annotations[v1.EndpointsLastChangeTriggerTime])
-		// In case of error val = time.Zero, which is ignored in the upstream code.
-	}
-	return val
+	return *new(time.Time)
 }
+
+// It's possible that the Endpoints object won't have the
+// EndpointsLastChangeTriggerTime annotation set. In that case return
+// the 'zero value', which is ignored in the upstream code.
+
+// In case of error val = time.Zero, which is ignored in the upstream code.
 
 // endpointsChange contains all changes to endpoints that happened since proxy
 // rules were synced.  For a single object, changes are accumulated, i.e.
@@ -207,101 +159,42 @@ type EndpointsMap map[ServicePortName]map[string]Endpoint
 // the last Update, triggers processEndpointsMapChange on every change, and clears the
 // changes map.
 func (em EndpointsMap) Update(ect *EndpointsChangeTracker) UpdateEndpointsMapResult {
-	result := UpdateEndpointsMapResult{
-		UpdatedServices:        sets.New[types.NamespacedName](),
-		LastChangeTriggerTimes: make(map[types.NamespacedName][]time.Time),
-	}
-	if ect == nil {
-		return result
-	}
-
-	changes := ect.checkoutChanges()
-	for nn, change := range changes {
-		if ect.processEndpointsMapChange != nil {
-			ect.processEndpointsMapChange(change.previous, change.current)
-		}
-		result.UpdatedServices.Insert(nn)
-
-		em.unmerge(change.previous)
-		em.merge(change.current)
-
-		// result.ConntrackCleanupRequired should be true if any one of the UDP
-		// ServicePort changed endpoint. Once true, we don't update the value.
-		if result.ConntrackCleanupRequired {
-			continue
-		}
-		// Check if the changed service had any UDP ServicePort
-		for svcPort := range change.previous {
-			if svcPort.NamespacedName == nn && svcPort.Protocol == v1.ProtocolUDP {
-				result.ConntrackCleanupRequired = true
-				break
-			}
-		}
-		// Check if the changed service has any UDP ServicePort
-		for svcPort := range change.current {
-			if svcPort.NamespacedName == nn && svcPort.Protocol == v1.ProtocolUDP {
-				result.ConntrackCleanupRequired = true
-				break
-			}
-		}
-	}
-	ect.checkoutTriggerTimes(&result.LastChangeTriggerTimes)
-
-	return result
+	_ = "STUB: not implemented"
+	return *new(UpdateEndpointsMapResult)
 }
+
+// result.ConntrackCleanupRequired should be true if any one of the UDP
+// ServicePort changed endpoint. Once true, we don't update the value.
+
+// Check if the changed service had any UDP ServicePort
+
+// Check if the changed service has any UDP ServicePort
 
 // Merge ensures that the current EndpointsMap contains all <service, endpoints> pairs from the EndpointsMap passed in.
-func (em EndpointsMap) merge(other EndpointsMap) {
-	for svcPortName := range other {
-		em[svcPortName] = other[svcPortName]
-	}
-}
+func (em EndpointsMap) merge(other EndpointsMap) { _ = "STUB: not implemented"; return }
 
 // Unmerge removes the <service, endpoints> pairs from the current EndpointsMap which are contained in the EndpointsMap passed in.
-func (em EndpointsMap) unmerge(other EndpointsMap) {
-	for svcPortName := range other {
-		delete(em, svcPortName)
-	}
-}
+func (em EndpointsMap) unmerge(other EndpointsMap) { _ = "STUB: not implemented"; return }
 
 // getLocalEndpointIPs returns endpoints IPs if given endpoint is local - local means the endpoint is running in same host as kube-proxy.
 func (em EndpointsMap) getLocalReadyEndpointIPs() map[types.NamespacedName]sets.Set[string] {
-	localIPs := make(map[types.NamespacedName]sets.Set[string])
-	for svcPortName, epList := range em {
-		for _, ep := range epList {
-			// Only add ready endpoints for health checking. Terminating endpoints may still serve traffic
-			// but the health check signal should fail if there are only terminating endpoints on a node.
-			if !ep.IsReady() {
-				continue
-			}
-
-			if ep.IsLocal() {
-				nsn := svcPortName.NamespacedName
-				if localIPs[nsn] == nil {
-					localIPs[nsn] = sets.New[string]()
-				}
-				localIPs[nsn].Insert(ep.IP())
-			}
-		}
-	}
-	return localIPs
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Only add ready endpoints for health checking. Terminating endpoints may still serve traffic
+// but the health check signal should fail if there are only terminating endpoints on a node.
 
 // LocalReadyEndpoints returns a map of Service names to the number of local ready
 // endpoints for that service.
 func (em EndpointsMap) LocalReadyEndpoints() map[types.NamespacedName]int {
+	_ = "STUB: not implemented"
 	// TODO: If this will appear to be computationally expensive, consider
 	// computing this incrementally similarly to endpointsMap.
-
-	// (Note that we need to call getLocalEndpointIPs first to squash the data by IP,
-	// because the EndpointsMap is sorted by IP+port, not just IP, and we want to
-	// consider a Service pointing to 10.0.0.1:80 and 10.0.0.1:443 to have 1 endpoint,
-	// not 2.)
-
-	eps := make(map[types.NamespacedName]int)
-	localIPs := em.getLocalReadyEndpointIPs()
-	for nsn, ips := range localIPs {
-		eps[nsn] = len(ips)
-	}
-	return eps
+	return nil
 }
+
+// (Note that we need to call getLocalEndpointIPs first to squash the data by IP,
+// because the EndpointsMap is sorted by IP+port, not just IP, and we want to
+// consider a Service pointing to 10.0.0.1:80 and 10.0.0.1:443 to have 1 endpoint,
+// not 2.)

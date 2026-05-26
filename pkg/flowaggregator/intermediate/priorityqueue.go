@@ -15,7 +15,6 @@
 package intermediate
 
 import (
-	"container/heap"
 	"time"
 )
 
@@ -31,54 +30,31 @@ type ItemToExpire struct {
 
 type TimeToExpirePriorityQueue []*ItemToExpire
 
-func (pq TimeToExpirePriorityQueue) Len() int {
-	return len(pq)
-}
+func (pq TimeToExpirePriorityQueue) Len() int { _ = "STUB: not implemented"; return 0 }
 
 func (pq TimeToExpirePriorityQueue) minExpireTime(i int) time.Time {
-	if pq[i].activeExpireTime.Before(pq[i].inactiveExpireTime) {
-		return pq[i].activeExpireTime
-	} else {
-		return pq[i].inactiveExpireTime
-	}
+	_ = "STUB: not implemented"
+	return *new(time.Time)
 }
 
-func (pq TimeToExpirePriorityQueue) Less(i, j int) bool {
-	return pq.minExpireTime(i).Before(pq.minExpireTime(j))
-}
+func (pq TimeToExpirePriorityQueue) Less(i, j int) bool { _ = "STUB: not implemented"; return false }
 
-func (pq TimeToExpirePriorityQueue) Swap(i, j int) {
-	pq[i], pq[j] = pq[j], pq[i]
-	pq[i].index = i
-	pq[j].index = j
-}
+func (pq TimeToExpirePriorityQueue) Swap(i, j int) { _ = "STUB: not implemented"; return }
 
-func (pq *TimeToExpirePriorityQueue) Push(x interface{}) {
-	n := len(*pq)
-	item := x.(*ItemToExpire)
-	item.index = n
-	*pq = append(*pq, item)
-}
+func (pq *TimeToExpirePriorityQueue) Push(x interface{}) { _ = "STUB: not implemented"; return }
 
-func (pq *TimeToExpirePriorityQueue) Pop() interface{} {
-	n := len(*pq)
-	item := (*pq)[n-1]
-	item.index = -1
-	*pq = (*pq)[0:(n - 1)]
-	return item
-}
+func (pq *TimeToExpirePriorityQueue) Pop() interface{} { _ = "STUB: not implemented"; return nil }
 
 // Peek returns the item at the beginning of the queue, without removing the
 // item or otherwise mutating the queue. It is safe to call directly.
 func (pq TimeToExpirePriorityQueue) Peek() *ItemToExpire {
-	return pq[0]
+	_ = "STUB: not implemented"
+
+	// update modifies the priority and flow record of an Item in the queue.
+	return nil
 }
 
-// update modifies the priority and flow record of an Item in the queue.
 func (pq *TimeToExpirePriorityQueue) Update(item *ItemToExpire, flowKey *FlowKey, flowRecord *AggregationFlowRecord, activeExpireTime time.Time, inactiveExpireTime time.Time) {
-	item.flowKey = flowKey
-	item.flowRecord = flowRecord
-	item.activeExpireTime = activeExpireTime
-	item.inactiveExpireTime = inactiveExpireTime
-	heap.Fix(pq, item.index)
+	_ = "STUB: not implemented"
+	return
 }

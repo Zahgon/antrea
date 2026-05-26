@@ -17,20 +17,15 @@ package linkmonitor
 type linkMonitor struct {
 }
 
-func NewLinkMonitor() *linkMonitor {
-	return &linkMonitor{}
-}
+func NewLinkMonitor() *linkMonitor { _ = "STUB: not implemented"; return nil }
 
-func (d *linkMonitor) HasSynced() bool {
-	return false
-}
+func (d *linkMonitor) HasSynced() bool { _ = "STUB: not implemented"; return false }
 
 func (d *linkMonitor) AddEventHandler(handler LinkEventHandler, linkNames ...string) {
+	_ = "STUB: not implemented"
+	return
 }
 
-func (d *linkMonitor) Run(stopCh <-chan struct{}) {
-}
+func (d *linkMonitor) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-func (d *linkMonitor) LinkExists(name string) bool {
-	return false
-}
+func (d *linkMonitor) LinkExists(name string) bool { _ = "STUB: not implemented"; return false }

@@ -15,39 +15,14 @@
 package agentinfo
 
 import (
-	"encoding/json"
 	"net/http"
 
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/agent/apis"
 	"antrea.io/antrea/v2/pkg/agent/querier"
-	"antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
 )
 
 // HandleFunc returns the function which can handle queries issued by agentinfo commands.
 // The handler function populates Antrea agent information to the response.
 func HandleFunc(aq querier.AgentQuerier) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		agentInfo := new(v1beta1.AntreaAgentInfo)
-		aq.GetAgentInfo(agentInfo, false)
-		info := &apis.AntreaAgentInfoResponse{
-			Version:                     agentInfo.Version,
-			PodRef:                      agentInfo.PodRef,
-			NodeRef:                     agentInfo.NodeRef,
-			NodeSubnets:                 agentInfo.NodeSubnets,
-			OVSInfo:                     agentInfo.OVSInfo,
-			NetworkPolicyControllerInfo: agentInfo.NetworkPolicyControllerInfo,
-			LocalPodNum:                 agentInfo.LocalPodNum,
-			AgentConditions:             agentInfo.AgentConditions,
-			APIPort:                     int32(agentInfo.APIPort),
-			NodePortLocalPortRange:      agentInfo.NodePortLocalPortRange,
-			NetworkInfo:                 agentInfo.NetworkInfo,
-		}
-		err := json.NewEncoder(w).Encode(info)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			klog.Errorf("Error when encoding AntreaAgentInfo to json: %v", err)
-		}
-	}
+	_ = "STUB: not implemented"
+	return *new(http.HandlerFunc)
 }

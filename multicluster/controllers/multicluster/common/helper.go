@@ -14,8 +14,8 @@ limitations under the License.
 package common
 
 import (
-	"crypto/sha1" // #nosec G505: not used for security purposes
-	"encoding/hex"
+	// #nosec G505: not used for security purposes
+
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
@@ -34,48 +34,26 @@ var CleanUpRetry = wait.Backoff{
 }
 
 // TODO: Use NamespacedName stringer method instead of this. e.g. nsName.String()
-func NamespacedName(namespace, name string) string {
-	return namespace + "/" + name
-}
+func NamespacedName(namespace, name string) string { _ = "STUB: not implemented"; return "" }
 
-func ToMCResourceName(originalResourceName string) string {
-	return AntreaMCSPrefix + originalResourceName
-}
+func ToMCResourceName(originalResourceName string) string { _ = "STUB: not implemented"; return "" }
 
 func GetServiceEndpointSubset(svc *corev1.Service) corev1.EndpointSubset {
-	var epSubset corev1.EndpointSubset
-	for _, ip := range svc.Spec.ClusterIPs {
-		epSubset.Addresses = append(epSubset.Addresses, corev1.EndpointAddress{IP: ip})
-	}
-
-	epSubset.Ports = GetServiceEndpointPorts(svc.Spec.Ports)
-	return epSubset
+	_ = "STUB: not implemented"
+	return *new(corev1.EndpointSubset)
 }
 
 // GetServiceEndpointPorts converts Service's port to EndpointPort
 func GetServiceEndpointPorts(ports []corev1.ServicePort) []corev1.EndpointPort {
-	if len(ports) == 0 {
-		return nil
-	}
-	var epPorts []corev1.EndpointPort
-	for _, p := range ports {
-		epPorts = append(epPorts, corev1.EndpointPort{
-			Name:     p.Name,
-			Port:     p.Port,
-			Protocol: p.Protocol,
-		})
-	}
-	return epPorts
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // HashLabelIdentity generates a hash value for label identity string.
 func HashLabelIdentity(l string) string {
-	hash := sha1.New() // #nosec G401: not used for security purposes
-	hash.Write([]byte(l))
-	hashValue := hex.EncodeToString(hash.Sum(nil))
-	return hashValue[:labelIdentityHashLength]
+	_ = "STUB: not implemented"
+	// #nosec G401: not used for security purposes
+	return ""
 }
 
-func IsMulticlusterService(service *corev1.Service) bool {
-	return service.Annotations[AntreaMCServiceAnnotation] == "true"
-}
+func IsMulticlusterService(service *corev1.Service) bool { _ = "STUB: not implemented"; return false }

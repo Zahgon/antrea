@@ -20,7 +20,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
 
-	"antrea.io/antrea/v2/pkg/agent/proxy/types"
 	k8sproxy "antrea.io/antrea/v2/third_party/proxy"
 )
 
@@ -32,27 +31,20 @@ type serviceChangesTracker struct {
 }
 
 func newServiceChangesTracker(ipFamily v1.IPFamily, serviceLabelSelector labels.Selector, skipServices []string) *serviceChangesTracker {
-	tracker := k8sproxy.NewServiceChangeTracker(ipFamily, types.NewServiceInfo, nil, serviceLabelSelector, skipServices)
-	return &serviceChangesTracker{tracker: tracker}
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (sh *serviceChangesTracker) OnServiceSynced() {
-	sh.Lock()
-	defer sh.Unlock()
-
-	sh.initialized = true
-}
+func (sh *serviceChangesTracker) OnServiceSynced() { _ = "STUB: not implemented"; return }
 
 func (sh *serviceChangesTracker) OnServiceUpdate(previous, current *v1.Service) bool {
-	return sh.tracker.Update(previous, current)
+	_ = "STUB: not implemented"
+	return false
 }
 
-func (sh *serviceChangesTracker) Synced() bool {
-	sh.Lock()
-	defer sh.Unlock()
-	return sh.initialized
-}
+func (sh *serviceChangesTracker) Synced() bool { _ = "STUB: not implemented"; return false }
 
 func (sh *serviceChangesTracker) Update(sm k8sproxy.ServicePortMap) k8sproxy.UpdateServiceMapResult {
-	return sm.Update(sh.tracker)
+	_ = "STUB: not implemented"
+	return *new(k8sproxy.UpdateServiceMapResult)
 }

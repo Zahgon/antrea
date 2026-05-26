@@ -15,21 +15,12 @@
 package antctl
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
 	"io"
 	"reflect"
-	"strings"
 
 	"github.com/spf13/cobra"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8sruntime "k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/antctl/output"
-	"antrea.io/antrea/v2/pkg/antctl/runtime"
 )
 
 type formatterType string
@@ -116,44 +107,13 @@ type resourceEndpoint struct {
 }
 
 func (e *resourceEndpoint) OutputType() OutputType {
-	if len(e.resourceName) != 0 {
-		return single
-	}
-	return defaultType
+	_ = "STUB: not implemented"
+	return *new(OutputType)
 }
 
-func (e *resourceEndpoint) flags() []flagInfo {
-	var flags []flagInfo
-	if len(e.resourceName) == 0 {
-		flags = append(flags, flagInfo{
-			name:         "name",
-			defaultValue: "",
-			arg:          true,
-			usage:        "Retrieve the resource by name",
-		})
-	}
-	if e.namespaced {
-		flags = append(flags, flagInfo{
-			name:         "namespace",
-			shorthand:    "n",
-			defaultValue: metav1.NamespaceAll,
-			usage:        "Filter the resource by namespace",
-		})
-	}
-	if e.supportSorting {
-		flags = append(flags, getSortByFlag())
-	}
-	flags = append(flags, e.params...)
-	return flags
-}
+func (e *resourceEndpoint) flags() []flagInfo { _ = "STUB: not implemented"; return nil }
 
-func getSortByFlag() flagInfo {
-	return flagInfo{
-		name:         "sort-by",
-		defaultValue: "",
-		usage:        "Get resources in specific order.",
-	}
-}
+func getSortByFlag() flagInfo { _ = "STUB: not implemented"; return *new(flagInfo) }
 
 type restMethod uint
 
@@ -168,15 +128,16 @@ type nonResourceEndpoint struct {
 	outputType OutputType
 }
 
-func (e *nonResourceEndpoint) flags() []flagInfo {
-	return e.params
-}
+func (e *nonResourceEndpoint) flags() []flagInfo { _ = "STUB: not implemented"; return nil }
 
 func (e *nonResourceEndpoint) OutputType() OutputType {
-	return e.outputType
+	_ = "STUB: not implemented"
+	return *
+
+	// endpoint is used to specified the API for an antctl running against antrea-controller.
+	new(OutputType)
 }
 
-// endpoint is used to specified the API for an antctl running against antrea-controller.
 type endpoint struct {
 	resourceEndpoint    *resourceEndpoint
 	nonResourceEndpoint *nonResourceEndpoint
@@ -233,71 +194,20 @@ type commandDefinition struct {
 	transformedResponse reflect.Type
 }
 
-func (cd *commandDefinition) namespaced() bool {
-	switch runtime.Mode {
-	case runtime.ModeAgent:
-		return cd.agentEndpoint != nil && cd.agentEndpoint.resourceEndpoint != nil && cd.agentEndpoint.resourceEndpoint.namespaced
-	case runtime.ModeController:
-		return cd.controllerEndpoint != nil && cd.controllerEndpoint.resourceEndpoint != nil && cd.controllerEndpoint.resourceEndpoint.namespaced
-	case runtime.ModeFlowAggregator:
-		return cd.flowAggregatorEndpoint != nil && cd.flowAggregatorEndpoint.resourceEndpoint != nil && cd.flowAggregatorEndpoint.resourceEndpoint.namespaced
-	}
-	return false
-}
+func (cd *commandDefinition) namespaced() bool { _ = "STUB: not implemented"; return false }
 
 func (cd *commandDefinition) getAddonTransform() func(reader io.Reader, single bool, opts map[string]string) (interface{}, error) {
-	if runtime.Mode == runtime.ModeAgent && cd.agentEndpoint != nil {
-		return cd.agentEndpoint.addonTransform
-	} else if runtime.Mode == runtime.ModeController && cd.controllerEndpoint != nil {
-		return cd.controllerEndpoint.addonTransform
-	} else if runtime.Mode == runtime.ModeFlowAggregator && cd.flowAggregatorEndpoint != nil {
-		return cd.flowAggregatorEndpoint.addonTransform
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (cd *commandDefinition) getEndpoint() endpointResponder {
-	switch runtime.Mode {
-	case runtime.ModeAgent:
-		if cd.agentEndpoint != nil {
-			if cd.agentEndpoint.resourceEndpoint != nil {
-				return cd.agentEndpoint.resourceEndpoint
-			}
-			return cd.agentEndpoint.nonResourceEndpoint
-		}
-	case runtime.ModeController:
-		if cd.controllerEndpoint != nil {
-			if cd.controllerEndpoint.resourceEndpoint != nil {
-				return cd.controllerEndpoint.resourceEndpoint
-			}
-			return cd.controllerEndpoint.nonResourceEndpoint
-		}
-	case runtime.ModeFlowAggregator:
-		if cd.flowAggregatorEndpoint != nil {
-			if cd.flowAggregatorEndpoint.resourceEndpoint != nil {
-				return cd.flowAggregatorEndpoint.resourceEndpoint
-			}
-			return cd.flowAggregatorEndpoint.nonResourceEndpoint
-		}
-	}
-	return nil
+	_ = "STUB: not implemented"
+	return *new(endpointResponder)
 }
 
 func (cd *commandDefinition) getRequestErrorFallback() func() (io.Reader, error) {
-	switch runtime.Mode {
-	case runtime.ModeAgent:
-		if cd.agentEndpoint != nil {
-			return cd.agentEndpoint.requestErrorFallback
-		}
-	case runtime.ModeController:
-		if cd.controllerEndpoint != nil {
-			return cd.controllerEndpoint.requestErrorFallback
-		}
-	case runtime.ModeFlowAggregator:
-		if cd.flowAggregatorEndpoint != nil {
-			return cd.flowAggregatorEndpoint.requestErrorFallback
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
@@ -305,108 +215,22 @@ func (cd *commandDefinition) getRequestErrorFallback() func() (io.Reader, error)
 // the client. It populates basic fields of a cobra.Command and creates the
 // appropriate RunE function for it according to the commandDefinition.
 func (cd *commandDefinition) applySubCommandToRoot(root *cobra.Command, client AntctlClient, out io.Writer) {
-	cmd := &cobra.Command{
-		Use:     cd.use,
-		Aliases: cd.aliases,
-		Short:   cd.short,
-		Long:    cd.long,
-	}
-	renderDescription(cmd)
-	cd.applyFlagsToCommand(cmd)
-
-	if groupCommand, ok := groupCommands[cd.commandGroup]; ok {
-		groupCommand.AddCommand(cmd)
-	} else {
-		// when antctl runs outside the Controller/Agent/FlowAggregator Pod. This check ensures that
-		// the log-level command is not added to the list of available commands.
-		if cmd.Use != "log-level [level]" || (cmd.Use == "log-level [level]" && runtime.InPod) {
-			root.AddCommand(cmd)
-		}
-	}
-	cd.applyExampleToCommand(cmd)
-
-	cmd.RunE = cd.newCommandRunE(client, out)
+	_ = "STUB: not implemented"
+	return
 }
+
+// when antctl runs outside the Controller/Agent/FlowAggregator Pod. This check ensures that
+// the log-level command is not added to the list of available commands.
 
 // validate checks if the commandDefinition is valid.
-func (cd *commandDefinition) validate() []error {
-	var errs []error
-	if len(cd.use) == 0 {
-		errs = append(errs, fmt.Errorf("the command does not have name"))
-	}
-	existingAliases := make(map[string]bool)
-	for _, a := range cd.aliases {
-		if a == cd.use {
-			errs = append(errs, fmt.Errorf("%s: command alias is the same with use of the command", cd.use))
-		}
-		if _, ok := existingAliases[a]; ok {
-			errs = append(errs, fmt.Errorf("%s: command alias is provided twice: %s", cd.use, a))
-		}
-		existingAliases[a] = true
-	}
-	if cd.transformedResponse == nil {
-		errs = append(errs, fmt.Errorf("%s: command does not define output struct", cd.use))
-	}
-	if cd.agentEndpoint == nil && cd.controllerEndpoint == nil && cd.flowAggregatorEndpoint == nil {
-		errs = append(errs, fmt.Errorf("%s: command does not define any supported component", cd.use))
-	}
-	if cd.agentEndpoint != nil && cd.agentEndpoint.nonResourceEndpoint != nil && cd.agentEndpoint.resourceEndpoint != nil {
-		errs = append(errs, fmt.Errorf("%s: command for agent can only define one endpoint", cd.use))
-	}
-	if cd.agentEndpoint != nil && cd.agentEndpoint.nonResourceEndpoint == nil && cd.agentEndpoint.resourceEndpoint == nil {
-		errs = append(errs, fmt.Errorf("%s: command for agent must define one endpoint", cd.use))
-	}
-	if cd.controllerEndpoint != nil && cd.controllerEndpoint.nonResourceEndpoint != nil && cd.controllerEndpoint.resourceEndpoint != nil {
-		errs = append(errs, fmt.Errorf("%s: command for controller can only define one endpoint", cd.use))
-	}
-	if cd.controllerEndpoint != nil && cd.controllerEndpoint.nonResourceEndpoint == nil && cd.controllerEndpoint.resourceEndpoint == nil {
-		errs = append(errs, fmt.Errorf("%s: command for controller must define one endpoint", cd.use))
-	}
-	if cd.flowAggregatorEndpoint != nil && cd.flowAggregatorEndpoint.nonResourceEndpoint != nil && cd.flowAggregatorEndpoint.resourceEndpoint != nil {
-		errs = append(errs, fmt.Errorf("%s: command for flow aggregator can only define one endpoint", cd.use))
-	}
-	if cd.flowAggregatorEndpoint != nil && cd.flowAggregatorEndpoint.nonResourceEndpoint == nil && cd.flowAggregatorEndpoint.resourceEndpoint == nil {
-		errs = append(errs, fmt.Errorf("%s: command for flow aggregator must define one endpoint", cd.use))
-	}
-	empty := struct{}{}
-	existingFlags := map[string]struct{}{"output": empty, "help": empty, "kubeconfig": empty, "timeout": empty, "verbose": empty}
-	if endpoint := cd.getEndpoint(); endpoint != nil {
-		for _, f := range endpoint.flags() {
-			if len(f.name) == 0 {
-				errs = append(errs, fmt.Errorf("%s: flag name cannot be empty", cd.use))
-			} else {
-				if _, ok := existingFlags[f.name]; ok {
-					errs = append(errs, fmt.Errorf("%s: flag redefined: %s", cd.use, f.name))
-				}
-				existingFlags[f.name] = empty
-			}
-			if len(f.shorthand) > 1 {
-				errs = append(errs, fmt.Errorf("%s: length of a flag shorthand cannot be larger than 1: %s", cd.use, f.shorthand))
-			}
-		}
-	}
-	return errs
-}
+func (cd *commandDefinition) validate() []error { _ = "STUB: not implemented"; return nil }
 
 // decode parses the data in reader and converts it to one or more
 // TransformedResponse objects. If single is false, the return type is
 // []TransformedResponse. Otherwise, the return type is TransformedResponse.
 func (cd *commandDefinition) decode(r io.Reader, single bool) (interface{}, error) {
-	var refType reflect.Type
-	if single {
-		refType = cd.transformedResponse
-	} else {
-		refType = reflect.SliceOf(cd.transformedResponse)
-	}
-	ref := reflect.New(refType)
-	err := json.NewDecoder(r).Decode(ref.Interface())
-	if err != nil {
-		return nil, err
-	}
-	if single {
-		return ref.Interface(), nil
-	}
-	return reflect.Indirect(ref).Interface(), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // output reads bytes from the resp and outputs the data to the writer in desired
@@ -414,184 +238,43 @@ func (cd *commandDefinition) decode(r io.Reader, single bool) (interface{}, erro
 // the data first. It will try to output the resp in the format ft specified after
 // doing transform.
 func (cd *commandDefinition) output(resp io.Reader, writer io.Writer, ft formatterType, single bool, args map[string]string) (err error) {
-	var obj interface{}
-	addonTransform := cd.getAddonTransform()
-
-	if addonTransform == nil { // Decode the data if there is no AddonTransform.
-		obj, err = cd.decode(resp, single)
-		if err == io.EOF {
-			// No response returned.
-			return nil
-		}
-		if err != nil {
-			return fmt.Errorf("error when decoding response %v: %w", resp, err)
-		}
-	} else {
-		obj, err = addonTransform(resp, single, args)
-		if err != nil {
-			return fmt.Errorf("error when doing local transform: %w", err)
-		}
-		klog.Infof("After transforming %v", obj)
-	}
-
-	if str, ok := obj.([]byte); ok {
-		// If the transformed response is of type []byte, just output
-		// the raw bytes.
-		_, err = writer.Write(str)
-		return err
-	}
-
-	// Output structure data in format
-	switch ft {
-	case jsonFormatter:
-		return output.JsonOutput(obj, writer)
-	case yamlFormatter:
-		return output.YamlOutput(obj, writer)
-	case tableFormatter:
-		switch cd.commandGroup {
-		case get:
-			return output.TableOutputForGetCommands(obj, writer)
-		case query:
-			if cd.controllerEndpoint.nonResourceEndpoint != nil && cd.controllerEndpoint.nonResourceEndpoint.path == "/endpoint" {
-				return output.TableOutputForQueryEndpoint(obj, writer)
-			}
-			return output.TableOutputForGetCommands(obj, writer)
-		default:
-			return output.TableOutput(obj, writer)
-		}
-	case rawFormatter:
-		return output.RawOutput(obj, writer)
-	default:
-		return fmt.Errorf("unsupported format type: %v", ft)
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
+// Decode the data if there is no AddonTransform.
+
+// No response returned.
+
+// If the transformed response is of type []byte, just output
+// the raw bytes.
+
+// Output structure data in format
+
 func (cd *commandDefinition) collectFlags(cmd *cobra.Command, args []string) (map[string]string, error) {
-	argMap := make(map[string]string)
-	if endpoint := cd.getEndpoint(); endpoint != nil {
-		for _, f := range endpoint.flags() {
-			if f.arg {
-				if len(args) > 0 {
-					argMap[f.name] = args[0]
-				}
-			} else {
-				if f.isBool {
-					vs, err := cmd.Flags().GetBool(f.name)
-					if err != nil {
-						return nil, fmt.Errorf("error accessing flag %s for command %s: %v", f.name, cmd.Name(), err)
-					}
-					if vs {
-						argMap[f.name] = ""
-					}
-				} else {
-					vs, err := cmd.Flags().GetString(f.name)
-					if err != nil {
-						return nil, fmt.Errorf("error accessing flag %s for command %s: %v", f.name, cmd.Name(), err)
-					}
-					if err == nil && len(vs) != 0 {
-						if f.supportedValues != nil && !cd.validateFlagValue(vs, f.supportedValues) {
-							return nil, fmt.Errorf("unsupported value %s for flag %s", vs, f.name)
-						}
-						argMap[f.name] = vs
-					}
-				}
-			}
-		}
-	}
-	if cd.namespaced() {
-		argMap["namespace"], _ = cmd.Flags().GetString("namespace")
-	}
-	return argMap, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (cd *commandDefinition) validateFlagValue(val string, supportedValues []string) bool {
-	for _, s := range supportedValues {
-		if s == val {
-			return true
-		}
-	}
+	_ = "STUB: not implemented"
 	return false
 }
 
 // newCommandRunE creates the RunE function for the command. The RunE function
 // checks the args according to argOption and flags.
 func (cd *commandDefinition) newCommandRunE(c AntctlClient, out io.Writer) func(*cobra.Command, []string) error {
-	return func(cmd *cobra.Command, args []string) error {
-		argMap, err := cd.collectFlags(cmd, args)
-		if err != nil {
-			return err
-		}
-		klog.Infof("Args: %v", argMap)
-		var argGet bool
-		for _, flag := range cd.getEndpoint().flags() {
-			if _, ok := argMap[flag.name]; ok && flag.arg {
-				argGet = true
-				break
-			}
-		}
-		kubeconfigPath, _ := cmd.Flags().GetString("kubeconfig")
-		timeout, _ := cmd.Flags().GetDuration("timeout")
-		server, _ := cmd.Flags().GetString("server")
-		outputFormat, err := cmd.Flags().GetString("output")
-		if err != nil {
-			return err
-		}
-
-		resp, requestErr := c.request(&requestOption{
-			commandDefinition: cd,
-			kubeconfig:        kubeconfigPath,
-			args:              argMap,
-			timeout:           timeout,
-			server:            server,
-		})
-		if requestErr != nil {
-			fallback := cd.getRequestErrorFallback()
-			if fallback == nil {
-				return requestErr
-			}
-			resp, err = fallback()
-			if err != nil {
-				return err
-			}
-		}
-		isSingle := cd.getEndpoint().OutputType() != multiple && (cd.getEndpoint().OutputType() == single || argGet)
-		if err := cd.output(resp, out, formatterType(outputFormat), isSingle, argMap); err != nil {
-			return err
-		}
-		return requestErr
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // applyFlagsToCommand sets up args and flags for the command.
 func (cd *commandDefinition) applyFlagsToCommand(cmd *cobra.Command) {
-	var hasArg bool
-	for _, flag := range cd.getEndpoint().flags() {
-		if flag.arg {
-			cmd.Args = cobra.MaximumNArgs(1)
-			cmd.Use += fmt.Sprintf(" [%s]", flag.name)
-			cmd.Long += fmt.Sprintf("\n\nArgs:\n  %s\t%s", flag.name, flag.usage)
-			hasArg = true
-		} else {
-			if flag.isBool {
-				// When the flag is a boolean, the default value will always be false.
-				cmd.Flags().BoolP(flag.name, flag.shorthand, false, flag.usage)
-			} else {
-				cmd.Flags().StringP(flag.name, flag.shorthand, flag.defaultValue, flag.usage)
-			}
-		}
-	}
-	if !hasArg {
-		cmd.Args = cobra.NoArgs
-	}
-	switch cd.commandGroup {
-	case get:
-		cmd.Flags().StringP("output", "o", "table", "output format: json|table|yaml|raw")
-	case query:
-		cmd.Flags().StringP("output", "o", "table", "output format: json|table|yaml|raw")
-	default:
-		cmd.Flags().StringP("output", "o", "yaml", "output format: json|table|yaml|raw")
-	}
+	_ = "STUB: not implemented"
+	return
 }
+
+// When the flag is a boolean, the default value will always be false.
 
 // applyExampleToCommand generates examples according to the commandDefinition.
 // It only creates for commands which specified TransformedResponse. If the singleObject
@@ -599,30 +282,6 @@ func (cd *commandDefinition) applyFlagsToCommand(cmd *cobra.Command) {
 // it will generates examples about retrieving single object according to the key
 // argOption and retrieving the object list.
 func (cd *commandDefinition) applyExampleToCommand(cmd *cobra.Command) {
-	if len(cd.example) != 0 {
-		cmd.Example = cd.example
-		return
-	}
-	var commands []string
-	for iter := cmd; iter != nil; iter = iter.Parent() {
-		commands = append(commands, iter.Name())
-	}
-	for i := 0; i < len(commands)/2; i++ {
-		commands[i], commands[len(commands)-1-i] = commands[len(commands)-1-i], commands[i]
-	}
-
-	var buf bytes.Buffer
-	dataName := strings.ToLower(cd.use)
-
-	if cd.getEndpoint().OutputType() == single {
-		fmt.Fprintf(&buf, "  Get the %s\n", dataName)
-		fmt.Fprintf(&buf, "  $ %s\n", strings.Join(commands, " "))
-	} else {
-		fmt.Fprintf(&buf, "  Get a %s\n", dataName)
-		fmt.Fprintf(&buf, "  $ %s [name]\n", strings.Join(commands, " "))
-		fmt.Fprintf(&buf, "  Get the list of %s\n", dataName)
-		fmt.Fprintf(&buf, "  $ %s\n", strings.Join(commands, " "))
-	}
-
-	cmd.Example = buf.String()
+	_ = "STUB: not implemented"
+	return
 }

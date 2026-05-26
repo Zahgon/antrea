@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	controlplanev1beta2 "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	gentype "k8s.io/client-go/gentype"
 )
@@ -44,13 +43,6 @@ type nodeStatsSummaries struct {
 
 // newNodeStatsSummaries returns a NodeStatsSummaries
 func newNodeStatsSummaries(c *ControlplaneV1beta2Client) *nodeStatsSummaries {
-	return &nodeStatsSummaries{
-		gentype.NewClient[*controlplanev1beta2.NodeStatsSummary](
-			"nodestatssummaries",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *controlplanev1beta2.NodeStatsSummary { return &controlplanev1beta2.NodeStatsSummary{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

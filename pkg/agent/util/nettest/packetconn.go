@@ -15,7 +15,6 @@
 package nettest
 
 import (
-	"fmt"
 	"net"
 	"time"
 )
@@ -38,123 +37,62 @@ type PacketConn struct {
 var _ net.PacketConn = (*PacketConn)(nil)
 
 func NewPacketConn(localAddr net.Addr, inCh chan *Packet, outCh chan *Packet) *PacketConn {
-	return &PacketConn{
-		addr:    localAddr,
-		inCh:    inCh,
-		outCh:   outCh,
-		closeCh: make(chan struct{}),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (pc *PacketConn) ReadFrom(p []byte) (int, net.Addr, error) {
+	_ = "STUB: not implemented"
 	// Check if connection is closed once before the select statement. Otherwise we may end up
 	// reading a packet even if the connection was already closed before calling this
 	// function. It is still possible for the connection to be closed between this check and the
 	// select, but it doesn't matter in this case because that would mean the 2 function calls
 	// (Close and ReadFrom) are concurrent.
-	if pc.IsClosed() {
-		return 0, nil, pc.closedConnectionError("read")
-	}
-	select {
-	case <-pc.closeCh:
-		return 0, nil, pc.closedConnectionError("read")
-	case packet := <-pc.inCh:
-		n := copy(p, packet.Bytes)
-		return n, packet.Addr, nil
-	}
+	return 0, *new(net.Addr), nil
 }
 
 func (pc *PacketConn) WriteTo(p []byte, addr net.Addr) (int, error) {
+	_ = "STUB: not implemented"
 	// See the comment in ReadFrom.
-	if pc.IsClosed() {
-		return 0, pc.closedConnectionError("write")
-	}
-	packet := &Packet{
-		Bytes: make([]byte, len(p)),
-		Addr:  addr,
-	}
-	n := copy(packet.Bytes, p)
-	select {
-	case <-pc.closeCh:
-		return 0, pc.closedConnectionError("write")
-	case pc.outCh <- packet:
-		return n, nil
-	}
+	return 0, nil
 }
 
 func (pc *PacketConn) Close() error {
+	_ = "STUB: not implemented"
 	// panic if the connection has already been closed
-	close(pc.closeCh)
 	return nil
 }
 
-func (pc *PacketConn) LocalAddr() net.Addr {
-	return pc.addr
-}
+func (pc *PacketConn) LocalAddr() net.Addr { _ = "STUB: not implemented"; return *new(net.Addr) }
 
-func (pc *PacketConn) SetDeadline(t time.Time) error {
-	return fmt.Errorf("not implemented")
-}
+func (pc *PacketConn) SetDeadline(t time.Time) error { _ = "STUB: not implemented"; return nil }
 
-func (pc *PacketConn) SetReadDeadline(t time.Time) error {
-	return fmt.Errorf("not implemented")
-}
+func (pc *PacketConn) SetReadDeadline(t time.Time) error { _ = "STUB: not implemented"; return nil }
 
-func (pc *PacketConn) SetWriteDeadline(t time.Time) error {
-	return fmt.Errorf("not implemented")
-}
+func (pc *PacketConn) SetWriteDeadline(t time.Time) error { _ = "STUB: not implemented"; return nil }
 
 // Send is a convenience function that will send a packet without blocking. If this is not possible,
 // it will return an error. Send does not check whether the connection is closed.
 func (pc *PacketConn) Send(p []byte, addr net.Addr) (int, error) {
-	packet := &Packet{
-		Bytes: make([]byte, len(p)),
-		Addr:  addr,
-	}
-	n := copy(packet.Bytes, p)
-	select {
-	case pc.outCh <- packet:
-		return n, nil
-	default:
-		return 0, fmt.Errorf("cannot send packet")
-	}
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 // Receive is a convenience function that will receive a packet without blocking. If no packet is
 // available, it will return an error. Receive does not check whether the connection is closed.
 func (pc *PacketConn) Receive() ([]byte, net.Addr, error) {
-	select {
-	case packet := <-pc.inCh:
-		return packet.Bytes, packet.Addr, nil
-	default:
-		return nil, nil, fmt.Errorf("no packet available")
-	}
+	_ = "STUB: not implemented"
+	return nil, *new(net.Addr), nil
 }
 
-func (pc *PacketConn) IsClosed() bool {
-	select {
-	case <-pc.closeCh:
-		return true
-	default:
-		return false
-	}
-}
+func (pc *PacketConn) IsClosed() bool { _ = "STUB: not implemented"; return false }
 
-func (pc *PacketConn) closedConnectionError(op string) error {
-	return &net.OpError{
-		Op:     op,
-		Net:    pc.addr.Network(),
-		Source: pc.addr,
-		Addr:   nil,
-		Err:    fmt.Errorf("connection is closed"),
-	}
-}
+func (pc *PacketConn) closedConnectionError(op string) error { _ = "STUB: not implemented"; return nil }
 
 // PacketConnPipe creates 2 instances of PacketConn which represent the 2 endpoints of a
 // packet-oriented connection. Every packet sent on one side will be received on the other side,
 // and we never check whether the address actually matches when sending a packet.
 func PacketConnPipe(addr1, addr2 net.Addr, capacity int) (*PacketConn, *PacketConn) {
-	ch1 := make(chan *Packet, capacity)
-	ch2 := make(chan *Packet, capacity)
-	return NewPacketConn(addr1, ch1, ch2), NewPacketConn(addr2, ch2, ch1)
+	_ = "STUB: not implemented"
+	return nil, nil
 }

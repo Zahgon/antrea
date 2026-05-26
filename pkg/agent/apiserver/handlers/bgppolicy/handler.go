@@ -15,42 +15,15 @@
 package bgppolicy
 
 import (
-	"encoding/json"
 	"net/http"
-	"reflect"
 
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/agent/apis"
 	"antrea.io/antrea/v2/pkg/querier"
 )
 
 // HandleFunc returns the function which can handle queries issued by the bgppolicy command.
 func HandleFunc(bq querier.AgentBGPPolicyInfoQuerier) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if bq == nil || reflect.ValueOf(bq).IsNil() {
-			// The error message must match the "FOO is not enabled" pattern to pass antctl e2e tests.
-			http.Error(w, "bgp is not enabled", http.StatusServiceUnavailable)
-			return
-		}
-
-		bgpPolicyInfo := bq.GetBGPPolicyInfo()
-		if bgpPolicyInfo == nil {
-			http.Error(w, "there is no effective bgp policy applied to the Node", http.StatusNotFound)
-			return
-		}
-		bgpPolicyResp := apis.BGPPolicyResponse{
-			BGPPolicyName:           bgpPolicyInfo.BGPPolicyName,
-			RouterID:                bgpPolicyInfo.RouterID,
-			LocalASN:                bgpPolicyInfo.LocalASN,
-			ListenPort:              bgpPolicyInfo.ListenPort,
-			ConfederationIdentifier: bgpPolicyInfo.ConfederationIdentifier,
-			MemberASNs:              bgpPolicyInfo.MemberASNs,
-		}
-
-		if err := json.NewEncoder(w).Encode(bgpPolicyResp); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			klog.ErrorS(err, "Error when encoding BGPPolicyResp to json")
-		}
-	}
+	_ = "STUB: not implemented"
+	return *new(http.HandlerFunc)
 }
+
+// The error message must match the "FOO is not enabled" pattern to pass antctl e2e tests.

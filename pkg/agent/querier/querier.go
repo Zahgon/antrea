@@ -15,11 +15,8 @@
 package querier
 
 import (
-	v1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clientset "k8s.io/client-go/kubernetes"
 	corelisters "k8s.io/client-go/listers/core/v1"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/config"
 	"antrea.io/antrea/v2/pkg/agent/interfacestore"
@@ -80,205 +77,121 @@ func NewAgentQuerier(
 	nodeLister corelisters.NodeLister,
 	bgpPolicyInfoQuerier querier.AgentBGPPolicyInfoQuerier,
 ) *agentQuerier {
-	return &agentQuerier{
-		nodeConfig:               nodeConfig,
-		networkConfig:            networkConfig,
-		interfaceStore:           interfaceStore,
-		k8sClient:                k8sClient,
-		ofClient:                 ofClient,
-		ovsBridgeClient:          ovsBridgeClient,
-		proxier:                  proxier,
-		networkPolicyInfoQuerier: networkPolicyInfoQuerier,
-		apiPort:                  apiPort,
-		nplRange:                 nplRange,
-		memberlistCluster:        memberlistCluster,
-		nodeLister:               nodeLister,
-		bgpPolicyInfoQuerier:     bgpPolicyInfoQuerier,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNodeLister returns NodeLister.
 func (aq agentQuerier) GetNodeLister() corelisters.NodeLister {
-	return aq.nodeLister
+	_ = "STUB: not implemented"
+	return *
+
+	// GetMemberlistCluster returns MemberlistCluster Interface.
+	new(corelisters.NodeLister)
 }
 
-// GetMemberlistCluster returns MemberlistCluster Interface.
 func (aq agentQuerier) GetMemberlistCluster() memberlist.Interface {
-	return aq.memberlistCluster
+	_ = "STUB: not implemented"
+	return *new(memberlist.Interface)
 }
 
 // GetNodeConfig returns NodeConfig.
-func (aq agentQuerier) GetNodeConfig() *config.NodeConfig {
-	return aq.nodeConfig
-}
+func (aq agentQuerier) GetNodeConfig() *config.NodeConfig { _ = "STUB: not implemented"; return nil }
 
 // GetNetworkConfig returns NetworkConfig.
 func (aq agentQuerier) GetNetworkConfig() *config.NetworkConfig {
-	return aq.networkConfig
+	_ = "STUB: not implemented"
+	return nil
+
+	// GetInterfaceStore returns InterfaceStore.
 }
 
-// GetInterfaceStore returns InterfaceStore.
 func (aq agentQuerier) GetInterfaceStore() interfacestore.InterfaceStore {
-	return aq.interfaceStore
+	_ = "STUB: not implemented"
+	return *
+
+	// GetK8sClient returns Kubernetes client.
+	new(interfacestore.InterfaceStore)
 }
 
-// GetK8sClient returns Kubernetes client.
 func (aq agentQuerier) GetK8sClient() clientset.Interface {
-	return aq.k8sClient
+	_ = "STUB: not implemented"
+	return *
+
+	// GetOpenflowClient returns openflow.Client.
+	new(clientset.Interface)
 }
 
-// GetOpenflowClient returns openflow.Client.
 func (aq *agentQuerier) GetOpenflowClient() openflow.Client {
-	return aq.ofClient
+	_ = "STUB: not implemented"
+	return *
+
+	// GetOVSCtlClient returns a new OVSCtlClient.
+	new(openflow.Client)
 }
 
-// GetOVSCtlClient returns a new OVSCtlClient.
 func (aq *agentQuerier) GetOVSCtlClient() ovsctl.OVSCtlClient {
-	return ovsctl.NewClient(aq.nodeConfig.OVSBridge)
+	_ = "STUB: not implemented"
+	return *new(ovsctl.OVSCtlClient)
 }
 
 // GetProxier returns proxy.ProxyQuerier.
 func (aq *agentQuerier) GetProxier() proxy.ProxyQuerier {
-	return aq.proxier
+	_ = "STUB: not implemented"
+
+	// GetNetworkPolicyInfoQuerier returns AgentNetworkPolicyInfoQuerier.
+	return *new(proxy.ProxyQuerier)
 }
 
-// GetNetworkPolicyInfoQuerier returns AgentNetworkPolicyInfoQuerier.
 func (aq agentQuerier) GetNetworkPolicyInfoQuerier() querier.AgentNetworkPolicyInfoQuerier {
-	return aq.networkPolicyInfoQuerier
+	_ = "STUB: not implemented"
+	return *new(querier.AgentNetworkPolicyInfoQuerier)
 }
 
 // getOVSVersion gets current OVS version.
-func (aq agentQuerier) getOVSVersion() string {
-	v, err := aq.ovsBridgeClient.GetOVSVersion()
-	if err != nil {
-		klog.Errorf("Failed to get OVS client version: %v", err)
-		return ""
-	}
-	return v
-}
+func (aq agentQuerier) getOVSVersion() string { _ = "STUB: not implemented"; return "" }
 
 // getOVSFlowTable gets current OVS flow tables.
-func (aq agentQuerier) getOVSFlowTable() map[string]int32 {
-	flowTable := make(map[string]int32)
-	flowTableStatus := aq.ofClient.GetFlowTableStatus()
-	for _, tableStatus := range flowTableStatus {
-		flowTable[tableStatus.Name] = int32(tableStatus.FlowCount)
-	}
-	return flowTable
-}
+func (aq agentQuerier) getOVSFlowTable() map[string]int32 { _ = "STUB: not implemented"; return nil }
 
 // getAgentConditions gets current conditions of agent pod.
 func (aq agentQuerier) getAgentConditions(ovsConnected bool) []v1beta1.AgentCondition {
-	lastHeartbeatTime := metav1.Now()
-	controllerConnectionStatus := v1.ConditionTrue
-	ovsdbConnectionStatus := v1.ConditionTrue
-	openflowConnectionStatus := v1.ConditionTrue
-	if !aq.networkPolicyInfoQuerier.GetControllerConnectionStatus() {
-		controllerConnectionStatus = v1.ConditionFalse
-	}
-	if !ovsConnected {
-		ovsdbConnectionStatus = v1.ConditionFalse
-	}
-	if !aq.ofClient.IsConnected() {
-		openflowConnectionStatus = v1.ConditionFalse
-	}
-	return []v1beta1.AgentCondition{
-		{
-			Type:              v1beta1.AgentHealthy,
-			Status:            v1.ConditionTrue,
-			LastHeartbeatTime: lastHeartbeatTime,
-		},
-		{
-			Type:              v1beta1.ControllerConnectionUp,
-			Status:            controllerConnectionStatus,
-			LastHeartbeatTime: lastHeartbeatTime,
-		},
-		{
-			Type:              v1beta1.OVSDBConnectionUp,
-			Status:            ovsdbConnectionStatus,
-			LastHeartbeatTime: lastHeartbeatTime,
-		},
-		{
-			Type:              v1beta1.OpenflowConnectionUp,
-			Status:            openflowConnectionStatus,
-			LastHeartbeatTime: lastHeartbeatTime,
-		},
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // getNetworkPolicyControllerInfo gets current network policy controller info
 // including: number of network policies, address groups and applied to groups.
 func (aq agentQuerier) getNetworkPolicyControllerInfo() v1beta1.NetworkPolicyControllerInfo {
-	return v1beta1.NetworkPolicyControllerInfo{
-		NetworkPolicyNum:  int32(aq.networkPolicyInfoQuerier.GetNetworkPolicyNum()),
-		AddressGroupNum:   int32(aq.networkPolicyInfoQuerier.GetAddressGroupNum()),
-		AppliedToGroupNum: int32(aq.networkPolicyInfoQuerier.GetAppliedToGroupNum()),
-	}
+	_ = "STUB: not implemented"
+	return *new(v1beta1.NetworkPolicyControllerInfo)
 }
 
 // GetAgentInfo gets current agent pod info.
 func (aq agentQuerier) GetAgentInfo(agentInfo *v1beta1.AntreaAgentInfo, partial bool) {
+	_ = "STUB: not implemented"
 	// LocalPodNum, FlowTable, NetworkPolicyControllerInfo, OVSVersion and AgentConditions can be changed, so reset these fields.
 	// Only these fields are updated when partial is true.
-	agentInfo.Name = aq.nodeConfig.Name
-	agentInfo.LocalPodNum = int32(aq.interfaceStore.GetContainerInterfaceNum())
-	agentInfo.OVSInfo.FlowTable = aq.getOVSFlowTable()
-	agentInfo.NetworkPolicyControllerInfo = aq.getNetworkPolicyControllerInfo()
-	ovsVersion := aq.getOVSVersion()
-	// OVS version query will fail and return empty string when OVSDB connection is down.
-	// Only change OVS version when the query gets a valid version.
-	ovsConnected := ovsVersion != ""
-	if ovsConnected {
-		agentInfo.OVSInfo.Version = ovsVersion
-	}
-	agentInfo.AgentConditions = aq.getAgentConditions(ovsConnected)
-
-	// Some other fields are needed when partial is false.
-	if !partial {
-		agentInfo.Version = querier.GetVersion()
-		agentInfo.PodRef = querier.GetSelfPod()
-		agentInfo.NodeRef = querier.GetSelfNode(true, aq.nodeConfig.Name)
-		// Make a new string slice instead of appending agentInfo.NodeSubnets directly to avoid duplicate CIDRs.
-		nodeSubnets := make([]string, 0)
-		if aq.nodeConfig.PodIPv4CIDR != nil {
-			nodeSubnets = append(nodeSubnets, aq.nodeConfig.PodIPv4CIDR.String())
-		}
-		if aq.nodeConfig.PodIPv6CIDR != nil {
-			nodeSubnets = append(nodeSubnets, aq.nodeConfig.PodIPv6CIDR.String())
-		}
-		agentInfo.NodeSubnets = nodeSubnets
-		agentInfo.OVSInfo.BridgeName = aq.nodeConfig.OVSBridge
-		agentInfo.APIPort = aq.apiPort
-		agentInfo.NodePortLocalPortRange = aq.nplRange
-		agentInfo.NetworkInfo = aq.getNetworkInfo()
-	}
+	return
 }
+
+// OVS version query will fail and return empty string when OVSDB connection is down.
+// Only change OVS version when the query gets a valid version.
+
+// Some other fields are needed when partial is false.
+
+// Make a new string slice instead of appending agentInfo.NodeSubnets directly to avoid duplicate CIDRs.
 
 // getNetworkInfo gets network information including transport interface details and Pod MTU.
 func (aq agentQuerier) getNetworkInfo() v1beta1.NetworkInfo {
-	networkInfo := v1beta1.NetworkInfo{
-		TransportInterface:    aq.nodeConfig.NodeTransportInterfaceName,
-		TransportInterfaceMTU: int32(aq.nodeConfig.NodeTransportInterfaceMTU),
-	}
-
-	if aq.networkConfig != nil {
-		networkInfo.PodMTU = int32(aq.networkConfig.InterfaceMTU)
-	}
-
-	// Collect transport interface IPs with CIDR notation
-	transportIPs := make([]string, 0, 2)
-	if aq.nodeConfig.NodeTransportIPv4Addr != nil {
-		transportIPs = append(transportIPs, aq.nodeConfig.NodeTransportIPv4Addr.String())
-	}
-	if aq.nodeConfig.NodeTransportIPv6Addr != nil {
-		transportIPs = append(transportIPs, aq.nodeConfig.NodeTransportIPv6Addr.String())
-	}
-	networkInfo.TransportInterfaceIPs = transportIPs
-
-	return networkInfo
+	_ = "STUB: not implemented"
+	return *new(v1beta1.NetworkInfo)
 }
+
+// Collect transport interface IPs with CIDR notation
 
 // GetBGPPolicyInfoQuerier returns AgentBGPPolicyInfoQuerier.
 func (aq agentQuerier) GetBGPPolicyInfoQuerier() querier.AgentBGPPolicyInfoQuerier {
-	return aq.bgpPolicyInfoQuerier
+	_ = "STUB: not implemented"
+	return *new(querier.AgentBGPPolicyInfoQuerier)
 }

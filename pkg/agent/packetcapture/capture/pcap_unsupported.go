@@ -19,7 +19,6 @@ package capture
 
 import (
 	"context"
-	"errors"
 	"net"
 
 	"github.com/gopacket/gopacket"
@@ -30,10 +29,9 @@ import (
 type pcapCapture struct {
 }
 
-func NewPcapCapture() (*pcapCapture, error) {
-	return nil, errors.New("PacketCapture is not implemented")
-}
+func NewPcapCapture() (*pcapCapture, error) { _ = "STUB: not implemented"; return nil, nil }
 
 func (p *pcapCapture) Capture(ctx context.Context, device string, snapLen int, srcIP, dstIP net.IP, packet *crdv1alpha1.Packet, direction crdv1alpha1.CaptureDirection) (chan gopacket.Packet, error) {
-	return nil, errors.New("PacketCapture is not implemented")
+	_ = "STUB: not implemented"
+	return nil, nil
 }

@@ -15,34 +15,21 @@
 package store
 
 import (
-	"reflect"
-
 	"antrea.io/antrea/v2/pkg/apiserver/storage"
-	"antrea.io/antrea/v2/pkg/controller/types"
 )
 
 // keyAndSpanSelectFunc returns whether the provided selectors matches the key and/or the nodeNames.
 func keyAndSpanSelectFunc(selectors *storage.Selectors, key string, obj interface{}) bool {
+	_ = "STUB: not implemented"
 	// If Key is present in selectors, the provided key must match it.
-	if selectors.Key != "" && key != selectors.Key {
-		return false
-	}
-	// If nodeName is present in selectors's Field selector, the provided nodeNames must contain it.
-	if nodeName, found := selectors.Field.RequiresExactMatch("nodeName"); found {
-		if !obj.(types.Span).Has(nodeName) {
-			return false
-		}
-	}
-	return true
+	return false
 }
+
+// If nodeName is present in selectors's Field selector, the provided nodeNames must contain it.
 
 // isSelected determines if the previous and the current version of an object should be selected by the given selectors.
 func isSelected(key string, prevObj, currObj interface{}, selectors *storage.Selectors, isInitEvent bool) (bool, bool) {
+	_ = "STUB: not implemented"
 	// We have filtered out init events that we are not interested in, so the current object must be selected.
-	if isInitEvent {
-		return false, true
-	}
-	prevObjSelected := !reflect.ValueOf(prevObj).IsNil() && keyAndSpanSelectFunc(selectors, key, prevObj)
-	currObjSelected := !reflect.ValueOf(currObj).IsNil() && keyAndSpanSelectFunc(selectors, key, currObj)
-	return prevObjSelected, currObjSelected
+	return false, false
 }

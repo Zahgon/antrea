@@ -29,14 +29,6 @@ type fakeNetworkPolicyEvaluations struct {
 }
 
 func newFakeNetworkPolicyEvaluations(fake *FakeControlplaneV1beta2) controlplanev1beta2.NetworkPolicyEvaluationInterface {
-	return &fakeNetworkPolicyEvaluations{
-		gentype.NewFakeClient[*v1beta2.NetworkPolicyEvaluation](
-			fake.Fake,
-			"",
-			v1beta2.SchemeGroupVersion.WithResource("networkpolicyevaluations"),
-			v1beta2.SchemeGroupVersion.WithKind("NetworkPolicyEvaluation"),
-			func() *v1beta2.NetworkPolicyEvaluation { return &v1beta2.NetworkPolicyEvaluation{} },
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(controlplanev1beta2.NetworkPolicyEvaluationInterface)
 }

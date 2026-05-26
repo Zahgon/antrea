@@ -15,31 +15,23 @@
 package serviceexternalip
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
-	discoveryv1 "k8s.io/api/discovery/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
 	apimachinerytypes "k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/wait"
 	coreinformers "k8s.io/client-go/informers/core/v1"
 	discoveryinformers "k8s.io/client-go/informers/discovery/v1"
 	corelisters "k8s.io/client-go/listers/core/v1"
 	discoverylisters "k8s.io/client-go/listers/discovery/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
-	"k8s.io/klog/v2"
-	utilnet "k8s.io/utils/net"
 
 	"antrea.io/antrea/v2/pkg/agent/apis"
 	"antrea.io/antrea/v2/pkg/agent/ipassigner"
 	"antrea.io/antrea/v2/pkg/agent/ipassigner/linkmonitor"
 	"antrea.io/antrea/v2/pkg/agent/memberlist"
-	"antrea.io/antrea/v2/pkg/agent/types"
 	"antrea.io/antrea/v2/pkg/querier"
 )
 
@@ -97,403 +89,125 @@ func NewServiceExternalIPController(
 	endpointSliceInformer discoveryinformers.EndpointSliceInformer,
 	linkMonitor linkmonitor.Interface,
 ) (*ServiceExternalIPController, error) {
-	c := &ServiceExternalIPController{
-		nodeName: nodeName,
-		cluster:  cluster,
-		queue: workqueue.NewTypedRateLimitingQueueWithConfig(
-			workqueue.NewTypedItemExponentialFailureRateLimiter[apimachinerytypes.NamespacedName](minRetryDelay, maxRetryDelay),
-			workqueue.TypedRateLimitingQueueConfig[apimachinerytypes.NamespacedName]{
-				Name: "AgentServiceExternalIP",
-			},
-		),
-		serviceInformer:           serviceInformer.Informer(),
-		serviceLister:             serviceInformer.Lister(),
-		serviceListerSynced:       serviceInformer.Informer().HasSynced,
-		endpointSliceInformer:     endpointSliceInformer.Informer(),
-		endpointSliceLister:       endpointSliceInformer.Lister(),
-		endpointSliceListerSynced: endpointSliceInformer.Informer().HasSynced,
-		externalIPStates:          make(map[apimachinerytypes.NamespacedName]externalIPState),
-		assignedIPs:               make(map[string]sets.Set[string]),
-		linkMonitor:               linkMonitor,
-	}
-	ipAssigner, err := ipassigner.NewIPAssigner(nodeTransportInterface, "", linkMonitor, false)
-	// On Windows, ipassigner.NewIPAssigner always returns a non-nil error (see ip_assigner_windows.go);
-	// on Linux, err is nil when initialization succeeds. golangci runs staticcheck with GOOS=windows too.
-	if err != nil { //nolint:staticcheck // SA4023: err is always non-nil on Windows only.
-		return nil, fmt.Errorf("initializing service external IP assigner failed: %v", err)
-	}
-	c.ipAssigner = ipAssigner
-
-	c.serviceInformer.AddIndexers(cache.Indexers{
-		externalIPIndex: func(obj interface{}) ([]string, error) {
-			service, ok := obj.(*corev1.Service)
-			if !ok {
-				return nil, fmt.Errorf("obj is not Service: %+v", obj)
-			}
-			if len(service.Status.LoadBalancer.Ingress) == 0 {
-				return nil, nil
-			}
-			return []string{service.Status.LoadBalancer.Ingress[0].IP}, nil
-		},
-		externalIPPoolIndex: func(obj interface{}) ([]string, error) {
-			service, ok := obj.(*corev1.Service)
-			if !ok {
-				return nil, fmt.Errorf("obj is not Service: %+v", obj)
-			}
-			eipName, ok := service.Annotations[types.ServiceExternalIPPoolAnnotationKey]
-			if !ok {
-				return nil, nil
-			}
-			return []string{eipName}, nil
-		}},
-	)
-
-	c.serviceInformer.AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc: c.enqueueService,
-			UpdateFunc: func(old, cur interface{}) {
-				c.enqueueService(cur)
-			},
-			DeleteFunc: c.enqueueService,
-		},
-		resyncPeriod,
-	)
-
-	c.endpointSliceInformer.AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc: c.enqueueServiceForEndpointSlice,
-			UpdateFunc: func(old, cur interface{}) {
-				c.enqueueServiceForEndpointSlice(cur)
-			},
-			DeleteFunc: c.enqueueServiceForEndpointSlice,
-		},
-		resyncPeriod,
-	)
-
-	c.cluster.AddClusterEventHandler(c.enqueueServicesByExternalIPPool)
-	return c, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
+// On Windows, ipassigner.NewIPAssigner always returns a non-nil error (see ip_assigner_windows.go);
+// on Linux, err is nil when initialization succeeds. golangci runs staticcheck with GOOS=windows too.
+//nolint:staticcheck // SA4023: err is always non-nil on Windows only.
+
 func (c *ServiceExternalIPController) enqueueService(obj interface{}) {
-	service, ok := obj.(*corev1.Service)
-	if !ok {
-		deletedState, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			klog.Errorf("Received unexpected object: %v", obj)
-			return
-		}
-		service, ok = deletedState.Obj.(*corev1.Service)
-		if !ok {
-			klog.Errorf("DeletedFinalStateUnknown contains non-Service object: %v", deletedState.Obj)
-			return
-		}
-	}
-	key := apimachinerytypes.NamespacedName{
-		Namespace: service.Namespace,
-		Name:      service.Name,
-	}
-	c.queue.Add(key)
+	_ = "STUB: not implemented"
+	return
 }
 
 func (c *ServiceExternalIPController) enqueueServiceForEndpointSlice(obj interface{}) {
-	endpointSlice, ok := obj.(*discoveryv1.EndpointSlice)
-	if !ok {
-		deletedState, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			klog.Errorf("Received unexpected object: %v", obj)
-			return
-		}
-		endpointSlice, ok = deletedState.Obj.(*discoveryv1.EndpointSlice)
-		if !ok {
-			klog.Errorf("DeletedFinalStateUnknown contains non-EndpointSlice object: %v", deletedState.Obj)
-			return
-		}
-	}
-	// Get the service name from the EndpointSlice label
-	serviceName, ok := endpointSlice.Labels[discoveryv1.LabelServiceName]
-	if !ok {
-		// EndpointSlice doesn't have the service name label, skip it
-		klog.V(5).InfoS("EndpointSlice doesn't have the service name label, skip it", "EndpointSlice", klog.KObj(endpointSlice))
-		return
-	}
-	service, err := c.serviceLister.Services(endpointSlice.Namespace).Get(serviceName)
-	if err != nil {
-		// The only possible error Lister.Get can return is NotFound.
-		// It's fine to ignore the error as the Service's add event will enqueue it when the Service is synced.
-		klog.V(5).InfoS("Failed to get Service for EndpointSlice", "EndpointSlice", klog.KObj(endpointSlice), "err", err)
-		return
-	}
-	// we only care services with ServiceExternalTrafficPolicy setting to local.
-	if service.Spec.ExternalTrafficPolicy != corev1.ServiceExternalTrafficPolicyLocal || service.Spec.Type != corev1.ServiceTypeLoadBalancer {
-		return
-	}
-	c.queue.Add(apimachinerytypes.NamespacedName{
-		Namespace: service.Namespace,
-		Name:      service.Name,
-	})
+	_ = "STUB: not implemented"
+	return
 }
+
+// Get the service name from the EndpointSlice label
+
+// EndpointSlice doesn't have the service name label, skip it
+
+// The only possible error Lister.Get can return is NotFound.
+// It's fine to ignore the error as the Service's add event will enqueue it when the Service is synced.
+
+// we only care services with ServiceExternalTrafficPolicy setting to local.
 
 // enqueueServicesByExternalIPPool enqueues all services that refer to the provided ExternalIPPool,
 // the ExternalIPPool is affected by a Node update/create/delete event or Node leaves/join cluster
 // event or ExternalIPPool changed event.
 func (c *ServiceExternalIPController) enqueueServicesByExternalIPPool(eipName string) {
-	objects, _ := c.serviceInformer.GetIndexer().ByIndex(externalIPPoolIndex, eipName)
-	for _, object := range objects {
-		service := object.(*corev1.Service)
-		c.queue.Add(apimachinerytypes.NamespacedName{
-			Namespace: service.Namespace,
-			Name:      service.Name,
-		})
-	}
-	klog.InfoS("Detected ExternalIPPool event", "ExternalIPPool", eipName, "enqueueServiceNum", len(objects))
+	_ = "STUB: not implemented"
+	return
 }
 
 // Run will create defaultWorkers workers (go routines) which will process the Service events from the
 // workqueue.
 func (c *ServiceExternalIPController) Run(stopCh <-chan struct{}) {
-	defer c.queue.ShutDown()
-	go c.ipAssigner.Run(stopCh)
-
-	klog.Infof("Starting %s", controllerName)
-	defer klog.Infof("Shutting down %s", controllerName)
-
-	if !cache.WaitForNamedCacheSync(controllerName, stopCh, c.serviceListerSynced, c.endpointSliceListerSynced, c.linkMonitor.HasSynced) {
-		return
-	}
-
-	for i := 0; i < defaultWorkers; i++ {
-		go wait.Until(c.worker, time.Second, stopCh)
-	}
-	<-stopCh
+	_ = "STUB: not implemented"
+	return
 }
 
 // worker is a long-running function that will continually call the processNextWorkItem function in
 // order to read and process a message on the workqueue.
-func (c *ServiceExternalIPController) worker() {
-	for c.processNextWorkItem() {
-	}
-}
+func (c *ServiceExternalIPController) worker() { _ = "STUB: not implemented"; return }
 
 func (c *ServiceExternalIPController) processNextWorkItem() bool {
-	key, quit := c.queue.Get()
-	if quit {
-		return false
-	}
-	defer c.queue.Done(key)
-	if err := c.syncService(key); err == nil {
-		// If no error occurs we Forget this item so it does not get queued again until
-		// another change happens.
-		c.queue.Forget(key)
-	} else {
-		// Put the item back on the workqueue to handle any transient errors.
-		c.queue.AddRateLimited(key)
-		klog.ErrorS(err, "Error syncing Service", "Service", key)
-	}
-	return true
+	_ = "STUB: not implemented"
+	return false
 }
 
+// If no error occurs we Forget this item so it does not get queued again until
+// another change happens.
+
+// Put the item back on the workqueue to handle any transient errors.
+
 func (c *ServiceExternalIPController) deleteService(service apimachinerytypes.NamespacedName) error {
-	c.externalIPStatesMutex.Lock()
-	defer c.externalIPStatesMutex.Unlock()
-	var state externalIPState
-	var exist bool
-	if state, exist = c.externalIPStates[service]; !exist {
-		return nil
-	}
-	if err := c.unassignIP(state.ip, service); err != nil {
-		return err
-	}
-	delete(c.externalIPStates, service)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (c *ServiceExternalIPController) getServiceState(service *corev1.Service) (externalIPState, bool) {
-	c.externalIPStatesMutex.RLock()
-	defer c.externalIPStatesMutex.RUnlock()
-	name := apimachinerytypes.NamespacedName{
-		Namespace: service.Namespace,
-		Name:      service.Name,
-	}
-	state, exist := c.externalIPStates[name]
-	return state, exist
+	_ = "STUB: not implemented"
+	return *new(externalIPState), false
 }
 
 func (c *ServiceExternalIPController) saveServiceState(service *corev1.Service, state *externalIPState) {
-	c.externalIPStatesMutex.Lock()
-	defer c.externalIPStatesMutex.Unlock()
-	name := apimachinerytypes.NamespacedName{
-		Namespace: service.Namespace,
-		Name:      service.Name,
-	}
-	c.externalIPStates[name] = *state
+	_ = "STUB: not implemented"
+	return
 }
 
 func (c *ServiceExternalIPController) getServiceExternalIP(service *corev1.Service) string {
-	if len(service.Status.LoadBalancer.Ingress) == 0 {
-		return ""
-	}
-	return service.Status.LoadBalancer.Ingress[0].IP
+	_ = "STUB: not implemented"
+	return ""
 }
 
 func (c *ServiceExternalIPController) syncService(key apimachinerytypes.NamespacedName) error {
-	startTime := time.Now()
-	defer func() {
-		klog.V(4).Infof("Finished syncing Service for %s. (%v)", key, time.Since(startTime))
-	}()
-
-	service, err := c.serviceLister.Services(key.Namespace).Get(key.Name)
-	if err != nil {
-		if errors.IsNotFound(err) {
-			return c.deleteService(key)
-		}
-		return err
-	}
-
-	if service.Spec.Type != corev1.ServiceTypeLoadBalancer {
-		return c.deleteService(key)
-	}
-
-	prevState, exist := c.getServiceState(service)
-	currentExternalIP := c.getServiceExternalIP(service)
-	if exist && prevState.ip != currentExternalIP {
-		// External IP of the Service has changed. Delete the previous assigned IP if exists.
-		if err := c.deleteService(key); err != nil {
-			return err
-		}
-	}
-
-	ipPool := service.ObjectMeta.Annotations[types.ServiceExternalIPPoolAnnotationKey]
-	state := &externalIPState{
-		ip:     currentExternalIP,
-		ipPool: ipPool,
-	}
-	defer c.saveServiceState(service, state)
-
-	if currentExternalIP == "" || ipPool == "" {
-		return nil
-	}
-
-	var filters []func(string) bool
-	if service.Spec.ExternalTrafficPolicy == corev1.ServiceExternalTrafficPolicyLocal {
-		nodes, err := c.nodesHasHealthyServiceEndpoint(service)
-		if err != nil {
-			return err
-		}
-		filters = append(filters, func(s string) bool {
-			return nodes.Has(s)
-		})
-	}
-
-	nodeName, err := c.cluster.SelectNodeForIP(currentExternalIP, ipPool, filters...)
-	if err != nil {
-		if err == memberlist.ErrNoNodeAvailable {
-			// No Node is available at the moment. The Service will be requeued by EndpointSlice, Node, or Memberlist update events.
-			klog.InfoS("No Node available", "ip", currentExternalIP, "ipPool", ipPool)
-			return nil
-		}
-		return err
-	}
-	klog.InfoS("Select Node for IP", "service", key, "nodeName", nodeName, "currentExternalIP", currentExternalIP, "ipPool", ipPool)
-
-	state.assignedNode = nodeName
-
-	if state.assignedNode == c.nodeName {
-		return c.assignIP(currentExternalIP, key)
-	}
-	return c.unassignIP(currentExternalIP, key)
+	_ = "STUB: not implemented"
+	return nil
 }
 
+// External IP of the Service has changed. Delete the previous assigned IP if exists.
+
+// No Node is available at the moment. The Service will be requeued by EndpointSlice, Node, or Memberlist update events.
+
 func (c *ServiceExternalIPController) assignIP(ip string, service apimachinerytypes.NamespacedName) error {
-	c.assignedIPsMutex.Lock()
-	defer c.assignedIPsMutex.Unlock()
-	if _, ok := c.assignedIPs[ip]; !ok {
-		if _, err := c.ipAssigner.AssignIP(ip, nil, true); err != nil {
-			return err
-		}
-		c.assignedIPs[ip] = sets.New(service.String())
-	} else {
-		c.assignedIPs[ip].Insert(service.String())
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (c *ServiceExternalIPController) unassignIP(ip string, service apimachinerytypes.NamespacedName) error {
-	c.assignedIPsMutex.Lock()
-	defer c.assignedIPsMutex.Unlock()
-	assigned, ok := c.assignedIPs[ip]
-	if !ok {
-		return nil
-	}
-	if assigned.Len() == 1 && assigned.Has(service.String()) {
-		if _, err := c.ipAssigner.UnassignIP(ip); err != nil {
-			return err
-		}
-		delete(c.assignedIPs, ip)
-		return nil
-	}
-	assigned.Delete(service.String())
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // nodesHasHealthyServiceEndpoint returns the set of Nodes which has at least one healthy endpoint
 // for the address family matching the service's external IP.
 func (c *ServiceExternalIPController) nodesHasHealthyServiceEndpoint(service *corev1.Service) (sets.Set[string], error) {
-	nodes := sets.New[string]()
-	// List all EndpointSlices for this service using the label selector
-	labelSelector := labels.SelectorFromSet(labels.Set{
-		discoveryv1.LabelServiceName: service.Name,
-	})
-	endpointSlices, err := c.endpointSliceLister.EndpointSlices(service.Namespace).List(labelSelector)
-	if err != nil {
-		return nodes, err
-	}
-	// Determine the address type matching the service's external IP, so that on dual-stack clusters
-	// we only consider EndpointSlices of the correct address family.
-	externalIP := c.getServiceExternalIP(service)
-	wantAddressType := discoveryv1.AddressTypeIPv4
-	if utilnet.IsIPv6String(externalIP) {
-		wantAddressType = discoveryv1.AddressTypeIPv6
-	}
-	for _, endpointSlice := range endpointSlices {
-		if endpointSlice.AddressType != wantAddressType {
-			continue
-		}
-		for _, ep := range endpointSlice.Endpoints {
-			if ep.NodeName == nil {
-				continue
-			}
-			// Check the ready condition first to respect the Service's publishNotReadyAddresses setting.
-			// The ready condition is true when:
-			// - publishNotReadyAddresses is true (all endpoints are considered ready), OR
-			// - the endpoint is serving AND not terminating
-			// If ready is true (or nil, which means true), we can use this endpoint.
-			if ep.Conditions.Ready == nil || *ep.Conditions.Ready {
-				nodes.Insert(*ep.NodeName)
-				continue
-			}
-			// If ready is false, fall back to checking the serving condition directly.
-			// This handles cases where the endpoint might still be serving but is marked not ready
-			// (e.g., during termination but still draining connections).
-			if ep.Conditions.Serving == nil || *ep.Conditions.Serving {
-				nodes.Insert(*ep.NodeName)
-			}
-		}
-	}
-	return nodes, nil
+	_ = "STUB: not implemented"
+	return nil,
+
+		// List all EndpointSlices for this service using the label selector
+		nil
 }
 
+// Determine the address type matching the service's external IP, so that on dual-stack clusters
+// we only consider EndpointSlices of the correct address family.
+
+// Check the ready condition first to respect the Service's publishNotReadyAddresses setting.
+// The ready condition is true when:
+// - publishNotReadyAddresses is true (all endpoints are considered ready), OR
+// - the endpoint is serving AND not terminating
+// If ready is true (or nil, which means true), we can use this endpoint.
+
+// If ready is false, fall back to checking the serving condition directly.
+// This handles cases where the endpoint might still be serving but is marked not ready
+// (e.g., during termination but still draining connections).
+
 func (c *ServiceExternalIPController) GetServiceExternalIPStatus() []apis.ServiceExternalIPInfo {
-	c.externalIPStatesMutex.RLock()
-	defer c.externalIPStatesMutex.RUnlock()
-	info := make([]apis.ServiceExternalIPInfo, 0, len(c.externalIPStates))
-	for k, v := range c.externalIPStates {
-		info = append(info, apis.ServiceExternalIPInfo{
-			ServiceName:    k.Name,
-			Namespace:      k.Namespace,
-			ExternalIP:     v.ip,
-			ExternalIPPool: v.ipPool,
-			AssignedNode:   v.assignedNode,
-		})
-	}
-	return info
+	_ = "STUB: not implemented"
+	return nil
 }

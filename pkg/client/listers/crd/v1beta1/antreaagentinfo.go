@@ -42,5 +42,6 @@ type antreaAgentInfoLister struct {
 
 // NewAntreaAgentInfoLister returns a new AntreaAgentInfoLister.
 func NewAntreaAgentInfoLister(indexer cache.Indexer) AntreaAgentInfoLister {
-	return &antreaAgentInfoLister{listers.New[*crdv1beta1.AntreaAgentInfo](indexer, crdv1beta1.Resource("antreaagentinfo"))}
+	_ = "STUB: not implemented"
+	return *new(AntreaAgentInfoLister)
 }

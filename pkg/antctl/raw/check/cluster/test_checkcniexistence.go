@@ -16,11 +16,6 @@ package cluster
 
 import (
 	"context"
-	"fmt"
-	"sort"
-	"strings"
-
-	"antrea.io/antrea/v2/pkg/antctl/raw"
 )
 
 type checkCNIExistence struct{}
@@ -30,23 +25,6 @@ func init() {
 }
 
 func (t *checkCNIExistence) Run(ctx context.Context, testContext *testContext) error {
-	command := []string{"ls", "-1", "/etc/cni/net.d"}
-	output, _, err := raw.ExecInPod(ctx, testContext.client, testContext.config, testContext.namespace, testContext.testPod.Name, "", command)
-	if err != nil {
-		return fmt.Errorf("failed to execute command in Pod %s, error: %w", testContext.testPod.Name, err)
-	}
-	files := strings.Fields(output)
-	if len(files) == 0 {
-		testContext.Log("No files present in /etc/cni/net.d in Node %s", testContext.testPod.Spec.NodeName)
-		return nil
-	}
-	sort.Strings(files)
-	if files[0] < "10-antrea.conflist" {
-		return newUncertainError("another CNI configuration file with higher priority than Antrea's CNI configuration file found: %s; this may be expected if networkPolicyOnly mode is enabled", files[0])
-	} else if files[0] != "10-antrea.conflist" {
-		testContext.Log("Another CNI configuration file found: %s with Antrea having higher precedence", files[0])
-	} else {
-		testContext.Log("Antrea's CNI configuration file already present: %s", files[0])
-	}
+	_ = "STUB: not implemented"
 	return nil
 }

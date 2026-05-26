@@ -15,8 +15,6 @@
 package v1beta2
 
 import (
-	"fmt"
-
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -25,22 +23,6 @@ func init() {
 }
 
 // addConversionFuncs adds non-generated conversion functions to the given scheme.
-func addConversionFuncs(scheme *runtime.Scheme) error {
-	for _, kind := range []string{"AppliedToGroup", "AddressGroup", "NetworkPolicy", "EgressGroup", "SupportBundleCollection"} {
-		err := scheme.AddFieldLabelConversionFunc(SchemeGroupVersion.WithKind(kind),
-			func(label, value string) (string, string, error) {
-				switch label {
-				// Antrea Agents select resources by nodeName.
-				case "metadata.name", "nodeName":
-					return label, value, nil
-				default:
-					return "", "", fmt.Errorf("field label not supported: %s", label)
-				}
-			},
-		)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
+func addConversionFuncs(scheme *runtime.Scheme) error { _ = "STUB: not implemented"; return nil }
+
+// Antrea Agents select resources by nodeName.

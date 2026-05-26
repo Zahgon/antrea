@@ -16,31 +16,17 @@ package packetcapture
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"io"
-	"net"
-	"path"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	v1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/apimachinery/pkg/util/rand"
-	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"k8s.io/utils/ptr"
 
-	"antrea.io/antrea/v2/pkg/agent/packetcapture/capture"
 	"antrea.io/antrea/v2/pkg/antctl/raw"
 	"antrea.io/antrea/v2/pkg/apis/crd/v1alpha1"
 	antrea "antrea.io/antrea/v2/pkg/client/clientset/versioned"
-	"antrea.io/antrea/v2/pkg/util/env"
 )
 
 var (
@@ -132,438 +118,62 @@ var tcpFlags = map[string]int32{
 }
 
 func getPodFileCopier(config *rest.Config, client kubernetes.Interface) raw.PodFileCopier {
-	return raw.NewPodFileCopier(config, client)
+	_ = "STUB: not implemented"
+	return *new(raw.PodFileCopier)
 }
 
 func getConfigAndClients(cmd *cobra.Command) (*rest.Config, kubernetes.Interface, antrea.Interface, error) {
-	kubeConfig, err := raw.ResolveKubeconfig(cmd)
-	if err != nil {
-		return nil, nil, nil, err
-	}
-	k8sClientset, client, err := raw.SetupClients(kubeConfig)
-	if err != nil {
-		return nil, nil, nil, fmt.Errorf("failed to create clientset: %w", err)
-	}
-	return kubeConfig, k8sClientset, client, nil
+	_ = "STUB: not implemented"
+	return nil, *new(kubernetes.Interface), *new(antrea.Interface), nil
 }
 
-func getPCName(options *packetCaptureOptions) string {
-	replace := func(s string) string {
-		return strings.ReplaceAll(s, "/", "-")
-	}
-	var parts []string
-	if options.source != "" {
-		parts = append(parts, replace(options.source))
-	}
-	if options.dest != "" {
-		parts = append(parts, replace(options.dest))
-	}
-	prefix := strings.Join(parts, "-")
-	if options.nowait {
-		return prefix
-	}
-	return fmt.Sprintf("%s-%s", prefix, rand.String(8))
-}
+func getPCName(options *packetCaptureOptions) string { _ = "STUB: not implemented"; return "" }
 
 func packetCaptureRunE(cmd *cobra.Command, args []string) error {
-	options.timeout, _ = cmd.Flags().GetDuration("timeout")
-	restConfig, k8sClient, antreaClient, err := getConfigAndClients(cmd)
-	if err != nil {
-		return err
-	}
-	return packetCaptureRun(cmd.Context(), cmd.OutOrStdout(), restConfig, k8sClient, antreaClient, options)
-}
-
-func packetCaptureRun(ctx context.Context, out io.Writer, restConfig *rest.Config, k8sClient kubernetes.Interface, antreaClient antrea.Interface, options *packetCaptureOptions) error {
-	if options.timeout > maxPacketCaptureTimeout {
-		return fmt.Errorf("timeout cannot be longer than %v", maxPacketCaptureTimeout)
-	}
-	if options.timeout == 0 {
-		options.timeout = defaultTimeout
-	}
-	if options.number == 0 {
-		return errors.New("packet number should be larger than 0")
-	}
-
-	pc, err := newPacketCapture(options)
-	if err != nil {
-		return fmt.Errorf("error when constructing a PacketCapture CR: %w", err)
-	}
-	createCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
-
-	if _, err := antreaClient.CrdV1alpha1().PacketCaptures().Create(createCtx, pc, metav1.CreateOptions{}); err != nil {
-		return fmt.Errorf("error when creating PacketCapture, is PacketCapture feature gate enabled? %w", err)
-	}
-
-	if options.nowait {
-		fmt.Fprintf(out, "PacketCapture Name: %s\n", pc.Name)
-		return nil
-	} else {
-		defer func() {
-			if err = antreaClient.CrdV1alpha1().PacketCaptures().Delete(context.TODO(), pc.Name, metav1.DeleteOptions{}); err != nil {
-				fmt.Fprintf(out, "error when deleting PacketCapture: %s", err.Error())
-			}
-		}()
-	}
-
-	var latestPC *v1alpha1.PacketCapture
-
-	// add extra timeout to make sure the wait won't be interrupted before PacketCapture timeout.
-	err = wait.PollUntilContextTimeout(ctx, 1*time.Second, options.timeout+time.Second*5, false, func(ctx context.Context) (bool, error) {
-		res, err := antreaClient.CrdV1alpha1().PacketCaptures().Get(ctx, pc.Name, metav1.GetOptions{})
-		if err != nil {
-			return false, err
-		}
-		for _, cond := range res.Status.Conditions {
-			if cond.Type == v1alpha1.PacketCaptureComplete && cond.Status == metav1.ConditionTrue {
-				latestPC = res
-				if cond.Reason == "Failed" || cond.Reason == "Timeout" {
-					return false, errors.New(cond.Message)
-				}
-				return true, nil
-			}
-		}
-		return false, nil
-	})
-
-	if wait.Interrupted(err) {
-		err = errors.New("timeout while waiting for PacketCapture to complete")
-		if latestPC == nil {
-			return err
-		}
-	} else if err != nil {
-		return fmt.Errorf("error when checking PacketCapture status: %w", err)
-	}
-
-	splits := strings.Split(latestPC.Status.FilePath, ":")
-	fileName := path.Base(splits[1])
-	copier := getCopier(restConfig, k8sClient)
-	if err := copier.CopyFromPod(ctx, defaultFS, env.GetAntreaNamespace(), splits[0], "antrea-agent", splits[1], options.outputDir); err != nil {
-		return fmt.Errorf("error when copying pcapng file from container: %w", err)
-	}
-	fmt.Fprintf(out, "Captured packets file: %s\n", path.Join(options.outputDir, fileName))
+	_ = "STUB: not implemented"
 	return nil
 }
 
+func packetCaptureRun(ctx context.Context, out io.Writer, restConfig *rest.Config, k8sClient kubernetes.Interface, antreaClient antrea.Interface, options *packetCaptureOptions) error {
+	_ = "STUB: not implemented"
+	return nil
+}
+
+// add extra timeout to make sure the wait won't be interrupted before PacketCapture timeout.
+
 func parseEndpoint(endpoint string) (*v1alpha1.PodReference, *string) {
-	var pod *v1alpha1.PodReference
-	var ip *string
-	parsedIP := net.ParseIP(endpoint)
-	if parsedIP != nil && (parsedIP.To4() != nil || parsedIP.To16() != nil) {
-		ip = ptr.To(parsedIP.String())
-	} else {
-		split := strings.Split(endpoint, "/")
-		if len(split) == 1 {
-			pod = &v1alpha1.PodReference{
-				Namespace: "default",
-				Name:      split[0],
-			}
-		} else if len(split) == 2 && len(split[0]) != 0 && len(split[1]) != 0 {
-			pod = &v1alpha1.PodReference{
-				Namespace: split[0],
-				Name:      split[1],
-			}
-		}
-	}
-	return pod, ip
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func getFlowFields(flow string) (map[string]string, error) {
-	fields := map[string]string{}
-	for _, v := range strings.Split(flow, ",") {
-		kv := strings.Split(v, "=")
-		if len(kv) == 2 && len(kv[0]) != 0 && len(kv[1]) != 0 {
-			fields[kv[0]] = kv[1]
-		} else if len(kv) == 1 {
-			if len(kv[0]) != 0 {
-				fields[v] = ""
-			}
-		} else {
-			return nil, fmt.Errorf("%s is not valid in flow", v)
-		}
-	}
-	return fields, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // tokenizeTCPFlags parses tcp_flags value and returns two slices: set (flags that must be set) and unset (flags that must be unset).
 func tokenizeTCPFlags(r string) ([]string, []string, error) {
-	var currentSign rune
-	var set, unset []string
-	for i := 0; i < len(r); {
-		if r[i] == '+' || r[i] == '-' {
-			currentSign = rune(r[i])
-			start := i + 1
-			i++
-			for i < len(r) && r[i] >= 'a' && r[i] <= 'z' {
-				i++
-			}
-			token := r[start:i]
-			if token == "" {
-				return nil, nil, fmt.Errorf("missing TCP flag after '%c' at %d", currentSign, i)
-			}
-			if _, ok := tcpFlags[token]; !ok {
-				return nil, nil, fmt.Errorf("invalid TCP flag %s", token)
-			}
-			if currentSign == '+' {
-				set = append(set, token)
-			} else {
-				unset = append(unset, token)
-			}
-		} else {
-			return nil, nil, fmt.Errorf("invalid character '%c' at %d, expected '+' or '-'", r[i], i+1)
-		}
-	}
-	return set, unset, nil
+	_ = "STUB: not implemented"
+	return nil, nil, nil
 }
 
 func parseFlow(options *packetCaptureOptions) (*v1alpha1.Packet, error) {
-	trimFlow := strings.ReplaceAll(options.flow, " ", "")
-	fields, err := getFlowFields(trimFlow)
-	if err != nil {
-		return nil, err
-	}
-	var pkt v1alpha1.Packet
-	_, isIPv6 := fields["ipv6"]
-	_, isICMPv6 := fields["icmpv6"]
-	if isIPv6 || isICMPv6 {
-		pkt.IPFamily = v1.IPv6Protocol
-	} else {
-		pkt.IPFamily = v1.IPv4Protocol
-	}
-	for k, v := range protocols {
-		if _, ok := fields[k]; ok {
-			pkt.Protocol = ptr.To(intstr.FromInt32(v))
-			break
-		}
-	}
-	if r, ok := fields["tcp_src"]; ok {
-		srcPort, err := strconv.ParseUint(r, 0, 16)
-		if err != nil {
-			return nil, err
-		}
-		pkt.TransportHeader.TCP = new(v1alpha1.TCPHeader)
-		pkt.TransportHeader.TCP.SrcPort = ptr.To(int32(srcPort))
-	}
-	if r, ok := fields["tcp_dst"]; ok {
-		dstPort, err := strconv.ParseUint(r, 0, 16)
-		if err != nil {
-			return nil, err
-		}
-		if pkt.TransportHeader.TCP == nil {
-			pkt.TransportHeader.TCP = new(v1alpha1.TCPHeader)
-		}
-		pkt.TransportHeader.TCP.DstPort = ptr.To(int32(dstPort))
-	}
-	if r, ok := fields["tcp_flags"]; ok {
-		var value, mask int32
-
-		set, unset, err := tokenizeTCPFlags(r)
-		if err != nil {
-			return nil, err
-		}
-
-		for _, flag := range set {
-			val := tcpFlags[flag]
-			value += val
-			mask += val
-		}
-		for _, flag := range unset {
-			val := tcpFlags[flag]
-			mask += val
-		}
-
-		if pkt.TransportHeader.TCP == nil {
-			pkt.TransportHeader.TCP = new(v1alpha1.TCPHeader)
-		}
-		pkt.TransportHeader.TCP.Flags = []v1alpha1.TCPFlagsMatcher{
-			{
-				Value: value,
-				Mask:  ptr.To(mask),
-			},
-		}
-	}
-	if r, ok := fields["udp_src"]; ok {
-		srcPort, err := strconv.ParseUint(r, 0, 16)
-		if err != nil {
-			return nil, err
-		}
-		pkt.TransportHeader.UDP = new(v1alpha1.UDPHeader)
-		pkt.TransportHeader.UDP.SrcPort = ptr.To(int32(srcPort))
-	}
-	if r, ok := fields["udp_dst"]; ok {
-		dstPort, err := strconv.ParseUint(r, 0, 16)
-		if err != nil {
-			return nil, err
-		}
-		if pkt.TransportHeader.UDP == nil {
-			pkt.TransportHeader.UDP = new(v1alpha1.UDPHeader)
-		}
-		pkt.TransportHeader.UDP.DstPort = ptr.To(int32(dstPort))
-	}
-	if t, ok := fields["icmp_type"]; ok {
-		var icmpType intstr.IntOrString
-		if val, err := strconv.ParseUint(t, 0, 8); err == nil {
-			icmpType = intstr.FromInt32(int32(val))
-		} else {
-			_, found := capture.ICMPMsgTypeMap[v1alpha1.ICMPMsgType(t)]
-			if !found {
-				return nil, fmt.Errorf("unknown icmp_type: %s", t)
-			}
-			icmpType = intstr.FromString(t)
-		}
-
-		pkt.TransportHeader.ICMP = new(v1alpha1.ICMPHeader)
-
-		c, ok := fields["icmp_code"]
-		if ok {
-			icmpCode, err := strconv.ParseUint(c, 0, 8)
-			if err != nil {
-				return nil, err
-			}
-			pkt.TransportHeader.ICMP.Messages = []v1alpha1.ICMPMsgMatcher{
-				{
-					Type: icmpType,
-					Code: ptr.To(int32(icmpCode)),
-				},
-			}
-		} else {
-			pkt.TransportHeader.ICMP.Messages = []v1alpha1.ICMPMsgMatcher{
-				{Type: icmpType},
-			}
-		}
-	} else if _, codeOK := fields["icmp_code"]; codeOK {
-		return nil, fmt.Errorf("icmp_type must be specified when icmp_code is provided")
-	}
-	if t, ok := fields["icmpv6_type"]; ok {
-		var icmpv6Type intstr.IntOrString
-		if val, err := strconv.ParseUint(t, 0, 8); err == nil {
-			icmpv6Type = intstr.FromInt32(int32(val))
-		} else {
-			_, found := capture.ICMPv6MsgTypeMap[v1alpha1.ICMPv6MsgType(t)]
-			if !found {
-				return nil, fmt.Errorf("unknown icmpv6_type: %s", t)
-			}
-			icmpv6Type = intstr.FromString(t)
-		}
-
-		pkt.TransportHeader.ICMPv6 = new(v1alpha1.ICMPv6Header)
-
-		c, ok := fields["icmpv6_code"]
-		if ok {
-			icmpv6Code, err := strconv.ParseUint(c, 0, 8)
-			if err != nil {
-				return nil, err
-			}
-			pkt.TransportHeader.ICMPv6.Messages = []v1alpha1.ICMPv6MsgMatcher{
-				{
-					Type: icmpv6Type,
-					Code: ptr.To(int32(icmpv6Code)),
-				},
-			}
-		} else {
-			pkt.TransportHeader.ICMPv6.Messages = []v1alpha1.ICMPv6MsgMatcher{
-				{Type: icmpv6Type},
-			}
-		}
-	} else if _, codeOK := fields["icmpv6_code"]; codeOK {
-		return nil, fmt.Errorf("icmpv6_type must be specified when icmpv6_code is provided")
-	}
-	return &pkt, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func parseDirection(direction string) (v1alpha1.CaptureDirection, error) {
+	_ = "STUB: not implemented"
 	// This case should not occur in practice as the direction flag is defaulted to SourceToDestination
-	if direction == "" {
-		return "", nil
-	}
-
-	switch v1alpha1.CaptureDirection(direction) {
-	case v1alpha1.CaptureDirectionSourceToDestination, v1alpha1.CaptureDirectionDestinationToSource, v1alpha1.CaptureDirectionBoth:
-		return v1alpha1.CaptureDirection(direction), nil
-	default:
-		return "", fmt.Errorf("invalid direction: %q, must be one of SourceToDestination, DestinationToSource, or Both", direction)
-	}
+	return *new(v1alpha1.CaptureDirection), nil
 }
 
 func parseCapturePoint(captPointStr string) (v1alpha1.CapturePoint, error) {
-	if captPointStr == "" {
-		return "", nil
-	}
-
-	switch v1alpha1.CapturePoint(captPointStr) {
-	case v1alpha1.CapturePointSource, v1alpha1.CapturePointDestination:
-		return v1alpha1.CapturePoint(captPointStr), nil
-	default:
-		return "", fmt.Errorf("invalid capture point: %q, must be either Source or Destination", captPointStr)
-	}
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.CapturePoint), nil
 }
 
 func newPacketCapture(options *packetCaptureOptions) (*v1alpha1.PacketCapture, error) {
-	if options.source == "" && options.dest == "" {
-		return nil, errors.New("must specify at least one of --source or --destination")
-	}
-
-	var src v1alpha1.Source
-	if options.source != "" {
-		src.Pod, src.IP = parseEndpoint(options.source)
-		if src.Pod == nil && src.IP == nil {
-			return nil, fmt.Errorf("source should be in the format of Namespace/Pod, Pod, or IPv4/IPv6")
-		}
-	}
-
-	var dst v1alpha1.Destination
-	if options.dest != "" {
-		dst.Pod, dst.IP = parseEndpoint(options.dest)
-		if dst.Pod == nil && dst.IP == nil {
-			return nil, fmt.Errorf("destination should be in the format of Namespace/Pod, Pod, or IPv4/IPv6")
-		}
-	}
-
-	if src.Pod == nil && dst.Pod == nil {
-		return nil, errors.New("one of source and destination must be a Pod")
-	}
-	pkt, err := parseFlow(options)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse flow: %w", err)
-	}
-
-	direction, err := parseDirection(options.direction)
-	if err != nil {
-		return nil, err
-	}
-
-	capturePoint, err := parseCapturePoint(options.capturePoint)
-	if err != nil {
-		return nil, err
-	}
-	switch {
-	case capturePoint == v1alpha1.CapturePointSource && src.Pod == nil:
-		return nil, fmt.Errorf("a source Pod must be specified when capture-point is 'Source'")
-	case capturePoint == v1alpha1.CapturePointDestination && dst.Pod == nil:
-		return nil, fmt.Errorf("a destination Pod must be specified when capture-point is 'Destination'")
-	}
-
-	name := getPCName(options)
-	timeout := int32(options.timeout.Seconds())
-	pc := &v1alpha1.PacketCapture{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: name,
-		},
-		Spec: v1alpha1.PacketCaptureSpec{
-			Source:       src,
-			Destination:  dst,
-			Direction:    direction,
-			Timeout:      &timeout,
-			Packet:       pkt,
-			CapturePoint: capturePoint,
-			CaptureConfig: v1alpha1.CaptureConfig{
-				FirstN: &v1alpha1.PacketCaptureFirstNConfig{
-					Number: options.number,
-				},
-			},
-		},
-	}
-
-	return pc, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }

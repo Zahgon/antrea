@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	crdv1alpha2 "antrea.io/antrea/v2/pkg/apis/crd/v1alpha2"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -53,14 +52,6 @@ type externalEntities struct {
 
 // newExternalEntities returns a ExternalEntities
 func newExternalEntities(c *CrdV1alpha2Client, namespace string) *externalEntities {
-	return &externalEntities{
-		gentype.NewClientWithList[*crdv1alpha2.ExternalEntity, *crdv1alpha2.ExternalEntityList](
-			"externalentities",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			namespace,
-			func() *crdv1alpha2.ExternalEntity { return &crdv1alpha2.ExternalEntity{} },
-			func() *crdv1alpha2.ExternalEntityList { return &crdv1alpha2.ExternalEntityList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

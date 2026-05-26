@@ -66,130 +66,40 @@ type ANNPRuleBuilder struct {
 }
 
 func toEgress(ingressRule crdv1beta1.Rule) crdv1beta1.Rule {
-	ingressRule.To = ingressRule.From
-	ingressRule.From = nil
-	return ingressRule
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.Rule)
 }
 
 func (rb ANNPRuleBuilder) GetEgress() crdv1beta1.Rule {
-	return toEgress(rb.GetIngress())
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.Rule)
 }
 
 func (rb ANNPRuleBuilder) GetIngress() crdv1beta1.Rule {
-	var ees *metav1.LabelSelector
-
-	ps := rb.generatePodSelector()
-	ns := rb.generateNSSelector()
-
-	if len(rb.EESelector) > 0 || len(rb.EESelectorMatchExp) > 0 {
-		ees = &metav1.LabelSelector{
-			MatchLabels:      rb.EESelector,
-			MatchExpressions: rb.EESelectorMatchExp,
-		}
-	}
-	// An empty From/To in ANNP rules evaluates to match all addresses.
-	policyPeer := make([]crdv1beta1.NetworkPolicyPeer, 0)
-	if ps != nil || ns != nil || rb.IPBlock != nil || rb.RuleGroup != "" || ees != nil {
-		policyPeer = []crdv1beta1.NetworkPolicyPeer{{
-			PodSelector:            ps,
-			NamespaceSelector:      ns,
-			ExternalEntitySelector: ees,
-			IPBlock:                rb.IPBlock,
-			Group:                  rb.RuleGroup,
-		}}
-	}
-	ports, protocols := GenPortsOrProtocols(rb.BaseRuleBuilder)
-
-	var appliedTos []crdv1beta1.AppliedTo
-	for _, at := range rb.AppliedToSpecs {
-		appliedTos = append(appliedTos, ANNPGetAppliedToPeer(at.PodSelector, at.PodSelectorMatchExp, at.ExternalEntitySelector, at.ExternalEntitySelectorMatchExp, at.Group))
-	}
-
-	return crdv1beta1.Rule{
-		From:        policyPeer,
-		Ports:       ports,
-		Protocols:   protocols,
-		L7Protocols: rb.L7Protocols,
-		Action:      &rb.Action,
-		Name:        rb.Name,
-		AppliedTo:   appliedTos,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.Rule)
 }
+
+// An empty From/To in ANNP rules evaluates to match all addresses.
 
 func (rb ACNPRuleBuilder) GetIngress() crdv1beta1.Rule {
-	var nodeSel *metav1.LabelSelector
-	var appliedTos []crdv1beta1.AppliedTo
-	podSel := rb.generatePodSelector()
-
-	if rb.NodeSelector != nil || rb.NodeSelectorMatchExp != nil {
-		nodeSel = &metav1.LabelSelector{
-			MatchLabels:      rb.NodeSelector,
-			MatchExpressions: rb.NodeSelectorMatchExp,
-		}
-	}
-
-	nsSel := rb.generateNSSelector()
-	for _, at := range rb.AppliedToSpecs {
-		appliedTos = append(appliedTos, ACNPGetAppliedToPeer(at.PodSelector,
-			at.NodeSelector,
-			at.NSSelector,
-			at.PodSelectorMatchExp,
-			at.NodeSelectorMatchExp,
-			at.NSSelectorMatchExp,
-			at.Group,
-			at.Service))
-	}
-
-	matchSelf := crdv1beta1.NamespaceMatchSelf
-	if rb.SelfNS {
-		rb.Namespaces = &crdv1beta1.PeerNamespaces{
-			Match: matchSelf,
-		}
-	}
-	// An empty From/To in ACNP rules evaluates to match all addresses.
-	policyPeer := make([]crdv1beta1.NetworkPolicyPeer, 0)
-	if podSel != nil || nodeSel != nil || nsSel != nil || rb.Namespaces != nil || rb.IPBlock != nil || rb.RuleClusterGroup != "" || rb.ServiceAccount != nil {
-		policyPeer = []crdv1beta1.NetworkPolicyPeer{{
-			PodSelector:       podSel,
-			NodeSelector:      nodeSel,
-			NamespaceSelector: nsSel,
-			Namespaces:        rb.Namespaces,
-			IPBlock:           rb.IPBlock,
-			Group:             rb.RuleClusterGroup,
-			ServiceAccount:    rb.ServiceAccount,
-		}}
-	}
-	ports, protocols := GenPortsOrProtocols(rb.BaseRuleBuilder)
-	return crdv1beta1.Rule{
-		From:      policyPeer,
-		Ports:     ports,
-		Protocols: protocols,
-		Action:    &rb.Action,
-		Name:      rb.Name,
-		AppliedTo: appliedTos,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.Rule)
 }
 
+// An empty From/To in ACNP rules evaluates to match all addresses.
+
 func (rb ACNPRuleBuilder) GetEgress() crdv1beta1.Rule {
-	return toEgress(rb.GetIngress())
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.Rule)
 }
 
 func (rb BaseRuleBuilder) generatePodSelector() (podSel *metav1.LabelSelector) {
-	if rb.PodSelector != nil || rb.PodSelectorMatchExp != nil {
-		podSel = &metav1.LabelSelector{
-			MatchLabels:      rb.PodSelector,
-			MatchExpressions: rb.PodSelectorMatchExp,
-		}
-	}
-	return podSel
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (rb BaseRuleBuilder) generateNSSelector() (nsSel *metav1.LabelSelector) {
-	if rb.NSSelector != nil || rb.NSSelectorMatchExp != nil {
-		nsSel = &metav1.LabelSelector{
-			MatchLabels:      rb.NSSelector,
-			MatchExpressions: rb.NSSelectorMatchExp,
-		}
-	}
-	return nsSel
+	_ = "STUB: not implemented"
+	return nil
 }

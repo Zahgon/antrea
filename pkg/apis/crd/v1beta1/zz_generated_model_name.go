@@ -20,386 +20,235 @@
 package v1beta1
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in AgentCondition) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.AgentCondition"
-}
+func (in AgentCondition) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in AntreaAgentInfo) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.AntreaAgentInfo"
-}
+func (in AntreaAgentInfo) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in AntreaAgentInfoList) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.AntreaAgentInfoList"
-}
+func (in AntreaAgentInfoList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in AntreaControllerInfo) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.AntreaControllerInfo"
-}
+func (in AntreaControllerInfo) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in AntreaControllerInfoList) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.AntreaControllerInfoList"
-}
+func (in AntreaControllerInfoList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in AppliedTo) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.AppliedTo"
-}
+func (in AppliedTo) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in Bandwidth) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.Bandwidth"
-}
+func (in Bandwidth) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ClusterGroup) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.ClusterGroup"
-}
+func (in ClusterGroup) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ClusterGroupList) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.ClusterGroupList"
-}
+func (in ClusterGroupList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ClusterNetworkPolicy) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.ClusterNetworkPolicy"
-}
+func (in ClusterNetworkPolicy) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ClusterNetworkPolicyList) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.ClusterNetworkPolicyList"
-}
+func (in ClusterNetworkPolicyList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ClusterNetworkPolicySpec) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.ClusterNetworkPolicySpec"
-}
+func (in ClusterNetworkPolicySpec) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ControllerCondition) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.ControllerCondition"
-}
+func (in ControllerCondition) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in Destination) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.Destination"
-}
+func (in Destination) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in Egress) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.Egress"
-}
+func (in Egress) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in EgressCondition) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.EgressCondition"
-}
+func (in EgressCondition) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in EgressList) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.EgressList"
-}
+func (in EgressList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in EgressSpec) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.EgressSpec"
-}
+func (in EgressSpec) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in EgressStatus) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.EgressStatus"
-}
+func (in EgressStatus) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ExternalIPPool) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.ExternalIPPool"
-}
+func (in ExternalIPPool) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ExternalIPPoolList) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.ExternalIPPoolList"
-}
+func (in ExternalIPPoolList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ExternalIPPoolSpec) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.ExternalIPPoolSpec"
-}
+func (in ExternalIPPoolSpec) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ExternalIPPoolStatus) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.ExternalIPPoolStatus"
-}
+func (in ExternalIPPoolStatus) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in Group) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.Group"
-}
+func (in Group) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in GroupCondition) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.GroupCondition"
-}
+func (in GroupCondition) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in GroupList) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.GroupList"
-}
+func (in GroupList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in GroupSpec) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.GroupSpec"
-}
+func (in GroupSpec) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in GroupStatus) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.GroupStatus"
-}
+func (in GroupStatus) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in HTTPProtocol) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.HTTPProtocol"
-}
+func (in HTTPProtocol) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ICMPEchoRequestHeader) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.ICMPEchoRequestHeader"
-}
+func (in ICMPEchoRequestHeader) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ICMPProtocol) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.ICMPProtocol"
-}
+func (in ICMPProtocol) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IGMPProtocol) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.IGMPProtocol"
-}
+func (in IGMPProtocol) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPAddressOwner) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.IPAddressOwner"
-}
+func (in IPAddressOwner) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPAddressState) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.IPAddressState"
-}
+func (in IPAddressState) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPBlock) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.IPBlock"
-}
+func (in IPBlock) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPHeader) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.IPHeader"
-}
+func (in IPHeader) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPPool) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.IPPool"
-}
+func (in IPPool) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPPoolList) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.IPPoolList"
-}
+func (in IPPoolList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPPoolSpec) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.IPPoolSpec"
-}
+func (in IPPoolSpec) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPPoolStatus) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.IPPoolStatus"
-}
+func (in IPPoolStatus) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPPoolUsage) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.IPPoolUsage"
-}
+func (in IPPoolUsage) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPRange) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.IPRange"
-}
+func (in IPRange) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPv6Header) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.IPv6Header"
-}
+func (in IPv6Header) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in L7Protocol) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.L7Protocol"
-}
+func (in L7Protocol) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NamespacedName) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.NamespacedName"
-}
+func (in NamespacedName) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkInfo) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.NetworkInfo"
-}
+func (in NetworkInfo) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicy) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.NetworkPolicy"
-}
+func (in NetworkPolicy) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyCondition) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.NetworkPolicyCondition"
-}
+func (in NetworkPolicyCondition) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in NetworkPolicyControllerInfo) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.NetworkPolicyControllerInfo"
+	_ = "STUB: not implemented"
+	return ""
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyList) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.NetworkPolicyList"
-}
+func (in NetworkPolicyList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyPeer) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.NetworkPolicyPeer"
-}
+func (in NetworkPolicyPeer) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyPort) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.NetworkPolicyPort"
-}
+func (in NetworkPolicyPort) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyProtocol) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.NetworkPolicyProtocol"
-}
+func (in NetworkPolicyProtocol) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicySpec) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.NetworkPolicySpec"
-}
+func (in NetworkPolicySpec) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyStatus) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.NetworkPolicyStatus"
-}
+func (in NetworkPolicyStatus) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NodeResult) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.NodeResult"
-}
+func (in NodeResult) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in OVSInfo) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.OVSInfo"
-}
+func (in OVSInfo) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in Observation) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.Observation"
-}
+func (in Observation) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in Packet) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.Packet"
-}
+func (in Packet) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in PeerNamespaces) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.PeerNamespaces"
-}
+func (in PeerNamespaces) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in PeerService) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.PeerService"
-}
+func (in PeerService) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in PodOwner) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.PodOwner"
-}
+func (in PodOwner) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in Rule) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.Rule"
-}
+func (in Rule) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in Source) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.Source"
-}
+func (in Source) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in StatefulSetOwner) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.StatefulSetOwner"
-}
+func (in StatefulSetOwner) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in SubnetInfo) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.SubnetInfo"
-}
+func (in SubnetInfo) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in TCPHeader) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.TCPHeader"
-}
+func (in TCPHeader) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in TLSProtocol) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.TLSProtocol"
-}
+func (in TLSProtocol) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in Tier) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.Tier"
-}
+func (in Tier) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in TierList) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.TierList"
-}
+func (in TierList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in TierSpec) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.TierSpec"
-}
+func (in TierSpec) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in Traceflow) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.Traceflow"
-}
+func (in Traceflow) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in TraceflowList) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.TraceflowList"
-}
+func (in TraceflowList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in TraceflowSpec) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.TraceflowSpec"
-}
+func (in TraceflowSpec) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in TraceflowStatus) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.TraceflowStatus"
-}
+func (in TraceflowStatus) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in TransportHeader) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.TransportHeader"
-}
+func (in TransportHeader) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in UDPHeader) OpenAPIModelName() string {
-	return "io.antrea.crd.v1beta1.UDPHeader"
-}
+func (in UDPHeader) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }

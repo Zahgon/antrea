@@ -41,12 +41,14 @@ type gatewayLister struct {
 
 // NewGatewayLister returns a new GatewayLister.
 func NewGatewayLister(indexer cache.Indexer) GatewayLister {
-	return &gatewayLister{listers.New[*multiclusterv1alpha1.Gateway](indexer, multiclusterv1alpha1.Resource("gateway"))}
+	_ = "STUB: not implemented"
+	return *new(GatewayLister)
 }
 
 // Gateways returns an object that can list and get Gateways.
 func (s *gatewayLister) Gateways(namespace string) GatewayNamespaceLister {
-	return gatewayNamespaceLister{listers.NewNamespaced[*multiclusterv1alpha1.Gateway](s.ResourceIndexer, namespace)}
+	_ = "STUB: not implemented"
+	return *new(GatewayNamespaceLister)
 }
 
 // GatewayNamespaceLister helps list and get Gateways.

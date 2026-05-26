@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -44,52 +42,40 @@ type MockInterfaceMockRecorder struct {
 
 // NewMockInterface creates a new mock instance.
 func NewMockInterface(ctrl *gomock.Controller) *MockInterface {
-	mock := &MockInterface{ctrl: ctrl}
-	mock.recorder = &MockInterfaceMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetNumConnsToCollector mocks base method.
+	return nil
 }
 
-// GetNumConnsToCollector mocks base method.
-func (m *MockInterface) GetNumConnsToCollector() int64 {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNumConnsToCollector")
-	ret0, _ := ret[0].(int64)
-	return ret0
-}
+func (m *MockInterface) GetNumConnsToCollector() int64 { _ = "STUB: not implemented"; return 0 }
 
 // GetNumConnsToCollector indicates an expected call of GetNumConnsToCollector.
 func (mr *MockInterfaceMockRecorder) GetNumConnsToCollector() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNumConnsToCollector", reflect.TypeOf((*MockInterface)(nil).GetNumConnsToCollector))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNumRecordsReceived mocks base method.
-func (m *MockInterface) GetNumRecordsReceived() int64 {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNumRecordsReceived")
-	ret0, _ := ret[0].(int64)
-	return ret0
-}
+func (m *MockInterface) GetNumRecordsReceived() int64 { _ = "STUB: not implemented"; return 0 }
 
 // GetNumRecordsReceived indicates an expected call of GetNumRecordsReceived.
 func (mr *MockInterfaceMockRecorder) GetNumRecordsReceived() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNumRecordsReceived", reflect.TypeOf((*MockInterface)(nil).GetNumRecordsReceived))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Run mocks base method.
-func (m *MockInterface) Run(stopCh <-chan struct{}) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Run", stopCh)
-}
+func (m *MockInterface) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
 // Run indicates an expected call of Run.
 func (mr *MockInterfaceMockRecorder) Run(stopCh any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockInterface)(nil).Run), stopCh)
+	_ = "STUB: not implemented"
+	return nil
 }

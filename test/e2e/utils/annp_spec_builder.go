@@ -35,43 +35,28 @@ type ANNPAppliedToSpec struct {
 }
 
 func (b *AntreaNetworkPolicySpecBuilder) Get() *crdv1beta1.NetworkPolicy {
-	if b.Spec.Ingress == nil {
-		b.Spec.Ingress = []crdv1beta1.Rule{}
-	}
-	if b.Spec.Egress == nil {
-		b.Spec.Egress = []crdv1beta1.Rule{}
-	}
-	return &crdv1beta1.NetworkPolicy{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      b.Name,
-			Namespace: b.Namespace,
-		},
-		Spec: b.Spec,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *AntreaNetworkPolicySpecBuilder) SetName(namespace string, name string) *AntreaNetworkPolicySpecBuilder {
-	b.Name = name
-	b.Namespace = namespace
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *AntreaNetworkPolicySpecBuilder) SetPriority(p float64) *AntreaNetworkPolicySpecBuilder {
-	b.Spec.Priority = p
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *AntreaNetworkPolicySpecBuilder) SetTier(tier string) *AntreaNetworkPolicySpecBuilder {
-	b.Spec.Tier = tier
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *AntreaNetworkPolicySpecBuilder) SetAppliedToGroup(specs []ANNPAppliedToSpec) *AntreaNetworkPolicySpecBuilder {
-	for _, spec := range specs {
-		appliedToPeer := ANNPGetAppliedToPeer(spec.PodSelector, spec.PodSelectorMatchExp, spec.ExternalEntitySelector, spec.ExternalEntitySelectorMatchExp, spec.Group)
-		b.Spec.AppliedTo = append(b.Spec.AppliedTo, appliedToPeer)
-	}
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ANNPGetAppliedToPeer(podSelector map[string]string,
@@ -79,92 +64,34 @@ func ANNPGetAppliedToPeer(podSelector map[string]string,
 	entitySelector map[string]string,
 	entitySelectorMatchExp []metav1.LabelSelectorRequirement,
 	appliedToGrp string) crdv1beta1.AppliedTo {
-	var ps, ees *metav1.LabelSelector
-	if len(entitySelector) > 0 || len(entitySelectorMatchExp) > 0 {
-		ees = &metav1.LabelSelector{
-			MatchLabels:      entitySelector,
-			MatchExpressions: entitySelectorMatchExp,
-		}
-	}
-	if len(podSelector) > 0 || len(podSelectorMatchExp) > 0 {
-		ps = &metav1.LabelSelector{
-			MatchLabels:      podSelector,
-			MatchExpressions: podSelectorMatchExp,
-		}
-	}
-	peer := crdv1beta1.AppliedTo{
-		PodSelector:            ps,
-		ExternalEntitySelector: ees,
-	}
-	if appliedToGrp != "" {
-		peer.Group = appliedToGrp
-	}
-	return peer
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.AppliedTo)
 }
 
 func (b *AntreaNetworkPolicySpecBuilder) AddIngress(rb RuleBuilder) *AntreaNetworkPolicySpecBuilder {
-	b.Spec.Ingress = append(b.Spec.Ingress, rb.GetIngress())
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *AntreaNetworkPolicySpecBuilder) AddEgress(rb RuleBuilder) *AntreaNetworkPolicySpecBuilder {
-	b.Spec.Egress = append(b.Spec.Egress, rb.GetEgress())
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *AntreaNetworkPolicySpecBuilder) AddToServicesRule(svcRefs []crdv1beta1.PeerService,
 	name string, ruleAppliedToSpecs []ANNPAppliedToSpec, action crdv1beta1.RuleAction) *AntreaNetworkPolicySpecBuilder {
-	var appliedTos []crdv1beta1.AppliedTo
-	for _, at := range ruleAppliedToSpecs {
-		appliedTos = append(appliedTos, ANNPGetAppliedToPeer(at.PodSelector, at.PodSelectorMatchExp, at.ExternalEntitySelector, at.ExternalEntitySelectorMatchExp, at.Group))
-	}
-	newRule := crdv1beta1.Rule{
-		To:         make([]crdv1beta1.NetworkPolicyPeer, 0),
-		ToServices: svcRefs,
-		Action:     &action,
-		Name:       name,
-		AppliedTo:  appliedTos,
-	}
-	b.Spec.Egress = append(b.Spec.Egress, newRule)
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *AntreaNetworkPolicySpecBuilder) AddEgressLogging(logLabel string) *AntreaNetworkPolicySpecBuilder {
-	for i, e := range b.Spec.Egress {
-		e.EnableLogging = true
-		e.LogLabel = logLabel
-		b.Spec.Egress[i] = e
-	}
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *AntreaNetworkPolicySpecBuilder) AddFQDNRule(fqdn string,
 	protoc AntreaPolicyProtocol, port *int32, portName *string, endPort *int32, name string,
 	specs []ANNPAppliedToSpec, action crdv1beta1.RuleAction) *AntreaNetworkPolicySpecBuilder {
-	var appliedTos []crdv1beta1.AppliedTo
-
-	for _, at := range specs {
-		appliedTos = append(appliedTos, ANNPGetAppliedToPeer(at.PodSelector,
-			at.PodSelectorMatchExp,
-			at.ExternalEntitySelector,
-			at.ExternalEntitySelectorMatchExp,
-			at.Group))
-	}
-
-	policyPeer := []crdv1beta1.NetworkPolicyPeer{{FQDN: fqdn}}
-	ports, _ := GenPortsOrProtocols(BaseRuleBuilder{
-		Protoc:   protoc,
-		Port:     port,
-		PortName: portName,
-		EndPort:  endPort,
-	})
-	newRule := crdv1beta1.Rule{
-		To:        policyPeer,
-		Ports:     ports,
-		Action:    &action,
-		Name:      name,
-		AppliedTo: appliedTos,
-	}
-	b.Spec.Egress = append(b.Spec.Egress, newRule)
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }

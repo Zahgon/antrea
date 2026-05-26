@@ -29,8 +29,6 @@ import (
 	"antrea.io/antrea/v2/pkg/agent/multicast"
 	"antrea.io/antrea/v2/pkg/agent/types"
 	cpv1beta "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	"antrea.io/antrea/v2/pkg/util/env"
-	"antrea.io/antrea/v2/pkg/version"
 )
 
 type NetworkPolicyInfoQuerier interface {
@@ -74,34 +72,16 @@ type EgressQuerier interface {
 }
 
 // GetSelfPod gets current pod.
-func GetSelfPod() v1.ObjectReference {
-	podName := env.GetPodName()
-	podNamespace := env.GetPodNamespace()
-	if podName == "" || podNamespace == "" {
-		return v1.ObjectReference{}
-	}
-	return v1.ObjectReference{Kind: "Pod", Name: podName, Namespace: podNamespace}
-}
+func GetSelfPod() v1.ObjectReference { _ = "STUB: not implemented"; return *new(v1.ObjectReference) }
 
 // GetSelfNode gets current node.
 func GetSelfNode(isAgent bool, node string) v1.ObjectReference {
-	if isAgent {
-		if node == "" {
-			return v1.ObjectReference{}
-		}
-		return v1.ObjectReference{Kind: "Node", Name: node}
-	}
-	nodeName, _ := env.GetNodeName()
-	if nodeName == "" {
-		return v1.ObjectReference{}
-	}
-	return v1.ObjectReference{Kind: "Node", Name: nodeName}
+	_ = "STUB: not implemented"
+	return *new(v1.ObjectReference)
 }
 
 // GetVersion gets current version.
-func GetVersion() string {
-	return version.GetFullVersion()
-}
+func GetVersion() string { _ = "STUB: not implemented"; return "" }
 
 // FQDNCacheFilter is used to filter the result while retrieving FQDN cache
 type FQDNCacheFilter struct {
@@ -134,13 +114,7 @@ var NetworkPolicyTypeMap = map[string]cpv1beta.NetworkPolicyType{
 	"BANP":  cpv1beta.BaselineAdminNetworkPolicy,
 }
 
-func GetNetworkPolicyTypeShorthands() []string {
-	validTypes := make([]string, 0, len(NetworkPolicyTypeMap))
-	for k := range NetworkPolicyTypeMap {
-		validTypes = append(validTypes, k)
-	}
-	return validTypes
-}
+func GetNetworkPolicyTypeShorthands() []string { _ = "STUB: not implemented"; return nil }
 
 var NamespaceScopedPolicyTypes = sets.New[string]("ANNP", "K8SNP")
 

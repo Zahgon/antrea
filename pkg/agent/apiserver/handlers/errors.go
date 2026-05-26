@@ -22,5 +22,6 @@ type HandlerError struct {
 }
 
 func NewHandlerError(err error, statusCode int) *HandlerError {
-	return &HandlerError{err, statusCode}
+	_ = "STUB: not implemented"
+	return nil
 }

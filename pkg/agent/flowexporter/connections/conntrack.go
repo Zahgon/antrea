@@ -18,8 +18,6 @@ import (
 	"net"
 	"net/netip"
 
-	"k8s.io/klog/v2"
-
 	"antrea.io/antrea/v2/pkg/agent/config"
 	"antrea.io/antrea/v2/pkg/agent/flowexporter/connection"
 	"antrea.io/antrea/v2/pkg/agent/openflow"
@@ -36,66 +34,22 @@ var connAllowedCTMarkMask = binding.NewCTMark(openflow.ConnSourceCTMarkField, 0x
 
 // InitializeConnTrackDumper initializes the ConnTrackDumper interface for different OS and datapath types.
 func InitializeConnTrackDumper(nodeConfig *config.NodeConfig, serviceCIDRv4 *net.IPNet, serviceCIDRv6 *net.IPNet, ovsDatapathType ovsconfig.OVSDatapathType, isAntreaProxyEnabled bool) ConnTrackDumper {
-	var svcCIDRv4, svcCIDRv6 netip.Prefix
-	if serviceCIDRv4 != nil {
-		svcCIDRv4 = netip.MustParsePrefix(serviceCIDRv4.String())
-	}
-	if serviceCIDRv6 != nil {
-		svcCIDRv6 = netip.MustParsePrefix(serviceCIDRv6.String())
-	}
-
-	var connTrackDumper ConnTrackDumper
-	if ovsDatapathType == ovsconfig.OVSDatapathSystem {
-		connTrackDumper = NewConnTrackSystem(nodeConfig, svcCIDRv4, svcCIDRv6, isAntreaProxyEnabled)
-	}
-	return connTrackDumper
+	_ = "STUB: not implemented"
+	return *new(ConnTrackDumper)
 }
 
 func filterAntreaConns(conns []*connection.Connection, nodeConfig *config.NodeConfig, serviceCIDR netip.Prefix, zoneFilter uint16, isAntreaProxyEnabled bool) []*connection.Connection {
-	filteredConns := conns[:0]
-	gwIPv4, _ := netip.AddrFromSlice(nodeConfig.GatewayConfig.IPv4)
-	gwIPv6, _ := netip.AddrFromSlice(nodeConfig.GatewayConfig.IPv6)
-
-	for _, conn := range conns {
-		if conn.Zone != zoneFilter {
-			continue
-		}
-
-		srcIP := conn.FlowKey.SourceAddress
-		dstIP := conn.FlowKey.DestinationAddress
-
-		// Consider Pod-to-Pod, Pod-To-Service and Pod-To-External flows.
-		if srcIP == gwIPv4 || dstIP == gwIPv4 {
-			continue
-		}
-		if srcIP == gwIPv6 || dstIP == gwIPv6 {
-			continue
-		}
-
-		if !isAntreaProxyEnabled {
-			// Pod-to-Service flows with kube-proxy: There are two conntrack flows
-			// for every Pod-to-Service flow. One is with ClusterIP as destination
-			// and the other one is with resolved endpoint PodIP as destination.
-			// Both conntrack flows have same stats, which makes them duplicates.
-			// We ignore the connection with ClusterIP and keep the connection with
-			// the endpoint PodIP, which is essentially Pod-to-Pod flow.
-			// TODO: Consider the conntrack flows from default zoneID to get iptables
-			// related flow that has both ClusterIP and resolved endpoint PodIP.
-			if serviceCIDR.Contains(dstIP) {
-				klog.V(4).Infof("Detected a flow with Cluster IP with kube-proxy enabled :%+v", conn)
-				continue
-			}
-		}
-
-		policyAllowed := conn.Mark&connAllowedCTMarkMask != 0
-		if !policyAllowed {
-			if klog.V(5).Enabled() {
-				klog.InfoS("Ignoring connection as it may have been denied by a policy rule", "conn", conn)
-			}
-			continue
-		}
-
-		filteredConns = append(filteredConns, conn)
-	}
-	return filteredConns
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Consider Pod-to-Pod, Pod-To-Service and Pod-To-External flows.
+
+// Pod-to-Service flows with kube-proxy: There are two conntrack flows
+// for every Pod-to-Service flow. One is with ClusterIP as destination
+// and the other one is with resolved endpoint PodIP as destination.
+// Both conntrack flows have same stats, which makes them duplicates.
+// We ignore the connection with ClusterIP and keep the connection with
+// the endpoint PodIP, which is essentially Pod-to-Pod flow.
+// TODO: Consider the conntrack flows from default zoneID to get iptables
+// related flow that has both ClusterIP and resolved endpoint PodIP.

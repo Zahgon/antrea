@@ -20,6 +20,4 @@
 package v1beta1
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in SupportBundle) OpenAPIModelName() string {
-	return "io.antrea.system.v1beta1.SupportBundle"
-}
+func (in SupportBundle) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }

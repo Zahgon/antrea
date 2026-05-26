@@ -46,40 +46,48 @@ type version struct {
 
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
-	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(Interface)
 }
 
 // ClusterInfoImports returns a ClusterInfoImportInformer.
 func (v *version) ClusterInfoImports() ClusterInfoImportInformer {
-	return &clusterInfoImportInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(ClusterInfoImportInformer)
 }
 
 // ClusterSets returns a ClusterSetInformer.
 func (v *version) ClusterSets() ClusterSetInformer {
-	return &clusterSetInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(ClusterSetInformer)
 }
 
 // Gateways returns a GatewayInformer.
 func (v *version) Gateways() GatewayInformer {
-	return &gatewayInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(GatewayInformer)
 }
 
 // LabelIdentities returns a LabelIdentityInformer.
 func (v *version) LabelIdentities() LabelIdentityInformer {
-	return &labelIdentityInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(LabelIdentityInformer)
 }
 
 // MemberClusterAnnounces returns a MemberClusterAnnounceInformer.
 func (v *version) MemberClusterAnnounces() MemberClusterAnnounceInformer {
-	return &memberClusterAnnounceInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(MemberClusterAnnounceInformer)
 }
 
 // ResourceExports returns a ResourceExportInformer.
 func (v *version) ResourceExports() ResourceExportInformer {
-	return &resourceExportInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(ResourceExportInformer)
 }
 
 // ResourceImports returns a ResourceImportInformer.
 func (v *version) ResourceImports() ResourceImportInformer {
-	return &resourceImportInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(ResourceImportInformer)
 }

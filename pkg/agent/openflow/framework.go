@@ -17,7 +17,6 @@ package openflow
 import (
 	"antrea.io/libOpenflow/openflow15"
 
-	"antrea.io/antrea/v2/pkg/agent/config"
 	binding "antrea.io/antrea/v2/pkg/ovs/openflow"
 )
 
@@ -142,182 +141,45 @@ var defaultDrop = func(table *Table) {
 
 // newTable is used to declare a Table. A table should belong to a stage and pipeline defined in current file.
 func newTable(tableName string, stage binding.StageID, pipeline binding.PipelineID, options ...Option) *Table {
-	table := &Table{
-		name:     tableName,
-		stage:    stage,
-		pipeline: pipeline,
-	}
-	for _, option := range options {
-		option(table)
-	}
-	tableOrderCache[pipeline] = append(tableOrderCache[pipeline], table)
-	return table
-}
-
-func (t *Table) IsInitialized() bool {
-	return t.ofTable != nil
-}
-
-func (t *Table) GetID() uint8 {
-	return t.ofTable.GetID()
-}
-
-func (t *Table) GetNext() uint8 {
-	return t.ofTable.GetNext()
-}
-
-func (t *Table) GetName() string {
-	return t.name
-}
-
-func (t *Table) GetMissAction() binding.MissActionType {
-	return t.ofTable.GetMissAction()
-}
-
-func (f *featurePodConnectivity) getRequiredTables() []*Table {
-	tables := []*Table{
-		ClassifierTable,
-		SpoofGuardTable,
-		ConntrackTable,
-		ConntrackStateTable,
-		L3ForwardingTable,
-		L3DecTTLTable,
-		L2ForwardingCalcTable,
-		ConntrackCommitTable,
-		OutputTable,
-	}
-
-	for _, ipProtocol := range f.ipProtocols {
-		switch ipProtocol {
-		case binding.ProtocolIPv6:
-			tables = append(tables, IPv6Table)
-		case binding.ProtocolIP:
-			tables = append(tables,
-				ARPSpoofGuardTable,
-				ARPResponderTable)
-			if f.enableMulticast {
-				tables = append(tables, PipelineIPClassifierTable)
-			}
-			if f.connectUplinkToBridge {
-				tables = append(tables, VLANTable)
-			}
-		}
-	}
-	if f.enableTrafficControl {
-		tables = append(tables, TrafficControlTable)
-	}
-
-	return tables
-}
-
-func (f *featureNetworkPolicy) getRequiredTables() []*Table {
-	tables := []*Table{
-		EgressRuleTable,
-		EgressDefaultTable,
-		EgressMetricTable,
-		IngressSecurityClassifierTable,
-		IngressRuleTable,
-		IngressDefaultTable,
-		IngressMetricTable,
-	}
-	if f.enableAntreaPolicy {
-		tables = append(tables,
-			AntreaPolicyEgressRuleTable,
-			AntreaPolicyIngressRuleTable,
-		)
-		if f.enableL7NetworkPolicy {
-			tables = append(tables, TrafficControlTable) // For L7 NetworkPolicy.
-		}
-		if f.enableMulticast {
-			tables = append(tables,
-				MulticastEgressRuleTable,
-				MulticastEgressPodMetricTable,
-				MulticastEgressMetricTable,
-				MulticastIngressRuleTable,
-				MulticastIngressPodMetricTable,
-				MulticastIngressMetricTable,
-			)
-		}
-	}
-	if f.nodeType == config.ExternalNode {
-		tables = append(tables,
-			EgressSecurityClassifierTable,
-		)
-	}
-	return tables
-}
-
-func (f *featureService) getRequiredTables() []*Table {
-	if !f.enableProxy {
-		return []*Table{DNATTable}
-	}
-	tables := []*Table{
-		UnSNATTable,
-		PreRoutingClassifierTable,
-		SessionAffinityTable,
-		ServiceLBTable,
-		EndpointDNATTable,
-		L3ForwardingTable,
-		SNATMarkTable,
-		SNATTable,
-		ConntrackCommitTable,
-		OutputTable,
-	}
-	if f.proxyAll {
-		tables = append(tables, NodePortMarkTable)
-	}
-	if f.enableDSR {
-		tables = append(tables, DSRServiceMarkTable)
-	}
-	return tables
-}
-
-func (f *featureEgress) getRequiredTables() []*Table {
-	tables := []*Table{
-		L3ForwardingTable,
-		EgressMarkTable,
-	}
-	if f.enableEgressTrafficShaping {
-		tables = append(tables, EgressQoSTable)
-	}
-	return tables
-}
-
-func (f *featureMulticast) getRequiredTables() []*Table {
-	tables := []*Table{
-		MulticastRoutingTable,
-		MulticastOutputTable,
-		MulticastEgressPodMetricTable,
-		MulticastIngressPodMetricTable,
-	}
-	return tables
-}
-
-func (f *featureMulticluster) getRequiredTables() []*Table {
-	return []*Table{
-		ClassifierTable,
-		ConntrackTable,
-		L3ForwardingTable,
-		SNATTable,
-		UnSNATTable,
-		SNATMarkTable,
-		OutputTable,
-	}
-}
-
-func (f *featureTraceflow) getRequiredTables() []*Table {
+	_ = "STUB: not implemented"
 	return nil
 }
 
+func (t *Table) IsInitialized() bool { _ = "STUB: not implemented"; return false }
+
+func (t *Table) GetID() uint8 { _ = "STUB: not implemented"; return 0 }
+
+func (t *Table) GetNext() uint8 { _ = "STUB: not implemented"; return 0 }
+
+func (t *Table) GetName() string { _ = "STUB: not implemented"; return "" }
+
+func (t *Table) GetMissAction() binding.MissActionType {
+	_ = "STUB: not implemented"
+	return *new(binding.MissActionType)
+}
+
+func (f *featurePodConnectivity) getRequiredTables() []*Table {
+	_ = "STUB: not implemented"
+	return nil
+}
+
+func (f *featureNetworkPolicy) getRequiredTables() []*Table { _ = "STUB: not implemented"; return nil }
+
+// For L7 NetworkPolicy.
+
+func (f *featureService) getRequiredTables() []*Table { _ = "STUB: not implemented"; return nil }
+
+func (f *featureEgress) getRequiredTables() []*Table { _ = "STUB: not implemented"; return nil }
+
+func (f *featureMulticast) getRequiredTables() []*Table { _ = "STUB: not implemented"; return nil }
+
+func (f *featureMulticluster) getRequiredTables() []*Table { _ = "STUB: not implemented"; return nil }
+
+func (f *featureTraceflow) getRequiredTables() []*Table { _ = "STUB: not implemented"; return nil }
+
 func (f *featureExternalNodeConnectivity) getRequiredTables() []*Table {
-	return []*Table{
-		ConntrackTable,
-		ConntrackStateTable,
-		L2ForwardingCalcTable,
-		ConntrackCommitTable,
-		OutputTable,
-		NonIPTable,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // traceableFeature is the interface to support Traceflow in Antrea data path. Any other feature expected to trace the

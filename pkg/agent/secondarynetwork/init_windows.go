@@ -17,10 +17,10 @@
 
 package secondarynetwork
 
-func (c *Controller) Initialize() error {
-	return nil
-}
+func (c *Controller) Initialize() error { _ = "STUB: not implemented"; return nil }
 
 func (c *Controller) Restore() {
+	_ = "STUB: not implemented"
 	// Not supported on Windows.
+	return
 }

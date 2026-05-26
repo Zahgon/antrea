@@ -25,12 +25,7 @@ import "k8s.io/apimachinery/pkg/util/sets"
 // s1 = {a1, a2, a3, a4, a5}
 //
 // It supersedes s1.Union(s2) when constructing a new set is not the intention.
-func MergeString(dst, src sets.Set[string]) sets.Set[string] {
-	for item := range src {
-		dst.Insert(item)
-	}
-	return dst
-}
+func MergeString(dst, src sets.Set[string]) sets.Set[string] { _ = "STUB: not implemented"; return nil }
 
 // SymmetricDifferenceString returns the symmetric difference of two sets.
 // For example:
@@ -41,16 +36,6 @@ func MergeString(dst, src sets.Set[string]) sets.Set[string] {
 // It supersedes s1.Difference(s2).Union(s2.Difference(s1)) which is a little complicated and always builds several
 // unnecessary intermediate sets.
 func SymmetricDifferenceString(s1, s2 sets.Set[string]) sets.Set[string] {
-	result := sets.New[string]()
-	for key := range s1 {
-		if !s2.Has(key) {
-			result.Insert(key)
-		}
-	}
-	for key := range s2 {
-		if !s1.Has(key) {
-			result.Insert(key)
-		}
-	}
-	return result
+	_ = "STUB: not implemented"
+	return nil
 }

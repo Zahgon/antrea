@@ -15,13 +15,11 @@
 package runtime
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/clientcmd"
 
 	"antrea.io/antrea/v2/pkg/apis"
 	"antrea.io/antrea/v2/pkg/util/runtime"
@@ -40,39 +38,11 @@ var (
 )
 
 func ResolveKubeconfig(path string) (*rest.Config, error) {
-	withExplicitPath := path != ""
-	if !withExplicitPath {
-		path = strings.TrimSpace(os.Getenv("KUBECONFIG"))
-		if path == "" {
-			path = clientcmd.RecommendedHomeFile
-		}
-	}
-	// #nosec G703: Path provided by local user and consumed by CLI; no privilege boundary crossed.
-	if _, err := os.Stat(path); err != nil {
-		if !os.IsNotExist(err) {
-			return nil, err
-		}
-		if withExplicitPath {
-			return nil, fmt.Errorf("failed to resolve kubeconfig: kubeconfig file does not exist at path '%s'", path)
-		}
-		config, inClusterErr := rest.InClusterConfig()
-		if inClusterErr == nil {
-			return config, nil
-		}
-		return nil, fmt.Errorf(
-			"failed to resolve kubeconfig: neither a valid kubeconfig file was found at '%s', nor could InClusterConfig be used: %w",
-			path, inClusterErr,
-		)
-	}
-
-	config, err := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
-		&clientcmd.ClientConfigLoadingRules{ExplicitPath: path},
-		&clientcmd.ConfigOverrides{}).ClientConfig()
-	if err != nil {
-		return nil, fmt.Errorf("failed to build kubeconfig from file at path '%s': %w", path, err)
-	}
-	return config, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// #nosec G703: Path provided by local user and consumed by CLI; no privilege boundary crossed.
 
 func init() {
 	podName, found := os.LookupEnv("POD_NAME")

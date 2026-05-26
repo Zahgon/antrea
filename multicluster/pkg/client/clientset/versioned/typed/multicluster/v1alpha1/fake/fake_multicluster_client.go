@@ -27,36 +27,43 @@ type FakeMulticlusterV1alpha1 struct {
 }
 
 func (c *FakeMulticlusterV1alpha1) ClusterInfoImports(namespace string) v1alpha1.ClusterInfoImportInterface {
-	return newFakeClusterInfoImports(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.ClusterInfoImportInterface)
 }
 
 func (c *FakeMulticlusterV1alpha1) ClusterSets(namespace string) v1alpha1.ClusterSetInterface {
-	return newFakeClusterSets(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.ClusterSetInterface)
 }
 
 func (c *FakeMulticlusterV1alpha1) Gateways(namespace string) v1alpha1.GatewayInterface {
-	return newFakeGateways(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.GatewayInterface)
 }
 
 func (c *FakeMulticlusterV1alpha1) LabelIdentities() v1alpha1.LabelIdentityInterface {
-	return newFakeLabelIdentities(c)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.LabelIdentityInterface)
 }
 
 func (c *FakeMulticlusterV1alpha1) MemberClusterAnnounces(namespace string) v1alpha1.MemberClusterAnnounceInterface {
-	return newFakeMemberClusterAnnounces(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.MemberClusterAnnounceInterface)
 }
 
 func (c *FakeMulticlusterV1alpha1) ResourceExports(namespace string) v1alpha1.ResourceExportInterface {
-	return newFakeResourceExports(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.ResourceExportInterface)
 }
 
 func (c *FakeMulticlusterV1alpha1) ResourceImports(namespace string) v1alpha1.ResourceImportInterface {
-	return newFakeResourceImports(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.ResourceImportInterface)
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeMulticlusterV1alpha1) RESTClient() rest.Interface {
-	var ret *rest.RESTClient
-	return ret
+	_ = "STUB: not implemented"
+	return *new(rest.Interface)
 }

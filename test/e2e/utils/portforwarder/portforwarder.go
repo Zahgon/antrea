@@ -15,14 +15,8 @@
 package portforwarder
 
 import (
-	"fmt"
-	"io"
-	"net/http"
-
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/portforward"
-	"k8s.io/client-go/transport/spdy"
 )
 
 type PortForwarder struct {
@@ -40,69 +34,12 @@ type PortForwarder struct {
 // After creating Port Forwarder object, call Start() on it to start forwarding
 // channel and Stop() to terminate it
 func NewPortForwarder(config *rest.Config, namespace string, pod string, targetPort int, listenAddress string, listenPort int) (*PortForwarder, error) {
-	pf := &PortForwarder{
-		config:        config,
-		namespace:     namespace,
-		name:          pod,
-		targetPort:    targetPort,
-		listenAddress: listenAddress,
-		listenPort:    listenPort,
-	}
-
-	var err error
-	pf.clientset, err = kubernetes.NewForConfig(pf.config)
-	if err != nil {
-		return pf, fmt.Errorf("failed to create Kubernetes client: %v", err)
-	}
-
-	return pf, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Start Port Forwarding channel
-func (p *PortForwarder) Start() error {
-	p.stopCh = make(chan struct{}, 1)
-	readyCh := make(chan struct{})
-	errCh := make(chan error, 1)
-
-	url := p.clientset.CoreV1().RESTClient().Post().
-		Resource("pods").
-		Namespace(p.namespace).
-		Name(p.name).
-		SubResource("portforward").URL()
-
-	transport, upgrader, err := spdy.RoundTripperFor(p.config)
-	if err != nil {
-		return fmt.Errorf("failed to create dialer: %v", err)
-	}
-
-	dialer := spdy.NewDialer(upgrader, &http.Client{Transport: transport}, "POST", url)
-
-	ports := []string{
-		fmt.Sprintf("%d:%d", p.listenPort, p.targetPort),
-	}
-
-	addresses := []string{
-		p.listenAddress,
-	}
-
-	pf, err := portforward.NewOnAddresses(dialer, addresses, ports, p.stopCh, readyCh, io.Discard, io.Discard)
-	if err != nil {
-		return fmt.Errorf("port forward request failed: %v", err)
-	}
-
-	go func() {
-		errCh <- pf.ForwardPorts()
-	}()
-
-	select {
-	case err = <-errCh:
-		return fmt.Errorf("port forward request failed: %v", err)
-	case <-readyCh:
-		return nil
-	}
-}
+func (p *PortForwarder) Start() error { _ = "STUB: not implemented"; return nil }
 
 // Stop Port Forwarding channel
-func (p *PortForwarder) Stop() {
-	p.stopCh <- struct{}{}
-}
+func (p *PortForwarder) Stop() { _ = "STUB: not implemented"; return }

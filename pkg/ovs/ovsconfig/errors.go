@@ -14,10 +14,6 @@
 
 package ovsconfig
 
-import (
-	"strings"
-)
-
 type Error interface {
 	error
 	Timeout() bool   // Is the error a timeout?
@@ -30,31 +26,23 @@ type TransactionError struct {
 }
 
 func NewTransactionError(err error, temporary bool) *TransactionError {
-	return &TransactionError{err, temporary}
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (e *TransactionError) Temporary() bool {
-	return e.temporary || e.Timeout()
-}
+func (e *TransactionError) Temporary() bool { _ = "STUB: not implemented"; return false }
 
-func (e *TransactionError) Timeout() bool {
-	return strings.HasPrefix(e.Error(), "timed out:")
-}
+func (e *TransactionError) Timeout() bool { _ = "STUB: not implemented"; return false }
 
 type InvalidArgumentsError string
 
 func newInvalidArgumentsError(err string) InvalidArgumentsError {
-	return InvalidArgumentsError(err)
+	_ = "STUB: not implemented"
+	return *new(InvalidArgumentsError)
 }
 
-func (e InvalidArgumentsError) Error() string {
-	return string(e)
-}
+func (e InvalidArgumentsError) Error() string { _ = "STUB: not implemented"; return "" }
 
-func (e InvalidArgumentsError) Temporary() bool {
-	return false
-}
+func (e InvalidArgumentsError) Temporary() bool { _ = "STUB: not implemented"; return false }
 
-func (e InvalidArgumentsError) Timeout() bool {
-	return false
-}
+func (e InvalidArgumentsError) Timeout() bool { _ = "STUB: not implemented"; return false }

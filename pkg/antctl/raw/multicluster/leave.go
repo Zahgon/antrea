@@ -29,23 +29,6 @@ var leaveExamples = strings.Trim(`
   antctl mc leave --clusterset clusterset1 -n kube-system
 `, "\n")
 
-func NewLeaveCommand() *cobra.Command {
-	command := &cobra.Command{
-		Use:     "leave",
-		Short:   "Leave the ClusterSet from a member cluster",
-		Args:    cobra.MaximumNArgs(0),
-		Example: leaveExamples,
-		RunE:    leaveRunE,
-	}
+func NewLeaveCommand() *cobra.Command { _ = "STUB: not implemented"; return nil }
 
-	o := common.CleanOptions{}
-	leaveOpts = &o
-	command.Flags().StringVarP(&o.Namespace, "namespace", "n", common.DefaultMemberNamespace, "Antrea Multi-cluster Namespace. Defaults to "+common.DefaultMemberNamespace)
-	command.Flags().StringVarP(&o.ClusterSet, "clusterset", "", "", "ClusterSet ID")
-
-	return command
-}
-
-func leaveRunE(cmd *cobra.Command, args []string) error {
-	return common.Cleanup(cmd, leaveOpts)
-}
+func leaveRunE(cmd *cobra.Command, args []string) error { _ = "STUB: not implemented"; return nil }

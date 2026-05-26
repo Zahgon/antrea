@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	gomock "go.uber.org/mock/gomock"
 	v1 "k8s.io/api/core/v1"
 	v10 "k8s.io/api/discovery/v1"
@@ -45,243 +43,197 @@ type MockProviderMockRecorder struct {
 }
 
 // NewMockProvider creates a new mock instance.
-func NewMockProvider(ctrl *gomock.Controller) *MockProvider {
-	mock := &MockProvider{ctrl: ctrl}
-	mock.recorder = &MockProviderMockRecorder{mock}
-	return mock
-}
+func NewMockProvider(ctrl *gomock.Controller) *MockProvider { _ = "STUB: not implemented"; return nil }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockProvider) EXPECT() *MockProviderMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// OnEndpointSliceAdd mocks base method.
+	return nil
 }
 
-// OnEndpointSliceAdd mocks base method.
 func (m *MockProvider) OnEndpointSliceAdd(endpointSlice *v10.EndpointSlice) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnEndpointSliceAdd", endpointSlice)
+	_ = "STUB: not implemented"
+	return
 }
 
 // OnEndpointSliceAdd indicates an expected call of OnEndpointSliceAdd.
 func (mr *MockProviderMockRecorder) OnEndpointSliceAdd(endpointSlice any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnEndpointSliceAdd", reflect.TypeOf((*MockProvider)(nil).OnEndpointSliceAdd), endpointSlice)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnEndpointSliceDelete mocks base method.
 func (m *MockProvider) OnEndpointSliceDelete(endpointSlice *v10.EndpointSlice) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnEndpointSliceDelete", endpointSlice)
+	_ = "STUB: not implemented"
+	return
 }
 
 // OnEndpointSliceDelete indicates an expected call of OnEndpointSliceDelete.
 func (mr *MockProviderMockRecorder) OnEndpointSliceDelete(endpointSlice any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnEndpointSliceDelete", reflect.TypeOf((*MockProvider)(nil).OnEndpointSliceDelete), endpointSlice)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnEndpointSliceUpdate mocks base method.
 func (m *MockProvider) OnEndpointSliceUpdate(oldEndpointSlice, newEndpointSlice *v10.EndpointSlice) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnEndpointSliceUpdate", oldEndpointSlice, newEndpointSlice)
+	_ = "STUB: not implemented"
+	return
 }
 
 // OnEndpointSliceUpdate indicates an expected call of OnEndpointSliceUpdate.
 func (mr *MockProviderMockRecorder) OnEndpointSliceUpdate(oldEndpointSlice, newEndpointSlice any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnEndpointSliceUpdate", reflect.TypeOf((*MockProvider)(nil).OnEndpointSliceUpdate), oldEndpointSlice, newEndpointSlice)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnEndpointSlicesSynced mocks base method.
-func (m *MockProvider) OnEndpointSlicesSynced() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnEndpointSlicesSynced")
-}
+func (m *MockProvider) OnEndpointSlicesSynced() { _ = "STUB: not implemented"; return }
 
 // OnEndpointSlicesSynced indicates an expected call of OnEndpointSlicesSynced.
 func (mr *MockProviderMockRecorder) OnEndpointSlicesSynced() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnEndpointSlicesSynced", reflect.TypeOf((*MockProvider)(nil).OnEndpointSlicesSynced))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnEndpointsAdd mocks base method.
-func (m *MockProvider) OnEndpointsAdd(endpoints *v1.Endpoints) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnEndpointsAdd", endpoints)
-}
+func (m *MockProvider) OnEndpointsAdd(endpoints *v1.Endpoints) { _ = "STUB: not implemented"; return }
 
 // OnEndpointsAdd indicates an expected call of OnEndpointsAdd.
 func (mr *MockProviderMockRecorder) OnEndpointsAdd(endpoints any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnEndpointsAdd", reflect.TypeOf((*MockProvider)(nil).OnEndpointsAdd), endpoints)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnEndpointsDelete mocks base method.
 func (m *MockProvider) OnEndpointsDelete(endpoints *v1.Endpoints) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnEndpointsDelete", endpoints)
+	_ = "STUB: not implemented"
+	return
 }
 
 // OnEndpointsDelete indicates an expected call of OnEndpointsDelete.
 func (mr *MockProviderMockRecorder) OnEndpointsDelete(endpoints any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnEndpointsDelete", reflect.TypeOf((*MockProvider)(nil).OnEndpointsDelete), endpoints)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnEndpointsSynced mocks base method.
-func (m *MockProvider) OnEndpointsSynced() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnEndpointsSynced")
-}
+func (m *MockProvider) OnEndpointsSynced() { _ = "STUB: not implemented"; return }
 
 // OnEndpointsSynced indicates an expected call of OnEndpointsSynced.
 func (mr *MockProviderMockRecorder) OnEndpointsSynced() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnEndpointsSynced", reflect.TypeOf((*MockProvider)(nil).OnEndpointsSynced))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnEndpointsUpdate mocks base method.
 func (m *MockProvider) OnEndpointsUpdate(oldEndpoints, endpoints *v1.Endpoints) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnEndpointsUpdate", oldEndpoints, endpoints)
+	_ = "STUB: not implemented"
+	return
 }
 
 // OnEndpointsUpdate indicates an expected call of OnEndpointsUpdate.
 func (mr *MockProviderMockRecorder) OnEndpointsUpdate(oldEndpoints, endpoints any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnEndpointsUpdate", reflect.TypeOf((*MockProvider)(nil).OnEndpointsUpdate), oldEndpoints, endpoints)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnNodeAdd mocks base method.
-func (m *MockProvider) OnNodeAdd(node *v1.Node) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnNodeAdd", node)
-}
+func (m *MockProvider) OnNodeAdd(node *v1.Node) { _ = "STUB: not implemented"; return }
 
 // OnNodeAdd indicates an expected call of OnNodeAdd.
 func (mr *MockProviderMockRecorder) OnNodeAdd(node any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnNodeAdd", reflect.TypeOf((*MockProvider)(nil).OnNodeAdd), node)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnNodeDelete mocks base method.
-func (m *MockProvider) OnNodeDelete(node *v1.Node) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnNodeDelete", node)
-}
+func (m *MockProvider) OnNodeDelete(node *v1.Node) { _ = "STUB: not implemented"; return }
 
 // OnNodeDelete indicates an expected call of OnNodeDelete.
 func (mr *MockProviderMockRecorder) OnNodeDelete(node any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnNodeDelete", reflect.TypeOf((*MockProvider)(nil).OnNodeDelete), node)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnNodeSynced mocks base method.
-func (m *MockProvider) OnNodeSynced() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnNodeSynced")
-}
+func (m *MockProvider) OnNodeSynced() { _ = "STUB: not implemented"; return }
 
 // OnNodeSynced indicates an expected call of OnNodeSynced.
 func (mr *MockProviderMockRecorder) OnNodeSynced() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnNodeSynced", reflect.TypeOf((*MockProvider)(nil).OnNodeSynced))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnNodeUpdate mocks base method.
-func (m *MockProvider) OnNodeUpdate(oldNode, node *v1.Node) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnNodeUpdate", oldNode, node)
-}
+func (m *MockProvider) OnNodeUpdate(oldNode, node *v1.Node) { _ = "STUB: not implemented"; return }
 
 // OnNodeUpdate indicates an expected call of OnNodeUpdate.
 func (mr *MockProviderMockRecorder) OnNodeUpdate(oldNode, node any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnNodeUpdate", reflect.TypeOf((*MockProvider)(nil).OnNodeUpdate), oldNode, node)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnServiceAdd mocks base method.
-func (m *MockProvider) OnServiceAdd(service *v1.Service) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnServiceAdd", service)
-}
+func (m *MockProvider) OnServiceAdd(service *v1.Service) { _ = "STUB: not implemented"; return }
 
 // OnServiceAdd indicates an expected call of OnServiceAdd.
 func (mr *MockProviderMockRecorder) OnServiceAdd(service any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnServiceAdd", reflect.TypeOf((*MockProvider)(nil).OnServiceAdd), service)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnServiceDelete mocks base method.
-func (m *MockProvider) OnServiceDelete(service *v1.Service) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnServiceDelete", service)
-}
+func (m *MockProvider) OnServiceDelete(service *v1.Service) { _ = "STUB: not implemented"; return }
 
 // OnServiceDelete indicates an expected call of OnServiceDelete.
 func (mr *MockProviderMockRecorder) OnServiceDelete(service any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnServiceDelete", reflect.TypeOf((*MockProvider)(nil).OnServiceDelete), service)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnServiceSynced mocks base method.
-func (m *MockProvider) OnServiceSynced() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnServiceSynced")
-}
+func (m *MockProvider) OnServiceSynced() { _ = "STUB: not implemented"; return }
 
 // OnServiceSynced indicates an expected call of OnServiceSynced.
 func (mr *MockProviderMockRecorder) OnServiceSynced() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnServiceSynced", reflect.TypeOf((*MockProvider)(nil).OnServiceSynced))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OnServiceUpdate mocks base method.
 func (m *MockProvider) OnServiceUpdate(oldService, service *v1.Service) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "OnServiceUpdate", oldService, service)
+	_ = "STUB: not implemented"
+	return
 }
 
 // OnServiceUpdate indicates an expected call of OnServiceUpdate.
 func (mr *MockProviderMockRecorder) OnServiceUpdate(oldService, service any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OnServiceUpdate", reflect.TypeOf((*MockProvider)(nil).OnServiceUpdate), oldService, service)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Run mocks base method.
-func (m *MockProvider) Run(stopCh <-chan struct{}) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Run", stopCh)
-}
+func (m *MockProvider) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
 // Run indicates an expected call of Run.
 func (mr *MockProviderMockRecorder) Run(stopCh any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockProvider)(nil).Run), stopCh)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SyncLoop mocks base method.
-func (m *MockProvider) SyncLoop() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SyncLoop")
-}
+func (m *MockProvider) SyncLoop() { _ = "STUB: not implemented"; return }
 
 // SyncLoop indicates an expected call of SyncLoop.
-func (mr *MockProviderMockRecorder) SyncLoop() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SyncLoop", reflect.TypeOf((*MockProvider)(nil).SyncLoop))
-}
+func (mr *MockProviderMockRecorder) SyncLoop() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // SyncedOnce mocks base method.
-func (m *MockProvider) SyncedOnce() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SyncedOnce")
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
+func (m *MockProvider) SyncedOnce() bool { _ = "STUB: not implemented"; return false }
 
 // SyncedOnce indicates an expected call of SyncedOnce.
 func (mr *MockProviderMockRecorder) SyncedOnce() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SyncedOnce", reflect.TypeOf((*MockProvider)(nil).SyncedOnce))
+	_ = "STUB: not implemented"
+	return nil
 }

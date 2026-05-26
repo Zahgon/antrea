@@ -29,22 +29,6 @@ type fakeNetworkPolicyStats struct {
 }
 
 func newFakeNetworkPolicyStats(fake *FakeStatsV1alpha1, namespace string) statsv1alpha1.NetworkPolicyStatsInterface {
-	return &fakeNetworkPolicyStats{
-		gentype.NewFakeClientWithList[*v1alpha1.NetworkPolicyStats, *v1alpha1.NetworkPolicyStatsList](
-			fake.Fake,
-			namespace,
-			v1alpha1.SchemeGroupVersion.WithResource("networkpolicystats"),
-			v1alpha1.SchemeGroupVersion.WithKind("NetworkPolicyStats"),
-			func() *v1alpha1.NetworkPolicyStats { return &v1alpha1.NetworkPolicyStats{} },
-			func() *v1alpha1.NetworkPolicyStatsList { return &v1alpha1.NetworkPolicyStatsList{} },
-			func(dst, src *v1alpha1.NetworkPolicyStatsList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.NetworkPolicyStatsList) []*v1alpha1.NetworkPolicyStats {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha1.NetworkPolicyStatsList, items []*v1alpha1.NetworkPolicyStats) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(statsv1alpha1.NetworkPolicyStatsInterface)
 }

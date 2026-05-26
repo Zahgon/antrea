@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	controlplanev1beta2 "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	watch "k8s.io/apimachinery/pkg/watch"
 	gentype "k8s.io/client-go/gentype"
@@ -47,14 +46,6 @@ type appliedToGroups struct {
 
 // newAppliedToGroups returns a AppliedToGroups
 func newAppliedToGroups(c *ControlplaneV1beta2Client) *appliedToGroups {
-	return &appliedToGroups{
-		gentype.NewClientWithList[*controlplanev1beta2.AppliedToGroup, *controlplanev1beta2.AppliedToGroupList](
-			"appliedtogroups",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *controlplanev1beta2.AppliedToGroup { return &controlplanev1beta2.AppliedToGroup{} },
-			func() *controlplanev1beta2.AppliedToGroupList { return &controlplanev1beta2.AppliedToGroupList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

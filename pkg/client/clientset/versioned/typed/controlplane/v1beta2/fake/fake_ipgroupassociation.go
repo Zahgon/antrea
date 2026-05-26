@@ -29,14 +29,6 @@ type fakeIPGroupAssociations struct {
 }
 
 func newFakeIPGroupAssociations(fake *FakeControlplaneV1beta2) controlplanev1beta2.IPGroupAssociationInterface {
-	return &fakeIPGroupAssociations{
-		gentype.NewFakeClient[*v1beta2.IPGroupAssociation](
-			fake.Fake,
-			"",
-			v1beta2.SchemeGroupVersion.WithResource("ipgroupassociations"),
-			v1beta2.SchemeGroupVersion.WithKind("IPGroupAssociation"),
-			func() *v1beta2.IPGroupAssociation { return &v1beta2.IPGroupAssociation{} },
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(controlplanev1beta2.IPGroupAssociationInterface)
 }

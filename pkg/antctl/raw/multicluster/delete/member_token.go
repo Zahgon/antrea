@@ -15,13 +15,10 @@
 package delete
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/spf13/cobra"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-
-	"antrea.io/antrea/v2/pkg/antctl/raw/multicluster/common"
 )
 
 type deleteTokenOptions struct {
@@ -37,48 +34,13 @@ var deleteTokenExamples = strings.Trim(`
 `, "\n")
 
 func (o *deleteTokenOptions) validateAndComplete(cmd *cobra.Command) error {
-	if o.namespace == "" {
-		return fmt.Errorf("Namespace must be specified")
-	}
-
-	var err error
-	if o.k8sClient == nil {
-		o.k8sClient, err = common.NewClient(cmd)
-		if err != nil {
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func NewMemberTokenCmd() *cobra.Command {
-	command := &cobra.Command{
-		Use:     "membertoken",
-		Args:    cobra.MaximumNArgs(1),
-		Short:   "Delete a member token in a leader cluster Namespace",
-		Long:    "Delete a member token in a leader cluster Namespace. Corresponding Secret, ServiceAccount and RoleBinding will be deleted if they exist.",
-		Example: deleteTokenExamples,
-		RunE:    deleteTokenRunE,
-	}
-
-	o := &deleteTokenOptions{}
-	deleteTokenOpts = o
-	command.Flags().StringVarP(&o.namespace, "namespace", "n", "", "Namespace of the token")
-
-	return command
-}
+func NewMemberTokenCmd() *cobra.Command { _ = "STUB: not implemented"; return nil }
 
 func deleteTokenRunE(cmd *cobra.Command, args []string) error {
-	if err := deleteTokenOpts.validateAndComplete(cmd); err != nil {
-		return err
-	}
-	if len(args) == 0 {
-		return fmt.Errorf("token name must be specified")
-	}
-
-	if err := common.DeleteMemberToken(cmd, deleteTokenOpts.k8sClient, args[0], deleteTokenOpts.namespace); err != nil {
-		return err
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }

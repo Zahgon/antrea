@@ -16,9 +16,6 @@ package cipher
 
 import (
 	"crypto/tls"
-	"strings"
-
-	"k8s.io/component-base/cli/flag"
 )
 
 var TLSVersionMap = map[string]uint16{
@@ -30,13 +27,6 @@ var TLSVersionMap = map[string]uint16{
 
 // GenerateCipherSuitesList generates Cipher Suite list from comma-separated Cipher Suite string.
 func GenerateCipherSuitesList(cipherSuites string) ([]uint16, error) {
-	csStrList := strings.Split(strings.ReplaceAll(cipherSuites, " ", ""), ",")
-	if len(csStrList) == 1 && csStrList[0] == "" {
-		return []uint16{}, nil
-	}
-	csIntList, err := flag.TLSCipherSuites(csStrList)
-	if err != nil {
-		return nil, err
-	}
-	return csIntList, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }

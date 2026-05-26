@@ -45,18 +45,9 @@ Modifies:
 
 package node
 
-import (
-	"fmt"
-
-	"k8s.io/api/core/v1"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	"k8s.io/client-go/tools/cache"
-
-	"k8s.io/klog/v2"
-)
-
 // RecordNodeStatusChange records a event related to a node status change. (Common to lifecycle and ipam)
 func RecordNodeStatusChange( /*recorder record.EventRecorder,*/ node *v1.Node, newStatus string) {
+	_ = "STUB: not implemented"
 	//ref := &v1.ObjectReference{
 	//	APIVersion: "v1",
 	//	Kind:       "Node",
@@ -64,55 +55,30 @@ func RecordNodeStatusChange( /*recorder record.EventRecorder,*/ node *v1.Node, n
 	//	UID:        node.UID,
 	//	Namespace:  "",
 	//}
-	klog.V(2).Infof("Recording status change %s event message for node %s", newStatus, node.Name)
-	// TODO: This requires a transaction, either both node status is updated
-	// and event is recorded or neither should happen, see issue #6055.
-	//recorder.Eventf(ref, v1.EventTypeNormal, newStatus, "Node %s status is now: %s", node.Name, newStatus)
+	return
 }
+
+// TODO: This requires a transaction, either both node status is updated
+// and event is recorded or neither should happen, see issue #6055.
+//recorder.Eventf(ref, v1.EventTypeNormal, newStatus, "Node %s status is now: %s", node.Name, newStatus)
 
 // CreateAddNodeHandler creates an add node handler.
 func CreateAddNodeHandler(f func(node *v1.Node) error) func(obj interface{}) {
-	return func(originalObj interface{}) {
-		node := originalObj.(*v1.Node).DeepCopy()
-		if err := f(node); err != nil {
-			utilruntime.HandleError(fmt.Errorf("Error while processing Node Add: %v", err))
-		}
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // CreateUpdateNodeHandler creates a node update handler. (Common to lifecycle and ipam)
 func CreateUpdateNodeHandler(f func(oldNode, newNode *v1.Node) error) func(oldObj, newObj interface{}) {
-	return func(origOldObj, origNewObj interface{}) {
-		node := origNewObj.(*v1.Node).DeepCopy()
-		prevNode := origOldObj.(*v1.Node).DeepCopy()
-
-		if err := f(prevNode, node); err != nil {
-			utilruntime.HandleError(fmt.Errorf("Error while processing Node Add/Delete: %v", err))
-		}
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // CreateDeleteNodeHandler creates a delete node handler. (Common to lifecycle and ipam)
 func CreateDeleteNodeHandler(f func(node *v1.Node) error) func(obj interface{}) {
-	return func(originalObj interface{}) {
-		originalNode, isNode := originalObj.(*v1.Node)
-		// We can get DeletedFinalStateUnknown instead of *v1.Node here and
-		// we need to handle that correctly. #34692
-		if !isNode {
-			deletedState, ok := originalObj.(cache.DeletedFinalStateUnknown)
-			if !ok {
-				klog.Errorf("Received unexpected object: %v", originalObj)
-				return
-			}
-			originalNode, ok = deletedState.Obj.(*v1.Node)
-			if !ok {
-				klog.Errorf("DeletedFinalStateUnknown contained non-Node object: %v", deletedState.Obj)
-				return
-			}
-		}
-		node := originalNode.DeepCopy()
-		if err := f(node); err != nil {
-			utilruntime.HandleError(fmt.Errorf("Error while processing Node Add/Delete: %v", err))
-		}
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// We can get DeletedFinalStateUnknown instead of *v1.Node here and
+// we need to handle that correctly. #34692

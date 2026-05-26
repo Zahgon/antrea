@@ -15,7 +15,6 @@
 package types
 
 import (
-	"fmt"
 	"sync"
 
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -48,82 +47,41 @@ type groupCounter struct {
 }
 
 func NewGroupCounter(groupAllocator openflow.GroupAllocator, groupIDUpdates chan<- string) *groupCounter {
-	return &groupCounter{groupMap: map[string]binding.GroupIDType{}, groupAllocator: groupAllocator, groupIDUpdates: groupIDUpdates, servicePortNamesMap: map[string]sets.Set[string]{}}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func keyString(svcPortName k8sproxy.ServicePortName, isEndpointsLocal bool) string {
-	key := svcPortName.String()
-	if isEndpointsLocal {
-		key = fmt.Sprintf("%s/local", key)
-	}
-	return key
+	_ = "STUB: not implemented"
+	return ""
 }
 
 func (c *groupCounter) updateServicePortNameMap(svcNamespacedName string, svcKeyString string) {
-	if _, ok := c.servicePortNamesMap[svcNamespacedName]; ok {
-		c.servicePortNamesMap[svcNamespacedName].Insert(svcKeyString)
-	} else {
-		keyStringSet := sets.New[string](svcKeyString)
-		c.servicePortNamesMap[svcNamespacedName] = keyStringSet
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 func (c *groupCounter) deleteServicePortNameMap(svcNamespacedName string, svcKeyString string) {
-	keyStringSet, ok := c.servicePortNamesMap[svcNamespacedName]
-	if !ok {
-		return
-	}
-	keyStringSet.Delete(svcKeyString)
-	if keyStringSet.Len() == 0 {
-		delete(c.servicePortNamesMap, svcNamespacedName)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 func (c *groupCounter) AllocateIfNotExist(svcPortName k8sproxy.ServicePortName, isEndpointsLocal bool) binding.GroupIDType {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	key := keyString(svcPortName, isEndpointsLocal)
-	if id, ok := c.groupMap[key]; ok {
-		return id
-	}
-	id := c.groupAllocator.Allocate()
-	c.groupMap[key] = id
-	c.updateServicePortNameMap(svcPortName.NamespacedName.String(), key)
-	c.groupIDUpdates <- svcPortName.NamespacedName.String()
-	return id
+	_ = "STUB: not implemented"
+	return *new(binding.GroupIDType)
 }
 
 func (c *groupCounter) Get(svcPortName k8sproxy.ServicePortName, isEndpointsLocal bool) (binding.GroupIDType, bool) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	key := keyString(svcPortName, isEndpointsLocal)
-	id, exist := c.groupMap[key]
-	return id, exist
+	_ = "STUB: not implemented"
+	return *new(binding.GroupIDType), false
 }
 
 func (c *groupCounter) Recycle(svcPortName k8sproxy.ServicePortName, isEndpointsLocal bool) bool {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	key := keyString(svcPortName, isEndpointsLocal)
-	if id, ok := c.groupMap[key]; ok {
-		delete(c.groupMap, key)
-		c.groupAllocator.Release(id)
-		c.deleteServicePortNameMap(svcPortName.NamespacedName.String(), key)
-		c.groupIDUpdates <- svcPortName.NamespacedName.String()
-		return true
-	}
+	_ = "STUB: not implemented"
 	return false
 }
 
 func (c *groupCounter) GetAllGroupIDs(svcNamespacedName string) []binding.GroupIDType {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	var ids []binding.GroupIDType
-	for _, key := range c.servicePortNamesMap[svcNamespacedName].UnsortedList() {
-		if id, ok := c.groupMap[key]; ok {
-			ids = append(ids, id)
-		}
-	}
-	return ids
+	_ = "STUB: not implemented"
+	return nil
 }

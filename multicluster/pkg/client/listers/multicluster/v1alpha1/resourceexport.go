@@ -41,12 +41,14 @@ type resourceExportLister struct {
 
 // NewResourceExportLister returns a new ResourceExportLister.
 func NewResourceExportLister(indexer cache.Indexer) ResourceExportLister {
-	return &resourceExportLister{listers.New[*multiclusterv1alpha1.ResourceExport](indexer, multiclusterv1alpha1.Resource("resourceexport"))}
+	_ = "STUB: not implemented"
+	return *new(ResourceExportLister)
 }
 
 // ResourceExports returns an object that can list and get ResourceExports.
 func (s *resourceExportLister) ResourceExports(namespace string) ResourceExportNamespaceLister {
-	return resourceExportNamespaceLister{listers.NewNamespaced[*multiclusterv1alpha1.ResourceExport](s.ResourceIndexer, namespace)}
+	_ = "STUB: not implemented"
+	return *new(ResourceExportNamespaceLister)
 }
 
 // ResourceExportNamespaceLister helps list and get ResourceExports.

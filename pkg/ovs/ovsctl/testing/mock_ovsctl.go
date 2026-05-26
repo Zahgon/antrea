@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	ovsctl "antrea.io/antrea/v2/pkg/ovs/ovsctl"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,228 +43,166 @@ type MockOVSCtlClientMockRecorder struct {
 
 // NewMockOVSCtlClient creates a new mock instance.
 func NewMockOVSCtlClient(ctrl *gomock.Controller) *MockOVSCtlClient {
-	mock := &MockOVSCtlClient{ctrl: ctrl}
-	mock.recorder = &MockOVSCtlClientMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOVSCtlClient) EXPECT() *MockOVSCtlClientMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// DeleteDPInterface mocks base method.
+	return nil
 }
 
-// DeleteDPInterface mocks base method.
 func (m *MockOVSCtlClient) DeleteDPInterface(name string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteDPInterface", name)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteDPInterface indicates an expected call of DeleteDPInterface.
 func (mr *MockOVSCtlClientMockRecorder) DeleteDPInterface(name any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDPInterface", reflect.TypeOf((*MockOVSCtlClient)(nil).DeleteDPInterface), name)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DumpFlows mocks base method.
 func (m *MockOVSCtlClient) DumpFlows(args ...string) ([]string, error) {
-	m.ctrl.T.Helper()
-	varargs := []any{}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "DumpFlows", varargs...)
-	ret0, _ := ret[0].([]string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // DumpFlows indicates an expected call of DumpFlows.
 func (mr *MockOVSCtlClientMockRecorder) DumpFlows(args ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DumpFlows", reflect.TypeOf((*MockOVSCtlClient)(nil).DumpFlows), args...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DumpFlowsWithoutTableNames mocks base method.
 func (m *MockOVSCtlClient) DumpFlowsWithoutTableNames(args ...string) ([]string, error) {
-	m.ctrl.T.Helper()
-	varargs := []any{}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "DumpFlowsWithoutTableNames", varargs...)
-	ret0, _ := ret[0].([]string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // DumpFlowsWithoutTableNames indicates an expected call of DumpFlowsWithoutTableNames.
 func (mr *MockOVSCtlClientMockRecorder) DumpFlowsWithoutTableNames(args ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DumpFlowsWithoutTableNames", reflect.TypeOf((*MockOVSCtlClient)(nil).DumpFlowsWithoutTableNames), args...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DumpGroup mocks base method.
 func (m *MockOVSCtlClient) DumpGroup(groupID uint32) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DumpGroup", groupID)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 // DumpGroup indicates an expected call of DumpGroup.
 func (mr *MockOVSCtlClientMockRecorder) DumpGroup(groupID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DumpGroup", reflect.TypeOf((*MockOVSCtlClient)(nil).DumpGroup), groupID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DumpGroups mocks base method.
 func (m *MockOVSCtlClient) DumpGroups() ([]string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DumpGroups")
-	ret0, _ := ret[0].([]string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // DumpGroups indicates an expected call of DumpGroups.
 func (mr *MockOVSCtlClientMockRecorder) DumpGroups() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DumpGroups", reflect.TypeOf((*MockOVSCtlClient)(nil).DumpGroups))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DumpMatchedFlow mocks base method.
 func (m *MockOVSCtlClient) DumpMatchedFlow(matchStr string) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DumpMatchedFlow", matchStr)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 // DumpMatchedFlow indicates an expected call of DumpMatchedFlow.
 func (mr *MockOVSCtlClientMockRecorder) DumpMatchedFlow(matchStr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DumpMatchedFlow", reflect.TypeOf((*MockOVSCtlClient)(nil).DumpMatchedFlow), matchStr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DumpPortsDesc mocks base method.
 func (m *MockOVSCtlClient) DumpPortsDesc() ([][]string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DumpPortsDesc")
-	ret0, _ := ret[0].([][]string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // DumpPortsDesc indicates an expected call of DumpPortsDesc.
 func (mr *MockOVSCtlClientMockRecorder) DumpPortsDesc() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DumpPortsDesc", reflect.TypeOf((*MockOVSCtlClient)(nil).DumpPortsDesc))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DumpTableFlows mocks base method.
 func (m *MockOVSCtlClient) DumpTableFlows(table uint8, filters ...string) ([]string, error) {
-	m.ctrl.T.Helper()
-	varargs := []any{table}
-	for _, a := range filters {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "DumpTableFlows", varargs...)
-	ret0, _ := ret[0].([]string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // DumpTableFlows indicates an expected call of DumpTableFlows.
 func (mr *MockOVSCtlClientMockRecorder) DumpTableFlows(table any, filters ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{table}, filters...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DumpTableFlows", reflect.TypeOf((*MockOVSCtlClient)(nil).DumpTableFlows), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetDPFeatures mocks base method.
 func (m *MockOVSCtlClient) GetDPFeatures() (map[ovsctl.DPFeature]bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDPFeatures")
-	ret0, _ := ret[0].(map[ovsctl.DPFeature]bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetDPFeatures indicates an expected call of GetDPFeatures.
 func (mr *MockOVSCtlClientMockRecorder) GetDPFeatures() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDPFeatures", reflect.TypeOf((*MockOVSCtlClient)(nil).GetDPFeatures))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RunAppctlCmd mocks base method.
 func (m *MockOVSCtlClient) RunAppctlCmd(cmd string, needsBridge bool, args ...string) ([]byte, error) {
-	m.ctrl.T.Helper()
-	varargs := []any{cmd, needsBridge}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "RunAppctlCmd", varargs...)
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // RunAppctlCmd indicates an expected call of RunAppctlCmd.
 func (mr *MockOVSCtlClientMockRecorder) RunAppctlCmd(cmd, needsBridge any, args ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{cmd, needsBridge}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunAppctlCmd", reflect.TypeOf((*MockOVSCtlClient)(nil).RunAppctlCmd), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RunOfctlCmd mocks base method.
 func (m *MockOVSCtlClient) RunOfctlCmd(cmd string, args ...string) ([]byte, error) {
-	m.ctrl.T.Helper()
-	varargs := []any{cmd}
-	for _, a := range args {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "RunOfctlCmd", varargs...)
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // RunOfctlCmd indicates an expected call of RunOfctlCmd.
 func (mr *MockOVSCtlClientMockRecorder) RunOfctlCmd(cmd any, args ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{cmd}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunOfctlCmd", reflect.TypeOf((*MockOVSCtlClient)(nil).RunOfctlCmd), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetPortNoFlood mocks base method.
-func (m *MockOVSCtlClient) SetPortNoFlood(ofport int) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetPortNoFlood", ofport)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockOVSCtlClient) SetPortNoFlood(ofport int) error { _ = "STUB: not implemented"; return nil }
 
 // SetPortNoFlood indicates an expected call of SetPortNoFlood.
 func (mr *MockOVSCtlClientMockRecorder) SetPortNoFlood(ofport any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPortNoFlood", reflect.TypeOf((*MockOVSCtlClient)(nil).SetPortNoFlood), ofport)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Trace mocks base method.
 func (m *MockOVSCtlClient) Trace(req *ovsctl.TracingRequest) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Trace", req)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 // Trace indicates an expected call of Trace.
 func (mr *MockOVSCtlClientMockRecorder) Trace(req any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Trace", reflect.TypeOf((*MockOVSCtlClient)(nil).Trace), req)
+	_ = "STUB: not implemented"
+	return nil
 }

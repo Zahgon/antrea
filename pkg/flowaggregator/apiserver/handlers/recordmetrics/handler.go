@@ -15,34 +15,13 @@
 package recordmetrics
 
 import (
-	"encoding/json"
 	"net/http"
 
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/flowaggregator/apis"
 	"antrea.io/antrea/v2/pkg/flowaggregator/querier"
 )
 
 // HandleFunc returns the function which can handle the /recordmetrics API request.
 func HandleFunc(faq querier.FlowAggregatorQuerier) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		metrics := faq.GetRecordMetrics()
-		metricsResponse := apis.RecordMetricsResponse{
-			NumRecordsExported:     metrics.NumRecordsExported,
-			NumRecordsReceived:     metrics.NumRecordsReceived,
-			NumRecordsDropped:      metrics.NumRecordsDropped,
-			NumFlows:               metrics.NumFlows,
-			NumConnToCollector:     metrics.NumConnToCollector,
-			WithClickHouseExporter: metrics.WithClickHouseExporter,
-			WithS3Exporter:         metrics.WithS3Exporter,
-			WithLogExporter:        metrics.WithLogExporter,
-			WithIPFIXExporter:      metrics.WithIPFIXExporter,
-		}
-		err := json.NewEncoder(w).Encode(metricsResponse)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			klog.Errorf("Error when encoding record metrics to json: %v", err)
-		}
-	}
+	_ = "STUB: not implemented"
+	return *new(http.HandlerFunc)
 }

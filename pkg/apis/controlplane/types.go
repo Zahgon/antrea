@@ -15,9 +15,6 @@
 package controlplane
 
 import (
-	"fmt"
-	"net"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -161,9 +158,7 @@ type AddressGroup struct {
 // IPAddress describes a single IP address. Either an IPv4 or IPv6 address must be set.
 type IPAddress []byte
 
-func (ip IPAddress) String() string {
-	return net.IP(ip).String()
-}
+func (ip IPAddress) String() string { _ = "STUB: not implemented"; return "" }
 
 // IPNet describes an IP network.
 type IPNet struct {
@@ -171,9 +166,7 @@ type IPNet struct {
 	PrefixLength int32
 }
 
-func (ipn IPNet) String() string {
-	return fmt.Sprintf("%s/%d", ipn.IP.String(), ipn.PrefixLength)
-}
+func (ipn IPNet) String() string { _ = "STUB: not implemented"; return "" }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

@@ -42,5 +42,6 @@ type supportBundleCollectionLister struct {
 
 // NewSupportBundleCollectionLister returns a new SupportBundleCollectionLister.
 func NewSupportBundleCollectionLister(indexer cache.Indexer) SupportBundleCollectionLister {
-	return &supportBundleCollectionLister{listers.New[*crdv1alpha1.SupportBundleCollection](indexer, crdv1alpha1.Resource("supportbundlecollection"))}
+	_ = "STUB: not implemented"
+	return *new(SupportBundleCollectionLister)
 }

@@ -29,22 +29,6 @@ type fakeClusterClaims struct {
 }
 
 func newFakeClusterClaims(fake *FakeMulticlusterV1alpha2, namespace string) multiclusterv1alpha2.ClusterClaimInterface {
-	return &fakeClusterClaims{
-		gentype.NewFakeClientWithList[*v1alpha2.ClusterClaim, *v1alpha2.ClusterClaimList](
-			fake.Fake,
-			namespace,
-			v1alpha2.SchemeGroupVersion.WithResource("clusterclaims"),
-			v1alpha2.SchemeGroupVersion.WithKind("ClusterClaim"),
-			func() *v1alpha2.ClusterClaim { return &v1alpha2.ClusterClaim{} },
-			func() *v1alpha2.ClusterClaimList { return &v1alpha2.ClusterClaimList{} },
-			func(dst, src *v1alpha2.ClusterClaimList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha2.ClusterClaimList) []*v1alpha2.ClusterClaim {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha2.ClusterClaimList, items []*v1alpha2.ClusterClaim) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(multiclusterv1alpha2.ClusterClaimInterface)
 }

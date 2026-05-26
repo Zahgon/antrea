@@ -40,28 +40,19 @@ var (
 )
 
 // NewREST returns a REST object that will work against API services.
-func NewREST(c statsCollector) *REST {
-	return &REST{c}
-}
+func NewREST(c statsCollector) *REST { _ = "STUB: not implemented"; return nil }
 
-func (r *REST) New() runtime.Object {
-	return &controlplane.NodeStatsSummary{}
-}
+func (r *REST) New() runtime.Object { _ = "STUB: not implemented"; return *new(runtime.Object) }
 
-func (r *REST) Destroy() {
-}
+func (r *REST) Destroy() { _ = "STUB: not implemented"; return }
 
 func (r *REST) Create(ctx context.Context, obj runtime.Object, createValidation rest.ValidateObjectFunc, options *v1.CreateOptions) (runtime.Object, error) {
-	summary := obj.(*controlplane.NodeStatsSummary)
-	r.statsCollector.Collect(summary)
-	// a valid runtime.Object must be returned, otherwise the client would throw error.
-	return &controlplane.NodeStatsSummary{}, nil
+	_ = "STUB: not implemented"
+	return *new(runtime.Object), nil
 }
 
-func (r *REST) NamespaceScoped() bool {
-	return false
-}
+// a valid runtime.Object must be returned, otherwise the client would throw error.
 
-func (r *REST) GetSingularName() string {
-	return "nodestatssummary"
-}
+func (r *REST) NamespaceScoped() bool { _ = "STUB: not implemented"; return false }
+
+func (r *REST) GetSingularName() string { _ = "STUB: not implemented"; return "" }

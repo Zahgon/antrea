@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	ipam "antrea.io/antrea/v2/pkg/agent/cniserver/ipam"
 	types "antrea.io/antrea/v2/pkg/agent/cniserver/types"
 	invoke "github.com/containernetworking/cni/pkg/invoke"
@@ -47,58 +45,49 @@ type MockIPAMDriverMockRecorder struct {
 
 // NewMockIPAMDriver creates a new mock instance.
 func NewMockIPAMDriver(ctrl *gomock.Controller) *MockIPAMDriver {
-	mock := &MockIPAMDriver{ctrl: ctrl}
-	mock.recorder = &MockIPAMDriverMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockIPAMDriver) EXPECT() *MockIPAMDriverMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// Add mocks base method.
+	return nil
 }
 
-// Add mocks base method.
 func (m *MockIPAMDriver) Add(args *invoke.Args, k8sArgs *types.K8sArgs, networkConfig []byte) (bool, *ipam.IPAMResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Add", args, k8sArgs, networkConfig)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(*ipam.IPAMResult)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	_ = "STUB: not implemented"
+	return false, nil, nil
 }
 
 // Add indicates an expected call of Add.
 func (mr *MockIPAMDriverMockRecorder) Add(args, k8sArgs, networkConfig any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockIPAMDriver)(nil).Add), args, k8sArgs, networkConfig)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Check mocks base method.
 func (m *MockIPAMDriver) Check(args *invoke.Args, k8sArgs *types.K8sArgs, networkConfig []byte) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Check", args, k8sArgs, networkConfig)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
 // Check indicates an expected call of Check.
 func (mr *MockIPAMDriverMockRecorder) Check(args, k8sArgs, networkConfig any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Check", reflect.TypeOf((*MockIPAMDriver)(nil).Check), args, k8sArgs, networkConfig)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Del mocks base method.
 func (m *MockIPAMDriver) Del(args *invoke.Args, k8sArgs *types.K8sArgs, networkConfig []byte) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Del", args, k8sArgs, networkConfig)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
 // Del indicates an expected call of Del.
 func (mr *MockIPAMDriverMockRecorder) Del(args, k8sArgs, networkConfig any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Del", reflect.TypeOf((*MockIPAMDriver)(nil).Del), args, k8sArgs, networkConfig)
+	_ = "STUB: not implemented"
+	return nil
 }

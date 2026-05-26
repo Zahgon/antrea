@@ -15,14 +15,10 @@
 package externalnode
 
 import (
-	"crypto/sha1" // #nosec G505: not used for security purposes
-	"encoding/hex"
-	"fmt"
-	"io"
+	// #nosec G505: not used for security purposes
 
 	"antrea.io/antrea/v2/pkg/apis/crd/v1alpha1"
 	"antrea.io/antrea/v2/pkg/apis/crd/v1alpha2"
-	"antrea.io/antrea/v2/pkg/util/k8s"
 )
 
 const (
@@ -32,34 +28,18 @@ const (
 )
 
 func GenExternalEntityName(externalNode *v1alpha1.ExternalNode) (string, error) {
-	if len(externalNode.Spec.Interfaces) == 0 {
-		// This should not happen since openAPIV3Schema checks it.
-		return "", fmt.Errorf("failed to get interface from ExternalNode %s", externalNode.Name)
-	}
-	// Only one network interface is supported now.
-	// Other interfaces except interfaces[0] will be ignored if there are more than one interfaces.
-	ifName := externalNode.Spec.Interfaces[0].Name
-	if ifName == "" {
-		return externalNode.Name, nil
-	} else {
-		hash := sha1.New() // #nosec G401: not used for security purposes
-		io.WriteString(hash, ifName)
-		hashedIfName := hex.EncodeToString(hash.Sum(nil))
-		return externalNode.Name + "-" + hashedIfName[:interfaceNameLength], nil
-	}
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
+// This should not happen since openAPIV3Schema checks it.
+
+// Only one network interface is supported now.
+// Other interfaces except interfaces[0] will be ignored if there are more than one interfaces.
+
+// #nosec G401: not used for security purposes
+
 func GenerateEntityNodeKey(externalEntity *v1alpha2.ExternalEntity) string {
-	if externalEntity.Spec.ExternalNode == "" {
-		return ""
-	}
-	entityNodeKey := externalEntity.Spec.ExternalNode
-	if len(externalEntity.OwnerReferences) == 0 {
-		return entityNodeKey
-	}
-	ownerRef := externalEntity.OwnerReferences[0]
-	if ownerRef.Kind == EntityOwnerKind {
-		entityNodeKey = k8s.NamespacedName(externalEntity.Namespace, entityNodeKey)
-	}
-	return entityNodeKey
+	_ = "STUB: not implemented"
+	return ""
 }

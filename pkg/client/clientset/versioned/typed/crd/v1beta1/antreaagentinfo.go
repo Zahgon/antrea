@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	crdv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -53,14 +52,6 @@ type antreaAgentInfos struct {
 
 // newAntreaAgentInfos returns a AntreaAgentInfos
 func newAntreaAgentInfos(c *CrdV1beta1Client) *antreaAgentInfos {
-	return &antreaAgentInfos{
-		gentype.NewClientWithList[*crdv1beta1.AntreaAgentInfo, *crdv1beta1.AntreaAgentInfoList](
-			"antreaagentinfos",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *crdv1beta1.AntreaAgentInfo { return &crdv1beta1.AntreaAgentInfo{} },
-			func() *crdv1beta1.AntreaAgentInfoList { return &crdv1beta1.AntreaAgentInfoList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

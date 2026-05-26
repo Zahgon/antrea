@@ -19,195 +19,69 @@ package portcache
 
 import (
 	"context"
-	"fmt"
-	"math"
-	"time"
-
-	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/nodeportlocal/rules"
 )
 
 func openSocketsForPort(localPortOpener LocalPortOpener, port int, protocol string, isIPv6 bool) (ProtocolSocketData, error) {
+	_ = "STUB: not implemented"
 	// Port only needs to be available for the protocol used by the NPL rule.
 	// We don't need to allocate the same nodePort for all protocols anymore.
-	socket, err := localPortOpener.OpenLocalPort(port, protocol, isIPv6)
-	if err != nil {
-		klog.V(4).InfoS("Local port cannot be opened", "port", port, "protocol", protocol, "ipv6", isIPv6)
-		return ProtocolSocketData{}, err
-	}
-	protocolData := ProtocolSocketData{
-		Protocol: protocol,
-		socket:   socket,
-	}
-	return protocolData, nil
+	return *new(ProtocolSocketData), nil
 }
 
 func (pt *PortTable) getFreePort(podIP string, podPort int, protocol string) (int, ProtocolSocketData, error) {
-	klog.V(2).InfoS("Looking for free Node port", "podIP", podIP, "podPort", podPort, "ipv6", pt.IsIPv6)
-	numPorts := pt.EndPort - pt.StartPort + 1
-	for i := 0; i < numPorts; i++ {
-		port := pt.PortSearchStart + i
-		if port > pt.EndPort {
-			// handle wrap around
-			port = port - numPorts
-		}
-		if _, ok := pt.getPortTableCacheFromNodePortIndex(NodePortProtoFormat(port, protocol)); ok {
-			// port is already taken
-			continue
-		}
-
-		protocolData, err := openSocketsForPort(pt.LocalPortOpener, port, protocol, pt.IsIPv6)
-		if err != nil {
-			klog.V(4).InfoS("Port cannot be reserved, moving on to the next one", "port", port, "ipv6", pt.IsIPv6)
-			continue
-		}
-
-		pt.PortSearchStart = port + 1
-		if pt.PortSearchStart > pt.EndPort {
-			pt.PortSearchStart = pt.StartPort
-		}
-		return port, protocolData, nil
-	}
-	return 0, ProtocolSocketData{}, fmt.Errorf("no free port found")
+	_ = "STUB: not implemented"
+	return 0, *new(ProtocolSocketData), nil
 }
+
+// handle wrap around
+
+// port is already taken
 
 func (pt *PortTable) AddRule(podKey string, podPort int, protocol string, podIP string) (int, error) {
-	pt.tableLock.Lock()
-	defer pt.tableLock.Unlock()
-	npData := pt.getEntryByPodKeyPortProto(podKey, podPort, protocol)
-	exists := (npData != nil)
-	if !exists {
-		nodePort, protocolData, err := pt.getFreePort(podIP, podPort, protocol)
-		if err != nil {
-			return 0, err
-		}
-		npData = &NodePortData{
-			PodKey:   podKey,
-			NodePort: nodePort,
-			PodIP:    podIP,
-			PodPort:  podPort,
-			Protocol: protocolData,
-		}
-		nodePort = npData.NodePort
-		if err := pt.PodPortRules.AddRule(nodePort, podIP, podPort, protocol); err != nil {
-			return 0, err
-		}
-		pt.addPortTableCache(npData)
-	} else {
-		// Only add rules if the entry does not exist.
-		return 0, fmt.Errorf("existing Linux Nodeport entry for %s:%d:%s", podIP, podPort, protocol)
-	}
-	return npData.NodePort, nil
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-func (pt *PortTable) deleteRule(data *NodePortData) error {
-	protocolSocketData := &data.Protocol
-	protocol := protocolSocketData.Protocol
+// Only add rules if the entry does not exist.
 
-	// In theory, we should not be modifying a cache item in-place. However, the field we are
-	// modifying (defunct) does NOT participate in indexing and the modification is thread-safe
-	// because of pt.tableLock.
-	// TODO: stop modifying cache items in-place.
-	// We could set defunct after the call to DeleteRule, because a failed call to DeleteRule
-	// should mean that the rule is still present and valid, but there is no harm in being more
-	// conservative.
-	data.defunct = true
+func (pt *PortTable) deleteRule(data *NodePortData) error { _ = "STUB: not implemented"; return nil }
 
-	// Calling DeleteRule is idempotent.
-	if err := pt.PodPortRules.DeleteRule(data.NodePort, data.PodIP, data.PodPort, protocol); err != nil {
-		return err
-	}
-	if err := protocolSocketData.socket.Close(); err != nil {
-		return fmt.Errorf("error when releasing local port %d with protocol %s: %w", data.NodePort, protocol, err)
-	}
-	// We don't need to delete cache from different indexes repeatedly because they map to the same entry.
-	// Deletion errors are not possible because our Index functions cannot return errors.
-	// See https://github.com/kubernetes/client-go/blob/3aa45779f2e5592d52edf68da66abfbd0805e413/tools/cache/store.go#L189-L196
-	pt.deletePortTableCache(data)
-	return nil
-}
+// In theory, we should not be modifying a cache item in-place. However, the field we are
+// modifying (defunct) does NOT participate in indexing and the modification is thread-safe
+// because of pt.tableLock.
+// TODO: stop modifying cache items in-place.
+// We could set defunct after the call to DeleteRule, because a failed call to DeleteRule
+// should mean that the rule is still present and valid, but there is no harm in being more
+// conservative.
+
+// Calling DeleteRule is idempotent.
+
+// We don't need to delete cache from different indexes repeatedly because they map to the same entry.
+// Deletion errors are not possible because our Index functions cannot return errors.
+// See https://github.com/kubernetes/client-go/blob/3aa45779f2e5592d52edf68da66abfbd0805e413/tools/cache/store.go#L189-L196
 
 func (pt *PortTable) DeleteRule(podKey string, podPort int, protocol string) error {
-	pt.tableLock.Lock()
-	defer pt.tableLock.Unlock()
-	data := pt.getEntryByPodKeyPortProto(podKey, podPort, protocol)
-	if data == nil {
-		// Delete not required when the PortTable entry does not exist
-		return nil
-	}
-	return pt.deleteRule(data)
-}
-
-// syncRules ensures that contents of the port table matches the iptables rules present on the Node.
-func (pt *PortTable) syncRules() error {
-	pt.tableLock.Lock()
-	defer pt.tableLock.Unlock()
-	objs := pt.PortTableCache.List()
-	nplPorts := make([]rules.PodNodePort, 0, len(objs))
-	for _, obj := range objs {
-		npData := obj.(*NodePortData)
-		nplPorts = append(nplPorts, rules.PodNodePort{
-			PodKey:   npData.PodKey,
-			NodePort: npData.NodePort,
-			PodPort:  npData.PodPort,
-			PodIP:    npData.PodIP,
-			Protocol: npData.Protocol.Protocol,
-		})
-	}
-	if err := pt.PodPortRules.AddAllRules(nplPorts); err != nil {
-		return err
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// Delete not required when the PortTable entry does not exist
+
+// syncRules ensures that contents of the port table matches the iptables rules present on the Node.
+func (pt *PortTable) syncRules() error { _ = "STUB: not implemented"; return nil }
 
 // RestoreRules should be called at Antrea Agent startup to restore a set of NPL rules. It is
 // blocking and no other operations should be performed on the PortTable until the function returns.
 func (pt *PortTable) RestoreRules(ctx context.Context, allNPLPorts []rules.PodNodePort) {
-	func() {
-		pt.tableLock.Lock()
-		defer pt.tableLock.Unlock()
-		for _, nplPort := range allNPLPorts {
-			protocolData, err := openSocketsForPort(pt.LocalPortOpener, nplPort.NodePort, nplPort.Protocol, pt.IsIPv6)
-			if err != nil {
-				// This will be handled gracefully by the NPL controller: if there is an
-				// annotation using this port, it will be removed and replaced with a new
-				// one with a valid port mapping.
-				klog.ErrorS(err, "Cannot bind to local port, skipping it", "port", nplPort.NodePort, "ipv6", pt.IsIPv6)
-				continue
-			}
-
-			npData := &NodePortData{
-				PodKey:   nplPort.PodKey,
-				NodePort: nplPort.NodePort,
-				PodPort:  nplPort.PodPort,
-				PodIP:    nplPort.PodIP,
-				Protocol: protocolData,
-			}
-			pt.addPortTableCache(npData)
-		}
-	}()
-	// retry mechanism as iptables-restore can fail if other components (in Antrea or other
-	// software) are accessing iptables.
-	backoff := wait.Backoff{
-		Steps:    math.MaxInt32,
-		Jitter:   0.1,
-		Factor:   1.5,
-		Duration: 1 * time.Second,
-		Cap:      5 * time.Second,
-	}
-	for {
-		if err := pt.syncRules(); err != nil {
-			delay := backoff.Step()
-			klog.ErrorS(err, "Failed to restore iptables rules, will retry with backoff", "delay", delay)
-			select {
-			case <-time.After(delay):
-				continue
-			case <-ctx.Done():
-				return
-			}
-		}
-		break
-	}
+	_ = "STUB: not implemented"
+	return
 }
+
+// This will be handled gracefully by the NPL controller: if there is an
+// annotation using this port, it will be removed and replaced with a new
+// one with a valid port mapping.
+
+// retry mechanism as iptables-restore can fail if other components (in Antrea or other
+// software) are accessing iptables.

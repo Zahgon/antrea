@@ -18,13 +18,7 @@
 package winfirewall
 
 import (
-	"fmt"
 	"net"
-	"strings"
-
-	"k8s.io/klog/v2"
-
-	ps "antrea.io/antrea/v2/pkg/agent/util/powershell"
 )
 
 type FWRuleDirection string
@@ -65,112 +59,41 @@ type winFirewallRule struct {
 }
 
 // add adds Firewall rule on the Windows host. The name and display name of the firewall rule are the same.
-func (r *winFirewallRule) add() error {
-	cmd := fmt.Sprintf("New-NetFirewallRule -Enabled True -Group %s %s", fwRuleGroup, r.getCommandString())
-	_, err := ps.RunCommand(cmd)
-	return err
-}
+func (r *winFirewallRule) add() error { _ = "STUB: not implemented"; return nil }
 
-func (r *winFirewallRule) getCommandString() string {
-	cmd := fmt.Sprintf("-Name '%s' -DisplayName '%s' -Direction %s -Action %s -Protocol %s", r.name, r.name, r.direction, r.action, r.protocol)
-	if r.localAddress != nil {
-		cmd = fmt.Sprintf("%s -LocalAddress %s", cmd, r.localAddress.String())
-	}
-	if r.remoteAddress != nil {
-		cmd = fmt.Sprintf("%s -RemoteAddress %s", cmd, r.remoteAddress.String())
-	}
-	if len(r.localPorts) > 0 {
-		cmd = fmt.Sprintf("%s -LocalPort %s", cmd, getPortsString(r.localPorts))
-	}
-	if len(r.remotePorts) > 0 {
-		cmd = fmt.Sprintf("%s -RemotePort %s", cmd, getPortsString(r.remotePorts))
-	}
-	return cmd
-}
+func (r *winFirewallRule) getCommandString() string { _ = "STUB: not implemented"; return "" }
 
-func getPortsString(ports []uint16) string {
-	portStr := []string{}
-	for _, port := range ports {
-		portStr = append(portStr, fmt.Sprintf("%d", port))
-	}
-	return strings.Join(portStr, ",")
-}
+func getPortsString(ports []uint16) string { _ = "STUB: not implemented"; return "" }
 
 type Client struct {
 }
 
 // AddRuleAllowIP adds Windows firewall rule to accept IP packets
 func (c *Client) AddRuleAllowIP(name string, direction FWRuleDirection, ipNet *net.IPNet) error {
-	return c.addIPRule(name, direction, ipNet, fwRuleAllow)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddRuleBlockIP adds Windows firewall rule to block IP packets
 func (c *Client) AddRuleBlockIP(name string, direction FWRuleDirection, ipNet *net.IPNet) error {
-	return c.addIPRule(name, direction, ipNet, fwRuleDeny)
-}
-
-func (c *Client) FirewallRuleExists(name string) (bool, error) {
-	cmd := fmt.Sprintf("Get-NetfirewallRule -DisplayName '%s'", name)
-	result, err := ps.RunCommand(cmd)
-	if err != nil {
-		if strings.Contains(err.Error(), "No MSFT_NetFirewallRule objects found") {
-			return false, nil
-		}
-		return false, err
-	}
-	return result != "", nil
-}
-
-func checkDeletionError(err error) error {
-	if err == nil {
-		return nil
-	}
-	if strings.Contains(err.Error(), "No MSFT_NetFirewallRule objects found") {
-		return nil
-	}
-	return err
-}
-
-func (c *Client) DelFirewallRuleByName(name string) error {
-	cmd := fmt.Sprintf("Remove-NetFirewallRule -DisplayName '%s'", name)
-	_, err := ps.RunCommand(cmd)
-	return checkDeletionError(err)
-}
-
-func (c *Client) DelAllFirewallRules() error {
-	cmd := fmt.Sprintf("Remove-NetFirewallRule -Group '%s'", fwRuleGroup)
-	_, err := ps.RunCommand(cmd)
-	return checkDeletionError(err)
-}
-
-func (c *Client) addIPRule(name string, direction FWRuleDirection, ipNet *net.IPNet, action fwRuleAction) error {
-	exist, err := c.FirewallRuleExists(name)
-	if err != nil {
-		return err
-	}
-	if exist {
-		return nil
-	}
-	rule := &winFirewallRule{
-		name:      name,
-		action:    fwRuleAllow,
-		direction: direction,
-		protocol:  fwRuleIPProtocol,
-	}
-	switch direction {
-	case FWRuleIn:
-		rule.remoteAddress = ipNet
-	case FWRuleOut:
-		rule.localAddress = ipNet
-	}
-	if err := rule.add(); err != nil {
-		klog.Errorf("Failed to add firewall rule %s", rule.getCommandString())
-		return err
-	}
-	klog.V(2).Infof("Added firewall rule %s", rule.getCommandString())
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func NewClient() *Client {
-	return &Client{}
+func (c *Client) FirewallRuleExists(name string) (bool, error) {
+	_ = "STUB: not implemented"
+	return false, nil
 }
+
+func checkDeletionError(err error) error { _ = "STUB: not implemented"; return nil }
+
+func (c *Client) DelFirewallRuleByName(name string) error { _ = "STUB: not implemented"; return nil }
+
+func (c *Client) DelAllFirewallRules() error { _ = "STUB: not implemented"; return nil }
+
+func (c *Client) addIPRule(name string, direction FWRuleDirection, ipNet *net.IPNet, action fwRuleAction) error {
+	_ = "STUB: not implemented"
+	return nil
+}
+
+func NewClient() *Client { _ = "STUB: not implemented"; return nil }

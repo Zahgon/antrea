@@ -16,7 +16,6 @@ package openflow
 
 import (
 	"antrea.io/libOpenflow/openflow15"
-	"antrea.io/libOpenflow/util"
 	"antrea.io/ofnet/ofctrl"
 )
 
@@ -25,59 +24,28 @@ type ofMeter struct {
 	bridge *OFBridge
 }
 
-func (m *ofMeter) Reset() {
-	m.ofctrl.Switch = m.bridge.ofSwitch
-}
+func (m *ofMeter) Reset() { _ = "STUB: not implemented"; return }
 
 // Note: use OFSwitch to directly send MeterModification message rather than bundle message is because the
 // current ofnet implementation for OpenFlow bundle does not support adding MeterModification.
-func (m *ofMeter) Add() error {
-	msg := m.ofctrl.GetBundleMessage(openflow15.MC_ADD)
-	return m.ofctrl.Switch.Send(msg.GetMessage())
-}
+func (m *ofMeter) Add() error { _ = "STUB: not implemented"; return nil }
 
-func (m *ofMeter) Modify() error {
-	msg := m.ofctrl.GetBundleMessage(openflow15.MC_MODIFY)
-	return m.ofctrl.Switch.Send(msg.GetMessage())
-}
+func (m *ofMeter) Modify() error { _ = "STUB: not implemented"; return nil }
 
-func (m *ofMeter) Delete() error {
-	meterMod := openflow15.NewMeterMod()
-	meterMod.MeterId = m.ofctrl.ID
-	meterMod.Command = openflow15.MC_DELETE
-	return m.ofctrl.Switch.Send(meterMod)
-}
+func (m *ofMeter) Delete() error { _ = "STUB: not implemented"; return nil }
 
-func (m *ofMeter) Type() EntryType {
-	return MeterEntry
-}
+func (m *ofMeter) Type() EntryType { _ = "STUB: not implemented"; return *new(EntryType) }
 
 func (m *ofMeter) GetBundleMessages(entryOper OFOperation) ([]ofctrl.OpenFlowModMessage, error) {
-	var operation int
-	switch entryOper {
-	case AddMessage:
-		operation = openflow15.MC_ADD
-	case ModifyMessage:
-		operation = openflow15.MC_MODIFY
-	case DeleteMessage:
-		operation = openflow15.MC_DELETE
-	}
-	message := m.ofctrl.GetBundleMessage(operation)
-	return []ofctrl.OpenFlowModMessage{message}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func (m *ofMeter) ResetMeterBands() Meter {
-	m.ofctrl.MeterBands = nil
-	return m
-}
+func (m *ofMeter) ResetMeterBands() Meter { _ = "STUB: not implemented"; return *new(Meter) }
 
 func (m *ofMeter) MeterBand() MeterBandBuilder {
-	return &meterBandBuilder{
-		meter:           m,
-		meterBandHeader: openflow15.NewMeterBandHeader(),
-		prevLevel:       0,
-		experimenter:    0,
-	}
+	_ = "STUB: not implemented"
+	return *new(MeterBandBuilder)
 }
 
 type meterBandBuilder struct {
@@ -88,48 +56,28 @@ type meterBandBuilder struct {
 }
 
 func (m *meterBandBuilder) MeterType(meterType ofctrl.MeterType) MeterBandBuilder {
-	m.meterBandHeader.Type = uint16(meterType)
-	return m
+	_ = "STUB: not implemented"
+	return *new(MeterBandBuilder)
 }
 
 func (m *meterBandBuilder) Rate(rate uint32) MeterBandBuilder {
-	m.meterBandHeader.Rate = rate
-	return m
+	_ = "STUB: not implemented"
+	return *new(MeterBandBuilder)
 }
 
 func (m *meterBandBuilder) Burst(burst uint32) MeterBandBuilder {
-	m.meterBandHeader.BurstSize = burst
-	return m
+	_ = "STUB: not implemented"
+	return *new(MeterBandBuilder)
 }
 
 func (m *meterBandBuilder) PrecLevel(precLevel uint8) MeterBandBuilder {
-	m.prevLevel = precLevel
-	return m
+	_ = "STUB: not implemented"
+	return *new(MeterBandBuilder)
 }
 
 func (m *meterBandBuilder) Experimenter(experimenter uint32) MeterBandBuilder {
-	m.experimenter = experimenter
-	return m
+	_ = "STUB: not implemented"
+	return *new(MeterBandBuilder)
 }
 
-func (m *meterBandBuilder) Done() Meter {
-	var mb util.Message
-	switch m.meterBandHeader.Type {
-	case uint16(ofctrl.MeterDrop):
-		mbDrop := new(openflow15.MeterBandDrop)
-		mbDrop.MeterBandHeader = *m.meterBandHeader
-		mb = mbDrop
-	case uint16(ofctrl.MeterDSCPRemark):
-		mbDscp := new(openflow15.MeterBandDSCP)
-		mbDscp.MeterBandHeader = *m.meterBandHeader
-		mbDscp.PrecLevel = m.prevLevel
-		mb = mbDscp
-	case uint16(ofctrl.MeterExperimenter):
-		mbExp := new(openflow15.MeterBandExperimenter)
-		mbExp.MeterBandHeader = *m.meterBandHeader
-		mbExp.Experimenter = m.experimenter
-		mb = mbExp
-	}
-	m.meter.ofctrl.AddMeterBand(&mb)
-	return m.meter
-}
+func (m *meterBandBuilder) Done() Meter { _ = "STUB: not implemented"; return *new(Meter) }

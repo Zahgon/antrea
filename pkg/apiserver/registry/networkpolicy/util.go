@@ -22,14 +22,6 @@ import (
 
 // GetSelectors extracts label selector, field selector, and key selector from the provided options.
 func GetSelectors(options *internalversion.ListOptions) (string, labels.Selector, fields.Selector) {
-	label := labels.Everything()
-	if options != nil && options.LabelSelector != nil {
-		label = options.LabelSelector
-	}
-	field := fields.Everything()
-	if options != nil && options.FieldSelector != nil {
-		field = options.FieldSelector
-	}
-	key, _ := field.RequiresExactMatch("metadata.name")
-	return key, label, field
+	_ = "STUB: not implemented"
+	return "", *new(labels.Selector), *new(fields.Selector)
 }

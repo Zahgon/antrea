@@ -15,10 +15,7 @@
 package log
 
 import (
-	"fmt"
-
 	"github.com/spf13/pflag"
-	"k8s.io/klog/v2"
 )
 
 const logVerbosityFlag = "v"
@@ -30,47 +27,15 @@ type logLevelManager struct {
 
 var logLevelMgr = &logLevelManager{}
 
-func (m *logLevelManager) getCurrentLogLevel() string {
-	if m.flag == nil {
-		return "UNKNOWN"
-	}
-	return m.flag.Value.String()
-}
+func (m *logLevelManager) getCurrentLogLevel() string { _ = "STUB: not implemented"; return "" }
 
-func (m *logLevelManager) setLogLevel(level string) error {
-	if m.flag == nil {
-		return fmt.Errorf("verbosity flag is unknown")
-	}
-	oldLevel := m.getCurrentLogLevel()
-	if oldLevel == level {
-		return nil
-	}
+func (m *logLevelManager) setLogLevel(level string) error { _ = "STUB: not implemented"; return nil }
 
-	var l klog.Level
-	err := l.Set(level)
-	if err != nil {
-		return err
-	}
-	klog.InfoS("Changed log level", "from", oldLevel, "to", level)
-	return nil
-
-}
-
-func initLogLevelManager(fs *pflag.FlagSet) {
-	flag := fs.Lookup(logVerbosityFlag)
-	if flag == nil {
-		klog.ErrorS(nil, "Failed to lookup verbosity flag", "flag", logVerbosityFlag)
-	}
-	logLevelMgr.flag = flag
-}
+func initLogLevelManager(fs *pflag.FlagSet) { _ = "STUB: not implemented"; return }
 
 // GetCurrentLogLevel returns the current log verbosity level.
-func GetCurrentLogLevel() string {
-	return logLevelMgr.getCurrentLogLevel()
-}
+func GetCurrentLogLevel() string { _ = "STUB: not implemented"; return "" }
 
 // SetLogLevel sets the log verbosity level. level must be a string
 // representation of a decimal integer.
-func SetLogLevel(level string) error {
-	return logLevelMgr.setLogLevel(level)
-}
+func SetLogLevel(level string) error { _ = "STUB: not implemented"; return nil }

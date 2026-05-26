@@ -15,12 +15,9 @@
 package nodeip
 
 import (
-	"net"
-	"reflect"
 	"sync"
 
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/client-go/tools/cache"
 
 	coreinformers "k8s.io/client-go/informers/core/v1"
 )
@@ -38,85 +35,23 @@ type Tracker struct {
 }
 
 func NewTracker(nodeInformer coreinformers.NodeInformer) *Tracker {
-	tracker := &Tracker{
-		nodeInformer: nodeInformer,
-		nodeIPs:      map[string]string{},
-	}
-	nodeInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
-		AddFunc:    tracker.OnNodeAdd,
-		UpdateFunc: tracker.OnNodeUpdate,
-		DeleteFunc: tracker.OnNodeDelete,
-	})
-	return tracker
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (t *Tracker) OnNodeAdd(obj interface{}) {
-	node := obj.(*corev1.Node)
-	t.mutex.Lock()
-	defer t.mutex.Unlock()
-	t.addNodeIPs(node)
-}
+func (t *Tracker) OnNodeAdd(obj interface{}) { _ = "STUB: not implemented"; return }
 
-func (t *Tracker) OnNodeUpdate(oldObj, obj interface{}) {
-	oldNode := oldObj.(*corev1.Node)
-	node := obj.(*corev1.Node)
-	if reflect.DeepEqual(oldNode.Status.Addresses, node.Status.Addresses) {
-		return
-	}
-	t.mutex.Lock()
-	defer t.mutex.Unlock()
-	t.deleteNodeIPs(oldNode)
-	t.addNodeIPs(node)
-}
+func (t *Tracker) OnNodeUpdate(oldObj, obj interface{}) { _ = "STUB: not implemented"; return }
 
-func (t *Tracker) OnNodeDelete(obj interface{}) {
-	node, ok := obj.(*corev1.Node)
-	if !ok {
-		// When the informer's watch connection is interrupted and re-established,
-		// delete events are delivered as cache.DeletedFinalStateUnknown tombstones.
-		tombstone, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			return
-		}
-		node, ok = tombstone.Obj.(*corev1.Node)
-		if !ok {
-			return
-		}
-	}
-	t.mutex.Lock()
-	defer t.mutex.Unlock()
-	t.deleteNodeIPs(node)
-}
+func (t *Tracker) OnNodeDelete(obj interface{}) { _ = "STUB: not implemented"; return }
 
-func (t *Tracker) addNodeIPs(node *corev1.Node) {
-	for _, addr := range node.Status.Addresses {
-		if addr.Type == corev1.NodeInternalIP || addr.Type == corev1.NodeExternalIP {
-			if net.ParseIP(addr.Address) != nil {
-				t.nodeIPs[addr.Address] = node.Name
-			}
-		}
-	}
-}
+// When the informer's watch connection is interrupted and re-established,
+// delete events are delivered as cache.DeletedFinalStateUnknown tombstones.
 
-func (t *Tracker) deleteNodeIPs(node *corev1.Node) {
-	for _, addr := range node.Status.Addresses {
-		if addr.Type == corev1.NodeInternalIP || addr.Type == corev1.NodeExternalIP {
-			if net.ParseIP(addr.Address) != nil {
-				if t.nodeIPs[addr.Address] == node.Name {
-					delete(t.nodeIPs, addr.Address)
-				}
-			}
-		}
-	}
-}
+func (t *Tracker) addNodeIPs(node *corev1.Node) { _ = "STUB: not implemented"; return }
 
-func (t *Tracker) IsNodeIP(ip string) bool {
-	t.mutex.RLock()
-	defer t.mutex.RUnlock()
-	_, exists := t.nodeIPs[ip]
-	return exists
-}
+func (t *Tracker) deleteNodeIPs(node *corev1.Node) { _ = "STUB: not implemented"; return }
 
-func (t *Tracker) HasSynced() bool {
-	return t.nodeInformer.Informer().HasSynced()
-}
+func (t *Tracker) IsNodeIP(ip string) bool { _ = "STUB: not implemented"; return false }
+
+func (t *Tracker) HasSynced() bool { _ = "STUB: not implemented"; return false }

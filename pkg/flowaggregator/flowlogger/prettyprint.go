@@ -14,42 +14,8 @@
 
 package flowlogger
 
-import (
-	"github.com/vmware/go-ipfix/pkg/registry"
+func PrettyPrintRuleAction(action uint8) string { _ = "STUB: not implemented"; return "" }
 
-	"antrea.io/antrea/v2/pkg/util/ip"
-)
+func PrettyPrintPolicyType(policyType uint8) string { _ = "STUB: not implemented"; return "" }
 
-func PrettyPrintRuleAction(action uint8) string {
-	switch action {
-	case registry.NetworkPolicyRuleActionNoAction:
-		return ""
-	case registry.NetworkPolicyRuleActionAllow:
-		return "Allow"
-	case registry.NetworkPolicyRuleActionDrop:
-		return "Drop"
-	case registry.NetworkPolicyRuleActionReject:
-		return "Reject"
-	default:
-		return "Invalid"
-	}
-}
-
-func PrettyPrintPolicyType(policyType uint8) string {
-	switch policyType {
-	case 0:
-		return ""
-	case registry.PolicyTypeK8sNetworkPolicy:
-		return "K8sNetworkPolicy"
-	case registry.PolicyTypeAntreaNetworkPolicy:
-		return "AntreaNetworkPolicy"
-	case registry.PolicyTypeAntreaClusterNetworkPolicy:
-		return "AntreaClusterNetworkPolicy"
-	default:
-		return "Invalid"
-	}
-}
-
-func PrettyPrintProtocolIdentifier(protocolID uint8) string {
-	return ip.IPProtocolNumberToString(protocolID, "Unknown Protocol")
-}
+func PrettyPrintProtocolIdentifier(protocolID uint8) string { _ = "STUB: not implemented"; return "" }

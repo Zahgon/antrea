@@ -16,28 +16,15 @@ package client
 
 import (
 	"context"
-	"fmt"
 	"net/url"
-	"reflect"
 	"sync/atomic"
 	"time"
 
-	corev1 "k8s.io/api/core/v1"
-	discoveryv1 "k8s.io/api/discovery/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/fields"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apiserver/pkg/util/proxy"
-	corev1informers "k8s.io/client-go/informers/core/v1"
-	discoveryv1informers "k8s.io/client-go/informers/discovery/v1"
 	"k8s.io/client-go/kubernetes"
 	corev1listers "k8s.io/client-go/listers/core/v1"
-	discoveryv1listers "k8s.io/client-go/listers/discovery/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
-	"k8s.io/klog/v2"
 )
 
 const (
@@ -85,207 +72,49 @@ type EndpointResolver struct {
 }
 
 func NewEndpointResolver(kubeClient kubernetes.Interface, namespace, serviceName string, servicePort int32) *EndpointResolver {
-	key := namespace + "/" + serviceName
-	controllerName := fmt.Sprintf("ServiceEndpointResolver:%s", key)
-
-	// We only need a specific Service and corresponding EndpointSlices, so we create
-	// filtered informers directly without factories for better efficiency.
-	serviceInformer := corev1informers.NewFilteredServiceInformer(
-		kubeClient,
-		namespace,
-		informerDefaultResync,
-		cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
-		func(listOptions *metav1.ListOptions) {
-			listOptions.FieldSelector = fields.OneTermEqualSelector("metadata.name", serviceName).String()
-		},
-	)
-	endpointSliceInformer := discoveryv1informers.NewFilteredEndpointSliceInformer(
-		kubeClient,
-		namespace,
-		informerDefaultResync,
-		cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
-		func(listOptions *metav1.ListOptions) {
-			listOptions.LabelSelector = labels.SelectorFromSet(labels.Set{discoveryv1.LabelServiceName: serviceName}).String()
-		},
-	)
-
-	serviceLister := corev1listers.NewServiceLister(serviceInformer.GetIndexer())
-	endpointSliceLister := discoveryv1listers.NewEndpointSliceLister(endpointSliceInformer.GetIndexer())
-	// Create an EndpointSliceGetter from the lister for use with proxy.ResolveEndpoint
-	endpointSliceGetter, _ := proxy.NewEndpointSliceListerGetter(endpointSliceLister)
-
-	resolver := &EndpointResolver{
-		name:                      controllerName,
-		namespace:                 namespace,
-		serviceName:               serviceName,
-		servicePort:               servicePort,
-		serviceInformer:           serviceInformer,
-		endpointSliceInformer:     endpointSliceInformer,
-		serviceLister:             serviceLister,
-		serviceListerSynced:       serviceInformer.HasSynced,
-		endpointSliceGetter:       endpointSliceGetter,
-		endpointSliceListerSynced: endpointSliceInformer.HasSynced,
-		queue: workqueue.NewTypedRateLimitingQueueWithConfig(
-			workqueue.NewTypedItemExponentialFailureRateLimiter[string](minRetryDelay, maxRetryDelay),
-			workqueue.TypedRateLimitingQueueConfig[string]{
-				Name: controllerName,
-			},
-		),
-	}
-
-	serviceInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
-		AddFunc: func(obj interface{}) {
-			resolver.queue.Add(key)
-		},
-		UpdateFunc: func(oldObj, newObj interface{}) {
-			// This should not happen: both objects should be Services in the
-			// update event handler.
-			oldSvc, ok := oldObj.(*corev1.Service)
-			if !ok {
-				return
-			}
-			newSvc, ok := newObj.(*corev1.Service)
-			if !ok {
-				return
-			}
-			// Ignore changes to metadata or status.
-			if reflect.DeepEqual(newSvc.Spec, oldSvc.Spec) {
-				return
-			}
-			resolver.queue.Add(key)
-		},
-		DeleteFunc: func(obj interface{}) {
-			resolver.queue.Add(key)
-		},
-	})
-	endpointSliceInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
-		AddFunc: func(obj interface{}) {
-			resolver.queue.Add(key)
-		},
-		UpdateFunc: func(oldObj, newObj interface{}) {
-			// This should not happen: both objects should be EndpointSlices in the
-			// update event handler.
-			oldEndpointSlice, ok := oldObj.(*discoveryv1.EndpointSlice)
-			if !ok {
-				return
-			}
-			newEndpointSlice, ok := newObj.(*discoveryv1.EndpointSlice)
-			if !ok {
-				return
-			}
-			// Ignore changes to metadata, only look at changes to endpoints or ports.
-			if reflect.DeepEqual(newEndpointSlice.Endpoints, oldEndpointSlice.Endpoints) &&
-				reflect.DeepEqual(newEndpointSlice.Ports, oldEndpointSlice.Ports) {
-				return
-			}
-			resolver.queue.Add(key)
-		},
-		DeleteFunc: func(obj interface{}) {
-			resolver.queue.Add(key)
-		},
-	})
-	return resolver
-}
-
-func (r *EndpointResolver) Run(ctx context.Context) {
-	defer r.queue.ShutDown()
-
-	klog.InfoS("Starting controller", "name", r.name)
-	defer klog.InfoS("Shutting down controller", "name", r.name)
-
-	go r.serviceInformer.Run(ctx.Done())
-	go r.endpointSliceInformer.Run(ctx.Done())
-
-	if !cache.WaitForNamedCacheSync(r.name, ctx.Done(), r.serviceListerSynced, r.endpointSliceListerSynced) {
-		return
-	}
-
-	// We only start one worker for this controller.
-	go wait.Until(r.runWorker, time.Second, ctx.Done())
-
-	<-ctx.Done()
-}
-
-func (r *EndpointResolver) runWorker() {
-	for r.processNextWorkItem() {
-	}
-}
-
-func (r *EndpointResolver) processNextWorkItem() bool {
-	key, quit := r.queue.Get()
-	if quit {
-		return false
-	}
-	defer r.queue.Done(key)
-
-	if err := r.resolveEndpoint(); err == nil {
-		r.queue.Forget(key)
-	} else {
-		klog.ErrorS(err, "Failed to resolve Service Endpoint, requeuing", "key", key)
-		r.queue.AddRateLimited(key)
-	}
-
-	return true
-}
-
-func (r *EndpointResolver) resolveEndpoint() error {
-	klog.V(2).InfoS("Resolving Endpoint", "service", klog.KRef(r.namespace, r.serviceName))
-	endpointURL, err := proxy.ResolveEndpoint(r.serviceLister, r.endpointSliceGetter, r.namespace, r.serviceName, r.servicePort)
-	// Typically we will get one of these 2 errors (unavailable or not found).
-	// In this case, it makes sense to reset the Endpoint URL to nil and notify listeners.
-	// There is also no need to retry, as we won't find a suitable Endpoint until the Service or
-	// the Endpoints resource is updated in a way that will cause this function to be called again.
-	if errors.IsServiceUnavailable(err) {
-		klog.ErrorS(err, "Cannot resolve endpoint because Service is unavailable", "service", klog.KRef(r.namespace, r.serviceName))
-		r.updateEndpointIfNeeded(nil)
-		return nil
-	}
-	if errors.IsNotFound(err) {
-		klog.ErrorS(err, "Cannot resolve endpoint because of missing resource", "service", klog.KRef(r.namespace, r.serviceName))
-		r.updateEndpointIfNeeded(nil)
-		return nil
-	}
-	if err != nil {
-		// Unknown error: we err on the side of caution.
-		// Do not reset the URL or notify listeners, and trigger a retry.
-		return err
-	}
-	klog.V(2).InfoS("Resolved Endpoint", "service", klog.KRef(r.namespace, r.serviceName), "url", endpointURL)
-	r.updateEndpointIfNeeded(endpointURL)
+	_ = "STUB: not implemented"
 	return nil
 }
 
+// We only need a specific Service and corresponding EndpointSlices, so we create
+// filtered informers directly without factories for better efficiency.
+
+// Create an EndpointSliceGetter from the lister for use with proxy.ResolveEndpoint
+
+// This should not happen: both objects should be Services in the
+// update event handler.
+
+// Ignore changes to metadata or status.
+
+// This should not happen: both objects should be EndpointSlices in the
+// update event handler.
+
+// Ignore changes to metadata, only look at changes to endpoints or ports.
+
+func (r *EndpointResolver) Run(ctx context.Context) { _ = "STUB: not implemented"; return }
+
+// We only start one worker for this controller.
+
+func (r *EndpointResolver) runWorker() { _ = "STUB: not implemented"; return }
+
+func (r *EndpointResolver) processNextWorkItem() bool { _ = "STUB: not implemented"; return false }
+
+func (r *EndpointResolver) resolveEndpoint() error { _ = "STUB: not implemented"; return nil }
+
+// Typically we will get one of these 2 errors (unavailable or not found).
+// In this case, it makes sense to reset the Endpoint URL to nil and notify listeners.
+// There is also no need to retry, as we won't find a suitable Endpoint until the Service or
+// the Endpoints resource is updated in a way that will cause this function to be called again.
+
+// Unknown error: we err on the side of caution.
+// Do not reset the URL or notify listeners, and trigger a retry.
+
 func (r *EndpointResolver) updateEndpointIfNeeded(endpointURL *url.URL) {
+	_ = "STUB: not implemented"
 	// The separate Load and Store calls are safe because there is a single writer for r.endpointURL.
-	currentEndpointURL := r.endpointURL.Load()
-	updateNeeded := func() bool {
-		if endpointURL == nil && currentEndpointURL == nil {
-			return false
-		}
-		if endpointURL == nil || currentEndpointURL == nil {
-			return true
-		}
-		return endpointURL.String() != currentEndpointURL.String()
-	}
-	if !updateNeeded() {
-		klog.V(2).InfoS("No change to Endpoint for Service, no need to notify listeners", "service", klog.KRef(r.namespace, r.serviceName))
-		return
-	}
-	if endpointURL != nil {
-		klog.InfoS("Selected a new Endpoint for Service, notifying listeners", "service", klog.KRef(r.namespace, r.serviceName), "url", endpointURL)
-	} else {
-		klog.InfoS("Selected no Endpoint for Service, notifying listeners", "service", klog.KRef(r.namespace, r.serviceName))
-	}
-	r.endpointURL.Store(endpointURL)
-	for _, listener := range r.listeners {
-		listener.Enqueue()
-	}
+	return
 }
 
-func (r *EndpointResolver) AddListener(listener Listener) {
-	r.listeners = append(r.listeners, listener)
-}
+func (r *EndpointResolver) AddListener(listener Listener) { _ = "STUB: not implemented"; return }
 
-func (r *EndpointResolver) CurrentEndpointURL() *url.URL {
-	return r.endpointURL.Load()
-}
+func (r *EndpointResolver) CurrentEndpointURL() *url.URL { _ = "STUB: not implemented"; return nil }

@@ -46,40 +46,48 @@ type version struct {
 
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
-	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(Interface)
 }
 
 // AntreaNodeConfigs returns a AntreaNodeConfigInformer.
 func (v *version) AntreaNodeConfigs() AntreaNodeConfigInformer {
-	return &antreaNodeConfigInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(AntreaNodeConfigInformer)
 }
 
 // BGPPolicies returns a BGPPolicyInformer.
 func (v *version) BGPPolicies() BGPPolicyInformer {
-	return &bGPPolicyInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(BGPPolicyInformer)
 }
 
 // ExternalNodes returns a ExternalNodeInformer.
 func (v *version) ExternalNodes() ExternalNodeInformer {
-	return &externalNodeInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(ExternalNodeInformer)
 }
 
 // FlowExporterDestinations returns a FlowExporterDestinationInformer.
 func (v *version) FlowExporterDestinations() FlowExporterDestinationInformer {
-	return &flowExporterDestinationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(FlowExporterDestinationInformer)
 }
 
 // NodeLatencyMonitors returns a NodeLatencyMonitorInformer.
 func (v *version) NodeLatencyMonitors() NodeLatencyMonitorInformer {
-	return &nodeLatencyMonitorInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(NodeLatencyMonitorInformer)
 }
 
 // PacketCaptures returns a PacketCaptureInformer.
 func (v *version) PacketCaptures() PacketCaptureInformer {
-	return &packetCaptureInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(PacketCaptureInformer)
 }
 
 // SupportBundleCollections returns a SupportBundleCollectionInformer.
 func (v *version) SupportBundleCollections() SupportBundleCollectionInformer {
-	return &supportBundleCollectionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(SupportBundleCollectionInformer)
 }

@@ -14,10 +14,6 @@
 
 package config
 
-import (
-	"strings"
-)
-
 type TrafficEncapModeType int
 
 const (
@@ -40,42 +36,20 @@ var (
 // GetTrafficEncapModeFromStr returns true and TrafficEncapModeType corresponding to input string.
 // Otherwise, false and undefined value is returned
 func GetTrafficEncapModeFromStr(str string) (bool, TrafficEncapModeType) {
-	for idx, ms := range modeStrs {
-		if strings.EqualFold(ms, str) {
-			return true, TrafficEncapModeType(idx)
-		}
-	}
-	return false, TrafficEncapModeInvalid
+	_ = "STUB: not implemented"
+	return false, *new(TrafficEncapModeType)
 }
 
-func GetTrafficEncapModes() []TrafficEncapModeType {
-	return []TrafficEncapModeType{
-		TrafficEncapModeEncap,
-		TrafficEncapModeNoEncap,
-		TrafficEncapModeHybrid,
-		TrafficEncapModeNetworkPolicyOnly,
-	}
-}
+func GetTrafficEncapModes() []TrafficEncapModeType { _ = "STUB: not implemented"; return nil }
 
 // String returns value in string.
-func (m TrafficEncapModeType) String() string {
-	if m == TrafficEncapModeInvalid {
-		return "invalid"
-	}
-	return modeStrs[m]
-}
+func (m TrafficEncapModeType) String() string { _ = "STUB: not implemented"; return "" }
 
 // IsNetworkPolicyOnly returns true if TrafficEncapModeType is network policy only.
-func (m TrafficEncapModeType) IsNetworkPolicyOnly() bool {
-	return m == TrafficEncapModeNetworkPolicyOnly
-}
+func (m TrafficEncapModeType) IsNetworkPolicyOnly() bool { _ = "STUB: not implemented"; return false }
 
 // SupportsNoEncap returns true if TrafficEncapModeType supports noEncap.
-func (m TrafficEncapModeType) SupportsNoEncap() bool {
-	return m == TrafficEncapModeNoEncap || m == TrafficEncapModeHybrid || m.IsNetworkPolicyOnly()
-}
+func (m TrafficEncapModeType) SupportsNoEncap() bool { _ = "STUB: not implemented"; return false }
 
 // SupportsEncap returns true if TrafficEncapModeType supports encap.
-func (m TrafficEncapModeType) SupportsEncap() bool {
-	return m == TrafficEncapModeEncap || m == TrafficEncapModeHybrid
-}
+func (m TrafficEncapModeType) SupportsEncap() bool { _ = "STUB: not implemented"; return false }

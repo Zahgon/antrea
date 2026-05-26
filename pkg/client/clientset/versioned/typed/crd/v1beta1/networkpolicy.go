@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	crdv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -55,14 +54,6 @@ type networkPolicies struct {
 
 // newNetworkPolicies returns a NetworkPolicies
 func newNetworkPolicies(c *CrdV1beta1Client, namespace string) *networkPolicies {
-	return &networkPolicies{
-		gentype.NewClientWithList[*crdv1beta1.NetworkPolicy, *crdv1beta1.NetworkPolicyList](
-			"networkpolicies",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			namespace,
-			func() *crdv1beta1.NetworkPolicy { return &crdv1beta1.NetworkPolicy{} },
-			func() *crdv1beta1.NetworkPolicyList { return &crdv1beta1.NetworkPolicyList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

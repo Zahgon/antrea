@@ -15,27 +15,18 @@
 package networkpolicy
 
 import (
-	"crypto/sha1" // #nosec G505: not used for security purposes
-	"encoding/hex"
-	"encoding/json"
-	"fmt"
-	"strings"
+	// #nosec G505: not used for security purposes
+
 	"sync"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/tools/cache"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/config"
-	"antrea.io/antrea/v2/pkg/agent/metrics"
-	agenttypes "antrea.io/antrea/v2/pkg/agent/types"
 	v1beta "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
 	crdv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
 	"antrea.io/antrea/v2/pkg/querier"
 	"antrea.io/antrea/v2/pkg/util/channel"
-	"antrea.io/antrea/v2/pkg/util/k8s"
 )
 
 const (
@@ -103,41 +94,20 @@ type rule struct {
 }
 
 func (r *rule) Less(r2 *rule) bool {
+	_ = "STUB: not implemented"
 	// priorities for rule r
-	tierPriority1, policyPriority1 := int32(0), float64(0)
-	// priorities for rule r2
-	tierPriority2, policyPriority2 := int32(0), float64(0)
-
-	if r.TierPriority != nil {
-		tierPriority1 = *r.TierPriority
-	}
-	if r.PolicyPriority != nil {
-		policyPriority1 = *r.PolicyPriority
-	}
-	if r2.TierPriority != nil {
-		tierPriority2 = *r2.TierPriority
-	}
-	if r2.PolicyPriority != nil {
-		policyPriority2 = *r2.PolicyPriority
-	}
-
-	// compare two rules' priorities
-	if tierPriority1 == tierPriority2 {
-		if policyPriority1 == policyPriority2 {
-			return r.Priority > r2.Priority
-		}
-		return policyPriority1 > policyPriority2
-	}
-	return tierPriority1 > tierPriority2
+	return false
 }
+
+// priorities for rule r2
+
+// compare two rules' priorities
 
 // hashRule calculates a string based on the rule's content.
 func hashRule(r *rule) string {
-	hash := sha1.New() // #nosec G401: not used for security purposes
-	b, _ := json.Marshal(r)
-	hash.Write(b)
-	hashValue := hex.EncodeToString(hash.Sum(nil))
-	return hashValue[:ruleIDLength]
+	_ = "STUB: not implemented"
+	// #nosec G401: not used for security purposes
+	return ""
 }
 
 // CompletedRule contains IPAddresses and Pods flattened from AddressGroups and AppliedToGroups.
@@ -155,43 +125,14 @@ type CompletedRule struct {
 }
 
 // String returns the string representation of the CompletedRule.
-func (r *CompletedRule) String() string {
-	var addressString string
-	if r.Direction == v1beta.DirectionIn {
-		addressString = fmt.Sprintf("FromAddressGroups: %d, FromIPBlocks: %d, FromAddresses: %d", len(r.From.AddressGroups), len(r.From.IPBlocks), len(r.FromAddresses))
-	} else {
-		addressString = fmt.Sprintf("ToAddressGroups: %d, ToIPBlocks: %d, ToAddresses: %d", len(r.To.AddressGroups), len(r.To.IPBlocks), len(r.ToAddresses))
-	}
-	return fmt.Sprintf("%s (Direction: %v, Targets: %d, %s, Services: %d, PolicyPriority: %v, RulePriority: %v)",
-		r.ID, r.Direction, len(r.TargetMembers), addressString, len(r.Services), r.PolicyPriority, r.Priority)
-}
+func (r *CompletedRule) String() string { _ = "STUB: not implemented"; return "" }
 
 // isAntreaNetworkPolicyRule returns true if the rule is part of a Antrea policy.
-func (r *CompletedRule) isAntreaNetworkPolicyRule() bool {
-	return r.SourceRef.Type != v1beta.K8sNetworkPolicy
-}
+func (r *CompletedRule) isAntreaNetworkPolicyRule() bool { _ = "STUB: not implemented"; return false }
 
-func (r *CompletedRule) isIGMPEgressPolicyRule() bool {
-	if r.Direction == v1beta.DirectionOut {
-		for _, svc := range r.Services {
-			if svc.Protocol != nil && *svc.Protocol == v1beta.ProtocolIGMP {
-				return true
-			}
-		}
-	}
-	return false
-}
+func (r *CompletedRule) isIGMPEgressPolicyRule() bool { _ = "STUB: not implemented"; return false }
 
-func (r *CompletedRule) isNodeNetworkPolicyRule() bool {
-	for _, m := range r.TargetMembers {
-		if m.Node != nil {
-			return true
-		} else {
-			return false
-		}
-	}
-	return false
-}
+func (r *CompletedRule) isNodeNetworkPolicyRule() bool { _ = "STUB: not implemented"; return false }
 
 // ruleCache caches Antrea AddressGroups, AppliedToGroups and NetworkPolicies,
 // can construct complete rules that can be used by reconciler to enforce.
@@ -223,227 +164,88 @@ type ruleCache struct {
 }
 
 func (c *ruleCache) getNetworkPolicies(npFilter *querier.NetworkPolicyQueryFilter) []v1beta.NetworkPolicy {
-	var ret []v1beta.NetworkPolicy
-	c.policyMapLock.RLock()
-	defer c.policyMapLock.RUnlock()
-	for _, np := range c.policyMap {
-		if c.networkPolicyMatchFilter(npFilter, np) {
-			ret = append(ret, *np)
-		}
-	}
-	return ret
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // networkPolicyMatchFilter returns true if the provided NetworkPolicy matches the provided NetworkPolicyQueryFilter.
 func (c *ruleCache) networkPolicyMatchFilter(npFilter *querier.NetworkPolicyQueryFilter, np *v1beta.NetworkPolicy) bool {
-	if npFilter.Name != "" {
-		return npFilter.Name == np.Name
-	}
-	return (npFilter.SourceName == "" || npFilter.SourceName == np.SourceRef.Name) &&
-		(npFilter.Namespace == "" || npFilter.Namespace == np.SourceRef.Namespace) &&
-		(npFilter.SourceType == "" || npFilter.SourceType == np.SourceRef.Type)
+	_ = "STUB: not implemented"
+	return false
 }
 
 func (c *ruleCache) getNetworkPolicy(uid string) *v1beta.NetworkPolicy {
-	c.policyMapLock.RLock()
-	defer c.policyMapLock.RUnlock()
-	policy, exists := c.policyMap[uid]
-	if !exists {
-		return nil
-	}
-	return policy
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (c *ruleCache) getAppliedNetworkPolicies(pod, namespace string, npFilter *querier.NetworkPolicyQueryFilter) []v1beta.NetworkPolicy {
-	var groups []string
-	memberPod := &v1beta.GroupMember{Pod: &v1beta.PodReference{Name: pod, Namespace: namespace}}
-	c.appliedToSetLock.RLock()
-	for group, memberSet := range c.appliedToSetByGroup {
-		if memberSet.Has(memberPod) {
-			groups = append(groups, group)
-		}
-	}
-	c.appliedToSetLock.RUnlock()
-
-	var policies []v1beta.NetworkPolicy
-	policyKeys := sets.New[string]()
-	for _, group := range groups {
-		rules, _ := c.rules.ByIndex(appliedToGroupIndex, group)
-		for _, ruleObj := range rules {
-			rule := ruleObj.(*rule)
-			if policyKeys.Has(string(rule.PolicyUID)) {
-				continue
-			}
-			np := c.getNetworkPolicy(string(rule.PolicyUID))
-			// The Policy might be removed during the query.
-			if np == nil {
-				continue
-			}
-			if c.networkPolicyMatchFilter(npFilter, np) {
-				policies = append(policies, *np)
-				policyKeys.Insert(string(rule.PolicyUID))
-			}
-		}
-	}
-	return policies
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// The Policy might be removed during the query.
 
 func (c *ruleCache) getEffectiveRulesByNetworkPolicy(uid string) []*rule {
-	objs, _ := c.rules.ByIndex(policyIndex, uid)
-	if len(objs) == 0 {
-		return nil
-	}
-	rules := make([]*rule, 0, len(objs))
-
-	// A rule is considered effective when any of its AppliedToGroups can be populated.
-	isEffective := func(r *rule) bool {
-		for _, g := range r.AppliedToGroups {
-			_, exists := c.appliedToSetByGroup[g]
-			if exists {
-				return true
-			}
-		}
-		return false
-	}
-
-	c.appliedToSetLock.RLock()
-	defer c.appliedToSetLock.RUnlock()
-
-	for _, obj := range objs {
-		rule := obj.(*rule)
-		if isEffective(rule) {
-			rules = append(rules, rule)
-		}
-	}
-	return rules
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (c *ruleCache) GetAddressGroups() []v1beta.AddressGroup {
-	var ret []v1beta.AddressGroup
-	c.addressSetLock.RLock()
-	defer c.addressSetLock.RUnlock()
+// A rule is considered effective when any of its AppliedToGroups can be populated.
 
-	for k, v := range c.addressSetByGroup {
-		var groupMembers []v1beta.GroupMember
-		for _, member := range v {
-			groupMembers = append(groupMembers, *member)
-		}
-		ret = append(ret, v1beta.AddressGroup{
-			ObjectMeta:   metav1.ObjectMeta{Name: k},
-			GroupMembers: groupMembers,
-		})
-	}
-	return ret
-}
+func (c *ruleCache) GetAddressGroups() []v1beta.AddressGroup { _ = "STUB: not implemented"; return nil }
 
 func (c *ruleCache) GetAppliedToGroups() []v1beta.AppliedToGroup {
-	var ret []v1beta.AppliedToGroup
-	c.appliedToSetLock.RLock()
-	defer c.appliedToSetLock.RUnlock()
-	for k, v := range c.appliedToSetByGroup {
-		var groupMembers []v1beta.GroupMember
-		for _, member := range v.Items() {
-			groupMembers = append(groupMembers, *member)
-		}
-		ret = append(ret, v1beta.AppliedToGroup{
-			ObjectMeta:   metav1.ObjectMeta{Name: k},
-			GroupMembers: groupMembers,
-		})
-	}
-	return ret
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ruleKeyFunc knows how to get key of a *rule.
-func ruleKeyFunc(obj interface{}) (string, error) {
-	rule := obj.(*rule)
-	return rule.ID, nil
-}
+func ruleKeyFunc(obj interface{}) (string, error) { _ = "STUB: not implemented"; return "", nil }
 
 // addressGroupIndexFunc knows how to get addressGroups of a *rule.
 // It's provided to cache.Indexer to build an index of addressGroups.
 func addressGroupIndexFunc(obj interface{}) ([]string, error) {
-	rule := obj.(*rule)
-	addressGroups := make([]string, 0, len(rule.From.AddressGroups)+len(rule.To.AddressGroups))
-	addressGroups = append(addressGroups, rule.From.AddressGroups...)
-	addressGroups = append(addressGroups, rule.To.AddressGroups...)
-	return addressGroups, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // appliedToGroupIndexFunc knows how to get appliedToGroups of a *rule.
 // It's provided to cache.Indexer to build an index of appliedToGroups.
 func appliedToGroupIndexFunc(obj interface{}) ([]string, error) {
-	rule := obj.(*rule)
-	return rule.AppliedToGroups, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // policyIndexFunc knows how to get NetworkPolicy UID of a *rule.
 // It's provided to cache.Indexer to build an index of NetworkPolicy.
-func policyIndexFunc(obj interface{}) ([]string, error) {
-	rule := obj.(*rule)
-	return []string{string(rule.PolicyUID)}, nil
-}
+func policyIndexFunc(obj interface{}) ([]string, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // toServicesIndexFunc knows how to get NamespacedNames of Services referred in
 // ToServices field of a *rule. It's provided to cache.Indexer to build an index of
 // NetworkPolicy.
 func toServicesIndexFunc(obj interface{}) ([]string, error) {
-	rule := obj.(*rule)
-	toSvcNamespacedName := sets.Set[string]{}
-	for _, svc := range rule.To.ToServices {
-		toSvcNamespacedName.Insert(k8s.NamespacedName(svc.Namespace, svc.Name))
-	}
-	return toSvcNamespacedName.UnsortedList(), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // toIGMPReportGroupAddressIndexFunc knows how to get IGMP report groupAddresses of a *rule
 // It's provided to cache.Indexer to build an index of NetworkPolicy.
 func toIGMPReportGroupAddressIndexFunc(obj interface{}) ([]string, error) {
-	rule := obj.(*rule)
-	mcastGroupAddresses := sets.Set[string]{}
-	if rule.Direction == v1beta.DirectionOut {
-		for _, svc := range rule.Services {
-			if svc.Protocol != nil && *svc.Protocol == v1beta.ProtocolIGMP && svc.IGMPType == nil ||
-				svc.IGMPType != nil && (*svc.IGMPType == crdv1beta1.IGMPReportV1 || *svc.IGMPType == crdv1beta1.IGMPReportV2 || *svc.IGMPType == crdv1beta1.IGMPReportV3) {
-				mcastGroupAddresses.Insert(svc.GroupAddress)
-			}
-		}
-	}
-
-	return mcastGroupAddresses.UnsortedList(), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // newRuleCache returns a new *ruleCache.
 func newRuleCache(dirtyRuleHandler func(string), podUpdateSubscriber channel.Subscriber, externalEntityUpdateSubscriber channel.Subscriber,
 	serviceGroupIDUpdate <-chan string, nodeType config.NodeType) *ruleCache {
-	rules := cache.NewIndexer(
-		ruleKeyFunc,
-		cache.Indexers{
-			addressGroupIndex:             addressGroupIndexFunc,
-			appliedToGroupIndex:           appliedToGroupIndexFunc,
-			policyIndex:                   policyIndexFunc,
-			toServicesIndex:               toServicesIndexFunc,
-			toIGMPReportGroupAddressIndex: toIGMPReportGroupAddressIndexFunc,
-		},
-	)
-	cache := &ruleCache{
-		appliedToSetByGroup: make(map[string]v1beta.GroupMemberSet),
-		addressSetByGroup:   make(map[string]v1beta.GroupMemberSet),
-		policyMap:           make(map[string]*v1beta.NetworkPolicy),
-		rules:               rules,
-		dirtyRuleHandler:    dirtyRuleHandler,
-		groupIDUpdates:      serviceGroupIDUpdate,
-	}
-	if nodeType == config.K8sNode {
-		// Subscribe Pod update events from CNIServer.
-		podUpdateSubscriber.Subscribe(cache.processPodUpdate)
-	} else {
-		// Subscribe ExternalEntity update events from ExternalNodeController
-		externalEntityUpdateSubscriber.Subscribe(cache.processExternalEntityUpdate)
-	}
-
-	go cache.processGroupIDUpdates()
-	return cache
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Subscribe Pod update events from CNIServer.
+
+// Subscribe ExternalEntity update events from ExternalNodeController
 
 // processPodUpdate will be called when CNIServer publishes a Pod update event.
 // It finds out AppliedToGroups that contain this Pod and triggers reconciliation
@@ -452,79 +254,28 @@ func newRuleCache(dirtyRuleHandler func(string), podUpdateSubscriber channel.Sub
 // done if antrea-controller has computed the Pods' policies and propagated
 // them to this Node by their labels and NodeName, instead of waiting for their
 // IPs are reported to kube-apiserver and processed by antrea-controller.
-func (c *ruleCache) processPodUpdate(e interface{}) {
-	podEvent := e.(agenttypes.PodUpdate)
-	member := &v1beta.GroupMember{
-		Pod: &v1beta.PodReference{
-			Name:      podEvent.PodName,
-			Namespace: podEvent.PodNamespace,
-		},
-	}
-	c.appliedToSetLock.RLock()
-	defer c.appliedToSetLock.RUnlock()
-	for group, memberSet := range c.appliedToSetByGroup {
-		if memberSet.Has(member) {
-			c.onAppliedToGroupUpdate(group)
-		}
-	}
-}
+func (c *ruleCache) processPodUpdate(e interface{}) { _ = "STUB: not implemented"; return }
 
 // processExternalEntityUpdate will be called when ExternalNodeController publishes an ExternalEntity update event.
 // It finds out AppliedToGroups that contain this ExternalNode converted ExternalEntity and triggers reconciliation
 // of related rules.
 // It can enforce NetworkPolicies to ExternalEntities after ExternalEntityInterface is realised in the interface store.
-func (c *ruleCache) processExternalEntityUpdate(e interface{}) {
-	externalEntityRef := e.(v1beta.ExternalEntityReference)
-	member := &v1beta.GroupMember{
-		ExternalEntity: &externalEntityRef,
-	}
-	c.appliedToSetLock.RLock()
-	defer c.appliedToSetLock.RUnlock()
-	for group, memberSet := range c.appliedToSetByGroup {
-		if memberSet.Has(member) {
-			c.onAppliedToGroupUpdate(group)
-		}
-	}
-}
+func (c *ruleCache) processExternalEntityUpdate(e interface{}) { _ = "STUB: not implemented"; return }
 
 // processGroupIDUpdates is an infinite loop that takes Service groupID
 // update events from the channel, finds out rules that refer this Service in
 // ToServices field and use dirtyRuleHandler to re-queue these rules.
-func (c *ruleCache) processGroupIDUpdates() {
-	for {
-		svcStr := <-c.groupIDUpdates
-		c.processServiceGroupIDUpdate(svcStr)
-	}
-}
+func (c *ruleCache) processGroupIDUpdates() { _ = "STUB: not implemented"; return }
 
 // GetAddressGroupNum gets the number of AddressGroup.
-func (c *ruleCache) GetAddressGroupNum() int {
-	c.addressSetLock.RLock()
-	defer c.addressSetLock.RUnlock()
-
-	return len(c.addressSetByGroup)
-}
+func (c *ruleCache) GetAddressGroupNum() int { _ = "STUB: not implemented"; return 0 }
 
 // ReplaceAddressGroups atomically adds the given groups to the cache and deletes
 // the pre-existing groups that are not in the given groups from the cache.
 // It makes the cache in sync with the apiserver when restarting a watch.
 func (c *ruleCache) ReplaceAddressGroups(groups []*v1beta.AddressGroup) {
-	c.addressSetLock.Lock()
-	defer c.addressSetLock.Unlock()
-
-	oldGroupKeys := make(sets.Set[string], len(c.addressSetByGroup))
-	for key := range c.addressSetByGroup {
-		oldGroupKeys.Insert(key)
-	}
-
-	for _, group := range groups {
-		oldGroupKeys.Delete(group.Name)
-		c.addAddressGroupLocked(group)
-	}
-
-	for key := range oldGroupKeys {
-		delete(c.addressSetByGroup, key)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // AddAddressGroup adds a new *v1beta.AddressGroup to the cache. The rules
@@ -532,101 +283,45 @@ func (c *ruleCache) ReplaceAddressGroups(groups []*v1beta.AddressGroup) {
 // It's safe to add an AddressGroup multiple times as it only overrides the
 // map, this could happen when the watcher reconnects to the Apiserver.
 func (c *ruleCache) AddAddressGroup(group *v1beta.AddressGroup) error {
-	c.addressSetLock.Lock()
-	defer c.addressSetLock.Unlock()
-
-	return c.addAddressGroupLocked(group)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (c *ruleCache) addAddressGroupLocked(group *v1beta.AddressGroup) error {
-	groupMemberSet := v1beta.GroupMemberSet{}
-	for i := range group.GroupMembers {
-		// Must not store address of loop iterator variable as it's the same
-		// address taking different values in each loop iteration, otherwise
-		// groupMemberSet would eventually contain only the last value.
-		// https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
-		groupMemberSet.Insert(&group.GroupMembers[i])
-	}
-
-	oldGroupMemberSet, exists := c.addressSetByGroup[group.Name]
-	if exists && oldGroupMemberSet.Equal(groupMemberSet) {
-		return nil
-	}
-	c.addressSetByGroup[group.Name] = groupMemberSet
-	c.onAddressGroupUpdate(group.Name)
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// Must not store address of loop iterator variable as it's the same
+// address taking different values in each loop iteration, otherwise
+// groupMemberSet would eventually contain only the last value.
+// https://github.com/golang/go/wiki/CommonMistakes#using-reference-to-loop-iterator-variable
 
 // PatchAddressGroup updates a cached *v1beta.AddressGroup.
 // The rules referencing it will be regarded as dirty.
 // It returns a copy of the patched AddressGroup, or an error if the AddressGroup doesn't exist.
 func (c *ruleCache) PatchAddressGroup(patch *v1beta.AddressGroupPatch) (*v1beta.AddressGroup, error) {
-	c.addressSetLock.Lock()
-	defer c.addressSetLock.Unlock()
-
-	groupMemberSet, exists := c.addressSetByGroup[patch.Name]
-	if !exists {
-		return nil, fmt.Errorf("AddressGroup %v doesn't exist in cache, can't be patched", patch.Name)
-	}
-	for i := range patch.AddedGroupMembers {
-		groupMemberSet.Insert(&patch.AddedGroupMembers[i])
-	}
-	for i := range patch.RemovedGroupMembers {
-		groupMemberSet.Delete(&patch.RemovedGroupMembers[i])
-	}
-
-	c.onAddressGroupUpdate(patch.Name)
-
-	members := make([]v1beta.GroupMember, 0, len(groupMemberSet))
-	for _, member := range groupMemberSet {
-		members = append(members, *member)
-	}
-	group := &v1beta.AddressGroup{
-		ObjectMeta:   patch.ObjectMeta,
-		GroupMembers: members,
-	}
-	return group, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // DeleteAddressGroup deletes a cached *v1beta.AddressGroup.
 // It should only happen when a group is no longer referenced by any rule, so
 // no need to mark dirty rules.
 func (c *ruleCache) DeleteAddressGroup(group *v1beta.AddressGroup) error {
-	c.addressSetLock.Lock()
-	defer c.addressSetLock.Unlock()
-
-	delete(c.addressSetByGroup, group.Name)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // GetAppliedToGroupNum gets the number of AppliedToGroup.
-func (c *ruleCache) GetAppliedToGroupNum() int {
-	c.appliedToSetLock.RLock()
-	defer c.appliedToSetLock.RUnlock()
-
-	return len(c.appliedToSetByGroup)
-}
+func (c *ruleCache) GetAppliedToGroupNum() int { _ = "STUB: not implemented"; return 0 }
 
 // ReplaceAppliedToGroups atomically adds the given groups to the cache and deletes
 // the pre-existing groups that are not in the given groups from the cache.
 // It makes the cache in sync with the apiserver when restarting a watch.
 func (c *ruleCache) ReplaceAppliedToGroups(groups []*v1beta.AppliedToGroup) {
-	c.appliedToSetLock.Lock()
-	defer c.appliedToSetLock.Unlock()
-
-	oldGroupKeys := make(sets.Set[string], len(c.appliedToSetByGroup))
-	for key := range c.appliedToSetByGroup {
-		oldGroupKeys.Insert(key)
-	}
-
-	for _, group := range groups {
-		oldGroupKeys.Delete(group.Name)
-		c.addAppliedToGroupLocked(group)
-	}
-
-	for key := range oldGroupKeys {
-		delete(c.appliedToSetByGroup, key)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // AddAppliedToGroup adds a new *v1beta.AppliedToGroup to the cache. The rules
@@ -634,23 +329,12 @@ func (c *ruleCache) ReplaceAppliedToGroups(groups []*v1beta.AppliedToGroup) {
 // It's safe to add an AppliedToGroup multiple times as it only overrides the
 // map, this could happen when the watcher reconnects to the Apiserver.
 func (c *ruleCache) AddAppliedToGroup(group *v1beta.AppliedToGroup) error {
-	c.appliedToSetLock.Lock()
-	defer c.appliedToSetLock.Unlock()
-
-	return c.addAppliedToGroupLocked(group)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (c *ruleCache) addAppliedToGroupLocked(group *v1beta.AppliedToGroup) error {
-	memberSet := v1beta.GroupMemberSet{}
-	for i := range group.GroupMembers {
-		memberSet.Insert(&group.GroupMembers[i])
-	}
-	oldMemberSet, exists := c.appliedToSetByGroup[group.Name]
-	if exists && oldMemberSet.Equal(memberSet) {
-		return nil
-	}
-	c.appliedToSetByGroup[group.Name] = memberSet
-	c.onAppliedToGroupUpdate(group.Name)
+	_ = "STUB: not implemented"
 	return nil
 }
 
@@ -658,119 +342,36 @@ func (c *ruleCache) addAppliedToGroupLocked(group *v1beta.AppliedToGroup) error 
 // The rules referencing it will be regarded as dirty.
 // It returns a copy of the patched AppliedToGroup, or an error if the AppliedToGroup doesn't exist.
 func (c *ruleCache) PatchAppliedToGroup(patch *v1beta.AppliedToGroupPatch) (*v1beta.AppliedToGroup, error) {
-	c.appliedToSetLock.Lock()
-	defer c.appliedToSetLock.Unlock()
-
-	memberSet, exists := c.appliedToSetByGroup[patch.Name]
-	if !exists {
-		return nil, fmt.Errorf("AppliedToGroup %v doesn't exist in cache, can't be patched", patch.Name)
-	}
-	for i := range patch.AddedGroupMembers {
-		memberSet.Insert(&patch.AddedGroupMembers[i])
-	}
-	for i := range patch.RemovedGroupMembers {
-		memberSet.Delete(&patch.RemovedGroupMembers[i])
-	}
-	c.onAppliedToGroupUpdate(patch.Name)
-
-	members := make([]v1beta.GroupMember, 0, len(memberSet))
-	for _, member := range memberSet {
-		members = append(members, *member)
-	}
-	group := &v1beta.AppliedToGroup{
-		ObjectMeta:   patch.ObjectMeta,
-		GroupMembers: members,
-	}
-	return group, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // DeleteAppliedToGroup deletes a cached *v1beta.AppliedToGroup.
 // It may be called when a rule becomes ineffective, so it needs to mark dirty rules.
 func (c *ruleCache) DeleteAppliedToGroup(group *v1beta.AppliedToGroup) error {
-	c.appliedToSetLock.Lock()
-	defer c.appliedToSetLock.Unlock()
-
-	delete(c.appliedToSetByGroup, group.Name)
-	c.onAppliedToGroupUpdate(group.Name)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // toRule converts v1beta.NetworkPolicyRule to *rule.
 func toRule(r *v1beta.NetworkPolicyRule, policy *v1beta.NetworkPolicy, maxPriority int32) *rule {
-	appliedToGroups := policy.AppliedToGroups
-	if len(r.AppliedToGroups) != 0 {
-		appliedToGroups = r.AppliedToGroups
-	}
-	rule := &rule{
-		Direction:       r.Direction,
-		From:            r.From,
-		To:              r.To,
-		Services:        r.Services,
-		L7Protocols:     r.L7Protocols,
-		Action:          r.Action,
-		Priority:        r.Priority,
-		PolicyPriority:  policy.Priority,
-		TierPriority:    policy.TierPriority,
-		AppliedToGroups: appliedToGroups,
-		Name:            r.Name,
-		PolicyUID:       policy.UID,
-		SourceRef:       policy.SourceRef,
-		EnableLogging:   r.EnableLogging,
-		LogLabel:        r.LogLabel,
-	}
-	rule.ID = hashRule(rule)
-	rule.PolicyName = policy.Name
-	rule.MaxPriority = maxPriority
-	return rule
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // getMaxPriority returns the highest rule priority for v1beta.NetworkPolicy that is created
 // by Antrea-native policies. For K8s NetworkPolicies, it always returns -1.
-func getMaxPriority(policy *v1beta.NetworkPolicy) int32 {
-	if policy.SourceRef.Type == v1beta.K8sNetworkPolicy {
-		return -1
-	}
-	maxPriority := int32(-1)
-	for _, r := range policy.Rules {
-		if r.Priority > maxPriority {
-			maxPriority = r.Priority
-		}
-	}
-	return maxPriority
-}
+func getMaxPriority(policy *v1beta.NetworkPolicy) int32 { _ = "STUB: not implemented"; return 0 }
 
 // GetNetworkPolicyNum gets the number of NetworkPolicy.
-func (c *ruleCache) GetNetworkPolicyNum() int {
-	c.policyMapLock.RLock()
-	defer c.policyMapLock.RUnlock()
-
-	return len(c.policyMap)
-}
+func (c *ruleCache) GetNetworkPolicyNum() int { _ = "STUB: not implemented"; return 0 }
 
 // ReplaceNetworkPolicies atomically adds the given policies to the cache and deletes
 // the pre-existing policies that are not in the given policies from the cache.
 // It makes the cache in sync with the apiserver when restarting a watch.
 func (c *ruleCache) ReplaceNetworkPolicies(policies []*v1beta.NetworkPolicy) {
-	c.policyMapLock.Lock()
-	defer c.policyMapLock.Unlock()
-
-	oldKeys := make(sets.Set[string], len(c.policyMap))
-	for key := range c.policyMap {
-		oldKeys.Insert(key)
-	}
-
-	for i := range policies {
-		if oldKeys.Has(string(policies[i].UID)) {
-			oldKeys.Delete(string(policies[i].UID))
-		} else {
-			metrics.NetworkPolicyCount.Inc()
-		}
-		c.updateNetworkPolicyLocked(policies[i])
-	}
-
-	for key := range oldKeys {
-		c.deleteNetworkPolicyLocked(key)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // AddNetworkPolicy adds a new *v1beta.NetworkPolicy to the cache.
@@ -778,94 +379,44 @@ func (c *ruleCache) ReplaceNetworkPolicies(policies []*v1beta.NetworkPolicy) {
 // watcher reconnects to the Apiserver, we use the same processing as
 // UpdateNetworkPolicy to ensure orphan rules are removed.
 func (c *ruleCache) AddNetworkPolicy(policy *v1beta.NetworkPolicy) {
-	metrics.NetworkPolicyCount.Inc()
-	c.policyMapLock.Lock()
-	defer c.policyMapLock.Unlock()
-	c.updateNetworkPolicyLocked(policy)
+	_ = "STUB: not implemented"
+	return
 }
 
 // UpdateNetworkPolicy updates a cached *v1beta.NetworkPolicy and returns whether any rule or the generation changes.
 // The added rules and removed rules will be regarded as dirty.
 func (c *ruleCache) UpdateNetworkPolicy(policy *v1beta.NetworkPolicy) bool {
-	c.policyMapLock.Lock()
-	defer c.policyMapLock.Unlock()
-	return c.updateNetworkPolicyLocked(policy)
+	_ = "STUB: not implemented"
+	return false
 }
 
 // updateNetworkPolicyLocked returns whether any rule or the generation changes.
 func (c *ruleCache) updateNetworkPolicyLocked(policy *v1beta.NetworkPolicy) bool {
-	oldPolicy, exists := c.policyMap[string(policy.UID)]
-	generationUpdated := !exists || oldPolicy.Generation != policy.Generation
-	c.policyMap[string(policy.UID)] = policy
-	existingRules, _ := c.rules.ByIndex(policyIndex, string(policy.UID))
-	ruleByID := map[string]interface{}{}
-	for _, r := range existingRules {
-		ruleByID[r.(*rule).ID] = r
-	}
-
-	anyRuleUpdate := false
-	maxPriority := getMaxPriority(policy)
-	for i := range policy.Rules {
-		r := toRule(&policy.Rules[i], policy, maxPriority)
-		if _, exists := ruleByID[r.ID]; exists {
-			// If rule already exists, remove it from the map so the ones left are orphaned,
-			// which means those rules need to be handled by dirtyRuleHandler.
-			klog.V(2).InfoS("Rule was not changed", "id", r.ID)
-			delete(ruleByID, r.ID)
-		} else {
-			// If rule doesn't exist, add it to cache and mark it as dirty.
-			c.rules.Add(r)
-			// Count up antrea_agent_ingress_networkpolicy_rule_count or antrea_agent_egress_networkpolicy_rule_count
-			if r.Direction == v1beta.DirectionIn {
-				metrics.IngressNetworkPolicyRuleCount.Inc()
-			} else {
-				metrics.EgressNetworkPolicyRuleCount.Inc()
-			}
-			c.dirtyRuleHandler(r.ID)
-			anyRuleUpdate = true
-		}
-	}
-
-	// At this moment, the remaining rules are orphaned, remove them from store and mark them as dirty.
-	for ruleID, r := range ruleByID {
-		c.rules.Delete(r)
-		// Count down antrea_agent_ingress_networkpolicy_rule_count or antrea_agent_egress_networkpolicy_rule_count
-		if r.(*rule).Direction == v1beta.DirectionIn {
-			metrics.IngressNetworkPolicyRuleCount.Dec()
-		} else {
-			metrics.EgressNetworkPolicyRuleCount.Dec()
-		}
-		c.dirtyRuleHandler(ruleID)
-		anyRuleUpdate = true
-	}
-	return anyRuleUpdate || generationUpdated
+	_ = "STUB: not implemented"
+	return false
 }
+
+// If rule already exists, remove it from the map so the ones left are orphaned,
+// which means those rules need to be handled by dirtyRuleHandler.
+
+// If rule doesn't exist, add it to cache and mark it as dirty.
+
+// Count up antrea_agent_ingress_networkpolicy_rule_count or antrea_agent_egress_networkpolicy_rule_count
+
+// At this moment, the remaining rules are orphaned, remove them from store and mark them as dirty.
+
+// Count down antrea_agent_ingress_networkpolicy_rule_count or antrea_agent_egress_networkpolicy_rule_count
 
 // DeleteNetworkPolicy deletes a cached *v1beta.NetworkPolicy.
 // All its rules will be regarded as dirty.
 func (c *ruleCache) DeleteNetworkPolicy(policy *v1beta.NetworkPolicy) {
-	c.policyMapLock.Lock()
-	defer c.policyMapLock.Unlock()
-
-	c.deleteNetworkPolicyLocked(string(policy.UID))
+	_ = "STUB: not implemented"
+	return
 }
 
-func (c *ruleCache) deleteNetworkPolicyLocked(uid string) {
-	delete(c.policyMap, uid)
-	existingRules, _ := c.rules.ByIndex(policyIndex, uid)
-	for _, r := range existingRules {
-		ruleID := r.(*rule).ID
-		// Count down antrea_agent_ingress_networkpolicy_rule_count or antrea_agent_egress_networkpolicy_rule_count
-		if r.(*rule).Direction == v1beta.DirectionIn {
-			metrics.IngressNetworkPolicyRuleCount.Dec()
-		} else {
-			metrics.EgressNetworkPolicyRuleCount.Dec()
-		}
-		c.rules.Delete(r)
-		c.dirtyRuleHandler(ruleID)
-	}
-	metrics.NetworkPolicyCount.Dec()
-}
+func (c *ruleCache) deleteNetworkPolicyLocked(uid string) { _ = "STUB: not implemented"; return }
+
+// Count down antrea_agent_ingress_networkpolicy_rule_count or antrea_agent_egress_networkpolicy_rule_count
 
 // GetCompletedRule constructs a *CompletedRule for the provided ruleID.
 // If the rule is not effective or not realizable due to missing group data, the return value will indicate it.
@@ -882,123 +433,36 @@ func (c *ruleCache) deleteNetworkPolicyLocked(uid string) {
 // In these cases, it is not guaranteed that all AppliedToGroups in the rule will eventually be present in the cache.
 // Only the AppliedToGroups whose span includes this Node will eventually be received.
 func (c *ruleCache) GetCompletedRule(ruleID string) (completedRule *CompletedRule, effective bool, realizable bool) {
-	obj, exists, _ := c.rules.GetByKey(ruleID)
-	if !exists {
-		return nil, false, false
-	}
-
-	r := obj.(*rule)
-
-	groupMembers, anyExists := c.unionAppliedToGroups(r.AppliedToGroups)
-	if !anyExists {
-		return nil, false, false
-	}
-
-	var fromAddresses, toAddresses v1beta.GroupMemberSet
-	var completed bool
-	if r.Direction == v1beta.DirectionIn {
-		fromAddresses, completed = c.unionAddressGroups(r.From.AddressGroups)
-	} else {
-		toAddresses, completed = c.unionAddressGroups(r.To.AddressGroups)
-	}
-	if !completed {
-		return nil, true, false
-	}
-
-	completedRule = &CompletedRule{
-		rule:          r,
-		FromAddresses: fromAddresses,
-		ToAddresses:   toAddresses,
-		TargetMembers: groupMembers,
-	}
-	return completedRule, true, true
+	_ = "STUB: not implemented"
+	return nil, false, false
 }
 
 // onAppliedToGroupUpdate gets rules referencing to the provided AppliedToGroup
 // and mark them as dirty.
-func (c *ruleCache) onAppliedToGroupUpdate(groupName string) {
-	ruleIDs, _ := c.rules.IndexKeys(appliedToGroupIndex, groupName)
-	for _, ruleID := range ruleIDs {
-		c.dirtyRuleHandler(ruleID)
-	}
-}
+func (c *ruleCache) onAppliedToGroupUpdate(groupName string) { _ = "STUB: not implemented"; return }
 
 // onAddressGroupUpdate gets rules referencing to the provided AddressGroup
 // and mark them as dirty.
-func (c *ruleCache) onAddressGroupUpdate(groupName string) {
-	ruleIDs, _ := c.rules.IndexKeys(addressGroupIndex, groupName)
-	for _, ruleID := range ruleIDs {
-		c.dirtyRuleHandler(ruleID)
-	}
-}
+func (c *ruleCache) onAddressGroupUpdate(groupName string) { _ = "STUB: not implemented"; return }
 
 // unionAddressGroups gets the union of addresses of the provided address groups.
 // If any group is not found, nil and false will be returned to indicate the
 // set is not complete yet.
 func (c *ruleCache) unionAddressGroups(groupNames []string) (v1beta.GroupMemberSet, bool) {
-	c.addressSetLock.RLock()
-	defer c.addressSetLock.RUnlock()
-
-	set := v1beta.NewGroupMemberSet()
-	for _, groupName := range groupNames {
-		curSet, exists := c.addressSetByGroup[groupName]
-		if !exists {
-			klog.V(2).Infof("AddressGroup %v was not found", groupName)
-			return nil, false
-		}
-		set.Merge(curSet)
-	}
-	return set, true
+	_ = "STUB: not implemented"
+	return *new(v1beta.GroupMemberSet), false
 }
 
 // unionAppliedToGroups gets the union of pods of the provided appliedTo groups.
 // If any group is found, the union and true will be returned. Otherwise an empty set and false will be returned.
 func (c *ruleCache) unionAppliedToGroups(groupNames []string) (v1beta.GroupMemberSet, bool) {
-	c.appliedToSetLock.RLock()
-	defer c.appliedToSetLock.RUnlock()
-
-	anyExists := false
-	set := v1beta.NewGroupMemberSet()
-	for _, groupName := range groupNames {
-		curSet, exists := c.appliedToSetByGroup[groupName]
-		if !exists {
-			klog.V(2).Infof("AppliedToGroup %v was not found", groupName)
-			continue
-		}
-		anyExists = true
-		set.Merge(curSet)
-	}
-	return set, anyExists
+	_ = "STUB: not implemented"
+	return *new(v1beta.GroupMemberSet), false
 }
 
 // processServiceGroupIDUpdate gets names of AppliedToGroup by Service NamespacedName.
-func (c *ruleCache) processServiceGroupIDUpdate(svcStr string) {
-	c.appliedToSetLock.RLock()
-	defer c.appliedToSetLock.RUnlock()
+func (c *ruleCache) processServiceGroupIDUpdate(svcStr string) { _ = "STUB: not implemented"; return }
 
-	// Reprocess rules if the Service referred by this rule's ToServices has updated.
-	toSvcRules, err := c.rules.ByIndex(toServicesIndex, svcStr)
-	if err != nil {
-		return
-	}
-	for _, toSvcRule := range toSvcRules {
-		c.dirtyRuleHandler(toSvcRule.(*rule).ID)
-	}
+// Reprocess rules if the Service referred by this rule's ToServices has updated.
 
-	// Reprocess rules if the Service referred by rule's AppliedToGroup has updated.
-	strListSvcRef := strings.Split(svcStr, "/")
-	if len(strListSvcRef) != 2 {
-		return
-	}
-	member := &v1beta.GroupMember{
-		Service: &v1beta.ServiceReference{
-			Name:      strListSvcRef[1],
-			Namespace: strListSvcRef[0],
-		},
-	}
-	for group, memberSet := range c.appliedToSetByGroup {
-		if memberSet.Has(member) {
-			c.onAppliedToGroupUpdate(group)
-		}
-	}
-}
+// Reprocess rules if the Service referred by rule's AppliedToGroup has updated.

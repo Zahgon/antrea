@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	crdv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -55,14 +54,6 @@ type externalIPPools struct {
 
 // newExternalIPPools returns a ExternalIPPools
 func newExternalIPPools(c *CrdV1beta1Client) *externalIPPools {
-	return &externalIPPools{
-		gentype.NewClientWithList[*crdv1beta1.ExternalIPPool, *crdv1beta1.ExternalIPPoolList](
-			"externalippools",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *crdv1beta1.ExternalIPPool { return &crdv1beta1.ExternalIPPool{} },
-			func() *crdv1beta1.ExternalIPPoolList { return &crdv1beta1.ExternalIPPoolList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

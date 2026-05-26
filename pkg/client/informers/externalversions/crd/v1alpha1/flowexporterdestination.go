@@ -17,17 +17,11 @@
 package v1alpha1
 
 import (
-	context "context"
 	time "time"
 
-	apiscrdv1alpha1 "antrea.io/antrea/v2/pkg/apis/crd/v1alpha1"
 	versioned "antrea.io/antrea/v2/pkg/client/clientset/versioned"
 	internalinterfaces "antrea.io/antrea/v2/pkg/client/informers/externalversions/internalinterfaces"
 	crdv1alpha1 "antrea.io/antrea/v2/pkg/client/listers/crd/v1alpha1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	runtime "k8s.io/apimachinery/pkg/runtime"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
-	watch "k8s.io/apimachinery/pkg/watch"
 	cache "k8s.io/client-go/tools/cache"
 )
 
@@ -47,67 +41,37 @@ type flowExporterDestinationInformer struct {
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFlowExporterDestinationInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFlowExporterDestinationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 // NewFilteredFlowExporterDestinationInformer constructs a new informer for FlowExporterDestination type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredFlowExporterDestinationInformer(client versioned.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewFlowExporterDestinationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 // NewFlowExporterDestinationInformerWithOptions constructs a new informer for FlowExporterDestination type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFlowExporterDestinationInformerWithOptions(client versioned.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
-	gvr := schema.GroupVersionResource{Group: "crd.antrea.io", Version: "v1alpha1", Resource: "flowexporterdestinations"}
-	identifier := options.InformerName.WithResource(gvr)
-	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
-		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
-			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.CrdV1alpha1().FlowExporterDestinations().List(context.Background(), opts)
-			},
-			WatchFunc: func(opts v1.ListOptions) (watch.Interface, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.CrdV1alpha1().FlowExporterDestinations().Watch(context.Background(), opts)
-			},
-			ListWithContextFunc: func(ctx context.Context, opts v1.ListOptions) (runtime.Object, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.CrdV1alpha1().FlowExporterDestinations().List(ctx, opts)
-			},
-			WatchFuncWithContext: func(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-				if tweakListOptions != nil {
-					tweakListOptions(&opts)
-				}
-				return client.CrdV1alpha1().FlowExporterDestinations().Watch(ctx, opts)
-			},
-		}, client),
-		&apiscrdv1alpha1.FlowExporterDestination{},
-		cache.SharedIndexInformerOptions{
-			ResyncPeriod: options.ResyncPeriod,
-			Indexers:     options.Indexers,
-			Identifier:   identifier,
-		},
-	)
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *flowExporterDestinationInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFlowExporterDestinationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *flowExporterDestinationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apiscrdv1alpha1.FlowExporterDestination{}, f.defaultInformer)
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 func (f *flowExporterDestinationInformer) Lister() crdv1alpha1.FlowExporterDestinationLister {
-	return crdv1alpha1.NewFlowExporterDestinationLister(f.Informer().GetIndexer())
+	_ = "STUB: not implemented"
+	return *new(crdv1alpha1.FlowExporterDestinationLister)
 }

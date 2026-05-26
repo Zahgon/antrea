@@ -16,7 +16,6 @@ package rule
 
 import (
 	cpv1beta "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	"antrea.io/antrea/v2/pkg/util/ip"
 )
 
 type service struct {
@@ -43,56 +42,18 @@ type Response struct {
 }
 
 func serviceTransform(services ...cpv1beta.Service) []service {
-	var ret []service
-	for _, s := range services {
-		port := "nil"
-		endPort := "nil"
-		if s.Port != nil {
-			port = s.Port.String()
-		}
-		if s.EndPort != nil {
-			endPort = string(*s.EndPort)
-		}
-		ret = append(ret, service{
-			Protocol: string(*s.Protocol),
-			Port:     port,
-			EndPort:  endPort,
-		})
-	}
-	return ret
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func ipBlockTransform(block cpv1beta.IPBlock) ipBlock {
-	var ib ipBlock
-	except := []string{}
-	for i := range block.Except {
-		except = append(except, ip.IPNetToNetIPNet(&block.Except[i]).String())
-	}
-	ib.Except = except
-	if len(block.CIDR.IP) >= 4 {
-		ib.CIDR = ip.IPNetToNetIPNet(&block.CIDR).String()
-	}
-	return ib
+	_ = "STUB: not implemented"
+	return *new(ipBlock)
 }
 
-func peerTransform(p cpv1beta.NetworkPolicyPeer) peer {
-	blocks := []ipBlock{}
-	for _, originBlock := range p.IPBlocks {
-		blocks = append(blocks, ipBlockTransform(originBlock))
-	}
-	return peer{AddressGroups: p.AddressGroups, IPBlocks: blocks}
-}
+func peerTransform(p cpv1beta.NetworkPolicyPeer) peer { _ = "STUB: not implemented"; return *new(peer) }
 
 func ObjectTransform(o interface{}) (interface{}, error) {
-	originRules := o.(*[]cpv1beta.NetworkPolicyRule)
-	var rules []Response
-	for _, rule := range *originRules {
-		rules = append(rules, Response{
-			Direction: string(rule.Direction),
-			From:      peerTransform(rule.From),
-			To:        peerTransform(rule.To),
-			Services:  serviceTransform(rule.Services...),
-		})
-	}
-	return rules, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }

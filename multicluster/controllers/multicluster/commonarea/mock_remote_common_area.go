@@ -26,7 +26,6 @@ package commonarea
 
 import (
 	context "context"
-	reflect "reflect"
 
 	v1alpha2 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha2"
 	common "antrea.io/antrea/v2/multicluster/controllers/multicluster/common"
@@ -52,280 +51,195 @@ type MockCommonAreaMockRecorder struct {
 
 // NewMockCommonArea creates a new mock instance.
 func NewMockCommonArea(ctrl *gomock.Controller) *MockCommonArea {
-	mock := &MockCommonArea{ctrl: ctrl}
-	mock.recorder = &MockCommonAreaMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockCommonArea) EXPECT() *MockCommonAreaMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// Apply mocks base method.
+	return nil
 }
 
-// Apply mocks base method.
 func (m *MockCommonArea) Apply(ctx context.Context, obj runtime.ApplyConfiguration, opts ...client.ApplyOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, obj}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Apply", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Apply indicates an expected call of Apply.
 func (mr *MockCommonAreaMockRecorder) Apply(ctx, obj any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, obj}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Apply", reflect.TypeOf((*MockCommonArea)(nil).Apply), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Create mocks base method.
 func (m *MockCommonArea) Create(ctx context.Context, obj client.Object, opts ...client.CreateOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, obj}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Create", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Create indicates an expected call of Create.
 func (mr *MockCommonAreaMockRecorder) Create(ctx, obj any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, obj}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockCommonArea)(nil).Create), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Delete mocks base method.
 func (m *MockCommonArea) Delete(ctx context.Context, obj client.Object, opts ...client.DeleteOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, obj}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Delete", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Delete indicates an expected call of Delete.
 func (mr *MockCommonAreaMockRecorder) Delete(ctx, obj any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, obj}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockCommonArea)(nil).Delete), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteAllOf mocks base method.
 func (m *MockCommonArea) DeleteAllOf(ctx context.Context, obj client.Object, opts ...client.DeleteAllOfOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, obj}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "DeleteAllOf", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteAllOf indicates an expected call of DeleteAllOf.
 func (mr *MockCommonAreaMockRecorder) DeleteAllOf(ctx, obj any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, obj}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAllOf", reflect.TypeOf((*MockCommonArea)(nil).DeleteAllOf), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Get mocks base method.
 func (m *MockCommonArea) Get(ctx context.Context, key client.ObjectKey, obj client.Object, opts ...client.GetOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, key, obj}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Get", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Get indicates an expected call of Get.
 func (mr *MockCommonAreaMockRecorder) Get(ctx, key, obj any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, key, obj}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockCommonArea)(nil).Get), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetClusterID mocks base method.
 func (m *MockCommonArea) GetClusterID() common.ClusterID {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetClusterID")
-	ret0, _ := ret[0].(common.ClusterID)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(common.ClusterID)
 }
 
 // GetClusterID indicates an expected call of GetClusterID.
 func (mr *MockCommonAreaMockRecorder) GetClusterID() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClusterID", reflect.TypeOf((*MockCommonArea)(nil).GetClusterID))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNamespace mocks base method.
-func (m *MockCommonArea) GetNamespace() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNamespace")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
+func (m *MockCommonArea) GetNamespace() string { _ = "STUB: not implemented"; return "" }
 
 // GetNamespace indicates an expected call of GetNamespace.
 func (mr *MockCommonAreaMockRecorder) GetNamespace() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNamespace", reflect.TypeOf((*MockCommonArea)(nil).GetNamespace))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GroupVersionKindFor mocks base method.
 func (m *MockCommonArea) GroupVersionKindFor(obj runtime.Object) (schema.GroupVersionKind, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GroupVersionKindFor", obj)
-	ret0, _ := ret[0].(schema.GroupVersionKind)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return *new(schema.GroupVersionKind), nil
 }
 
 // GroupVersionKindFor indicates an expected call of GroupVersionKindFor.
 func (mr *MockCommonAreaMockRecorder) GroupVersionKindFor(obj any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GroupVersionKindFor", reflect.TypeOf((*MockCommonArea)(nil).GroupVersionKindFor), obj)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // IsObjectNamespaced mocks base method.
 func (m *MockCommonArea) IsObjectNamespaced(obj runtime.Object) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsObjectNamespaced", obj)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
 // IsObjectNamespaced indicates an expected call of IsObjectNamespaced.
 func (mr *MockCommonAreaMockRecorder) IsObjectNamespaced(obj any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsObjectNamespaced", reflect.TypeOf((*MockCommonArea)(nil).IsObjectNamespaced), obj)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // List mocks base method.
 func (m *MockCommonArea) List(ctx context.Context, list client.ObjectList, opts ...client.ListOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, list}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "List", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // List indicates an expected call of List.
 func (mr *MockCommonAreaMockRecorder) List(ctx, list any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, list}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockCommonArea)(nil).List), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Patch mocks base method.
 func (m *MockCommonArea) Patch(ctx context.Context, obj client.Object, patch client.Patch, opts ...client.PatchOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, obj, patch}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Patch", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Patch indicates an expected call of Patch.
 func (mr *MockCommonAreaMockRecorder) Patch(ctx, obj, patch any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, obj, patch}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Patch", reflect.TypeOf((*MockCommonArea)(nil).Patch), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RESTMapper mocks base method.
 func (m *MockCommonArea) RESTMapper() meta.RESTMapper {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RESTMapper")
-	ret0, _ := ret[0].(meta.RESTMapper)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(meta.RESTMapper)
 }
 
 // RESTMapper indicates an expected call of RESTMapper.
 func (mr *MockCommonAreaMockRecorder) RESTMapper() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RESTMapper", reflect.TypeOf((*MockCommonArea)(nil).RESTMapper))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Scheme mocks base method.
-func (m *MockCommonArea) Scheme() *runtime.Scheme {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Scheme")
-	ret0, _ := ret[0].(*runtime.Scheme)
-	return ret0
-}
+func (m *MockCommonArea) Scheme() *runtime.Scheme { _ = "STUB: not implemented"; return nil }
 
 // Scheme indicates an expected call of Scheme.
-func (mr *MockCommonAreaMockRecorder) Scheme() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Scheme", reflect.TypeOf((*MockCommonArea)(nil).Scheme))
-}
+func (mr *MockCommonAreaMockRecorder) Scheme() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Status mocks base method.
 func (m *MockCommonArea) Status() client.SubResourceWriter {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Status")
-	ret0, _ := ret[0].(client.SubResourceWriter)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(client.SubResourceWriter)
 }
 
 // Status indicates an expected call of Status.
-func (mr *MockCommonAreaMockRecorder) Status() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Status", reflect.TypeOf((*MockCommonArea)(nil).Status))
-}
+func (mr *MockCommonAreaMockRecorder) Status() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // SubResource mocks base method.
 func (m *MockCommonArea) SubResource(subResource string) client.SubResourceClient {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SubResource", subResource)
-	ret0, _ := ret[0].(client.SubResourceClient)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(client.SubResourceClient)
 }
 
 // SubResource indicates an expected call of SubResource.
 func (mr *MockCommonAreaMockRecorder) SubResource(subResource any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SubResource", reflect.TypeOf((*MockCommonArea)(nil).SubResource), subResource)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Update mocks base method.
 func (m *MockCommonArea) Update(ctx context.Context, obj client.Object, opts ...client.UpdateOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, obj}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Update", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Update indicates an expected call of Update.
 func (mr *MockCommonAreaMockRecorder) Update(ctx, obj any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, obj}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockCommonArea)(nil).Update), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockRemoteCommonArea is a mock of RemoteCommonArea interface.
@@ -342,386 +256,282 @@ type MockRemoteCommonAreaMockRecorder struct {
 
 // NewMockRemoteCommonArea creates a new mock instance.
 func NewMockRemoteCommonArea(ctrl *gomock.Controller) *MockRemoteCommonArea {
-	mock := &MockRemoteCommonArea{ctrl: ctrl}
-	mock.recorder = &MockRemoteCommonAreaMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockRemoteCommonArea) EXPECT() *MockRemoteCommonAreaMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddImportReconciler mocks base method.
+	return nil
 }
 
-// AddImportReconciler mocks base method.
 func (m *MockRemoteCommonArea) AddImportReconciler(reconciler ImportReconciler) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "AddImportReconciler", reconciler)
+	_ = "STUB: not implemented"
+	return
 }
 
 // AddImportReconciler indicates an expected call of AddImportReconciler.
 func (mr *MockRemoteCommonAreaMockRecorder) AddImportReconciler(reconciler any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddImportReconciler", reflect.TypeOf((*MockRemoteCommonArea)(nil).AddImportReconciler), reconciler)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Apply mocks base method.
 func (m *MockRemoteCommonArea) Apply(ctx context.Context, obj runtime.ApplyConfiguration, opts ...client.ApplyOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, obj}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Apply", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Apply indicates an expected call of Apply.
 func (mr *MockRemoteCommonAreaMockRecorder) Apply(ctx, obj any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, obj}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Apply", reflect.TypeOf((*MockRemoteCommonArea)(nil).Apply), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Create mocks base method.
 func (m *MockRemoteCommonArea) Create(ctx context.Context, obj client.Object, opts ...client.CreateOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, obj}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Create", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Create indicates an expected call of Create.
 func (mr *MockRemoteCommonAreaMockRecorder) Create(ctx, obj any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, obj}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRemoteCommonArea)(nil).Create), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Delete mocks base method.
 func (m *MockRemoteCommonArea) Delete(ctx context.Context, obj client.Object, opts ...client.DeleteOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, obj}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Delete", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Delete indicates an expected call of Delete.
 func (mr *MockRemoteCommonAreaMockRecorder) Delete(ctx, obj any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, obj}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockRemoteCommonArea)(nil).Delete), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteAllOf mocks base method.
 func (m *MockRemoteCommonArea) DeleteAllOf(ctx context.Context, obj client.Object, opts ...client.DeleteAllOfOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, obj}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "DeleteAllOf", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteAllOf indicates an expected call of DeleteAllOf.
 func (mr *MockRemoteCommonAreaMockRecorder) DeleteAllOf(ctx, obj any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, obj}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAllOf", reflect.TypeOf((*MockRemoteCommonArea)(nil).DeleteAllOf), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Get mocks base method.
 func (m *MockRemoteCommonArea) Get(ctx context.Context, key client.ObjectKey, obj client.Object, opts ...client.GetOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, key, obj}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Get", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Get indicates an expected call of Get.
 func (mr *MockRemoteCommonAreaMockRecorder) Get(ctx, key, obj any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, key, obj}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockRemoteCommonArea)(nil).Get), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetClusterID mocks base method.
 func (m *MockRemoteCommonArea) GetClusterID() common.ClusterID {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetClusterID")
-	ret0, _ := ret[0].(common.ClusterID)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(common.ClusterID)
 }
 
 // GetClusterID indicates an expected call of GetClusterID.
 func (mr *MockRemoteCommonAreaMockRecorder) GetClusterID() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClusterID", reflect.TypeOf((*MockRemoteCommonArea)(nil).GetClusterID))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetLocalClusterID mocks base method.
-func (m *MockRemoteCommonArea) GetLocalClusterID() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetLocalClusterID")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
+func (m *MockRemoteCommonArea) GetLocalClusterID() string { _ = "STUB: not implemented"; return "" }
 
 // GetLocalClusterID indicates an expected call of GetLocalClusterID.
 func (mr *MockRemoteCommonAreaMockRecorder) GetLocalClusterID() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLocalClusterID", reflect.TypeOf((*MockRemoteCommonArea)(nil).GetLocalClusterID))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNamespace mocks base method.
-func (m *MockRemoteCommonArea) GetNamespace() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNamespace")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
+func (m *MockRemoteCommonArea) GetNamespace() string { _ = "STUB: not implemented"; return "" }
 
 // GetNamespace indicates an expected call of GetNamespace.
 func (mr *MockRemoteCommonAreaMockRecorder) GetNamespace() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNamespace", reflect.TypeOf((*MockRemoteCommonArea)(nil).GetNamespace))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetStatus mocks base method.
 func (m *MockRemoteCommonArea) GetStatus() []v1alpha2.ClusterCondition {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetStatus")
-	ret0, _ := ret[0].([]v1alpha2.ClusterCondition)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetStatus indicates an expected call of GetStatus.
 func (mr *MockRemoteCommonAreaMockRecorder) GetStatus() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStatus", reflect.TypeOf((*MockRemoteCommonArea)(nil).GetStatus))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GroupVersionKindFor mocks base method.
 func (m *MockRemoteCommonArea) GroupVersionKindFor(obj runtime.Object) (schema.GroupVersionKind, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GroupVersionKindFor", obj)
-	ret0, _ := ret[0].(schema.GroupVersionKind)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return *new(schema.GroupVersionKind), nil
 }
 
 // GroupVersionKindFor indicates an expected call of GroupVersionKindFor.
 func (mr *MockRemoteCommonAreaMockRecorder) GroupVersionKindFor(obj any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GroupVersionKindFor", reflect.TypeOf((*MockRemoteCommonArea)(nil).GroupVersionKindFor), obj)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // IsConnected mocks base method.
-func (m *MockRemoteCommonArea) IsConnected() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsConnected")
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
+func (m *MockRemoteCommonArea) IsConnected() bool { _ = "STUB: not implemented"; return false }
 
 // IsConnected indicates an expected call of IsConnected.
 func (mr *MockRemoteCommonAreaMockRecorder) IsConnected() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsConnected", reflect.TypeOf((*MockRemoteCommonArea)(nil).IsConnected))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // IsObjectNamespaced mocks base method.
 func (m *MockRemoteCommonArea) IsObjectNamespaced(obj runtime.Object) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsObjectNamespaced", obj)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
 // IsObjectNamespaced indicates an expected call of IsObjectNamespaced.
 func (mr *MockRemoteCommonAreaMockRecorder) IsObjectNamespaced(obj any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsObjectNamespaced", reflect.TypeOf((*MockRemoteCommonArea)(nil).IsObjectNamespaced), obj)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // List mocks base method.
 func (m *MockRemoteCommonArea) List(ctx context.Context, list client.ObjectList, opts ...client.ListOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, list}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "List", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // List indicates an expected call of List.
 func (mr *MockRemoteCommonAreaMockRecorder) List(ctx, list any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, list}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockRemoteCommonArea)(nil).List), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Patch mocks base method.
 func (m *MockRemoteCommonArea) Patch(ctx context.Context, obj client.Object, patch client.Patch, opts ...client.PatchOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, obj, patch}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Patch", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Patch indicates an expected call of Patch.
 func (mr *MockRemoteCommonAreaMockRecorder) Patch(ctx, obj, patch any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, obj, patch}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Patch", reflect.TypeOf((*MockRemoteCommonArea)(nil).Patch), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RESTMapper mocks base method.
 func (m *MockRemoteCommonArea) RESTMapper() meta.RESTMapper {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RESTMapper")
-	ret0, _ := ret[0].(meta.RESTMapper)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(meta.RESTMapper)
 }
 
 // RESTMapper indicates an expected call of RESTMapper.
 func (mr *MockRemoteCommonAreaMockRecorder) RESTMapper() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RESTMapper", reflect.TypeOf((*MockRemoteCommonArea)(nil).RESTMapper))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Scheme mocks base method.
-func (m *MockRemoteCommonArea) Scheme() *runtime.Scheme {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Scheme")
-	ret0, _ := ret[0].(*runtime.Scheme)
-	return ret0
-}
+func (m *MockRemoteCommonArea) Scheme() *runtime.Scheme { _ = "STUB: not implemented"; return nil }
 
 // Scheme indicates an expected call of Scheme.
 func (mr *MockRemoteCommonAreaMockRecorder) Scheme() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Scheme", reflect.TypeOf((*MockRemoteCommonArea)(nil).Scheme))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Start mocks base method.
 func (m *MockRemoteCommonArea) Start() context.CancelFunc {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Start")
-	ret0, _ := ret[0].(context.CancelFunc)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(context.CancelFunc)
 }
 
 // Start indicates an expected call of Start.
 func (mr *MockRemoteCommonAreaMockRecorder) Start() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Start", reflect.TypeOf((*MockRemoteCommonArea)(nil).Start))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // StartWatching mocks base method.
-func (m *MockRemoteCommonArea) StartWatching() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StartWatching")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockRemoteCommonArea) StartWatching() error { _ = "STUB: not implemented"; return nil }
 
 // StartWatching indicates an expected call of StartWatching.
 func (mr *MockRemoteCommonAreaMockRecorder) StartWatching() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartWatching", reflect.TypeOf((*MockRemoteCommonArea)(nil).StartWatching))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Status mocks base method.
 func (m *MockRemoteCommonArea) Status() client.SubResourceWriter {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Status")
-	ret0, _ := ret[0].(client.SubResourceWriter)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(client.SubResourceWriter)
 }
 
 // Status indicates an expected call of Status.
 func (mr *MockRemoteCommonAreaMockRecorder) Status() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Status", reflect.TypeOf((*MockRemoteCommonArea)(nil).Status))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Stop mocks base method.
-func (m *MockRemoteCommonArea) Stop() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Stop")
-}
+func (m *MockRemoteCommonArea) Stop() { _ = "STUB: not implemented"; return }
 
 // Stop indicates an expected call of Stop.
 func (mr *MockRemoteCommonAreaMockRecorder) Stop() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Stop", reflect.TypeOf((*MockRemoteCommonArea)(nil).Stop))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // StopWatching mocks base method.
-func (m *MockRemoteCommonArea) StopWatching() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "StopWatching")
-}
+func (m *MockRemoteCommonArea) StopWatching() { _ = "STUB: not implemented"; return }
 
 // StopWatching indicates an expected call of StopWatching.
 func (mr *MockRemoteCommonAreaMockRecorder) StopWatching() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StopWatching", reflect.TypeOf((*MockRemoteCommonArea)(nil).StopWatching))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SubResource mocks base method.
 func (m *MockRemoteCommonArea) SubResource(subResource string) client.SubResourceClient {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SubResource", subResource)
-	ret0, _ := ret[0].(client.SubResourceClient)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(client.SubResourceClient)
 }
 
 // SubResource indicates an expected call of SubResource.
 func (mr *MockRemoteCommonAreaMockRecorder) SubResource(subResource any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SubResource", reflect.TypeOf((*MockRemoteCommonArea)(nil).SubResource), subResource)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Update mocks base method.
 func (m *MockRemoteCommonArea) Update(ctx context.Context, obj client.Object, opts ...client.UpdateOption) error {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, obj}
-	for _, a := range opts {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Update", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Update indicates an expected call of Update.
 func (mr *MockRemoteCommonAreaMockRecorder) Update(ctx, obj any, opts ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, obj}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockRemoteCommonArea)(nil).Update), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockImportReconciler is a mock of ImportReconciler interface.
@@ -738,28 +548,27 @@ type MockImportReconcilerMockRecorder struct {
 
 // NewMockImportReconciler creates a new mock instance.
 func NewMockImportReconciler(ctrl *gomock.Controller) *MockImportReconciler {
-	mock := &MockImportReconciler{ctrl: ctrl}
-	mock.recorder = &MockImportReconcilerMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockImportReconciler) EXPECT() *MockImportReconcilerMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// SetupWithManager mocks base method.
+	return nil
 }
 
-// SetupWithManager mocks base method.
 func (m *MockImportReconciler) SetupWithManager(mgr controllerruntime.Manager) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetupWithManager", mgr)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetupWithManager indicates an expected call of SetupWithManager.
 func (mr *MockImportReconcilerMockRecorder) SetupWithManager(mgr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetupWithManager", reflect.TypeOf((*MockImportReconciler)(nil).SetupWithManager), mgr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockRemoteCommonAreaGetter is a mock of RemoteCommonAreaGetter interface.
@@ -776,28 +585,25 @@ type MockRemoteCommonAreaGetterMockRecorder struct {
 
 // NewMockRemoteCommonAreaGetter creates a new mock instance.
 func NewMockRemoteCommonAreaGetter(ctrl *gomock.Controller) *MockRemoteCommonAreaGetter {
-	mock := &MockRemoteCommonAreaGetter{ctrl: ctrl}
-	mock.recorder = &MockRemoteCommonAreaGetterMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockRemoteCommonAreaGetter) EXPECT() *MockRemoteCommonAreaGetterMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetRemoteCommonAreaAndLocalID mocks base method.
+	return nil
 }
 
-// GetRemoteCommonAreaAndLocalID mocks base method.
 func (m *MockRemoteCommonAreaGetter) GetRemoteCommonAreaAndLocalID() (RemoteCommonArea, string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetRemoteCommonAreaAndLocalID")
-	ret0, _ := ret[0].(RemoteCommonArea)
-	ret1, _ := ret[1].(string)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	_ = "STUB: not implemented"
+	return *new(RemoteCommonArea), "", nil
 }
 
 // GetRemoteCommonAreaAndLocalID indicates an expected call of GetRemoteCommonAreaAndLocalID.
 func (mr *MockRemoteCommonAreaGetterMockRecorder) GetRemoteCommonAreaAndLocalID() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRemoteCommonAreaAndLocalID", reflect.TypeOf((*MockRemoteCommonAreaGetter)(nil).GetRemoteCommonAreaAndLocalID))
+	_ = "STUB: not implemented"
+	return nil
 }

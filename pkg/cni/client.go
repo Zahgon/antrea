@@ -15,16 +15,7 @@
 package cni
 
 import (
-	"context"
-	"fmt"
-	"os"
-
 	"github.com/containernetworking/cni/pkg/skel"
-	"github.com/containernetworking/cni/pkg/types"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	grpcinsecure "google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/status"
 
 	cnipb "antrea.io/antrea/v2/pkg/apis/cni/v1beta1"
 )
@@ -86,82 +77,25 @@ const AntreaCNIVersion = "1.0.0-beta.1"
 var withClient = rpcClient
 
 func rpcClient(f func(client cnipb.CniClient) error) error {
+	_ = "STUB: not implemented"
 	// When using a custom dialer, it makes more sense to use the deprecated grpc.Dial function
 	// instead of grpc.NewClient, as grpc.Dial will default to the "dns" resolver (instead of
 	// the legacy "passthrough" resolver). Using grpc.NewClient would require us to explicitly
 	// add the "passthrough" scheme to the target address. Note that grpc.Dial will stay
 	// supported throughout gRPC 1.x.
 	// A custom dialer is required for Windows named-pipe support.
-	//nolint: staticcheck
-	conn, err := grpc.Dial(
-		AntreaCNISocketAddr,
-		grpc.WithTransportCredentials(grpcinsecure.NewCredentials()),
-		grpc.WithContextDialer(dial),
-	)
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
-	return f(cnipb.NewCniClient(conn))
+	// nolint: staticcheck
+	return nil
 }
 
 // Request requests the antrea-agent to execute the specified action with the provided arguments via RPC.
 // If successful, it outputs the result to stdout and returns nil. Otherwise types.Error is returned.
-func (a Action) Request(arg *skel.CmdArgs) error {
-	return withClient(func(client cnipb.CniClient) error {
-		cmdRequest := cnipb.CniCmdRequest{
-			CniArgs: &cnipb.CniCmdArgs{
-				ContainerId:          arg.ContainerID,
-				Ifname:               arg.IfName,
-				Args:                 arg.Args,
-				Netns:                arg.Netns,
-				NetworkConfiguration: arg.StdinData,
-				Path:                 arg.Path,
-			},
-		}
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
+func (a Action) Request(arg *skel.CmdArgs) error { _ = "STUB: not implemented"; return nil }
 
-		var resp *cnipb.CniCmdResponse
-		var err error
+// Handle gRPC errors.
 
-		switch a {
-		case ActionAdd:
-			resp, err = client.CmdAdd(ctx, &cmdRequest)
-		case ActionCheck:
-			resp, err = client.CmdCheck(ctx, &cmdRequest)
-		case ActionDel:
-			resp, err = client.CmdDel(ctx, &cmdRequest)
-		}
+// network errors, could be transient.
 
-		// Handle gRPC errors.
-		if status.Code(err) == codes.Unimplemented {
-			return &types.Error{
-				Code:    uint(cnipb.ErrorCode_INCOMPATIBLE_API_VERSION),
-				Msg:     fmt.Sprintf("incompatible CNI API version between client (antrea-cni) and server (antrea-agent), client is using version %s", AntreaCNIVersion),
-				Details: fmt.Sprintf("service or method unimplemented by gRPC server: %v", err.Error()),
-			}
-		} else if status.Code(err) == codes.Unavailable || status.Code(err) == codes.DeadlineExceeded {
-			// network errors, could be transient.
-			return &types.Error{
-				Code: uint(cnipb.ErrorCode_TRY_AGAIN_LATER),
-				Msg:  err.Error(),
-			}
-		} else if err != nil { // all other RPC errors.
-			return &types.Error{
-				Code: uint(cnipb.ErrorCode_UNKNOWN_RPC_ERROR),
-				Msg:  err.Error(),
-			}
-		}
+// all other RPC errors.
 
-		// Handle errors during CNI execution.
-		if resp.Error != nil {
-			return &types.Error{
-				Code: uint(resp.Error.Code),
-				Msg:  resp.Error.Message,
-			}
-		}
-		os.Stdout.Write(resp.CniResult)
-		return nil
-	})
-}
+// Handle errors during CNI execution.

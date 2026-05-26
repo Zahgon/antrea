@@ -21,10 +21,6 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/log"
-	"antrea.io/antrea/v2/pkg/version"
 )
 
 func main() {
@@ -34,23 +30,4 @@ func main() {
 	}
 }
 
-func newSimulatorCommand() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:  "antrea-agent-simulator",
-		Long: "The Antrea agent simulator.",
-		Run: func(cmd *cobra.Command, args []string) {
-			log.InitLogs(cmd.Flags())
-			defer log.FlushLogs()
-
-			if err := run(); err != nil {
-				klog.Fatalf("Error running agent: %v", err)
-			}
-		},
-		Version: version.GetFullVersionWithRuntimeInfo(),
-	}
-
-	flags := cmd.Flags()
-	log.AddFlags(flags)
-
-	return cmd
-}
+func newSimulatorCommand() *cobra.Command { _ = "STUB: not implemented"; return nil }

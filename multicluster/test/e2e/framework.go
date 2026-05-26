@@ -15,12 +15,9 @@
 package e2e
 
 import (
-	"fmt"
 	"os"
-	"strings"
 	"time"
 
-	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 
 	crdv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
@@ -78,196 +75,89 @@ type MCTestData struct {
 
 var testData *MCTestData
 
-func (data *MCTestData) createClients() error {
-	kubeConfigPaths := []string{
-		testOptions.leaderClusterKubeConfigPath,
-		testOptions.eastClusterKubeConfigPath,
-		testOptions.westClusterKubeConfigPath,
-	}
-	data.clusters = []string{
-		leaderCluster, eastCluster, westCluster,
-	}
-	data.clusterTestDataMap = make(map[string]*antreae2e.TestData)
-	for i, cluster := range data.clusters {
-		testData := &antreae2e.TestData{ClusterName: cluster}
-		if err := testData.CreateClient(kubeConfigPaths[i]); err != nil {
-			return fmt.Errorf("error initializing clients for cluster %s: %v", cluster, err)
-		}
-		data.clusterTestDataMap[cluster] = testData
-	}
-	data.controlPlaneNames = map[string]string{
-		"east-cluster":   "east-control-plane",
-		"west-cluster":   "west-control-plane",
-		"leader-cluster": "leader-control-plane",
-	}
-	return nil
-}
+func (data *MCTestData) createClients() error { _ = "STUB: not implemented"; return nil }
 
-func (data *MCTestData) initProviders() error {
-	providerName := "remote"
-	if testOptions.providerName == "kind" {
-		providerName = testOptions.providerName
-	}
-	for cluster, d := range data.clusterTestDataMap {
-		if err := d.InitProvider(providerName, "multicluster"); err != nil {
-			log.Errorf("Failed to initialize provider for cluster %s", cluster)
-			return err
-		}
-	}
-	if testOptions.providerName == "kind" {
-		provider, _ = providers.NewKindProvider("multicluster")
-	} else {
-		provider, _ = providers.NewRemoteProvider("multicluster")
-	}
-	return nil
-}
+func (data *MCTestData) initProviders() error { _ = "STUB: not implemented"; return nil }
 
-func (data *MCTestData) createTestNamespaces() error {
-	for cluster, d := range data.clusterTestDataMap {
-		if err := d.CreateNamespace(multiClusterTestNamespace, nil); err != nil {
-			log.Errorf("Failed to create Namespace %s in cluster %s", multiClusterTestNamespace, cluster)
-			return err
-		}
-	}
-	return nil
-}
+func (data *MCTestData) createTestNamespaces() error { _ = "STUB: not implemented"; return nil }
 
-func (data *MCTestData) deleteTestNamespaces() error {
-	for cluster, d := range data.clusterTestDataMap {
-		if err := d.DeleteNamespace(multiClusterTestNamespace, defaultTimeout); err != nil {
-			log.Errorf("Failed to delete Namespace %s in cluster %s", multiClusterTestNamespace, cluster)
-			return err
-		}
-	}
-	return nil
-}
+func (data *MCTestData) deleteTestNamespaces() error { _ = "STUB: not implemented"; return nil }
 
 func (data *MCTestData) patchPod(clusterName, namespace, name string, patch []byte) error {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		if err := d.PatchPod(namespace, name, patch); err != nil {
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (data *MCTestData) deletePod(clusterName, namespace, name string) error {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		if err := d.DeletePod(namespace, name); err != nil {
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (data *MCTestData) deletePodAndWait(clusterName, namespace, name string) error {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		if err := d.DeletePodAndWait(defaultTimeout, namespace, name); err != nil {
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (data *MCTestData) deleteService(clusterName, namespace, name string) error {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		if err := d.DeleteService(namespace, name); err != nil {
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (data *MCTestData) getService(clusterName, namespace, name string) (*corev1.Service, error) {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		return d.GetService(namespace, name)
-	}
-	return nil, fmt.Errorf("clusterName %s not found", clusterName)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (data *MCTestData) createPod(clusterName, name, nodeName, namespace, ctrName, image string, command []string,
 	args []string, env []corev1.EnvVar, ports []corev1.ContainerPort, hostNetwork bool, mutateFunc func(pod *corev1.Pod)) error {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		return antreae2e.NewPodBuilder(name, namespace, image).
-			OnNode(nodeName).WithContainerName(ctrName).
-			WithCommand(command).WithArgs(args).
-			WithEnv(env).WithPorts(ports).WithHostNetwork(hostNetwork).
-			WithMutateFunc(mutateFunc).
-			Create(d)
-	}
-	return fmt.Errorf("clusterName %s not found", clusterName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (data *MCTestData) updatePod(clusterName string, namespace, name string, mutateFunc func(*corev1.Pod)) error {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		if err := d.UpdatePod(namespace, name, mutateFunc); err != nil {
-			return err
-		}
-		return nil
-	}
-	return fmt.Errorf("clusterName %s not found", clusterName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (data *MCTestData) updateNamespace(clusterName string, namespace string, mutateFunc func(*corev1.Namespace)) error {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		if err := d.UpdateNamespace(namespace, mutateFunc); err != nil {
-			return err
-		}
-		return nil
-	}
-	return fmt.Errorf("clusterName %s not found", clusterName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (data *MCTestData) createService(clusterName, serviceName, namespace string, port int32, targetPort int32,
 	protocol corev1.Protocol, selector map[string]string, affinity bool, nodeLocalExternal bool, serviceType corev1.ServiceType,
 	ipFamily *corev1.IPFamily, annotation map[string]string) (*corev1.Service, error) {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		svc, err := d.CreateServiceWithAnnotations(serviceName, namespace, port, targetPort, protocol, selector, affinity, nodeLocalExternal, serviceType, ipFamily, annotation)
-		if err != nil {
-			return nil, err
-		}
-		return svc, nil
-	}
-	return nil, fmt.Errorf("clusterName %s not found", clusterName)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (data *MCTestData) createOrUpdateANNP(clusterName string, annp *crdv1beta1.NetworkPolicy) (*crdv1beta1.NetworkPolicy, error) {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		return d.CreateOrUpdateANNP(annp)
-	}
-	return nil, fmt.Errorf("clusterName %s not found", clusterName)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // deleteANNP is a convenience function for deleting ANNP by name and Namespace.
 func (data *MCTestData) deleteANNP(clusterName, namespace, name string) error {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		return d.DeleteANNP(namespace, name)
-	}
-	return fmt.Errorf("clusterName %s not found", clusterName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (data *MCTestData) createOrUpdateACNP(clusterName string, acnp *crdv1beta1.ClusterNetworkPolicy) (*crdv1beta1.ClusterNetworkPolicy, error) {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		return d.CreateOrUpdateACNP(acnp)
-	}
-	return nil, fmt.Errorf("clusterName %s not found", clusterName)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // deleteACNP is a convenience function for deleting ACNP by name.
 func (data *MCTestData) deleteACNP(clusterName, name string) error {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		return d.DeleteACNP(name)
-	}
-	return fmt.Errorf("clusterName %s not found", clusterName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // podWaitFor polls the K8s apiserver until the specified Pod is found (in the test Namespace) and
 // the condition predicate is met (or until the provided timeout expires).
 func (data *MCTestData) podWaitFor(timeout time.Duration, clusterName, name, namespace string, condition antreae2e.PodCondition) (*corev1.Pod, error) {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		return d.PodWaitFor(timeout, name, namespace, condition)
-	}
-	return nil, fmt.Errorf("clusterName %s not found", clusterName)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (data *MCTestData) probeServiceFromPodInCluster(
@@ -277,16 +167,7 @@ func (data *MCTestData) probeServiceFromPodInCluster(
 	podNamespace string,
 	serviceIP string,
 ) error {
-	cmd := []string{
-		"/bin/sh",
-		"-c",
-		fmt.Sprintf("curl --connect-timeout 5 -s %s", serviceIP),
-	}
-	log.Tracef("Running: kubectl exec %s -c %s -n %s -- %s", podName, containerName, podNamespace, strings.Join(cmd, " "))
-	stdout, stderr, err := data.runCommandFromPod(cluster, podNamespace, podName, containerName, cmd)
-	if err != nil || stderr != "" {
-		return fmt.Errorf("%s -> %s: error when running command: err - %v /// stdout - %s /// stderr - %s", podName, serviceIP, err, stdout, stderr)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
@@ -300,25 +181,14 @@ func (data *MCTestData) probeFromPodInCluster(
 	port int32,
 	protocol corev1.Protocol,
 ) antreae2e.PodConnectivityMark {
-	protocolStr := map[corev1.Protocol]string{
-		corev1.ProtocolTCP:  "tcp",
-		corev1.ProtocolUDP:  "udp",
-		corev1.ProtocolSCTP: "sctp",
-	}
-	cmd := antreae2e.ProbeCommand(fmt.Sprintf("%s:%d", dstAddr, port), protocolStr[protocol], "")
-	d, ok := data.clusterTestDataMap[cluster]
-	if !ok {
-		return antreae2e.Error
-	}
-	return d.RunProbeCommand(podNamespace, podName, containerName, podName, dstName, cmd, nil)
+	_ = "STUB: not implemented"
+	return *new(antreae2e.PodConnectivityMark)
 }
 
 // Run the provided command in the specified Container for the given Pod and returns the contents of
 // stdout and stderr as strings. An error either indicates that the command couldn't be run or that
 // the command returned a non-zero error code.
 func (data *MCTestData) runCommandFromPod(clusterName, podNamespace, podName, containerName string, cmd []string) (stdout string, stderr string, err error) {
-	if d, ok := data.clusterTestDataMap[clusterName]; ok {
-		return d.RunCommandFromPod(podNamespace, podName, containerName, cmd)
-	}
-	return "", "", fmt.Errorf("clusterName %s not found", clusterName)
+	_ = "STUB: not implemented"
+	return "", "", nil
 }

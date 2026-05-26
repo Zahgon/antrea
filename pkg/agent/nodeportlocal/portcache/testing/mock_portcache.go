@@ -26,7 +26,6 @@ package testing
 
 import (
 	io "io"
-	reflect "reflect"
 
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,27 +44,25 @@ type MockLocalPortOpenerMockRecorder struct {
 
 // NewMockLocalPortOpener creates a new mock instance.
 func NewMockLocalPortOpener(ctrl *gomock.Controller) *MockLocalPortOpener {
-	mock := &MockLocalPortOpener{ctrl: ctrl}
-	mock.recorder = &MockLocalPortOpenerMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockLocalPortOpener) EXPECT() *MockLocalPortOpenerMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// OpenLocalPort mocks base method.
+	return nil
 }
 
-// OpenLocalPort mocks base method.
 func (m *MockLocalPortOpener) OpenLocalPort(port int, protocol string, isIPv6 bool) (io.Closer, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OpenLocalPort", port, protocol, isIPv6)
-	ret0, _ := ret[0].(io.Closer)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return *new(io.Closer), nil
 }
 
 // OpenLocalPort indicates an expected call of OpenLocalPort.
 func (mr *MockLocalPortOpenerMockRecorder) OpenLocalPort(port, protocol, isIPv6 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OpenLocalPort", reflect.TypeOf((*MockLocalPortOpener)(nil).OpenLocalPort), port, protocol, isIPv6)
+	_ = "STUB: not implemented"
+	return nil
 }

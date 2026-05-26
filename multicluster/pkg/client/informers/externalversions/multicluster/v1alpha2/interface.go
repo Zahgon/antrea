@@ -36,15 +36,18 @@ type version struct {
 
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
-	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(Interface)
 }
 
 // ClusterClaims returns a ClusterClaimInformer.
 func (v *version) ClusterClaims() ClusterClaimInformer {
-	return &clusterClaimInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(ClusterClaimInformer)
 }
 
 // ClusterSets returns a ClusterSetInformer.
 func (v *version) ClusterSets() ClusterSetInformer {
-	return &clusterSetInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(ClusterSetInformer)
 }

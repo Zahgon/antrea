@@ -15,20 +15,11 @@
 package networkpolicy
 
 import (
-	"errors"
-	"fmt"
-	"net"
 	"net/netip"
-	"time"
 
 	"antrea.io/libOpenflow/openflow15"
 	"antrea.io/ofnet/ofctrl"
-	"github.com/vmware/go-ipfix/pkg/registry"
-	"k8s.io/klog/v2"
 
-	"antrea.io/antrea/v2/pkg/agent/flowexporter/connection"
-	flowexporterutils "antrea.io/antrea/v2/pkg/agent/flowexporter/utils"
-	"antrea.io/antrea/v2/pkg/agent/openflow"
 	binding "antrea.io/antrea/v2/pkg/ovs/openflow"
 )
 
@@ -36,252 +27,85 @@ import (
 // policy agent controller. It performs the appropriate operations based on which
 // bits are set in the "custom reasons" field of the packet received from OVS.
 func (c *Controller) HandlePacketIn(pktIn *ofctrl.PacketIn) error {
-	if pktIn == nil {
-		return errors.New("empty packetIn for Antrea Policy")
-	}
-
-	if len(pktIn.UserData) < 2 {
-		return errors.New("packetIn for Antrea Policy miss the required userdata")
-	}
-	packetInOperations := pktIn.UserData[1]
-	// Choose operations.
-	var checkOperation = func(operation uint8) bool {
-		return packetInOperations&operation == operation
-	}
-	if checkOperation(openflow.PacketInNPLoggingOperation) {
-		if err := c.logPacketAction(pktIn); err != nil {
-			return err
-		}
-	}
-	if checkOperation(openflow.PacketInNPRejectOperation) {
-		if err := c.rejectRequestAction(pktIn); err != nil {
-			return err
-		}
-	}
-	if checkOperation(openflow.PacketInNPStoreDenyOperation) {
-		if err := c.storeDenyConnectionAction(pktIn); err != nil {
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
+// Choose operations.
+
 // getMatchRegField returns match to the regNum register.
 func getMatchRegField(matchers *ofctrl.Matchers, field *binding.RegField) *ofctrl.MatchField {
-	return openflow.GetMatchFieldByRegID(matchers, field.GetRegID())
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // getMatch receives ofctrl matchers and table id, match field.
 // Modifies match field to Ingress/Egress register based on tableID.
 func getMatch(matchers *ofctrl.Matchers, tableID uint8, disposition uint32) *ofctrl.MatchField {
+	_ = "STUB: not implemented"
 	// Get match from CNPDenyConjIDReg if disposition is Drop or Reject.
-	if disposition == openflow.DispositionDrop || disposition == openflow.DispositionRej {
-		return getMatchRegField(matchers, openflow.APConjIDField)
-	}
-	// Get match from ingress/egress reg if disposition is Allow or Pass.
-	for _, table := range append(openflow.GetAntreaPolicyEgressTables(), openflow.EgressRuleTable) {
-		if table.IsInitialized() && tableID == table.GetID() {
-			return getMatchRegField(matchers, openflow.TFEgressConjIDField)
-		}
-	}
-	for _, table := range append(openflow.GetAntreaPolicyIngressTables(), openflow.IngressRuleTable) {
-		if table.IsInitialized() && tableID == table.GetID() {
-			return getMatchRegField(matchers, openflow.TFIngressConjIDField)
-		}
-	}
 	return nil
 }
 
+// Get match from ingress/egress reg if disposition is Allow or Pass.
+
 // getInfoInReg unloads and returns data stored in the match field.
 func getInfoInReg(regMatch *ofctrl.MatchField, rng *openflow15.NXRange) (uint32, error) {
-	regValue, ok := regMatch.GetValue().(*ofctrl.NXRegister)
-	if !ok {
-		return 0, errors.New("register value cannot be retrieved")
-	}
-	if rng != nil {
-		return ofctrl.GetUint32ValueWithRange(regValue.Data, rng), nil
-	}
-	return regValue.Data, nil
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 func (c *Controller) storeDenyConnection(pktIn *ofctrl.PacketIn) error {
-	packet, err := binding.ParsePacketIn(pktIn)
-	if err != nil {
-		return fmt.Errorf("error in parsing packetIn: %w", err)
-	}
-	return c.storeDenyConnectionParsed(pktIn, packet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // storeDenyConnectionParsed takes a parsed packet as input, making it easier to unit test than storeDenyConnection.
 func (c *Controller) storeDenyConnectionParsed(pktIn *ofctrl.PacketIn, packet *binding.Packet) error {
-	matchers := pktIn.GetMatches()
-
-	// Get 5-tuple information
-	sourceAddr, _ := netip.AddrFromSlice(packet.SourceIP)
-	destinationAddr, _ := netip.AddrFromSlice(packet.DestinationIP)
-	tuple := connection.Tuple{
-		SourceAddress:      sourceAddr,
-		DestinationAddress: destinationAddr,
-		SourcePort:         packet.SourcePort,
-		DestinationPort:    packet.DestinationPort,
-		Protocol:           packet.IPProto,
-	}
-
-	// Generate deny connection and add to deny connection store
-	denyConn := connection.Connection{}
-	denyConn.FlowKey = tuple
-	denyConn.OriginalDestinationAddress = tuple.DestinationAddress
-	denyConn.OriginalDestinationPort = tuple.DestinationPort
-	denyConn.Mark = getCTMarkValue(matchers)
-	denyConn.Labels = getCTLabelValue(matchers)
-	nwDstValue := getCTNwDstValue(matchers)
-	dstPortValue := getCTTpDstValue(matchers)
-	if nwDstValue.IsValid() {
-		denyConn.OriginalDestinationAddress = nwDstValue
-	}
-	if dstPortValue != 0 {
-		denyConn.OriginalDestinationPort = dstPortValue
-	}
-
-	// OriginalBytes will be added to the total size of the connection
-	// if the connection is already in the store.
-	denyConn.OriginalBytes = uint64(packet.IPLength)
-	// StartTime identifies when this packet was received. If the connection
-	// is already in the store, the start time will not be updated. This value
-	// is also used to approximate the stoptime of the connection.
-	denyConn.StartTime = time.Now()
-
-	var match *ofctrl.MatchField
-	// Get table ID
-	tableID := getPacketInTableID(pktIn)
-	// Get disposition Allow, Drop or Reject
-	match = getMatchRegField(matchers, openflow.APDispositionField)
-	id, err := getInfoInReg(match, openflow.APDispositionField.GetRange().ToNXRange())
-	if err != nil {
-		return fmt.Errorf("error when getting disposition from reg: %v", err)
-	}
-	disposition := openflow.DispositionToString[id]
-	denyConn.Disposition = disposition
-
-	// Set match to corresponding ingress/egress reg according to disposition
-	match = getMatch(matchers, tableID, id)
-	if match != nil {
-		ruleID, err := getInfoInReg(match, nil)
-		if err != nil {
-			return fmt.Errorf("error when obtaining rule id from reg: %v", err)
-		}
-		if isAntreaPolicyIngressTable(tableID) {
-			denyConn.IngressRuleID = ruleID
-		} else if isAntreaPolicyEgressTable(tableID) {
-			denyConn.EgressRuleID = ruleID
-		}
-	} else {
-		// For K8s NetworkPolicy implicit drop action, we cannot get Namespace/name.
-		if tableID == openflow.IngressDefaultTable.GetID() {
-			denyConn.IngressNetworkPolicyType = registry.PolicyTypeK8sNetworkPolicy
-			denyConn.IngressNetworkPolicyRuleAction = flowexporterutils.RuleActionToUint8(disposition)
-		} else if tableID == openflow.EgressDefaultTable.GetID() {
-			denyConn.EgressNetworkPolicyType = registry.PolicyTypeK8sNetworkPolicy
-			denyConn.EgressNetworkPolicyRuleAction = flowexporterutils.RuleActionToUint8(disposition)
-		}
-	}
-	if c.denyConnNotifier != nil {
-		c.denyConnNotifier.Notify(&denyConn)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func isAntreaPolicyIngressTable(tableID uint8) bool {
-	for _, table := range openflow.GetAntreaPolicyIngressTables() {
-		if table.IsInitialized() && table.GetID() == tableID {
-			return true
-		}
-	}
-	return false
-}
+// Get 5-tuple information
 
-func isAntreaPolicyEgressTable(tableID uint8) bool {
-	for _, table := range openflow.GetAntreaPolicyEgressTables() {
-		if table.IsInitialized() && table.GetID() == tableID {
-			return true
-		}
-	}
-	return false
-}
+// Generate deny connection and add to deny connection store
+
+// OriginalBytes will be added to the total size of the connection
+// if the connection is already in the store.
+
+// StartTime identifies when this packet was received. If the connection
+// is already in the store, the start time will not be updated. This value
+// is also used to approximate the stoptime of the connection.
+
+// Get table ID
+
+// Get disposition Allow, Drop or Reject
+
+// Set match to corresponding ingress/egress reg according to disposition
+
+// For K8s NetworkPolicy implicit drop action, we cannot get Namespace/name.
+
+func isAntreaPolicyIngressTable(tableID uint8) bool { _ = "STUB: not implemented"; return false }
+
+func isAntreaPolicyEgressTable(tableID uint8) bool { _ = "STUB: not implemented"; return false }
 
 // getPacketInTableID returns the OVS table ID in which the packet is sent to antrea-agent. Since L2ForwardOutput is
 // the table where all Antrea-native policies logging packets are sent to antrea-agent, "PacketInTableField" is used
 // to store the real table requiring "sendToController" action. This function first parses the direct table where
 // the packet leaves OVS pipeline, then checks whether "PacketInTableField" is set with a valid value or not. The value
 // in the field is returned if yes.
-func getPacketInTableID(pktIn *ofctrl.PacketIn) uint8 {
-	tableID := pktIn.TableId
-	matchers := pktIn.GetMatches()
-	if match := getMatchRegField(matchers, openflow.PacketInTableField); match != nil {
-		tableVal, err := getInfoInReg(match, openflow.PacketInTableField.GetRange().ToNXRange())
-		if err == nil {
-			return uint8(tableVal)
-		} else {
-			// This is not expected, so we log an error.
-			klog.ErrorS(err, "Unable to parse table ID from PacketInTableField in PacketIn message, using the packetIn.TableId", "table", tableID)
-		}
-	}
-	return tableID
-}
+func getPacketInTableID(pktIn *ofctrl.PacketIn) uint8 { _ = "STUB: not implemented"; return 0 }
 
-func getCTMarkValue(matchers *ofctrl.Matchers) uint32 {
-	ctMark := matchers.GetMatchByName("NXM_NX_CT_MARK")
-	if ctMark == nil {
-		return 0
-	}
-	ctMarkValue, ok := ctMark.GetValue().(uint32)
-	if !ok {
-		return 0
-	}
-	return ctMarkValue
-}
+// This is not expected, so we log an error.
+
+func getCTMarkValue(matchers *ofctrl.Matchers) uint32 { _ = "STUB: not implemented"; return 0 }
 
 // getCTLabelValue returns the conntrack label as a []byte using a big-endian representation.
-func getCTLabelValue(matchers *ofctrl.Matchers) []byte {
-	ctLabel := matchers.GetMatchByName("NXM_NX_CT_LABEL")
-	if ctLabel == nil {
-		return nil
-	}
-	ctLabelValue, ok := ctLabel.GetValue().([]byte)
-	if !ok {
-		return nil
-	}
-	return ctLabelValue
-}
+func getCTLabelValue(matchers *ofctrl.Matchers) []byte { _ = "STUB: not implemented"; return nil }
 
 func getCTNwDstValue(matchers *ofctrl.Matchers) netip.Addr {
-	nwDst := matchers.GetMatchByName("NXM_NX_CT_NW_DST")
-	if nwDst != nil {
-		if nwDstValue, ok := nwDst.GetValue().(net.IP); ok {
-			if ip, ok := netip.AddrFromSlice(nwDstValue.To4()); ok {
-				return ip
-			}
-		}
-	}
-	nwDst = matchers.GetMatchByName("NXM_NX_CT_IPV6_DST")
-	if nwDst != nil {
-		if nwDstValue, ok := nwDst.GetValue().(net.IP); ok {
-			if ip, ok := netip.AddrFromSlice(nwDstValue.To16()); ok {
-				return ip
-			}
-		}
-	}
-	return netip.Addr{}
+	_ = "STUB: not implemented"
+	return *new(netip.Addr)
 }
 
-func getCTTpDstValue(matchers *ofctrl.Matchers) uint16 {
-	port := matchers.GetMatchByName("NXM_NX_CT_TP_DST")
-	if port == nil {
-		return 0
-	}
-	portValue, ok := port.GetValue().(uint16)
-	if !ok {
-		return 0
-	}
-	return portValue
-}
+func getCTTpDstValue(matchers *ofctrl.Matchers) uint16 { _ = "STUB: not implemented"; return 0 }

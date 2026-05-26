@@ -15,9 +15,6 @@
 package sftp
 
 import (
-	"fmt"
-	"time"
-
 	"golang.org/x/crypto/ssh"
 )
 
@@ -27,36 +24,15 @@ import (
 // multiple key types / key algorithms, and if we use the default value for HostKeyAlgorithms, the
 // server may present a key that does not match our HostKeyCallback. When using a fixed host key, it
 // makes sense to set HostKeyAlgorithms to the list of algorithms matching that specific key type.
-func getAlgorithmsForHostKey(key ssh.PublicKey) []string {
-	switch t := key.Type(); t {
-	case ssh.KeyAlgoRSA:
-		return []string{ssh.KeyAlgoRSA, ssh.KeyAlgoRSASHA256, ssh.KeyAlgoRSASHA512}
-	default:
-		return []string{t}
-	}
-}
+func getAlgorithmsForHostKey(key ssh.PublicKey) []string { _ = "STUB: not implemented"; return nil }
 
 // GetSSHClientConfig returns a standard SSH client configuration which is used by Antrea for SFTP
 // upload. If hostKey is nil (not recommended), the config will accept any host public key.
 func GetSSHClientConfig(user string, password string, hostKey []byte) (*ssh.ClientConfig, error) {
+	_ = "STUB: not implemented"
 	// #nosec G106: users should provie hostKey, accepting arbitrary keys is not recommended.
-	hostKeyCallback := ssh.InsecureIgnoreHostKey()
-	var hostKeyAlgorithms []string
-	if hostKey != nil {
-		key, err := ssh.ParsePublicKey(hostKey)
-		if err != nil {
-			return nil, fmt.Errorf("invalid host public key: %w", err)
-		}
-		hostKeyCallback = ssh.FixedHostKey(key)
-		// With a single fixed key, it makes sense to set this in case the server supports
-		// multiple keys (e.g., ed25519 and rsa).
-		hostKeyAlgorithms = getAlgorithmsForHostKey(key)
-	}
-	return &ssh.ClientConfig{
-		User:              user,
-		Auth:              []ssh.AuthMethod{ssh.Password(password)},
-		HostKeyCallback:   hostKeyCallback,
-		HostKeyAlgorithms: hostKeyAlgorithms,
-		Timeout:           1 * time.Second,
-	}, nil
+	return nil, nil
 }
+
+// With a single fixed key, it makes sense to set this in case the server supports
+// multiple keys (e.g., ed25519 and rsa).

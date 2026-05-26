@@ -16,7 +16,6 @@ package wait
 
 import (
 	"context"
-	"fmt"
 	"sync"
 	"time"
 )
@@ -28,65 +27,23 @@ type Group struct {
 	once   sync.Once
 }
 
-func NewGroup() *Group {
-	return &Group{
-		wg:     &sync.WaitGroup{},
-		doneCh: make(chan struct{}),
-	}
-}
+func NewGroup() *Group { _ = "STUB: not implemented"; return nil }
 
-func (g *Group) Increment() *Group {
-	g.wg.Add(1)
-	return g
-}
+func (g *Group) Increment() *Group { _ = "STUB: not implemented"; return nil }
 
-func (g *Group) Done() {
-	g.wg.Done()
-}
+func (g *Group) Done() { _ = "STUB: not implemented"; return }
 
-func (g *Group) Go(f func()) {
-	g.wg.Go(f)
-}
+func (g *Group) Go(f func()) { _ = "STUB: not implemented"; return }
 
-func (g *Group) wait() {
-	g.once.Do(func() {
-		go func() {
-			g.wg.Wait()
-			close(g.doneCh)
-		}()
-	})
-}
+func (g *Group) wait() { _ = "STUB: not implemented"; return }
 
-func (g *Group) WaitWithTimeout(timeout time.Duration) error {
-	g.wait()
-	select {
-	case <-g.doneCh:
-		return nil
-	case <-time.After(timeout):
-		return fmt.Errorf("timeout waiting for group")
-	}
-}
+func (g *Group) WaitWithTimeout(timeout time.Duration) error { _ = "STUB: not implemented"; return nil }
 
-func (g *Group) WaitUntil(stopCh <-chan struct{}) error {
-	g.wait()
-	select {
-	case <-g.doneCh:
-		return nil
-	case <-stopCh:
-		return fmt.Errorf("stopCh closed, stop waiting")
-	}
-}
+func (g *Group) WaitUntil(stopCh <-chan struct{}) error { _ = "STUB: not implemented"; return nil }
 
 func (g *Group) WaitUntilWithContext(ctx context.Context) error {
-	g.wait()
-	select {
-	case <-g.doneCh:
-		return nil
-	case <-ctx.Done():
-		return ctx.Err()
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (g *Group) Wait() {
-	g.wg.Wait()
-}
+func (g *Group) Wait() { _ = "STUB: not implemented"; return }

@@ -17,11 +17,8 @@ limitations under the License.
 package cidrset
 
 import (
-	"encoding/binary"
 	"errors"
-	"fmt"
 	"math/big"
-	"math/bits"
 	"net"
 	"sync"
 )
@@ -76,220 +73,59 @@ var (
 
 // NewCIDRSet creates a new CidrSet.
 func NewCIDRSet(clusterCIDR *net.IPNet, subNetMaskSize int) (*CidrSet, error) {
-	clusterMask := clusterCIDR.Mask
-	clusterMaskSize, bits := clusterMask.Size()
-
-	var maxCIDRs int
-	if (clusterCIDR.IP.To4() == nil) && (subNetMaskSize-clusterMaskSize > clusterSubnetMaxDiff) {
-		return nil, ErrCIDRSetSubNetTooBig
-	}
-
-	// register CidrSet metrics
-	registerCidrsetMetrics()
-
-	maxCIDRs = 1 << uint32(subNetMaskSize-clusterMaskSize)
-	return &CidrSet{
-		clusterCIDR:     clusterCIDR,
-		nodeMask:        net.CIDRMask(subNetMaskSize, bits),
-		clusterMaskSize: clusterMaskSize,
-		maxCIDRs:        maxCIDRs,
-		nodeMaskSize:    subNetMaskSize,
-		label:           clusterCIDR.String(),
-	}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// register CidrSet metrics
 
 func (s *CidrSet) indexToCIDRBlock(index int) *net.IPNet {
-	var ip []byte
-	switch /*v4 or v6*/ {
-	case s.clusterCIDR.IP.To4() != nil:
-		{
-			j := uint32(index) << uint32(32-s.nodeMaskSize)
-			ipInt := (binary.BigEndian.Uint32(s.clusterCIDR.IP)) | j
-			ip = make([]byte, net.IPv4len)
-			binary.BigEndian.PutUint32(ip, ipInt)
-		}
-	case s.clusterCIDR.IP.To16() != nil:
-		{
-			// leftClusterIP      |     rightClusterIP
-			// 2001:0DB8:1234:0000:0000:0000:0000:0000
-			const v6NBits = 128
-			const halfV6NBits = v6NBits / 2
-			leftClusterIP := binary.BigEndian.Uint64(s.clusterCIDR.IP[:halfIPv6Len])
-			rightClusterIP := binary.BigEndian.Uint64(s.clusterCIDR.IP[halfIPv6Len:])
+	_ = "STUB: not implemented"
 
-			ip = make([]byte, net.IPv6len)
-
-			if s.nodeMaskSize <= halfV6NBits {
-				// We only care about left side IP
-				leftClusterIP |= uint64(index) << uint(halfV6NBits-s.nodeMaskSize)
-			} else {
-				if s.clusterMaskSize < halfV6NBits {
-					// see how many bits are needed to reach the left side
-					btl := uint(s.nodeMaskSize - halfV6NBits)
-					indexMaxBit := uint(64 - bits.LeadingZeros64(uint64(index)))
-					if indexMaxBit > btl {
-						leftClusterIP |= uint64(index) >> btl
-					}
-				}
-				// the right side will be calculated the same way either the
-				// subNetMaskSize affects both left and right sides
-				rightClusterIP |= uint64(index) << uint(v6NBits-s.nodeMaskSize)
-			}
-			binary.BigEndian.PutUint64(ip[:halfIPv6Len], leftClusterIP)
-			binary.BigEndian.PutUint64(ip[halfIPv6Len:], rightClusterIP)
-		}
-	}
-	return &net.IPNet{
-		IP:   ip,
-		Mask: s.nodeMask,
-	}
+	/*v4 or v6*/
+	return nil
 }
+
+// leftClusterIP      |     rightClusterIP
+// 2001:0DB8:1234:0000:0000:0000:0000:0000
+
+// We only care about left side IP
+
+// see how many bits are needed to reach the left side
+
+// the right side will be calculated the same way either the
+// subNetMaskSize affects both left and right sides
 
 // AllocateNext allocates the next free CIDR range. This will set the range
 // as occupied and return the allocated range.
-func (s *CidrSet) AllocateNext() (*net.IPNet, error) {
-	s.Lock()
-	defer s.Unlock()
+func (s *CidrSet) AllocateNext() (*net.IPNet, error) { _ = "STUB: not implemented"; return nil, nil }
 
-	if s.allocatedCIDRs == s.maxCIDRs {
-		return nil, ErrCIDRRangeNoCIDRsRemaining
-	}
-	candidate := s.nextCandidate
-	var i int
-	for i = 0; i < s.maxCIDRs; i++ {
-		if s.used.Bit(candidate) == 0 {
-			break
-		}
-		candidate = (candidate + 1) % s.maxCIDRs
-	}
-
-	s.nextCandidate = (candidate + 1) % s.maxCIDRs
-	s.used.SetBit(&s.used, candidate, 1)
-	s.allocatedCIDRs++
-	// Update metrics
-	cidrSetAllocations.WithLabelValues(s.label).Inc()
-	cidrSetAllocationTriesPerRequest.WithLabelValues(s.label).Observe(float64(i))
-	cidrSetUsage.WithLabelValues(s.label).Set(float64(s.allocatedCIDRs) / float64(s.maxCIDRs))
-
-	return s.indexToCIDRBlock(candidate), nil
-}
+// Update metrics
 
 func (s *CidrSet) getBeginingAndEndIndices(cidr *net.IPNet) (begin, end int, err error) {
-	if cidr == nil {
-		return -1, -1, fmt.Errorf("error getting indices for cluster cidr %v, cidr is nil", s.clusterCIDR)
-	}
-	begin, end = 0, s.maxCIDRs-1
-	cidrMask := cidr.Mask
-	maskSize, _ := cidrMask.Size()
-	var ipSize int
-
-	if !s.clusterCIDR.Contains(cidr.IP.Mask(s.clusterCIDR.Mask)) && !cidr.Contains(s.clusterCIDR.IP.Mask(cidr.Mask)) {
-		return -1, -1, fmt.Errorf("cidr %v is out the range of cluster cidr %v", cidr, s.clusterCIDR)
-	}
-
-	if s.clusterMaskSize < maskSize {
-
-		ipSize = net.IPv4len
-		if cidr.IP.To4() == nil {
-			ipSize = net.IPv6len
-		}
-		begin, err = s.getIndexForCIDR(&net.IPNet{
-			IP:   cidr.IP.Mask(s.nodeMask),
-			Mask: s.nodeMask,
-		})
-		if err != nil {
-			return -1, -1, err
-		}
-		ip := make([]byte, ipSize)
-		if cidr.IP.To4() != nil {
-			ipInt := binary.BigEndian.Uint32(cidr.IP) | (^binary.BigEndian.Uint32(cidr.Mask))
-			binary.BigEndian.PutUint32(ip, ipInt)
-		} else {
-			// ipIntLeft          |         ipIntRight
-			// 2001:0DB8:1234:0000:0000:0000:0000:0000
-			ipIntLeft := binary.BigEndian.Uint64(cidr.IP[:net.IPv6len/2]) | (^binary.BigEndian.Uint64(cidr.Mask[:net.IPv6len/2]))
-			ipIntRight := binary.BigEndian.Uint64(cidr.IP[net.IPv6len/2:]) | (^binary.BigEndian.Uint64(cidr.Mask[net.IPv6len/2:]))
-			binary.BigEndian.PutUint64(ip[:net.IPv6len/2], ipIntLeft)
-			binary.BigEndian.PutUint64(ip[net.IPv6len/2:], ipIntRight)
-		}
-		end, err = s.getIndexForCIDR(&net.IPNet{
-			IP:   net.IP(ip).Mask(s.nodeMask),
-			Mask: s.nodeMask,
-		})
-		if err != nil {
-			return -1, -1, err
-		}
-	}
-	return begin, end, nil
+	_ = "STUB: not implemented"
+	return 0, 0, nil
 }
+
+// ipIntLeft          |         ipIntRight
+// 2001:0DB8:1234:0000:0000:0000:0000:0000
 
 // Release releases the given CIDR range.
-func (s *CidrSet) Release(cidr *net.IPNet) error {
-	begin, end, err := s.getBeginingAndEndIndices(cidr)
-	if err != nil {
-		return err
-	}
-	s.Lock()
-	defer s.Unlock()
-	for i := begin; i <= end; i++ {
-		// Only change the counters if we change the bit to prevent
-		// double counting.
-		if s.used.Bit(i) != 0 {
-			s.used.SetBit(&s.used, i, 0)
-			s.allocatedCIDRs--
-			cidrSetReleases.WithLabelValues(s.label).Inc()
-		}
-	}
+func (s *CidrSet) Release(cidr *net.IPNet) error { _ = "STUB: not implemented"; return nil }
 
-	cidrSetUsage.WithLabelValues(s.label).Set(float64(s.allocatedCIDRs) / float64(s.maxCIDRs))
-	return nil
-}
+// Only change the counters if we change the bit to prevent
+// double counting.
 
 // Occupy marks the given CIDR range as used. Occupy succeeds even if the CIDR
 // range was previously used.
-func (s *CidrSet) Occupy(cidr *net.IPNet) (err error) {
-	begin, end, err := s.getBeginingAndEndIndices(cidr)
-	if err != nil {
-		return err
-	}
-	s.Lock()
-	defer s.Unlock()
-	for i := begin; i <= end; i++ {
-		// Only change the counters if we change the bit to prevent
-		// double counting.
-		if s.used.Bit(i) == 0 {
-			s.used.SetBit(&s.used, i, 1)
-			s.allocatedCIDRs++
-			cidrSetAllocations.WithLabelValues(s.label).Inc()
-		}
-	}
+func (s *CidrSet) Occupy(cidr *net.IPNet) (err error) { _ = "STUB: not implemented"; return nil }
 
-	cidrSetUsage.WithLabelValues(s.label).Set(float64(s.allocatedCIDRs) / float64(s.maxCIDRs))
-	return nil
-}
+// Only change the counters if we change the bit to prevent
+// double counting.
 
 func (s *CidrSet) getIndexForCIDR(cidr *net.IPNet) (int, error) {
-	return s.getIndexForIP(cidr.IP)
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-func (s *CidrSet) getIndexForIP(ip net.IP) (int, error) {
-	if ip.To4() != nil {
-		cidrIndex := (binary.BigEndian.Uint32(s.clusterCIDR.IP) ^ binary.BigEndian.Uint32(ip.To4())) >> uint32(32-s.nodeMaskSize)
-		if cidrIndex >= uint32(s.maxCIDRs) {
-			return 0, fmt.Errorf("CIDR: %v/%v is out of the range of CIDR allocator", ip, s.nodeMaskSize)
-		}
-		return int(cidrIndex), nil
-	}
-	if ip.To16() != nil {
-		bigIP := big.NewInt(0).SetBytes(s.clusterCIDR.IP)
-		bigIP = bigIP.Xor(bigIP, big.NewInt(0).SetBytes(ip))
-		cidrIndexBig := bigIP.Rsh(bigIP, uint(net.IPv6len*8-s.nodeMaskSize))
-		cidrIndex := cidrIndexBig.Uint64()
-		if cidrIndex >= uint64(s.maxCIDRs) {
-			return 0, fmt.Errorf("CIDR: %v/%v is out of the range of CIDR allocator", ip, s.nodeMaskSize)
-		}
-		return int(cidrIndex), nil
-	}
-
-	return 0, fmt.Errorf("invalid IP: %v", ip)
-}
+func (s *CidrSet) getIndexForIP(ip net.IP) (int, error) { _ = "STUB: not implemented"; return 0, nil }

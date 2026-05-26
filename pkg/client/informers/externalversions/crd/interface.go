@@ -41,20 +41,24 @@ type group struct {
 
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
-	return &group{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(Interface)
 }
 
 // V1alpha1 returns a new v1alpha1.Interface.
 func (g *group) V1alpha1() v1alpha1.Interface {
-	return v1alpha1.New(g.factory, g.namespace, g.tweakListOptions)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.Interface)
 }
 
 // V1alpha2 returns a new v1alpha2.Interface.
 func (g *group) V1alpha2() v1alpha2.Interface {
-	return v1alpha2.New(g.factory, g.namespace, g.tweakListOptions)
+	_ = "STUB: not implemented"
+	return *new(v1alpha2.Interface)
 }
 
 // V1beta1 returns a new v1beta1.Interface.
 func (g *group) V1beta1() v1beta1.Interface {
-	return v1beta1.New(g.factory, g.namespace, g.tweakListOptions)
+	_ = "STUB: not implemented"
+	return *new(v1beta1.Interface)
 }

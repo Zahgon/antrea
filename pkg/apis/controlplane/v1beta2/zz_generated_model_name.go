@@ -20,246 +20,166 @@
 package v1beta2
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in AddressGroup) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.AddressGroup"
-}
+func (in AddressGroup) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in AddressGroupList) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.AddressGroupList"
-}
+func (in AddressGroupList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in AddressGroupPatch) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.AddressGroupPatch"
-}
+func (in AddressGroupPatch) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in AppliedToGroup) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.AppliedToGroup"
-}
+func (in AppliedToGroup) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in AppliedToGroupList) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.AppliedToGroupList"
-}
+func (in AppliedToGroupList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in AppliedToGroupPatch) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.AppliedToGroupPatch"
-}
+func (in AppliedToGroupPatch) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in BasicAuthentication) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.BasicAuthentication"
-}
+func (in BasicAuthentication) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in BundleFileServer) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.BundleFileServer"
-}
+func (in BundleFileServer) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in BundleServerAuthConfiguration) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.BundleServerAuthConfiguration"
+	_ = "STUB: not implemented"
+	return ""
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ClusterGroupMembers) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.ClusterGroupMembers"
-}
+func (in ClusterGroupMembers) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in EgressGroup) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.EgressGroup"
-}
+func (in EgressGroup) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in EgressGroupList) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.EgressGroupList"
-}
+func (in EgressGroupList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in EgressGroupPatch) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.EgressGroupPatch"
-}
+func (in EgressGroupPatch) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in Entity) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.Entity"
-}
+func (in Entity) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ExternalEntityReference) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.ExternalEntityReference"
-}
+func (in ExternalEntityReference) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in GroupAssociation) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.GroupAssociation"
-}
+func (in GroupAssociation) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in GroupMember) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.GroupMember"
-}
+func (in GroupMember) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in GroupMembers) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.GroupMembers"
-}
+func (in GroupMembers) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in GroupReference) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.GroupReference"
-}
+func (in GroupReference) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in HTTPProtocol) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.HTTPProtocol"
-}
+func (in HTTPProtocol) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPBlock) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.IPBlock"
-}
+func (in IPBlock) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPGroupAssociation) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.IPGroupAssociation"
-}
+func (in IPGroupAssociation) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in IPNet) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.IPNet"
-}
+func (in IPNet) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in L7Protocol) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.L7Protocol"
-}
+func (in L7Protocol) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in MulticastGroupInfo) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.MulticastGroupInfo"
-}
+func (in MulticastGroupInfo) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NamedPort) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NamedPort"
-}
+func (in NamedPort) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicy) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NetworkPolicy"
-}
+func (in NetworkPolicy) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyEvaluation) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NetworkPolicyEvaluation"
-}
+func (in NetworkPolicyEvaluation) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in NetworkPolicyEvaluationRequest) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NetworkPolicyEvaluationRequest"
+	_ = "STUB: not implemented"
+	return ""
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in NetworkPolicyEvaluationResponse) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NetworkPolicyEvaluationResponse"
+	_ = "STUB: not implemented"
+	return ""
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyList) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NetworkPolicyList"
-}
+func (in NetworkPolicyList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyNodeStatus) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NetworkPolicyNodeStatus"
-}
+func (in NetworkPolicyNodeStatus) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyPeer) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NetworkPolicyPeer"
-}
+func (in NetworkPolicyPeer) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyReference) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NetworkPolicyReference"
-}
+func (in NetworkPolicyReference) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyRule) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NetworkPolicyRule"
-}
+func (in NetworkPolicyRule) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyStats) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NetworkPolicyStats"
-}
+func (in NetworkPolicyStats) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyStatus) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NetworkPolicyStatus"
-}
+func (in NetworkPolicyStatus) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NodeReference) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NodeReference"
-}
+func (in NodeReference) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NodeStatsSummary) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.NodeStatsSummary"
-}
+func (in NodeStatsSummary) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in PaginationGetOptions) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.PaginationGetOptions"
-}
+func (in PaginationGetOptions) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in PodReference) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.PodReference"
-}
+func (in PodReference) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in RuleRef) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.RuleRef"
-}
+func (in RuleRef) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in Service) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.Service"
-}
+func (in Service) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ServiceReference) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.ServiceReference"
-}
+func (in ServiceReference) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in SupportBundleCollection) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.SupportBundleCollection"
-}
+func (in SupportBundleCollection) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in SupportBundleCollectionList) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.SupportBundleCollectionList"
+	_ = "STUB: not implemented"
+	return ""
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in SupportBundleCollectionNodeStatus) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.SupportBundleCollectionNodeStatus"
+	_ = "STUB: not implemented"
+	return ""
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in SupportBundleCollectionStatus) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.SupportBundleCollectionStatus"
+	_ = "STUB: not implemented"
+	return ""
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in TLSProtocol) OpenAPIModelName() string {
-	return "io.antrea.controlplane.v1beta2.TLSProtocol"
-}
+func (in TLSProtocol) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }

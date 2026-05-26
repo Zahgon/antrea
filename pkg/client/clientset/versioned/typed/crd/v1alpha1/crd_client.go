@@ -19,8 +19,6 @@ package v1alpha1
 import (
 	http "net/http"
 
-	crdv1alpha1 "antrea.io/antrea/v2/pkg/apis/crd/v1alpha1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	rest "k8s.io/client-go/rest"
 )
 
@@ -41,89 +39,67 @@ type CrdV1alpha1Client struct {
 }
 
 func (c *CrdV1alpha1Client) AntreaNodeConfigs() AntreaNodeConfigInterface {
-	return newAntreaNodeConfigs(c)
+	_ = "STUB: not implemented"
+	return *new(AntreaNodeConfigInterface)
 }
 
 func (c *CrdV1alpha1Client) BGPPolicies() BGPPolicyInterface {
-	return newBGPPolicies(c)
+	_ = "STUB: not implemented"
+	return *new(BGPPolicyInterface)
 }
 
 func (c *CrdV1alpha1Client) ExternalNodes(namespace string) ExternalNodeInterface {
-	return newExternalNodes(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(ExternalNodeInterface)
 }
 
 func (c *CrdV1alpha1Client) FlowExporterDestinations() FlowExporterDestinationInterface {
-	return newFlowExporterDestinations(c)
+	_ = "STUB: not implemented"
+	return *new(FlowExporterDestinationInterface)
 }
 
 func (c *CrdV1alpha1Client) NodeLatencyMonitors() NodeLatencyMonitorInterface {
-	return newNodeLatencyMonitors(c)
+	_ = "STUB: not implemented"
+	return *new(NodeLatencyMonitorInterface)
 }
 
 func (c *CrdV1alpha1Client) PacketCaptures() PacketCaptureInterface {
-	return newPacketCaptures(c)
+	_ = "STUB: not implemented"
+	return *new(PacketCaptureInterface)
 }
 
 func (c *CrdV1alpha1Client) SupportBundleCollections() SupportBundleCollectionInterface {
-	return newSupportBundleCollections(c)
+	_ = "STUB: not implemented"
+	return *new(SupportBundleCollectionInterface)
 }
 
 // NewForConfig creates a new CrdV1alpha1Client for the given config.
 // NewForConfig is equivalent to NewForConfigAndClient(c, httpClient),
 // where httpClient was generated with rest.HTTPClientFor(c).
 func NewForConfig(c *rest.Config) (*CrdV1alpha1Client, error) {
-	config := *c
-	setConfigDefaults(&config)
-	httpClient, err := rest.HTTPClientFor(&config)
-	if err != nil {
-		return nil, err
-	}
-	return NewForConfigAndClient(&config, httpClient)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // NewForConfigAndClient creates a new CrdV1alpha1Client for the given config and http client.
 // Note the http client provided takes precedence over the configured transport values.
 func NewForConfigAndClient(c *rest.Config, h *http.Client) (*CrdV1alpha1Client, error) {
-	config := *c
-	setConfigDefaults(&config)
-	client, err := rest.RESTClientForConfigAndClient(&config, h)
-	if err != nil {
-		return nil, err
-	}
-	return &CrdV1alpha1Client{client}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // NewForConfigOrDie creates a new CrdV1alpha1Client for the given config and
 // panics if there is an error in the config.
-func NewForConfigOrDie(c *rest.Config) *CrdV1alpha1Client {
-	client, err := NewForConfig(c)
-	if err != nil {
-		panic(err)
-	}
-	return client
-}
+func NewForConfigOrDie(c *rest.Config) *CrdV1alpha1Client { _ = "STUB: not implemented"; return nil }
 
 // New creates a new CrdV1alpha1Client for the given RESTClient.
-func New(c rest.Interface) *CrdV1alpha1Client {
-	return &CrdV1alpha1Client{c}
-}
+func New(c rest.Interface) *CrdV1alpha1Client { _ = "STUB: not implemented"; return nil }
 
-func setConfigDefaults(config *rest.Config) {
-	gv := crdv1alpha1.SchemeGroupVersion
-	config.GroupVersion = &gv
-	config.APIPath = "/apis"
-	config.NegotiatedSerializer = rest.CodecFactoryForGeneratedClient(scheme.Scheme, scheme.Codecs).WithoutConversion()
-
-	if config.UserAgent == "" {
-		config.UserAgent = rest.DefaultKubernetesUserAgent()
-	}
-}
+func setConfigDefaults(config *rest.Config) { _ = "STUB: not implemented"; return }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *CrdV1alpha1Client) RESTClient() rest.Interface {
-	if c == nil {
-		return nil
-	}
-	return c.restClient
+	_ = "STUB: not implemented"
+	return *new(rest.Interface)
 }

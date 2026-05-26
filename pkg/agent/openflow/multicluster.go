@@ -42,43 +42,32 @@ type featureMulticluster struct {
 	snatCtZones     map[binding.Protocol]int
 }
 
-func (f *featureMulticluster) getFeatureName() string {
-	return "Multicluster"
-}
+func (f *featureMulticluster) getFeatureName() string { _ = "STUB: not implemented"; return "" }
 
 func newFeatureMulticluster(cookieAllocator cookie.Allocator, ipProtocols []binding.Protocol) *featureMulticluster {
-	snatCtZones := make(map[binding.Protocol]int)
-	dnatCtZones := make(map[binding.Protocol]int)
-	snatCtZones[ipProtocols[0]] = SNATCtZone
-	dnatCtZones[ipProtocols[0]] = CtZone
-	return &featureMulticluster{
-		cookieAllocator: cookieAllocator,
-		cachedFlows:     newFlowCategoryCache(),
-		cachedPodFlows:  newFlowCategoryCache(),
-		category:        cookie.Multicluster,
-		ipProtocols:     ipProtocols,
-		snatCtZones:     snatCtZones,
-		dnatCtZones:     dnatCtZones,
-	}
-}
-
-func (f *featureMulticluster) initFlows() []*openflow15.FlowMod {
-	return []*openflow15.FlowMod{}
-}
-
-func (f *featureMulticluster) replayFlows() []*openflow15.FlowMod {
-	return getCachedFlowMessages(f.cachedFlows)
-}
-
-func (f *featureMulticluster) initGroups() []binding.OFEntry {
+	_ = "STUB: not implemented"
 	return nil
 }
 
+func (f *featureMulticluster) initFlows() []*openflow15.FlowMod {
+	_ = "STUB: not implemented"
+	return nil
+}
+
+func (f *featureMulticluster) replayFlows() []*openflow15.FlowMod {
+	_ = "STUB: not implemented"
+	return nil
+}
+
+func (f *featureMulticluster) initGroups() []binding.OFEntry { _ = "STUB: not implemented"; return nil }
+
 func (f *featureMulticluster) replayGroups() []binding.OFEntry {
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (f *featureMulticluster) replayMeters() []binding.OFEntry {
+	_ = "STUB: not implemented"
 	return nil
 }
 
@@ -88,136 +77,60 @@ func (f *featureMulticluster) l3FwdFlowToRemoteGateway(
 	tunnelPeer net.IP,
 	remoteGatewayIP net.IP,
 	enableStretchedNetworkPolicy bool) []binding.Flow {
-	ipProtocol := getIPProtocol(peerServiceCIDR.IP)
-	cookieID := f.cookieAllocator.Request(f.category).Raw()
-	var flows []binding.Flow
-	flows = append(flows,
-		// This generates the flow to forward cross-cluster request packets based
-		// on Service ClusterIP range.
-		L3ForwardingTable.ofTable.BuildFlow(priorityNormal).
-			Cookie(cookieID).
-			MatchProtocol(ipProtocol).
-			MatchDstIPNet(peerServiceCIDR).
-			Action().SetSrcMAC(localGatewayMAC).                 // Rewrite src MAC to local gateway MAC.
-			Action().SetDstMAC(GlobalVirtualMACForMulticluster). // Rewrite dst MAC to virtual MC MAC.
-			Action().SetTunnelDst(tunnelPeer).                   // Flow based tunnel. Set tunnel destination.
-			Action().LoadRegMark(ToTunnelRegMark).
-			Action().GotoTable(L3DecTTLTable.GetID()).
-			Done(),
-		// This generates the flow to forward cross-cluster reply traffic based
-		// on Gateway IP.
-		L3ForwardingTable.ofTable.BuildFlow(priorityNormal).
-			Cookie(cookieID).
-			MatchProtocol(ipProtocol).
-			MatchCTStateRpl(true).
-			MatchCTStateTrk(true).
-			MatchDstIP(remoteGatewayIP).
-			Action().SetSrcMAC(localGatewayMAC).
-			Action().SetDstMAC(GlobalVirtualMACForMulticluster).
-			Action().SetTunnelDst(tunnelPeer). // Flow based tunnel. Set tunnel destination.
-			Action().LoadRegMark(ToTunnelRegMark).
-			Action().GotoTable(L3DecTTLTable.GetID()).
-			Done(),
-	)
-	if enableStretchedNetworkPolicy {
-		flows = append(flows,
-			// This generates the flow to forward cross-cluster reject traffic based
-			// on Gateway IP and reg.
-			L3ForwardingTable.ofTable.BuildFlow(priorityNormal-1).
-				Cookie(cookieID).
-				MatchProtocol(ipProtocol).
-				MatchRegMark(GeneratedRejectPacketOutRegMark).
-				MatchDstIP(remoteGatewayIP).
-				Action().SetSrcMAC(localGatewayMAC).
-				Action().SetDstMAC(GlobalVirtualMACForMulticluster).
-				Action().SetTunnelDst(tunnelPeer). // Flow based tunnel. Set tunnel destination.
-				Action().LoadRegMark(ToTunnelRegMark).
-				Action().GotoTable(L3DecTTLTable.GetID()).
-				Done(),
-		)
-	}
-	return flows
+	_ = "STUB: not implemented"
+	return nil
 }
 
+// This generates the flow to forward cross-cluster request packets based
+// on Service ClusterIP range.
+
+// Rewrite src MAC to local gateway MAC.
+// Rewrite dst MAC to virtual MC MAC.
+// Flow based tunnel. Set tunnel destination.
+
+// This generates the flow to forward cross-cluster reply traffic based
+// on Gateway IP.
+
+// Flow based tunnel. Set tunnel destination.
+
+// This generates the flow to forward cross-cluster reject traffic based
+// on Gateway IP and reg.
+
+// Flow based tunnel. Set tunnel destination.
+
 func (f *featureMulticluster) tunnelClassifierFlow(tunnelOFPort uint32) binding.Flow {
-	return ClassifierTable.ofTable.BuildFlow(priorityHigh).
-		Cookie(f.cookieAllocator.Request(f.category).Raw()).
-		MatchInPort(tunnelOFPort).
-		MatchDstMAC(GlobalVirtualMACForMulticluster).
-		Action().LoadRegMark(FromTunnelRegMark).
-		Action().LoadRegMark(RewriteMACRegMark).
-		Action().GotoStage(stageConntrackState).
-		Done()
+	_ = "STUB: not implemented"
+	return *new(binding.Flow)
 }
 
 func (f *featureMulticluster) outputHairpinTunnelFlow(tunnelOFPort uint32) binding.Flow {
-	return OutputTable.ofTable.BuildFlow(priorityHigh).
-		Cookie(f.cookieAllocator.Request(f.category).Raw()).
-		MatchRegFieldWithValue(TargetOFPortField, tunnelOFPort).
-		MatchInPort(tunnelOFPort).
-		Action().OutputInPort().
-		Done()
+	_ = "STUB: not implemented"
+	return *new(binding.Flow)
 }
 
 // snatConntrackFlows generates flows on a multi-cluster Gateway Node to perform SNAT for cross-cluster connections.
 func (f *featureMulticluster) snatConntrackFlows(serviceCIDR net.IPNet, localGatewayIP net.IP) []binding.Flow {
-	var flows []binding.Flow
-	ipProtocol := getIPProtocol(localGatewayIP)
-	cookieID := f.cookieAllocator.Request(f.category).Raw()
-	flows = append(flows,
-		// This generates the flow to match the first packet of multi-cluster Service connection, and commit them into
-		// DNAT zone to make sure DNAT is performed before SNAT for any remote cluster traffic.
-		SNATMarkTable.ofTable.BuildFlow(priorityHigh).
-			Cookie(cookieID).
-			MatchProtocol(ipProtocol).
-			MatchDstIPNet(serviceCIDR).
-			MatchCTStateNew(true).
-			MatchCTStateTrk(true).
-			Action().CT(true, SNATMarkTable.GetNext(), f.dnatCtZones[ipProtocol], nil).
-			LoadToCtMark(ConnSNATCTMark).
-			MoveToCtMarkField(PktSourceField, ConnSourceCTMarkField).
-			CTDone().
-			Done(),
-		// This generates the flow to perform SNAT for the cross-cluster Service connections.
-		SNATTable.ofTable.BuildFlow(priorityNormal).
-			Cookie(cookieID).
-			MatchProtocol(ipProtocol).
-			MatchCTStateNew(true).
-			MatchCTStateTrk(true).
-			MatchDstIPNet(serviceCIDR).
-			Action().CT(true, SNATTable.GetNext(), f.snatCtZones[ipProtocol], nil).
-			SNAT(&binding.IPRange{StartIP: localGatewayIP, EndIP: localGatewayIP}, nil).
-			LoadToCtMark(ConnSNATCTMark).
-			CTDone().
-			Done(),
-		// This generates the flow to unSNAT reply packets of connections committed in SNAT CT zone by the above flows.
-		UnSNATTable.ofTable.BuildFlow(priorityNormal).
-			Cookie(cookieID).
-			MatchProtocol(ipProtocol).
-			MatchDstIP(localGatewayIP).
-			Action().CT(false, UnSNATTable.GetNext(), f.snatCtZones[ipProtocol], nil).
-			NAT().
-			CTDone().
-			Done(),
-	)
-	return flows
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// This generates the flow to match the first packet of multi-cluster Service connection, and commit them into
+// DNAT zone to make sure DNAT is performed before SNAT for any remote cluster traffic.
+
+// This generates the flow to perform SNAT for the cross-cluster Service connections.
+
+// This generates the flow to unSNAT reply packets of connections committed in SNAT CT zone by the above flows.
 
 func (f *featureMulticluster) l3FwdFlowToPodViaTun(
 	localGatewayMAC net.HardwareAddr,
 	podIP net.IP,
 	tunnelPeer net.IP) binding.Flow {
-	ipProtocol := getIPProtocol(podIP)
-	// This generates the flow to forward cross-cluster request packets based
-	// on Pod IP.
-	return L3ForwardingTable.ofTable.BuildFlow(priorityHigh).
-		Cookie(f.cookieAllocator.Request(f.category).Raw()).
-		MatchProtocol(ipProtocol).
-		MatchDstIP(podIP).
-		MatchDstMAC(GlobalVirtualMACForMulticluster).
-		Action().SetSrcMAC(localGatewayMAC). // Rewrite src MAC to local gateway MAC.
-		Action().SetTunnelDst(tunnelPeer).   // Flow based tunnel. Set tunnel destination.
-		Action().LoadRegMark(ToTunnelRegMark).
-		Action().GotoTable(L3DecTTLTable.GetID()).
-		Done()
+	_ = "STUB: not implemented"
+	return *new(binding.Flow)
 }
+
+// This generates the flow to forward cross-cluster request packets based
+// on Pod IP.
+
+// Rewrite src MAC to local gateway MAC.
+// Flow based tunnel. Set tunnel destination.

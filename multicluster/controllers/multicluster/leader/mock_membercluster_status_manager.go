@@ -25,8 +25,6 @@
 package leader
 
 import (
-	reflect "reflect"
-
 	v1alpha2 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha2"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,26 +43,25 @@ type MockMemberClusterStatusManagerMockRecorder struct {
 
 // NewMockMemberClusterStatusManager creates a new mock instance.
 func NewMockMemberClusterStatusManager(ctrl *gomock.Controller) *MockMemberClusterStatusManager {
-	mock := &MockMemberClusterStatusManager{ctrl: ctrl}
-	mock.recorder = &MockMemberClusterStatusManagerMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockMemberClusterStatusManager) EXPECT() *MockMemberClusterStatusManagerMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetMemberClusterStatuses mocks base method.
+	return nil
 }
 
-// GetMemberClusterStatuses mocks base method.
 func (m *MockMemberClusterStatusManager) GetMemberClusterStatuses() []v1alpha2.ClusterStatus {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetMemberClusterStatuses")
-	ret0, _ := ret[0].([]v1alpha2.ClusterStatus)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetMemberClusterStatuses indicates an expected call of GetMemberClusterStatuses.
 func (mr *MockMemberClusterStatusManagerMockRecorder) GetMemberClusterStatuses() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMemberClusterStatuses", reflect.TypeOf((*MockMemberClusterStatusManager)(nil).GetMemberClusterStatuses))
+	_ = "STUB: not implemented"
+	return nil
 }

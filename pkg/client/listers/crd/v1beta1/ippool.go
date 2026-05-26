@@ -42,5 +42,6 @@ type iPPoolLister struct {
 
 // NewIPPoolLister returns a new IPPoolLister.
 func NewIPPoolLister(indexer cache.Indexer) IPPoolLister {
-	return &iPPoolLister{listers.New[*crdv1beta1.IPPool](indexer, crdv1beta1.Resource("ippool"))}
+	_ = "STUB: not implemented"
+	return *new(IPPoolLister)
 }

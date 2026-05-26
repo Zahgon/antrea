@@ -21,11 +21,10 @@
 package v1alpha1
 
 import (
+	sync "sync"
+
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
 )
 
 const (
@@ -42,42 +41,21 @@ type ExportRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ExportRequest) Reset() {
-	*x = ExportRequest{}
-	mi := &file_pkg_apis_flow_v1alpha1_service_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *ExportRequest) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *ExportRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *ExportRequest) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*ExportRequest) ProtoMessage() {}
+func (*ExportRequest) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *ExportRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_flow_v1alpha1_service_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use ExportRequest.ProtoReflect.Descriptor instead.
-func (*ExportRequest) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_service_proto_rawDescGZIP(), []int{0}
-}
+func (*ExportRequest) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
-func (x *ExportRequest) GetFlows() []*Flow {
-	if x != nil {
-		return x.Flows
-	}
-	return nil
-}
+func (x *ExportRequest) GetFlows() []*Flow { _ = "STUB: not implemented"; return nil }
 
 type ExportResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -85,35 +63,19 @@ type ExportResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ExportResponse) Reset() {
-	*x = ExportResponse{}
-	mi := &file_pkg_apis_flow_v1alpha1_service_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
+func (x *ExportResponse) Reset() { _ = "STUB: not implemented"; return }
 
-func (x *ExportResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
+func (x *ExportResponse) String() string { _ = "STUB: not implemented"; return "" }
 
-func (*ExportResponse) ProtoMessage() {}
+func (*ExportResponse) ProtoMessage() { _ = "STUB: not implemented"; return }
 
 func (x *ExportResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_apis_flow_v1alpha1_service_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
+	_ = "STUB: not implemented"
+	return *new(protoreflect.Message)
 }
 
 // Deprecated: Use ExportResponse.ProtoReflect.Descriptor instead.
-func (*ExportResponse) Descriptor() ([]byte, []int) {
-	return file_pkg_apis_flow_v1alpha1_service_proto_rawDescGZIP(), []int{1}
-}
+func (*ExportResponse) Descriptor() ([]byte, []int) { _ = "STUB: not implemented"; return nil, nil }
 
 var File_pkg_apis_flow_v1alpha1_service_proto protoreflect.FileDescriptor
 
@@ -132,10 +94,8 @@ var (
 )
 
 func file_pkg_apis_flow_v1alpha1_service_proto_rawDescGZIP() []byte {
-	file_pkg_apis_flow_v1alpha1_service_proto_rawDescOnce.Do(func() {
-		file_pkg_apis_flow_v1alpha1_service_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_pkg_apis_flow_v1alpha1_service_proto_rawDesc), len(file_pkg_apis_flow_v1alpha1_service_proto_rawDesc)))
-	})
-	return file_pkg_apis_flow_v1alpha1_service_proto_rawDescData
+	_ = "STUB: not implemented"
+	return nil
 }
 
 var file_pkg_apis_flow_v1alpha1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
@@ -155,27 +115,5 @@ var file_pkg_apis_flow_v1alpha1_service_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_pkg_apis_flow_v1alpha1_service_proto_init() }
-func file_pkg_apis_flow_v1alpha1_service_proto_init() {
-	if File_pkg_apis_flow_v1alpha1_service_proto != nil {
-		return
-	}
-	file_pkg_apis_flow_v1alpha1_flow_proto_init()
-	type x struct{}
-	out := protoimpl.TypeBuilder{
-		File: protoimpl.DescBuilder{
-			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_pkg_apis_flow_v1alpha1_service_proto_rawDesc), len(file_pkg_apis_flow_v1alpha1_service_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   2,
-			NumExtensions: 0,
-			NumServices:   1,
-		},
-		GoTypes:           file_pkg_apis_flow_v1alpha1_service_proto_goTypes,
-		DependencyIndexes: file_pkg_apis_flow_v1alpha1_service_proto_depIdxs,
-		MessageInfos:      file_pkg_apis_flow_v1alpha1_service_proto_msgTypes,
-	}.Build()
-	File_pkg_apis_flow_v1alpha1_service_proto = out.File
-	file_pkg_apis_flow_v1alpha1_service_proto_goTypes = nil
-	file_pkg_apis_flow_v1alpha1_service_proto_depIdxs = nil
-}
+func init()                                           { file_pkg_apis_flow_v1alpha1_service_proto_init() }
+func file_pkg_apis_flow_v1alpha1_service_proto_init() { _ = "STUB: not implemented"; return }

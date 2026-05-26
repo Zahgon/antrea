@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	v1alpha1 "antrea.io/antrea/v2/pkg/apis/flow/v1alpha1"
 	intermediate "antrea.io/antrea/v2/pkg/flowaggregator/intermediate"
 	gomock "go.uber.org/mock/gomock"
@@ -46,158 +44,136 @@ type MockAggregationProcessMockRecorder struct {
 
 // NewMockAggregationProcess creates a new mock instance.
 func NewMockAggregationProcess(ctrl *gomock.Controller) *MockAggregationProcess {
-	mock := &MockAggregationProcess{ctrl: ctrl}
-	mock.recorder = &MockAggregationProcessMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAggregationProcess) EXPECT() *MockAggregationProcessMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AreCorrelatedFieldsFilled mocks base method.
+	return nil
 }
 
-// AreCorrelatedFieldsFilled mocks base method.
 func (m *MockAggregationProcess) AreCorrelatedFieldsFilled(record intermediate.AggregationFlowRecord) bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AreCorrelatedFieldsFilled", record)
-	ret0, _ := ret[0].(bool)
-	return ret0
+	_ = "STUB: not implemented"
+	return false
 }
 
 // AreCorrelatedFieldsFilled indicates an expected call of AreCorrelatedFieldsFilled.
 func (mr *MockAggregationProcessMockRecorder) AreCorrelatedFieldsFilled(record any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AreCorrelatedFieldsFilled", reflect.TypeOf((*MockAggregationProcess)(nil).AreCorrelatedFieldsFilled), record)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AreExternalFieldsFilled mocks base method.
 func (m *MockAggregationProcess) AreExternalFieldsFilled(record intermediate.AggregationFlowRecord) bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AreExternalFieldsFilled", record)
-	ret0, _ := ret[0].(bool)
-	return ret0
+	_ = "STUB: not implemented"
+	return false
 }
 
 // AreExternalFieldsFilled indicates an expected call of AreExternalFieldsFilled.
 func (mr *MockAggregationProcessMockRecorder) AreExternalFieldsFilled(record any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AreExternalFieldsFilled", reflect.TypeOf((*MockAggregationProcess)(nil).AreExternalFieldsFilled), record)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ForAllExpiredFlowRecordsDo mocks base method.
 func (m *MockAggregationProcess) ForAllExpiredFlowRecordsDo(callback intermediate.FlowKeyRecordMapCallBack) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ForAllExpiredFlowRecordsDo", callback)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ForAllExpiredFlowRecordsDo indicates an expected call of ForAllExpiredFlowRecordsDo.
 func (mr *MockAggregationProcessMockRecorder) ForAllExpiredFlowRecordsDo(callback any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ForAllExpiredFlowRecordsDo", reflect.TypeOf((*MockAggregationProcess)(nil).ForAllExpiredFlowRecordsDo), callback)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNumFlows mocks base method.
-func (m *MockAggregationProcess) GetNumFlows() int64 {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNumFlows")
-	ret0, _ := ret[0].(int64)
-	return ret0
-}
+func (m *MockAggregationProcess) GetNumFlows() int64 { _ = "STUB: not implemented"; return 0 }
 
 // GetNumFlows indicates an expected call of GetNumFlows.
 func (mr *MockAggregationProcessMockRecorder) GetNumFlows() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNumFlows", reflect.TypeOf((*MockAggregationProcess)(nil).GetNumFlows))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetRecords mocks base method.
 func (m *MockAggregationProcess) GetRecords(flowKey *intermediate.FlowKey) []map[string]any {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetRecords", flowKey)
-	ret0, _ := ret[0].([]map[string]any)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetRecords indicates an expected call of GetRecords.
 func (mr *MockAggregationProcessMockRecorder) GetRecords(flowKey any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRecords", reflect.TypeOf((*MockAggregationProcess)(nil).GetRecords), flowKey)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // IsAggregatedRecordIPv4 mocks base method.
 func (m *MockAggregationProcess) IsAggregatedRecordIPv4(record intermediate.AggregationFlowRecord) bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsAggregatedRecordIPv4", record)
-	ret0, _ := ret[0].(bool)
-	return ret0
+	_ = "STUB: not implemented"
+	return false
 }
 
 // IsAggregatedRecordIPv4 indicates an expected call of IsAggregatedRecordIPv4.
 func (mr *MockAggregationProcessMockRecorder) IsAggregatedRecordIPv4(record any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsAggregatedRecordIPv4", reflect.TypeOf((*MockAggregationProcess)(nil).IsAggregatedRecordIPv4), record)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ResetStatAndThroughputElementsInRecord mocks base method.
 func (m *MockAggregationProcess) ResetStatAndThroughputElementsInRecord(record *v1alpha1.Flow) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ResetStatAndThroughputElementsInRecord", record)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ResetStatAndThroughputElementsInRecord indicates an expected call of ResetStatAndThroughputElementsInRecord.
 func (mr *MockAggregationProcessMockRecorder) ResetStatAndThroughputElementsInRecord(record any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetStatAndThroughputElementsInRecord", reflect.TypeOf((*MockAggregationProcess)(nil).ResetStatAndThroughputElementsInRecord), record)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetCorrelatedFieldsFilled mocks base method.
 func (m *MockAggregationProcess) SetCorrelatedFieldsFilled(record *intermediate.AggregationFlowRecord, isFilled bool) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetCorrelatedFieldsFilled", record, isFilled)
+	_ = "STUB: not implemented"
+	return
 }
 
 // SetCorrelatedFieldsFilled indicates an expected call of SetCorrelatedFieldsFilled.
 func (mr *MockAggregationProcessMockRecorder) SetCorrelatedFieldsFilled(record, isFilled any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetCorrelatedFieldsFilled", reflect.TypeOf((*MockAggregationProcess)(nil).SetCorrelatedFieldsFilled), record, isFilled)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetExternalFieldsFilled mocks base method.
 func (m *MockAggregationProcess) SetExternalFieldsFilled(record *intermediate.AggregationFlowRecord, isFilled bool) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetExternalFieldsFilled", record, isFilled)
+	_ = "STUB: not implemented"
+	return
 }
 
 // SetExternalFieldsFilled indicates an expected call of SetExternalFieldsFilled.
 func (mr *MockAggregationProcessMockRecorder) SetExternalFieldsFilled(record, isFilled any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetExternalFieldsFilled", reflect.TypeOf((*MockAggregationProcess)(nil).SetExternalFieldsFilled), record, isFilled)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Start mocks base method.
-func (m *MockAggregationProcess) Start() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Start")
-}
+func (m *MockAggregationProcess) Start() { _ = "STUB: not implemented"; return }
 
 // Start indicates an expected call of Start.
 func (mr *MockAggregationProcessMockRecorder) Start() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Start", reflect.TypeOf((*MockAggregationProcess)(nil).Start))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Stop mocks base method.
-func (m *MockAggregationProcess) Stop() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Stop")
-}
+func (m *MockAggregationProcess) Stop() { _ = "STUB: not implemented"; return }
 
 // Stop indicates an expected call of Stop.
 func (mr *MockAggregationProcessMockRecorder) Stop() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Stop", reflect.TypeOf((*MockAggregationProcess)(nil).Stop))
+	_ = "STUB: not implemented"
+	return nil
 }

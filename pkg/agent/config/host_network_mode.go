@@ -14,8 +14,6 @@
 
 package config
 
-import "strings"
-
 type HostNetworkMode int
 
 const (
@@ -34,18 +32,9 @@ var (
 // GetHostNetworkModeFromStr returns true and HostNetworkMode corresponding to input string.
 // Otherwise, false and undefined value is returned
 func GetHostNetworkModeFromStr(str string) (bool, HostNetworkMode) {
-	for idx, ms := range hostNetworkModeStrs {
-		if strings.EqualFold(ms, str) {
-			return true, HostNetworkMode(idx)
-		}
-	}
-	return false, HostNetworkModeInvalid
+	_ = "STUB: not implemented"
+	return false, *new(HostNetworkMode)
 }
 
 // String returns value in string.
-func (m HostNetworkMode) String() string {
-	if m == HostNetworkModeInvalid {
-		return "invalid"
-	}
-	return hostNetworkModeStrs[m]
-}
+func (m HostNetworkMode) String() string { _ = "STUB: not implemented"; return "" }

@@ -29,22 +29,6 @@ type fakeExternalEntities struct {
 }
 
 func newFakeExternalEntities(fake *FakeCrdV1alpha2, namespace string) crdv1alpha2.ExternalEntityInterface {
-	return &fakeExternalEntities{
-		gentype.NewFakeClientWithList[*v1alpha2.ExternalEntity, *v1alpha2.ExternalEntityList](
-			fake.Fake,
-			namespace,
-			v1alpha2.SchemeGroupVersion.WithResource("externalentities"),
-			v1alpha2.SchemeGroupVersion.WithKind("ExternalEntity"),
-			func() *v1alpha2.ExternalEntity { return &v1alpha2.ExternalEntity{} },
-			func() *v1alpha2.ExternalEntityList { return &v1alpha2.ExternalEntityList{} },
-			func(dst, src *v1alpha2.ExternalEntityList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha2.ExternalEntityList) []*v1alpha2.ExternalEntity {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha2.ExternalEntityList, items []*v1alpha2.ExternalEntity) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1alpha2.ExternalEntityInterface)
 }

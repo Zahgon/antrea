@@ -26,7 +26,6 @@ package testing
 
 import (
 	context "context"
-	reflect "reflect"
 
 	bgp "antrea.io/antrea/v2/pkg/agent/bgp"
 	bgp0 "antrea.io/antrea/v2/pkg/agent/controller/bgp"
@@ -53,168 +52,147 @@ type MockAgentNetworkPolicyInfoQuerierMockRecorder struct {
 
 // NewMockAgentNetworkPolicyInfoQuerier creates a new mock instance.
 func NewMockAgentNetworkPolicyInfoQuerier(ctrl *gomock.Controller) *MockAgentNetworkPolicyInfoQuerier {
-	mock := &MockAgentNetworkPolicyInfoQuerier{ctrl: ctrl}
-	mock.recorder = &MockAgentNetworkPolicyInfoQuerierMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAgentNetworkPolicyInfoQuerier) EXPECT() *MockAgentNetworkPolicyInfoQuerierMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetAddressGroupNum mocks base method.
+	return nil
 }
 
-// GetAddressGroupNum mocks base method.
 func (m *MockAgentNetworkPolicyInfoQuerier) GetAddressGroupNum() int {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAddressGroupNum")
-	ret0, _ := ret[0].(int)
-	return ret0
+	_ = "STUB: not implemented"
+	return 0
 }
 
 // GetAddressGroupNum indicates an expected call of GetAddressGroupNum.
 func (mr *MockAgentNetworkPolicyInfoQuerierMockRecorder) GetAddressGroupNum() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAddressGroupNum", reflect.TypeOf((*MockAgentNetworkPolicyInfoQuerier)(nil).GetAddressGroupNum))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetAddressGroups mocks base method.
 func (m *MockAgentNetworkPolicyInfoQuerier) GetAddressGroups() []v1beta2.AddressGroup {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAddressGroups")
-	ret0, _ := ret[0].([]v1beta2.AddressGroup)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetAddressGroups indicates an expected call of GetAddressGroups.
 func (mr *MockAgentNetworkPolicyInfoQuerierMockRecorder) GetAddressGroups() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAddressGroups", reflect.TypeOf((*MockAgentNetworkPolicyInfoQuerier)(nil).GetAddressGroups))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetAppliedNetworkPolicies mocks base method.
 func (m *MockAgentNetworkPolicyInfoQuerier) GetAppliedNetworkPolicies(pod, namespace string, npFilter *querier.NetworkPolicyQueryFilter) []v1beta2.NetworkPolicy {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAppliedNetworkPolicies", pod, namespace, npFilter)
-	ret0, _ := ret[0].([]v1beta2.NetworkPolicy)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetAppliedNetworkPolicies indicates an expected call of GetAppliedNetworkPolicies.
 func (mr *MockAgentNetworkPolicyInfoQuerierMockRecorder) GetAppliedNetworkPolicies(pod, namespace, npFilter any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAppliedNetworkPolicies", reflect.TypeOf((*MockAgentNetworkPolicyInfoQuerier)(nil).GetAppliedNetworkPolicies), pod, namespace, npFilter)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetAppliedToGroupNum mocks base method.
 func (m *MockAgentNetworkPolicyInfoQuerier) GetAppliedToGroupNum() int {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAppliedToGroupNum")
-	ret0, _ := ret[0].(int)
-	return ret0
+	_ = "STUB: not implemented"
+	return 0
 }
 
 // GetAppliedToGroupNum indicates an expected call of GetAppliedToGroupNum.
 func (mr *MockAgentNetworkPolicyInfoQuerierMockRecorder) GetAppliedToGroupNum() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAppliedToGroupNum", reflect.TypeOf((*MockAgentNetworkPolicyInfoQuerier)(nil).GetAppliedToGroupNum))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetAppliedToGroups mocks base method.
 func (m *MockAgentNetworkPolicyInfoQuerier) GetAppliedToGroups() []v1beta2.AppliedToGroup {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAppliedToGroups")
-	ret0, _ := ret[0].([]v1beta2.AppliedToGroup)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetAppliedToGroups indicates an expected call of GetAppliedToGroups.
 func (mr *MockAgentNetworkPolicyInfoQuerierMockRecorder) GetAppliedToGroups() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAppliedToGroups", reflect.TypeOf((*MockAgentNetworkPolicyInfoQuerier)(nil).GetAppliedToGroups))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetControllerConnectionStatus mocks base method.
 func (m *MockAgentNetworkPolicyInfoQuerier) GetControllerConnectionStatus() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetControllerConnectionStatus")
-	ret0, _ := ret[0].(bool)
-	return ret0
+	_ = "STUB: not implemented"
+	return false
 }
 
 // GetControllerConnectionStatus indicates an expected call of GetControllerConnectionStatus.
 func (mr *MockAgentNetworkPolicyInfoQuerierMockRecorder) GetControllerConnectionStatus() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetControllerConnectionStatus", reflect.TypeOf((*MockAgentNetworkPolicyInfoQuerier)(nil).GetControllerConnectionStatus))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetFQDNCache mocks base method.
 func (m *MockAgentNetworkPolicyInfoQuerier) GetFQDNCache(fqdnFilter *querier.FQDNCacheFilter) []types.DnsCacheEntry {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetFQDNCache", fqdnFilter)
-	ret0, _ := ret[0].([]types.DnsCacheEntry)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetFQDNCache indicates an expected call of GetFQDNCache.
 func (mr *MockAgentNetworkPolicyInfoQuerierMockRecorder) GetFQDNCache(fqdnFilter any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFQDNCache", reflect.TypeOf((*MockAgentNetworkPolicyInfoQuerier)(nil).GetFQDNCache), fqdnFilter)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNetworkPolicies mocks base method.
 func (m *MockAgentNetworkPolicyInfoQuerier) GetNetworkPolicies(npFilter *querier.NetworkPolicyQueryFilter) []v1beta2.NetworkPolicy {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNetworkPolicies", npFilter)
-	ret0, _ := ret[0].([]v1beta2.NetworkPolicy)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNetworkPolicies indicates an expected call of GetNetworkPolicies.
 func (mr *MockAgentNetworkPolicyInfoQuerierMockRecorder) GetNetworkPolicies(npFilter any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNetworkPolicies", reflect.TypeOf((*MockAgentNetworkPolicyInfoQuerier)(nil).GetNetworkPolicies), npFilter)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNetworkPolicyByRuleFlowID mocks base method.
 func (m *MockAgentNetworkPolicyInfoQuerier) GetNetworkPolicyByRuleFlowID(ruleFlowID uint32) *v1beta2.NetworkPolicyReference {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNetworkPolicyByRuleFlowID", ruleFlowID)
-	ret0, _ := ret[0].(*v1beta2.NetworkPolicyReference)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNetworkPolicyByRuleFlowID indicates an expected call of GetNetworkPolicyByRuleFlowID.
 func (mr *MockAgentNetworkPolicyInfoQuerierMockRecorder) GetNetworkPolicyByRuleFlowID(ruleFlowID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNetworkPolicyByRuleFlowID", reflect.TypeOf((*MockAgentNetworkPolicyInfoQuerier)(nil).GetNetworkPolicyByRuleFlowID), ruleFlowID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNetworkPolicyNum mocks base method.
 func (m *MockAgentNetworkPolicyInfoQuerier) GetNetworkPolicyNum() int {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNetworkPolicyNum")
-	ret0, _ := ret[0].(int)
-	return ret0
+	_ = "STUB: not implemented"
+	return 0
 }
 
 // GetNetworkPolicyNum indicates an expected call of GetNetworkPolicyNum.
 func (mr *MockAgentNetworkPolicyInfoQuerierMockRecorder) GetNetworkPolicyNum() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNetworkPolicyNum", reflect.TypeOf((*MockAgentNetworkPolicyInfoQuerier)(nil).GetNetworkPolicyNum))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetRuleByFlowID mocks base method.
 func (m *MockAgentNetworkPolicyInfoQuerier) GetRuleByFlowID(ruleFlowID uint32) *types.PolicyRule {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetRuleByFlowID", ruleFlowID)
-	ret0, _ := ret[0].(*types.PolicyRule)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetRuleByFlowID indicates an expected call of GetRuleByFlowID.
 func (mr *MockAgentNetworkPolicyInfoQuerierMockRecorder) GetRuleByFlowID(ruleFlowID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRuleByFlowID", reflect.TypeOf((*MockAgentNetworkPolicyInfoQuerier)(nil).GetRuleByFlowID), ruleFlowID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockAgentMulticastInfoQuerier is a mock of AgentMulticastInfoQuerier interface.
@@ -231,71 +209,63 @@ type MockAgentMulticastInfoQuerierMockRecorder struct {
 
 // NewMockAgentMulticastInfoQuerier creates a new mock instance.
 func NewMockAgentMulticastInfoQuerier(ctrl *gomock.Controller) *MockAgentMulticastInfoQuerier {
-	mock := &MockAgentMulticastInfoQuerier{ctrl: ctrl}
-	mock.recorder = &MockAgentMulticastInfoQuerierMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAgentMulticastInfoQuerier) EXPECT() *MockAgentMulticastInfoQuerierMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// CollectIGMPReportNPStats mocks base method.
+	return nil
 }
 
-// CollectIGMPReportNPStats mocks base method.
 func (m *MockAgentMulticastInfoQuerier) CollectIGMPReportNPStats() (map[types0.UID]map[string]*types.RuleMetric, map[types0.UID]map[string]*types.RuleMetric) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CollectIGMPReportNPStats")
-	ret0, _ := ret[0].(map[types0.UID]map[string]*types.RuleMetric)
-	ret1, _ := ret[1].(map[types0.UID]map[string]*types.RuleMetric)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // CollectIGMPReportNPStats indicates an expected call of CollectIGMPReportNPStats.
 func (mr *MockAgentMulticastInfoQuerierMockRecorder) CollectIGMPReportNPStats() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CollectIGMPReportNPStats", reflect.TypeOf((*MockAgentMulticastInfoQuerier)(nil).CollectIGMPReportNPStats))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetAllPodsStats mocks base method.
 func (m *MockAgentMulticastInfoQuerier) GetAllPodsStats() map[*interfacestore.InterfaceConfig]*multicast.PodTrafficStats {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllPodsStats")
-	ret0, _ := ret[0].(map[*interfacestore.InterfaceConfig]*multicast.PodTrafficStats)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetAllPodsStats indicates an expected call of GetAllPodsStats.
 func (mr *MockAgentMulticastInfoQuerierMockRecorder) GetAllPodsStats() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllPodsStats", reflect.TypeOf((*MockAgentMulticastInfoQuerier)(nil).GetAllPodsStats))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetGroupPods mocks base method.
 func (m *MockAgentMulticastInfoQuerier) GetGroupPods() map[string][]v1beta2.PodReference {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetGroupPods")
-	ret0, _ := ret[0].(map[string][]v1beta2.PodReference)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetGroupPods indicates an expected call of GetGroupPods.
 func (mr *MockAgentMulticastInfoQuerierMockRecorder) GetGroupPods() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGroupPods", reflect.TypeOf((*MockAgentMulticastInfoQuerier)(nil).GetGroupPods))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetPodStats mocks base method.
 func (m *MockAgentMulticastInfoQuerier) GetPodStats(podName, podNamespace string) *multicast.PodTrafficStats {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPodStats", podName, podNamespace)
-	ret0, _ := ret[0].(*multicast.PodTrafficStats)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetPodStats indicates an expected call of GetPodStats.
 func (mr *MockAgentMulticastInfoQuerierMockRecorder) GetPodStats(podName, podNamespace any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPodStats", reflect.TypeOf((*MockAgentMulticastInfoQuerier)(nil).GetPodStats), podName, podNamespace)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockEgressQuerier is a mock of EgressQuerier interface.
@@ -312,44 +282,39 @@ type MockEgressQuerierMockRecorder struct {
 
 // NewMockEgressQuerier creates a new mock instance.
 func NewMockEgressQuerier(ctrl *gomock.Controller) *MockEgressQuerier {
-	mock := &MockEgressQuerier{ctrl: ctrl}
-	mock.recorder = &MockEgressQuerierMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockEgressQuerier) EXPECT() *MockEgressQuerierMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetEgress mocks base method.
+	return nil
 }
 
-// GetEgress mocks base method.
 func (m *MockEgressQuerier) GetEgress(podNamespace, podName string) (types.EgressConfig, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetEgress", podNamespace, podName)
-	ret0, _ := ret[0].(types.EgressConfig)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return *new(types.EgressConfig), nil
 }
 
 // GetEgress indicates an expected call of GetEgress.
 func (mr *MockEgressQuerierMockRecorder) GetEgress(podNamespace, podName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEgress", reflect.TypeOf((*MockEgressQuerier)(nil).GetEgress), podNamespace, podName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetEgressIPByMark mocks base method.
 func (m *MockEgressQuerier) GetEgressIPByMark(mark uint32) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetEgressIPByMark", mark)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 // GetEgressIPByMark indicates an expected call of GetEgressIPByMark.
 func (mr *MockEgressQuerierMockRecorder) GetEgressIPByMark(mark any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEgressIPByMark", reflect.TypeOf((*MockEgressQuerier)(nil).GetEgressIPByMark), mark)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockAgentBGPPolicyInfoQuerier is a mock of AgentBGPPolicyInfoQuerier interface.
@@ -366,56 +331,49 @@ type MockAgentBGPPolicyInfoQuerierMockRecorder struct {
 
 // NewMockAgentBGPPolicyInfoQuerier creates a new mock instance.
 func NewMockAgentBGPPolicyInfoQuerier(ctrl *gomock.Controller) *MockAgentBGPPolicyInfoQuerier {
-	mock := &MockAgentBGPPolicyInfoQuerier{ctrl: ctrl}
-	mock.recorder = &MockAgentBGPPolicyInfoQuerierMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAgentBGPPolicyInfoQuerier) EXPECT() *MockAgentBGPPolicyInfoQuerierMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetBGPPeerStatus mocks base method.
+	return nil
 }
 
-// GetBGPPeerStatus mocks base method.
 func (m *MockAgentBGPPolicyInfoQuerier) GetBGPPeerStatus(ctx context.Context) ([]bgp.PeerStatus, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBGPPeerStatus", ctx)
-	ret0, _ := ret[0].([]bgp.PeerStatus)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetBGPPeerStatus indicates an expected call of GetBGPPeerStatus.
 func (mr *MockAgentBGPPolicyInfoQuerierMockRecorder) GetBGPPeerStatus(ctx any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBGPPeerStatus", reflect.TypeOf((*MockAgentBGPPolicyInfoQuerier)(nil).GetBGPPeerStatus), ctx)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetBGPPolicyInfo mocks base method.
 func (m *MockAgentBGPPolicyInfoQuerier) GetBGPPolicyInfo() *bgp0.BGPPolicyInfo {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBGPPolicyInfo")
-	ret0, _ := ret[0].(*bgp0.BGPPolicyInfo)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetBGPPolicyInfo indicates an expected call of GetBGPPolicyInfo.
 func (mr *MockAgentBGPPolicyInfoQuerierMockRecorder) GetBGPPolicyInfo() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBGPPolicyInfo", reflect.TypeOf((*MockAgentBGPPolicyInfoQuerier)(nil).GetBGPPolicyInfo))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetBGPRoutes mocks base method.
 func (m *MockAgentBGPPolicyInfoQuerier) GetBGPRoutes(ctx context.Context) (map[bgp.Route]bgp0.RouteMetadata, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBGPRoutes", ctx)
-	ret0, _ := ret[0].(map[bgp.Route]bgp0.RouteMetadata)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetBGPRoutes indicates an expected call of GetBGPRoutes.
 func (mr *MockAgentBGPPolicyInfoQuerierMockRecorder) GetBGPRoutes(ctx any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBGPRoutes", reflect.TypeOf((*MockAgentBGPPolicyInfoQuerier)(nil).GetBGPRoutes), ctx)
+	_ = "STUB: not implemented"
+	return nil
 }

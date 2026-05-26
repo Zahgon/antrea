@@ -27,36 +27,43 @@ type FakeCrdV1alpha1 struct {
 }
 
 func (c *FakeCrdV1alpha1) AntreaNodeConfigs() v1alpha1.AntreaNodeConfigInterface {
-	return newFakeAntreaNodeConfigs(c)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.AntreaNodeConfigInterface)
 }
 
 func (c *FakeCrdV1alpha1) BGPPolicies() v1alpha1.BGPPolicyInterface {
-	return newFakeBGPPolicies(c)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.BGPPolicyInterface)
 }
 
 func (c *FakeCrdV1alpha1) ExternalNodes(namespace string) v1alpha1.ExternalNodeInterface {
-	return newFakeExternalNodes(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.ExternalNodeInterface)
 }
 
 func (c *FakeCrdV1alpha1) FlowExporterDestinations() v1alpha1.FlowExporterDestinationInterface {
-	return newFakeFlowExporterDestinations(c)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.FlowExporterDestinationInterface)
 }
 
 func (c *FakeCrdV1alpha1) NodeLatencyMonitors() v1alpha1.NodeLatencyMonitorInterface {
-	return newFakeNodeLatencyMonitors(c)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.NodeLatencyMonitorInterface)
 }
 
 func (c *FakeCrdV1alpha1) PacketCaptures() v1alpha1.PacketCaptureInterface {
-	return newFakePacketCaptures(c)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.PacketCaptureInterface)
 }
 
 func (c *FakeCrdV1alpha1) SupportBundleCollections() v1alpha1.SupportBundleCollectionInterface {
-	return newFakeSupportBundleCollections(c)
+	_ = "STUB: not implemented"
+	return *new(v1alpha1.SupportBundleCollectionInterface)
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeCrdV1alpha1) RESTClient() rest.Interface {
-	var ret *rest.RESTClient
-	return ret
+	_ = "STUB: not implemented"
+	return *new(rest.Interface)
 }

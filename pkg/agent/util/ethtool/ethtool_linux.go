@@ -14,12 +14,6 @@
 
 package ethtool
 
-import (
-	"fmt"
-	"syscall"
-	"unsafe"
-)
-
 const (
 	IFNAMSIZ        = 16         // defined in linux/if.h
 	SIOCETHTOOL     = 0x8946     // ethtool interface, defined in linux/sockios.h
@@ -39,36 +33,7 @@ type ethtoolValue struct {
 }
 
 // EthtoolTXHWCsumOff disables TX checksum offload on the specified interface.
-func EthtoolTXHWCsumOff(name string) error {
-	if len(name)+1 > IFNAMSIZ {
-		return fmt.Errorf("name '%s' exceeds IFNAMSIZ (%d)", name, IFNAMSIZ)
-	}
+func EthtoolTXHWCsumOff(name string) error { _ = "STUB: not implemented"; return nil }
 
-	fd, err := syscall.Socket(syscall.AF_INET, syscall.SOCK_DGRAM, syscall.IPPROTO_IP)
-	if err != nil {
-		return fmt.Errorf("error when opening socket: %v", err)
-	}
-	defer syscall.Close(fd)
-
-	value := ethtoolValue{
-		Cmd:  ETHTOOL_STXCSUM,
-		Data: 0,
-	}
-	request := ifReq{
-		Data: uintptr(unsafe.Pointer(&value)),
-	}
-	copy(request.Name[:], []byte(name))
-
-	// We perform the call unconditionally: if TX checksum offload is already disabled the call
-	// will be a no-op and there will be no error.
-	if _, _, errno := syscall.RawSyscall(
-		syscall.SYS_IOCTL,
-		uintptr(fd),
-		uintptr(SIOCETHTOOL),
-		uintptr(unsafe.Pointer(&request)),
-	); errno != 0 {
-		return fmt.Errorf("ioctl call failed: %v", errno)
-	}
-
-	return nil
-}
+// We perform the call unconditionally: if TX checksum offload is already disabled the call
+// will be a no-op and there will be no error.

@@ -27,16 +27,18 @@ type FakeMulticlusterV1alpha2 struct {
 }
 
 func (c *FakeMulticlusterV1alpha2) ClusterClaims(namespace string) v1alpha2.ClusterClaimInterface {
-	return newFakeClusterClaims(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1alpha2.ClusterClaimInterface)
 }
 
 func (c *FakeMulticlusterV1alpha2) ClusterSets(namespace string) v1alpha2.ClusterSetInterface {
-	return newFakeClusterSets(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1alpha2.ClusterSetInterface)
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeMulticlusterV1alpha2) RESTClient() rest.Interface {
-	var ret *rest.RESTClient
-	return ret
+	_ = "STUB: not implemented"
+	return *new(rest.Interface)
 }

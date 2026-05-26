@@ -15,59 +15,24 @@
 package fqdncache
 
 import (
-	"encoding/json"
 	"net/http"
 	"net/url"
-	"regexp"
-	"strings"
 
-	"k8s.io/klog/v2"
-
-	agentapi "antrea.io/antrea/v2/pkg/agent/apis"
 	"antrea.io/antrea/v2/pkg/querier"
 )
 
 func HandleFunc(npq querier.AgentNetworkPolicyInfoQuerier) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		fqdnFilter, err := newFilterFromURLQuery(r.URL.Query())
-		if err != nil {
-			http.Error(w, "Invalid regex: "+err.Error(), http.StatusBadRequest)
-			klog.ErrorS(err, "Invalid regex")
-			return
-		}
-		dnsEntryCache := npq.GetFQDNCache(fqdnFilter)
-		resp := make([]agentapi.FQDNCacheResponse, 0, len(dnsEntryCache))
-		for _, entry := range dnsEntryCache {
-			resp = append(resp, agentapi.FQDNCacheResponse{
-				FQDNName:       entry.FQDNName,
-				IPAddress:      entry.IPAddress.String(),
-				ExpirationTime: entry.ExpirationTime,
-			})
-		}
-		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			http.Error(w, "Failed to encode response: "+err.Error(), http.StatusBadRequest)
-			klog.ErrorS(err, "Failed to encode response")
-			return
-		}
-	}
+	_ = "STUB: not implemented"
+	return *new(http.HandlerFunc)
 }
 
 func newFilterFromURLQuery(query url.Values) (*querier.FQDNCacheFilter, error) {
-	domain := query.Get("domain")
-	if domain == "" {
-		return nil, nil
-	}
-	pattern := strings.TrimSpace(domain)
-	// Replace "." as a regex literal, since it's recogized as a separator in FQDN.
-	pattern = strings.ReplaceAll(pattern, ".", "[.]")
-	// Replace "*" with ".*".
-	pattern = strings.ReplaceAll(pattern, "*", ".*")
-	// Anchor the regex match expression.
-	pattern = "^" + pattern + "$"
-
-	regex, err := regexp.Compile(pattern)
-	if err != nil {
-		return nil, err
-	}
-	return &querier.FQDNCacheFilter{DomainRegex: regex}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// Replace "." as a regex literal, since it's recogized as a separator in FQDN.
+
+// Replace "*" with ".*".
+
+// Anchor the regex match expression.

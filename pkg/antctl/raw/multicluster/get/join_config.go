@@ -15,19 +15,10 @@
 package get
 
 import (
-	"context"
-	"fmt"
 	"strings"
 
 	"github.com/spf13/cobra"
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-
-	mcv1alpha2 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha2"
-	"antrea.io/antrea/v2/pkg/antctl/raw"
-	"antrea.io/antrea/v2/pkg/antctl/raw/multicluster/common"
-	multiclusterscheme "antrea.io/antrea/v2/pkg/antctl/raw/multicluster/scheme"
 )
 
 type joinConfigOptions struct {
@@ -48,76 +39,12 @@ $ antctl mc get joinconfig --member-token cluster-east-token -n antrea-multiclus
 `, "\n")
 
 func (o *joinConfigOptions) validateAndComplete(cmd *cobra.Command) error {
-	if o.namespace == "" {
-		return fmt.Errorf("Namespace must be specified")
-	}
-
-	// For unit test.
-	if o.k8sClient != nil {
-		return nil
-	}
-
-	kubeconfig, err := raw.ResolveKubeconfig(cmd)
-	if err == nil {
-		o.k8sClient, err = client.New(kubeconfig, client.Options{Scheme: multiclusterscheme.Scheme})
-	}
-	return err
-}
-
-func NewJoinConfigCommand() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "joinconfig",
-		Short:   "Print ClusterSet join parameters in a leader cluster",
-		Args:    cobra.MaximumNArgs(0),
-		Example: joinConfigExamples,
-		RunE:    runEJoinConfig,
-	}
-	o := &joinConfigOptions{}
-	joinConfigOpts = o
-	cmd.Flags().StringVarP(&o.namespace, "namespace", "n", "", "Namespace of the ClusterSet")
-	cmd.Flags().StringVarP(&o.memberToken, "member-token", "", "", "Member token name. If provided, the Secret manifest of the token will also be printed.")
-
-	return cmd
-}
-
-func runEJoinConfig(cmd *cobra.Command, args []string) error {
-	err := joinConfigOpts.validateAndComplete(cmd)
-	if err != nil {
-		return err
-	}
-
-	clusterSetList := &mcv1alpha2.ClusterSetList{}
-	err = joinConfigOpts.k8sClient.List(context.TODO(), clusterSetList, &client.ListOptions{Namespace: joinConfigOpts.namespace})
-	if err != nil {
-		return err
-	}
-	clusterSets := clusterSetList.Items
-
-	if len(clusterSets) == 0 {
-		return fmt.Errorf("no ClusterSet found in Namespace %s", joinConfigOpts.namespace)
-	} else if len(clusterSets) > 1 {
-		return fmt.Errorf("more than one ClusterSet found in Namespace %s", joinConfigOpts.namespace)
-	}
-
-	cs := clusterSets[0]
-	if len(cs.Spec.Leaders) == 0 {
-		return fmt.Errorf("invalid ClusterSet %s: no leader cluster", cs.Name)
-	}
-
-	var tokenSecret *corev1.Secret
-	if joinConfigOpts.memberToken != "" {
-		tokenSecret = &corev1.Secret{}
-		err = joinConfigOpts.k8sClient.Get(context.TODO(), types.NamespacedName{
-			Namespace: joinConfigOpts.namespace,
-			Name:      joinConfigOpts.memberToken,
-		}, tokenSecret)
-		if err != nil {
-			return err
-		}
-	}
-
-	if err := common.OutputJoinConfig(cmd, cmd.OutOrStdout(), cs.Name, cs.Spec.Leaders[0].ClusterID, cs.Namespace, tokenSecret); err != nil {
-		return err
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// For unit test.
+
+func NewJoinConfigCommand() *cobra.Command { _ = "STUB: not implemented"; return nil }
+
+func runEJoinConfig(cmd *cobra.Command, args []string) error { _ = "STUB: not implemented"; return nil }

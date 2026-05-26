@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	multiclusterv1alpha2 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha2"
-	scheme "antrea.io/antrea/v2/multicluster/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -55,14 +54,6 @@ type clusterSets struct {
 
 // newClusterSets returns a ClusterSets
 func newClusterSets(c *MulticlusterV1alpha2Client, namespace string) *clusterSets {
-	return &clusterSets{
-		gentype.NewClientWithList[*multiclusterv1alpha2.ClusterSet, *multiclusterv1alpha2.ClusterSetList](
-			"clustersets",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			namespace,
-			func() *multiclusterv1alpha2.ClusterSet { return &multiclusterv1alpha2.ClusterSet{} },
-			func() *multiclusterv1alpha2.ClusterSetList { return &multiclusterv1alpha2.ClusterSetList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

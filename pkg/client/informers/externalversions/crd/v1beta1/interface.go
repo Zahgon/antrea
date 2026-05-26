@@ -54,60 +54,60 @@ type version struct {
 
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
-	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(Interface)
 }
 
 // AntreaAgentInfos returns a AntreaAgentInfoInformer.
 func (v *version) AntreaAgentInfos() AntreaAgentInfoInformer {
-	return &antreaAgentInfoInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(AntreaAgentInfoInformer)
 }
 
 // AntreaControllerInfos returns a AntreaControllerInfoInformer.
 func (v *version) AntreaControllerInfos() AntreaControllerInfoInformer {
-	return &antreaControllerInfoInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(AntreaControllerInfoInformer)
 }
 
 // ClusterGroups returns a ClusterGroupInformer.
 func (v *version) ClusterGroups() ClusterGroupInformer {
-	return &clusterGroupInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(ClusterGroupInformer)
 }
 
 // ClusterNetworkPolicies returns a ClusterNetworkPolicyInformer.
 func (v *version) ClusterNetworkPolicies() ClusterNetworkPolicyInformer {
-	return &clusterNetworkPolicyInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(ClusterNetworkPolicyInformer)
 }
 
 // Egresses returns a EgressInformer.
-func (v *version) Egresses() EgressInformer {
-	return &egressInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
-}
+func (v *version) Egresses() EgressInformer { _ = "STUB: not implemented"; return *new(EgressInformer) }
 
 // ExternalIPPools returns a ExternalIPPoolInformer.
 func (v *version) ExternalIPPools() ExternalIPPoolInformer {
-	return &externalIPPoolInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(ExternalIPPoolInformer)
 }
 
 // Groups returns a GroupInformer.
-func (v *version) Groups() GroupInformer {
-	return &groupInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
+func (v *version) Groups() GroupInformer { _ = "STUB: not implemented"; return *new(GroupInformer) }
 
 // IPPools returns a IPPoolInformer.
-func (v *version) IPPools() IPPoolInformer {
-	return &iPPoolInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
-}
+func (v *version) IPPools() IPPoolInformer { _ = "STUB: not implemented"; return *new(IPPoolInformer) }
 
 // NetworkPolicies returns a NetworkPolicyInformer.
 func (v *version) NetworkPolicies() NetworkPolicyInformer {
-	return &networkPolicyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(NetworkPolicyInformer)
 }
 
 // Tiers returns a TierInformer.
-func (v *version) Tiers() TierInformer {
-	return &tierInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
-}
+func (v *version) Tiers() TierInformer { _ = "STUB: not implemented"; return *new(TierInformer) }
 
 // Traceflows returns a TraceflowInformer.
 func (v *version) Traceflows() TraceflowInformer {
-	return &traceflowInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	_ = "STUB: not implemented"
+	return *new(TraceflowInformer)
 }

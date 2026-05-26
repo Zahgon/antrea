@@ -64,9 +64,8 @@ type consumerConfig struct {
 // may re-park and wait up to one additional tick, so actual blocking time can
 // slightly exceed the requested deadline.
 func WithMaxConsumeDeadline(d time.Duration) ConsumerOption {
-	return func(c *consumerConfig) {
-		c.maxConsumeDeadline = d
-	}
+	_ = "STUB: not implemented"
+	return *new(ConsumerOption)
 }
 
 // WithReadFromBeginning positions the consumer at the oldest available slot
@@ -76,11 +75,7 @@ func WithMaxConsumeDeadline(d time.Duration) ConsumerOption {
 // The starting position is a best-effort snapshot. If the producer advances
 // past it before the consumer's first read, computeLost will detect and
 // account for the overwritten items, so correctness is maintained.
-func WithReadFromBeginning() ConsumerOption {
-	return func(c *consumerConfig) {
-		c.readFromBeginning = true
-	}
-}
+func WithReadFromBeginning() ConsumerOption { _ = "STUB: not implemented"; return *new(ConsumerOption) }
 
 // BroadcastBuffer represents the complete system: the producer methods
 // plus the factory method to spawn new consumers.

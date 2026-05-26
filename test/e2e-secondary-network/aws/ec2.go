@@ -16,28 +16,9 @@ package aws
 
 import (
 	"context"
-	"fmt"
-
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/ec2"
 )
 
 func AssignIPToEC2ENI(ctx context.Context, interfaceID, ip string) error {
-	cfg, err := config.LoadDefaultConfig(ctx, config.WithEC2IMDSRegion())
-	if err != nil {
-		return fmt.Errorf("unable to load AWS configuration: %w", err)
-	}
-	client := ec2.NewFromConfig(cfg)
-
-	ipInput := &ec2.AssignPrivateIpAddressesInput{
-		AllowReassignment:  aws.Bool(true),
-		NetworkInterfaceId: aws.String(interfaceID),
-		PrivateIpAddresses: []string{ip},
-	}
-	_, err = client.AssignPrivateIpAddresses(ctx, ipInput)
-	if err != nil {
-		return fmt.Errorf("unable to assign IP %s to interface %s: %w", ip, interfaceID, err)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }

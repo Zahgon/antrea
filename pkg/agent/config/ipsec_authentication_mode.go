@@ -14,8 +14,6 @@
 
 package config
 
-import "strings"
-
 type IPsecAuthenticationMode int
 
 const (
@@ -29,28 +27,14 @@ var supportedIPsecAuthenticationModeStrs = [...]string{
 	"cert",
 }
 
-func GetIPsecConfigModes() []IPsecAuthenticationMode {
-	return []IPsecAuthenticationMode{
-		IPsecAuthenticationModePSK,
-		IPsecAuthenticationModeCert,
-	}
-}
+func GetIPsecConfigModes() []IPsecAuthenticationMode { _ = "STUB: not implemented"; return nil }
 
 // String returns value in string.
-func (am IPsecAuthenticationMode) String() string {
-	if am == IPsecAuthenticationModeInvalid {
-		return "invalid"
-	}
-	return supportedIPsecAuthenticationModeStrs[am]
-}
+func (am IPsecAuthenticationMode) String() string { _ = "STUB: not implemented"; return "" }
 
 // GetIPsecAuthenticationModeFromStr returns true and IPsecAuthenticationModeType corresponding to input string.
 // Otherwise, false and undefined value is returned
 func GetIPsecAuthenticationModeFromStr(str string) (bool, IPsecAuthenticationMode) {
-	for idx, ms := range supportedIPsecAuthenticationModeStrs {
-		if strings.EqualFold(ms, str) {
-			return true, IPsecAuthenticationMode(idx)
-		}
-	}
-	return false, IPsecAuthenticationModeInvalid
+	_ = "STUB: not implemented"
+	return false, *new(IPsecAuthenticationMode)
 }

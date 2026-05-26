@@ -15,76 +15,15 @@
 package testing
 
 import (
-	"net/netip"
-	"time"
-
-	"github.com/google/uuid"
-
 	"antrea.io/antrea/v2/pkg/agent/flowexporter/connection"
-	"antrea.io/antrea/v2/pkg/agent/flowexporter/utils"
 )
 
 func GetConnection(isIPv6 bool, isPresent bool, statusFlag uint32, protoID uint8, tcpState string) *connection.Connection {
-	var tuple connection.Tuple
-	if !isIPv6 {
-		tuple = connection.Tuple{SourceAddress: netip.MustParseAddr("1.2.3.4"), DestinationAddress: netip.MustParseAddr("4.3.2.1"), Protocol: protoID, SourcePort: 65280, DestinationPort: 255}
-	} else {
-		srcIP := netip.MustParseAddr("2001:0:3238:dfe1:63::fefb")
-		dstIP := netip.MustParseAddr("2001:0:3238:dfe1:63::fefc")
-		tuple = connection.Tuple{SourceAddress: srcIP, DestinationAddress: dstIP, Protocol: protoID, SourcePort: 65280, DestinationPort: 255}
-	}
-	conn := &connection.Connection{
-		StartTime:                      time.Time{},
-		StopTime:                       time.Time{},
-		StatusFlag:                     statusFlag,
-		OriginalPackets:                0xab,
-		OriginalBytes:                  0xabcd,
-		ReversePackets:                 0xa,
-		ReverseBytes:                   0xab,
-		FlowKey:                        tuple,
-		IsPresent:                      isPresent,
-		SourcePodNamespace:             "ns",
-		SourcePodName:                  "pod",
-		SourcePodUID:                   uuid.New().String(),
-		DestinationPodNamespace:        "",
-		DestinationPodName:             "",
-		IngressNetworkPolicyName:       "",
-		IngressNetworkPolicyNamespace:  "",
-		IngressNetworkPolicyType:       utils.PolicyTypeUnspecified,
-		IngressNetworkPolicyRuleName:   "",
-		IngressNetworkPolicyRuleAction: utils.NetworkPolicyRuleActionNoAction,
-		EgressNetworkPolicyName:        "np",
-		EgressNetworkPolicyNamespace:   "ns",
-		EgressNetworkPolicyUID:         uuid.New().String(),
-		EgressNetworkPolicyType:        utils.PolicyTypeK8sNetworkPolicy,
-		EgressNetworkPolicyRuleName:    "",
-		EgressNetworkPolicyRuleAction:  utils.NetworkPolicyRuleActionAllow,
-		DestinationServicePortName:     "service",
-		TCPState:                       tcpState,
-		FlowType:                       utils.FlowTypeInterNode,
-		EgressName:                     "my-egress",
-		EgressUID:                      uuid.New().String(),
-		EgressNodeName:                 "egress-node",
-	}
-	return conn
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func GetDenyConnection(isIPv6 bool, protoID uint8) *connection.Connection {
-	var tuple, _ connection.Tuple
-	if !isIPv6 {
-		tuple = connection.Tuple{SourceAddress: netip.MustParseAddr("1.2.3.4"), DestinationAddress: netip.MustParseAddr("4.3.2.1"), Protocol: protoID, SourcePort: 65280, DestinationPort: 255}
-	} else {
-		srcIP := netip.MustParseAddr("2001:0:3238:dfe1:63::fefb")
-		dstIP := netip.MustParseAddr("2001:0:3238:dfe1:63::fefc")
-		tuple = connection.Tuple{SourceAddress: srcIP, DestinationAddress: dstIP, Protocol: protoID, SourcePort: 65280, DestinationPort: 255}
-	}
-	now := time.Now()
-	conn := &connection.Connection{
-		FlowKey:         tuple,
-		SourcePodName:   "pod",
-		StartTime:       now,
-		StopTime:        now,
-		OriginalPackets: 1,
-	}
-	return conn
+	_ = "STUB: not implemented"
+	return nil
 }

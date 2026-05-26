@@ -40,75 +40,28 @@ type featureEgress struct {
 	enableEgressTrafficShaping bool
 }
 
-func (f *featureEgress) getFeatureName() string {
-	return "Egress"
-}
+func (f *featureEgress) getFeatureName() string { _ = "STUB: not implemented"; return "" }
 
 func newFeatureEgress(cookieAllocator cookie.Allocator,
 	ipProtocols []binding.Protocol,
 	nodeConfig *config.NodeConfig,
 	egressConfig *config.EgressConfig,
 	enableEgressTrafficShaping bool) *featureEgress {
-	exceptCIDRs := make(map[binding.Protocol][]net.IPNet)
-	for _, cidr := range egressConfig.ExceptCIDRs {
-		if cidr.IP.To4() == nil {
-			exceptCIDRs[binding.ProtocolIPv6] = append(exceptCIDRs[binding.ProtocolIPv6], cidr)
-		} else {
-			exceptCIDRs[binding.ProtocolIP] = append(exceptCIDRs[binding.ProtocolIP], cidr)
-		}
-	}
-
-	nodeIPs := make(map[binding.Protocol]net.IP)
-	for _, ipProtocol := range ipProtocols {
-		switch ipProtocol {
-		case binding.ProtocolIP:
-			nodeIPs[ipProtocol] = nodeConfig.NodeIPv4Addr.IP
-		case binding.ProtocolIPv6:
-			nodeIPs[ipProtocol] = nodeConfig.NodeIPv6Addr.IP
-		}
-	}
-	return &featureEgress{
-		cachedFlows:                newFlowCategoryCache(),
-		cachedMeter:                sync.Map{},
-		cookieAllocator:            cookieAllocator,
-		exceptCIDRs:                exceptCIDRs,
-		ipProtocols:                ipProtocols,
-		nodeIPs:                    nodeIPs,
-		gatewayMAC:                 nodeConfig.GatewayConfig.MAC,
-		category:                   cookie.Egress,
-		enableEgressTrafficShaping: enableEgressTrafficShaping,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (f *featureEgress) initFlows() []*openflow15.FlowMod {
+	_ = "STUB: not implemented"
 	// This installs the flows to enable Pods to communicate to the external IP addresses. The flows identify the packets
 	// from local Pods to the external IP address, and mark the packets to be SNAT'd with the configured SNAT IPs.
-	initialFlows := f.externalFlows()
-	if f.enableEgressTrafficShaping {
-		initialFlows = append(initialFlows, f.egressQoSDefaultFlow())
-	}
-	return GetFlowModMessages(initialFlows, binding.AddMessage)
-}
-
-func (f *featureEgress) replayFlows() []*openflow15.FlowMod {
-	return getCachedFlowMessages(f.cachedFlows)
-}
-
-func (f *featureEgress) initGroups() []binding.OFEntry {
 	return nil
 }
 
-func (f *featureEgress) replayGroups() []binding.OFEntry {
-	return nil
-}
+func (f *featureEgress) replayFlows() []*openflow15.FlowMod { _ = "STUB: not implemented"; return nil }
 
-func (f *featureEgress) replayMeters() []binding.OFEntry {
-	var meters []binding.OFEntry
-	f.cachedMeter.Range(func(id, value interface{}) bool {
-		meter := value.(binding.Meter)
-		meter.Reset()
-		meters = append(meters, meter)
-		return true
-	})
-	return meters
-}
+func (f *featureEgress) initGroups() []binding.OFEntry { _ = "STUB: not implemented"; return nil }
+
+func (f *featureEgress) replayGroups() []binding.OFEntry { _ = "STUB: not implemented"; return nil }
+
+func (f *featureEgress) replayMeters() []binding.OFEntry { _ = "STUB: not implemented"; return nil }

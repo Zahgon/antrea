@@ -18,15 +18,8 @@
 package rules
 
 import (
-	"fmt"
-	"net"
-
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/agent/route"
 	"antrea.io/antrea/v2/pkg/agent/util"
 	"antrea.io/antrea/v2/pkg/agent/util/winnet"
-	binding "antrea.io/antrea/v2/pkg/ovs/openflow"
 )
 
 // Use antrea-nat netnatstaticmapping rules as NPL implementation
@@ -35,9 +28,7 @@ var (
 )
 
 // InitRules initializes rules based on the netnatstaticmapping implementation on windows
-func InitRules(_ bool) PodPortRules {
-	return NewNetNatRules()
-}
+func InitRules(_ bool) PodPortRules { _ = "STUB: not implemented"; return *new(PodPortRules) }
 
 type netnatRules struct {
 	name   string
@@ -45,81 +36,31 @@ type netnatRules struct {
 }
 
 // NewNetNatRules returns a new instance of netnatRules.
-func NewNetNatRules() *netnatRules {
-	nnRule := netnatRules{
-		name:   antreaNatNPL,
-		winnet: &winnet.Handle{},
-	}
-	return &nnRule
-}
+func NewNetNatRules() *netnatRules { _ = "STUB: not implemented"; return nil }
 
 // Init initializes NetNat rules for NPL.
-func (nn *netnatRules) Init() error {
-	if err := nn.initRules(); err != nil {
-		return fmt.Errorf("initialization of NPL netnat rules failed: %v", err)
-	}
-	return nil
-}
+func (nn *netnatRules) Init() error { _ = "STUB: not implemented"; return nil }
 
 // initRules creates or reuses NetNat table as NPL rule instance on Windows.
-func (nn *netnatRules) initRules() error {
-	nn.DeleteAllRules()
-	if err := nn.winnet.AddNetNat(antreaNatNPL, route.PodCIDRIPv4); err != nil {
-		return err
-	}
-	klog.InfoS("Successfully created NetNat rule", "name", antreaNatNPL, "CIDR", route.PodCIDRIPv4)
-	return nil
-}
+func (nn *netnatRules) initRules() error { _ = "STUB: not implemented"; return nil }
 
 // AddRule appends a NetNatStaticMapping rule.
 func (nn *netnatRules) AddRule(nodePort int, podIP string, podPort int, protocol string) error {
-	netNatStaticMapping := &winnet.NetNatStaticMapping{
-		Name:         antreaNatNPL,
-		ExternalIP:   net.ParseIP("0.0.0.0"),
-		ExternalPort: util.PortToUint16(nodePort),
-		InternalIP:   net.ParseIP(podIP),
-		InternalPort: util.PortToUint16(podPort),
-		Protocol:     binding.Protocol(protocol),
-	}
-	if err := nn.winnet.ReplaceNetNatStaticMapping(netNatStaticMapping); err != nil {
-		return err
-	}
-	klog.InfoS("Successfully added NetNatStaticMapping", "NetNatStaticMapping", netNatStaticMapping)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // AddAllRules constructs a list of NPL rules and performs NetNatStaticMapping replacement.
 func (nn *netnatRules) AddAllRules(nplList []PodNodePort) error {
-	for _, nplData := range nplList {
-		if err := nn.AddRule(nplData.NodePort, nplData.PodIP, nplData.PodPort, nplData.Protocol); err != nil {
-			return err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // DeleteRule deletes a specific NPL rule from NetNatStaticMapping table
 func (nn *netnatRules) DeleteRule(nodePort int, podIP string, podPort int, protocol string) error {
-	netNatStaticMapping := &winnet.NetNatStaticMapping{
-		Name:         antreaNatNPL,
-		ExternalIP:   net.ParseIP("0.0.0.0"),
-		ExternalPort: util.PortToUint16(nodePort),
-		InternalIP:   net.ParseIP(podIP),
-		InternalPort: util.PortToUint16(podPort),
-		Protocol:     binding.Protocol(protocol),
-	}
-	if err := nn.winnet.RemoveNetNatStaticMapping(netNatStaticMapping); err != nil {
-		return err
-	}
-	klog.InfoS("Successfully deleted NetNatStaticMapping", "NetNatStaticMapping", netNatStaticMapping)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // DeleteAllRules deletes the NetNatStaticMapping table in the node
-func (nn *netnatRules) DeleteAllRules() error {
-	if err := nn.winnet.RemoveNetNatStaticMappingsByNetNat(antreaNatNPL); err != nil {
-		return err
-	}
-	klog.InfoS("Successfully deleted all NPL NetNatStaticMapping rules", "NatName", antreaNatNPL)
-	return nil
-}
+func (nn *netnatRules) DeleteAllRules() error { _ = "STUB: not implemented"; return nil }

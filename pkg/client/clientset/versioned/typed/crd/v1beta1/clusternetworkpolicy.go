@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	crdv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -55,14 +54,6 @@ type clusterNetworkPolicies struct {
 
 // newClusterNetworkPolicies returns a ClusterNetworkPolicies
 func newClusterNetworkPolicies(c *CrdV1beta1Client) *clusterNetworkPolicies {
-	return &clusterNetworkPolicies{
-		gentype.NewClientWithList[*crdv1beta1.ClusterNetworkPolicy, *crdv1beta1.ClusterNetworkPolicyList](
-			"clusternetworkpolicies",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *crdv1beta1.ClusterNetworkPolicy { return &crdv1beta1.ClusterNetworkPolicy{} },
-			func() *crdv1beta1.ClusterNetworkPolicyList { return &crdv1beta1.ClusterNetworkPolicyList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

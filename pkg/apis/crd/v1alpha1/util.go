@@ -15,10 +15,6 @@
 package v1alpha1
 
 import (
-	"sort"
-	"time"
-
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/conversion"
 )
 
@@ -26,32 +22,13 @@ import (
 // LastTransitionTime field. It must be exported because it is used directly by the
 // packetcapture controller's mergeConditions logic.
 func ConditionEqualsIgnoreLastTransitionTime(a, b PacketCaptureCondition) bool {
-	a1 := a
-	a1.LastTransitionTime = metav1.Date(2018, 1, 1, 0, 0, 0, 0, time.UTC)
-	b1 := b
-	b1.LastTransitionTime = metav1.Date(2018, 1, 1, 0, 0, 0, 0, time.UTC)
-	return a1 == b1
+	_ = "STUB: not implemented"
+	return false
 }
 
 func ConditionSliceEqualsIgnoreLastTransitionTime(as, bs []PacketCaptureCondition) bool {
-	sort.Slice(as, func(i, j int) bool {
-		return as[i].Type < as[j].Type
-	})
-	sort.Slice(bs, func(i, j int) bool {
-		return bs[i].Type < bs[j].Type
-	})
-
-	if len(as) != len(bs) {
-		return false
-	}
-	for i := range as {
-		a := as[i]
-		b := bs[i]
-		if !ConditionEqualsIgnoreLastTransitionTime(a, b) {
-			return false
-		}
-	}
-	return true
+	_ = "STUB: not implemented"
+	return false
 }
 
 // Flow exporter protocol name constants
@@ -67,21 +44,20 @@ var semanticIgnoreLastTransitionTime = conversion.EqualitiesOrDie(
 // PacketCaptureStatusEqual performs a semantic deep equality check between two
 // PacketCaptureStatus objects.
 func PacketCaptureStatusEqual(oldStatus, newStatus PacketCaptureStatus) bool {
-	return semanticIgnoreLastTransitionTime.DeepEqual(oldStatus, newStatus)
+	_ = "STUB: not implemented"
+	return false
 }
 
-func (proto *FlowExporterGRPCConfig) Name() string {
-	return FlowExporterProtocolGRPC
-}
+func (proto *FlowExporterGRPCConfig) Name() string { _ = "STUB: not implemented"; return "" }
 
-func (proto *FlowExporterIPFIXConfig) Name() string {
-	return FlowExporterProtocolIPFIX
-}
+func (proto *FlowExporterIPFIXConfig) Name() string { _ = "STUB: not implemented"; return "" }
 
 func (proto *FlowExporterGRPCConfig) TransportProtocol() FlowExporterTransportProtocol {
-	return FlowExporterTransportTLS
+	_ = "STUB: not implemented"
+	return *new(FlowExporterTransportProtocol)
 }
 
 func (proto *FlowExporterIPFIXConfig) TransportProtocol() FlowExporterTransportProtocol {
-	return proto.Transport
+	_ = "STUB: not implemented"
+	return *new(FlowExporterTransportProtocol)
 }

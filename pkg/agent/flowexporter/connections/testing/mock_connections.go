@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	connection "antrea.io/antrea/v2/pkg/agent/flowexporter/connection"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,45 +43,39 @@ type MockConnTrackDumperMockRecorder struct {
 
 // NewMockConnTrackDumper creates a new mock instance.
 func NewMockConnTrackDumper(ctrl *gomock.Controller) *MockConnTrackDumper {
-	mock := &MockConnTrackDumper{ctrl: ctrl}
-	mock.recorder = &MockConnTrackDumperMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockConnTrackDumper) EXPECT() *MockConnTrackDumperMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// DumpFlows mocks base method.
+	return nil
 }
 
-// DumpFlows mocks base method.
 func (m *MockConnTrackDumper) DumpFlows(zoneFilter uint16) ([]*connection.Connection, int, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DumpFlows", zoneFilter)
-	ret0, _ := ret[0].([]*connection.Connection)
-	ret1, _ := ret[1].(int)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	_ = "STUB: not implemented"
+	return nil, 0, nil
 }
 
 // DumpFlows indicates an expected call of DumpFlows.
 func (mr *MockConnTrackDumperMockRecorder) DumpFlows(zoneFilter any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DumpFlows", reflect.TypeOf((*MockConnTrackDumper)(nil).DumpFlows), zoneFilter)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetMaxConnections mocks base method.
 func (m *MockConnTrackDumper) GetMaxConnections() (int, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetMaxConnections")
-	ret0, _ := ret[0].(int)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 // GetMaxConnections indicates an expected call of GetMaxConnections.
 func (mr *MockConnTrackDumperMockRecorder) GetMaxConnections() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMaxConnections", reflect.TypeOf((*MockConnTrackDumper)(nil).GetMaxConnections))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockNetFilterConnTrack is a mock of NetFilterConnTrack interface.
@@ -100,55 +92,43 @@ type MockNetFilterConnTrackMockRecorder struct {
 
 // NewMockNetFilterConnTrack creates a new mock instance.
 func NewMockNetFilterConnTrack(ctrl *gomock.Controller) *MockNetFilterConnTrack {
-	mock := &MockNetFilterConnTrack{ctrl: ctrl}
-	mock.recorder = &MockNetFilterConnTrackMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockNetFilterConnTrack) EXPECT() *MockNetFilterConnTrackMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// Close mocks base method.
+	return nil
 }
 
-// Close mocks base method.
-func (m *MockNetFilterConnTrack) Close() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Close")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockNetFilterConnTrack) Close() error { _ = "STUB: not implemented"; return nil }
 
 // Close indicates an expected call of Close.
 func (mr *MockNetFilterConnTrackMockRecorder) Close() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockNetFilterConnTrack)(nil).Close))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Dial mocks base method.
-func (m *MockNetFilterConnTrack) Dial() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Dial")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockNetFilterConnTrack) Dial() error { _ = "STUB: not implemented"; return nil }
 
 // Dial indicates an expected call of Dial.
 func (mr *MockNetFilterConnTrackMockRecorder) Dial() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Dial", reflect.TypeOf((*MockNetFilterConnTrack)(nil).Dial))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DumpFlowsInCtZone mocks base method.
 func (m *MockNetFilterConnTrack) DumpFlowsInCtZone(zoneFilter uint16) ([]*connection.Connection, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DumpFlowsInCtZone", zoneFilter)
-	ret0, _ := ret[0].([]*connection.Connection)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // DumpFlowsInCtZone indicates an expected call of DumpFlowsInCtZone.
 func (mr *MockNetFilterConnTrackMockRecorder) DumpFlowsInCtZone(zoneFilter any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DumpFlowsInCtZone", reflect.TypeOf((*MockNetFilterConnTrack)(nil).DumpFlowsInCtZone), zoneFilter)
+	_ = "STUB: not implemented"
+	return nil
 }

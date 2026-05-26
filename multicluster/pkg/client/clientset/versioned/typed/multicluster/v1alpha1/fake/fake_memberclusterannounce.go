@@ -29,22 +29,6 @@ type fakeMemberClusterAnnounces struct {
 }
 
 func newFakeMemberClusterAnnounces(fake *FakeMulticlusterV1alpha1, namespace string) multiclusterv1alpha1.MemberClusterAnnounceInterface {
-	return &fakeMemberClusterAnnounces{
-		gentype.NewFakeClientWithList[*v1alpha1.MemberClusterAnnounce, *v1alpha1.MemberClusterAnnounceList](
-			fake.Fake,
-			namespace,
-			v1alpha1.SchemeGroupVersion.WithResource("memberclusterannounces"),
-			v1alpha1.SchemeGroupVersion.WithKind("MemberClusterAnnounce"),
-			func() *v1alpha1.MemberClusterAnnounce { return &v1alpha1.MemberClusterAnnounce{} },
-			func() *v1alpha1.MemberClusterAnnounceList { return &v1alpha1.MemberClusterAnnounceList{} },
-			func(dst, src *v1alpha1.MemberClusterAnnounceList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.MemberClusterAnnounceList) []*v1alpha1.MemberClusterAnnounce {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha1.MemberClusterAnnounceList, items []*v1alpha1.MemberClusterAnnounce) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(multiclusterv1alpha1.MemberClusterAnnounceInterface)
 }

@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	interfacestore "antrea.io/antrea/v2/pkg/agent/interfacestore"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,248 +43,208 @@ type MockInterfaceStoreMockRecorder struct {
 
 // NewMockInterfaceStore creates a new mock instance.
 func NewMockInterfaceStore(ctrl *gomock.Controller) *MockInterfaceStore {
-	mock := &MockInterfaceStore{ctrl: ctrl}
-	mock.recorder = &MockInterfaceStoreMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockInterfaceStore) EXPECT() *MockInterfaceStoreMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddInterface mocks base method.
+	return nil
 }
 
-// AddInterface mocks base method.
 func (m *MockInterfaceStore) AddInterface(interfaceConfig *interfacestore.InterfaceConfig) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "AddInterface", interfaceConfig)
+	_ = "STUB: not implemented"
+	return
 }
 
 // AddInterface indicates an expected call of AddInterface.
 func (mr *MockInterfaceStoreMockRecorder) AddInterface(interfaceConfig any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddInterface", reflect.TypeOf((*MockInterfaceStore)(nil).AddInterface), interfaceConfig)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteInterface mocks base method.
 func (m *MockInterfaceStore) DeleteInterface(interfaceConfig *interfacestore.InterfaceConfig) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "DeleteInterface", interfaceConfig)
+	_ = "STUB: not implemented"
+	return
 }
 
 // DeleteInterface indicates an expected call of DeleteInterface.
 func (mr *MockInterfaceStoreMockRecorder) DeleteInterface(interfaceConfig any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteInterface", reflect.TypeOf((*MockInterfaceStore)(nil).DeleteInterface), interfaceConfig)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetContainerInterface mocks base method.
 func (m *MockInterfaceStore) GetContainerInterface(containerID string) (*interfacestore.InterfaceConfig, bool) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetContainerInterface", containerID)
-	ret0, _ := ret[0].(*interfacestore.InterfaceConfig)
-	ret1, _ := ret[1].(bool)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // GetContainerInterface indicates an expected call of GetContainerInterface.
 func (mr *MockInterfaceStoreMockRecorder) GetContainerInterface(containerID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetContainerInterface", reflect.TypeOf((*MockInterfaceStore)(nil).GetContainerInterface), containerID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetContainerInterfaceNum mocks base method.
-func (m *MockInterfaceStore) GetContainerInterfaceNum() int {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetContainerInterfaceNum")
-	ret0, _ := ret[0].(int)
-	return ret0
-}
+func (m *MockInterfaceStore) GetContainerInterfaceNum() int { _ = "STUB: not implemented"; return 0 }
 
 // GetContainerInterfaceNum indicates an expected call of GetContainerInterfaceNum.
 func (mr *MockInterfaceStoreMockRecorder) GetContainerInterfaceNum() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetContainerInterfaceNum", reflect.TypeOf((*MockInterfaceStore)(nil).GetContainerInterfaceNum))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetContainerInterfacesByPod mocks base method.
 func (m *MockInterfaceStore) GetContainerInterfacesByPod(podName, podNamespace string) []*interfacestore.InterfaceConfig {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetContainerInterfacesByPod", podName, podNamespace)
-	ret0, _ := ret[0].([]*interfacestore.InterfaceConfig)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetContainerInterfacesByPod indicates an expected call of GetContainerInterfacesByPod.
 func (mr *MockInterfaceStoreMockRecorder) GetContainerInterfacesByPod(podName, podNamespace any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetContainerInterfacesByPod", reflect.TypeOf((*MockInterfaceStore)(nil).GetContainerInterfacesByPod), podName, podNamespace)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetInterface mocks base method.
 func (m *MockInterfaceStore) GetInterface(interfaceKey string) (*interfacestore.InterfaceConfig, bool) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInterface", interfaceKey)
-	ret0, _ := ret[0].(*interfacestore.InterfaceConfig)
-	ret1, _ := ret[1].(bool)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // GetInterface indicates an expected call of GetInterface.
 func (mr *MockInterfaceStoreMockRecorder) GetInterface(interfaceKey any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInterface", reflect.TypeOf((*MockInterfaceStore)(nil).GetInterface), interfaceKey)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetInterfaceByIP mocks base method.
 func (m *MockInterfaceStore) GetInterfaceByIP(interfaceIP string) (*interfacestore.InterfaceConfig, bool) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInterfaceByIP", interfaceIP)
-	ret0, _ := ret[0].(*interfacestore.InterfaceConfig)
-	ret1, _ := ret[1].(bool)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // GetInterfaceByIP indicates an expected call of GetInterfaceByIP.
 func (mr *MockInterfaceStoreMockRecorder) GetInterfaceByIP(interfaceIP any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInterfaceByIP", reflect.TypeOf((*MockInterfaceStore)(nil).GetInterfaceByIP), interfaceIP)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetInterfaceByName mocks base method.
 func (m *MockInterfaceStore) GetInterfaceByName(interfaceName string) (*interfacestore.InterfaceConfig, bool) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInterfaceByName", interfaceName)
-	ret0, _ := ret[0].(*interfacestore.InterfaceConfig)
-	ret1, _ := ret[1].(bool)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // GetInterfaceByName indicates an expected call of GetInterfaceByName.
 func (mr *MockInterfaceStoreMockRecorder) GetInterfaceByName(interfaceName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInterfaceByName", reflect.TypeOf((*MockInterfaceStore)(nil).GetInterfaceByName), interfaceName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetInterfaceByOFPort mocks base method.
 func (m *MockInterfaceStore) GetInterfaceByOFPort(ofPort uint32) (*interfacestore.InterfaceConfig, bool) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInterfaceByOFPort", ofPort)
-	ret0, _ := ret[0].(*interfacestore.InterfaceConfig)
-	ret1, _ := ret[1].(bool)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // GetInterfaceByOFPort indicates an expected call of GetInterfaceByOFPort.
 func (mr *MockInterfaceStoreMockRecorder) GetInterfaceByOFPort(ofPort any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInterfaceByOFPort", reflect.TypeOf((*MockInterfaceStore)(nil).GetInterfaceByOFPort), ofPort)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetInterfaceKeysByType mocks base method.
 func (m *MockInterfaceStore) GetInterfaceKeysByType(interfaceType interfacestore.InterfaceType) []string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInterfaceKeysByType", interfaceType)
-	ret0, _ := ret[0].([]string)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetInterfaceKeysByType indicates an expected call of GetInterfaceKeysByType.
 func (mr *MockInterfaceStoreMockRecorder) GetInterfaceKeysByType(interfaceType any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInterfaceKeysByType", reflect.TypeOf((*MockInterfaceStore)(nil).GetInterfaceKeysByType), interfaceType)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetInterfacesByEntity mocks base method.
 func (m *MockInterfaceStore) GetInterfacesByEntity(name, namespace string) []*interfacestore.InterfaceConfig {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInterfacesByEntity", name, namespace)
-	ret0, _ := ret[0].([]*interfacestore.InterfaceConfig)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetInterfacesByEntity indicates an expected call of GetInterfacesByEntity.
 func (mr *MockInterfaceStoreMockRecorder) GetInterfacesByEntity(name, namespace any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInterfacesByEntity", reflect.TypeOf((*MockInterfaceStore)(nil).GetInterfacesByEntity), name, namespace)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetInterfacesByType mocks base method.
 func (m *MockInterfaceStore) GetInterfacesByType(interfaceType interfacestore.InterfaceType) []*interfacestore.InterfaceConfig {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInterfacesByType", interfaceType)
-	ret0, _ := ret[0].([]*interfacestore.InterfaceConfig)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetInterfacesByType indicates an expected call of GetInterfacesByType.
 func (mr *MockInterfaceStoreMockRecorder) GetInterfacesByType(interfaceType any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInterfacesByType", reflect.TypeOf((*MockInterfaceStore)(nil).GetInterfacesByType), interfaceType)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNodeTunnelInterface mocks base method.
 func (m *MockInterfaceStore) GetNodeTunnelInterface(nodeName string) (*interfacestore.InterfaceConfig, bool) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNodeTunnelInterface", nodeName)
-	ret0, _ := ret[0].(*interfacestore.InterfaceConfig)
-	ret1, _ := ret[1].(bool)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // GetNodeTunnelInterface indicates an expected call of GetNodeTunnelInterface.
 func (mr *MockInterfaceStoreMockRecorder) GetNodeTunnelInterface(nodeName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNodeTunnelInterface", reflect.TypeOf((*MockInterfaceStore)(nil).GetNodeTunnelInterface), nodeName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Initialize mocks base method.
 func (m *MockInterfaceStore) Initialize(interfaces []*interfacestore.InterfaceConfig) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Initialize", interfaces)
+	_ = "STUB: not implemented"
+	return
 }
 
 // Initialize indicates an expected call of Initialize.
 func (mr *MockInterfaceStoreMockRecorder) Initialize(interfaces any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Initialize", reflect.TypeOf((*MockInterfaceStore)(nil).Initialize), interfaces)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Len mocks base method.
-func (m *MockInterfaceStore) Len() int {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Len")
-	ret0, _ := ret[0].(int)
-	return ret0
-}
+func (m *MockInterfaceStore) Len() int { _ = "STUB: not implemented"; return 0 }
 
 // Len indicates an expected call of Len.
-func (mr *MockInterfaceStoreMockRecorder) Len() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Len", reflect.TypeOf((*MockInterfaceStore)(nil).Len))
-}
+func (mr *MockInterfaceStoreMockRecorder) Len() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // ListInterfaces mocks base method.
 func (m *MockInterfaceStore) ListInterfaces() []*interfacestore.InterfaceConfig {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListInterfaces")
-	ret0, _ := ret[0].([]*interfacestore.InterfaceConfig)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ListInterfaces indicates an expected call of ListInterfaces.
 func (mr *MockInterfaceStoreMockRecorder) ListInterfaces() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInterfaces", reflect.TypeOf((*MockInterfaceStore)(nil).ListInterfaces))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UpdateInterface mocks base method.
 func (m *MockInterfaceStore) UpdateInterface(interfaceConfig *interfacestore.InterfaceConfig) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "UpdateInterface", interfaceConfig)
+	_ = "STUB: not implemented"
+	return
 }
 
 // UpdateInterface indicates an expected call of UpdateInterface.
 func (mr *MockInterfaceStoreMockRecorder) UpdateInterface(interfaceConfig any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateInterface", reflect.TypeOf((*MockInterfaceStore)(nil).UpdateInterface), interfaceConfig)
+	_ = "STUB: not implemented"
+	return nil
 }

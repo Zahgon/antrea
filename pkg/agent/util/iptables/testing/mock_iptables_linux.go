@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	iptables "antrea.io/antrea/v2/pkg/agent/util/iptables"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,155 +43,124 @@ type MockInterfaceMockRecorder struct {
 
 // NewMockInterface creates a new mock instance.
 func NewMockInterface(ctrl *gomock.Controller) *MockInterface {
-	mock := &MockInterface{ctrl: ctrl}
-	mock.recorder = &MockInterfaceMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AppendRule mocks base method.
+	return nil
 }
 
-// AppendRule mocks base method.
 func (m *MockInterface) AppendRule(protocol iptables.Protocol, table, chain string, ruleSpec []string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AppendRule", protocol, table, chain, ruleSpec)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AppendRule indicates an expected call of AppendRule.
 func (mr *MockInterfaceMockRecorder) AppendRule(protocol, table, chain, ruleSpec any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AppendRule", reflect.TypeOf((*MockInterface)(nil).AppendRule), protocol, table, chain, ruleSpec)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ChainExists mocks base method.
 func (m *MockInterface) ChainExists(protocol iptables.Protocol, table, chain string) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ChainExists", protocol, table, chain)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
 // ChainExists indicates an expected call of ChainExists.
 func (mr *MockInterfaceMockRecorder) ChainExists(protocol, table, chain any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChainExists", reflect.TypeOf((*MockInterface)(nil).ChainExists), protocol, table, chain)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteChain mocks base method.
 func (m *MockInterface) DeleteChain(protocol iptables.Protocol, table, chain string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteChain", protocol, table, chain)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteChain indicates an expected call of DeleteChain.
 func (mr *MockInterfaceMockRecorder) DeleteChain(protocol, table, chain any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteChain", reflect.TypeOf((*MockInterface)(nil).DeleteChain), protocol, table, chain)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteRule mocks base method.
 func (m *MockInterface) DeleteRule(protocol iptables.Protocol, table, chain string, ruleSpec []string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteRule", protocol, table, chain, ruleSpec)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteRule indicates an expected call of DeleteRule.
 func (mr *MockInterfaceMockRecorder) DeleteRule(protocol, table, chain, ruleSpec any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteRule", reflect.TypeOf((*MockInterface)(nil).DeleteRule), protocol, table, chain, ruleSpec)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EnsureChain mocks base method.
 func (m *MockInterface) EnsureChain(protocol iptables.Protocol, table, chain string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnsureChain", protocol, table, chain)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EnsureChain indicates an expected call of EnsureChain.
 func (mr *MockInterfaceMockRecorder) EnsureChain(protocol, table, chain any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnsureChain", reflect.TypeOf((*MockInterface)(nil).EnsureChain), protocol, table, chain)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // HasRandomFully mocks base method.
-func (m *MockInterface) HasRandomFully() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "HasRandomFully")
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
+func (m *MockInterface) HasRandomFully() bool { _ = "STUB: not implemented"; return false }
 
 // HasRandomFully indicates an expected call of HasRandomFully.
 func (mr *MockInterfaceMockRecorder) HasRandomFully() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasRandomFully", reflect.TypeOf((*MockInterface)(nil).HasRandomFully))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InsertRule mocks base method.
 func (m *MockInterface) InsertRule(protocol iptables.Protocol, table, chain string, ruleSpec []string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InsertRule", protocol, table, chain, ruleSpec)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InsertRule indicates an expected call of InsertRule.
 func (mr *MockInterfaceMockRecorder) InsertRule(protocol, table, chain, ruleSpec any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertRule", reflect.TypeOf((*MockInterface)(nil).InsertRule), protocol, table, chain, ruleSpec)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ListRules mocks base method.
 func (m *MockInterface) ListRules(protocol iptables.Protocol, table, chain string) (map[iptables.Protocol][]string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListRules", protocol, table, chain)
-	ret0, _ := ret[0].(map[iptables.Protocol][]string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // ListRules indicates an expected call of ListRules.
 func (mr *MockInterfaceMockRecorder) ListRules(protocol, table, chain any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRules", reflect.TypeOf((*MockInterface)(nil).ListRules), protocol, table, chain)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Restore mocks base method.
 func (m *MockInterface) Restore(data string, flush, useIPv6 bool) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Restore", data, flush, useIPv6)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Restore indicates an expected call of Restore.
 func (mr *MockInterfaceMockRecorder) Restore(data, flush, useIPv6 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Restore", reflect.TypeOf((*MockInterface)(nil).Restore), data, flush, useIPv6)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Save mocks base method.
-func (m *MockInterface) Save() ([]byte, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Save")
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
+func (m *MockInterface) Save() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // Save indicates an expected call of Save.
-func (mr *MockInterfaceMockRecorder) Save() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockInterface)(nil).Save))
-}
+func (mr *MockInterfaceMockRecorder) Save() *gomock.Call { _ = "STUB: not implemented"; return nil }

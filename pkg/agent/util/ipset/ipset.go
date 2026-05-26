@@ -15,9 +15,7 @@
 package ipset
 
 import (
-	"fmt"
 	"regexp"
-	"strings"
 
 	"k8s.io/utils/exec"
 )
@@ -55,80 +53,30 @@ type Client struct {
 
 var _ Interface = &Client{}
 
-func NewClient() *Client {
-	return &Client{
-		exec: exec.New(),
-	}
-}
+func NewClient() *Client { _ = "STUB: not implemented"; return nil }
 
-func (c *Client) DestroyIPSet(name string) error {
-	cmd := c.exec.Command("ipset", "destroy", name)
-	if output, err := cmd.CombinedOutput(); err != nil {
-		if strings.Contains(string(output), "The set with the given name does not exist") {
-			return nil
-		}
-		return fmt.Errorf("error destroying ipset %s, err: %w, output: %s", name, err, output)
-	}
-	return nil
-}
+func (c *Client) DestroyIPSet(name string) error { _ = "STUB: not implemented"; return nil }
 
 // CreateIPSet creates a new set, it will ignore error when the set already exists.
 func (c *Client) CreateIPSet(name string, setType SetType, isIPv6 bool) error {
-	var cmd exec.Cmd
-	if isIPv6 {
-		// #nosec G204 -- inputs are not controlled by users
-		cmd = c.exec.Command("ipset", "create", name, string(setType), "family", "inet6", "-exist")
-	} else {
-		// #nosec G204 -- inputs are not controlled by users
-		cmd = c.exec.Command("ipset", "create", name, string(setType), "-exist")
-	}
-	if output, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("error creating ipset %s, err: %w, output: %s", name, err, output)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// #nosec G204 -- inputs are not controlled by users
+
+// #nosec G204 -- inputs are not controlled by users
 
 // AddEntry adds a new entry to the set, it will ignore error when the entry already exists.
-func (c *Client) AddEntry(name string, entry string) error {
-	cmd := c.exec.Command("ipset", "add", name, entry, "-exist")
-	if output, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("error adding entry %s to ipset %s, err: %w, output: %s", entry, name, err, output)
-	}
-	return nil
-}
+func (c *Client) AddEntry(name string, entry string) error { _ = "STUB: not implemented"; return nil }
 
 // DelEntry deletes the entry from the set, it will ignore error when the entry doesn't exist.
-func (c *Client) DelEntry(name string, entry string) error {
-	cmd := c.exec.Command("ipset", "del", name, entry, "-exist")
-	if output, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("error deleting entry %s from ipset %s, err: %w, output: %s", entry, name, err, output)
-	}
-	return nil
-}
+func (c *Client) DelEntry(name string, entry string) error { _ = "STUB: not implemented"; return nil }
 
 // ListEntries lists all the entries of the set.
 func (c *Client) ListEntries(name string) ([]string, error) {
-	cmd := c.exec.Command("ipset", "list", name)
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return nil, fmt.Errorf("error listing ipset %s, err: %w, output: %s", name, err, output)
-	}
-	memberStr := memberPattern.ReplaceAllString(string(output), "")
-	lines := strings.Split(memberStr, "\n")
-	entries := make([]string, 0, len(lines))
-	for i := range lines {
-		if len(lines[i]) > 0 {
-			entries = append(entries, lines[i])
-		}
-	}
-	return entries, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func (c *Client) Save() ([]byte, error) {
-	cmd := c.exec.Command("ipset", "save")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return nil, fmt.Errorf("error saving ipset: %w, output: %s", err, string(output))
-	}
-	return output, nil
-}
+func (c *Client) Save() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }

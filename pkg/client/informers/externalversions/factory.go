@@ -28,7 +28,6 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
-	wait "k8s.io/apimachinery/pkg/util/wait"
 	cache "k8s.io/client-go/tools/cache"
 )
 
@@ -58,36 +57,26 @@ type sharedInformerFactory struct {
 
 // WithCustomResyncConfig sets a custom resync period for the specified informer types.
 func WithCustomResyncConfig(resyncConfig map[v1.Object]time.Duration) SharedInformerOption {
-	return func(factory *sharedInformerFactory) *sharedInformerFactory {
-		for k, v := range resyncConfig {
-			factory.customResync[reflect.TypeOf(k)] = v
-		}
-		return factory
-	}
+	_ = "STUB: not implemented"
+	return *new(SharedInformerOption)
 }
 
 // WithTweakListOptions sets a custom filter on all listers of the configured SharedInformerFactory.
 func WithTweakListOptions(tweakListOptions internalinterfaces.TweakListOptionsFunc) SharedInformerOption {
-	return func(factory *sharedInformerFactory) *sharedInformerFactory {
-		factory.tweakListOptions = tweakListOptions
-		return factory
-	}
+	_ = "STUB: not implemented"
+	return *new(SharedInformerOption)
 }
 
 // WithNamespace limits the SharedInformerFactory to the specified namespace.
 func WithNamespace(namespace string) SharedInformerOption {
-	return func(factory *sharedInformerFactory) *sharedInformerFactory {
-		factory.namespace = namespace
-		return factory
-	}
+	_ = "STUB: not implemented"
+	return *new(SharedInformerOption)
 }
 
 // WithTransform sets a transform on all informers.
 func WithTransform(transform cache.TransformFunc) SharedInformerOption {
-	return func(factory *sharedInformerFactory) *sharedInformerFactory {
-		factory.transform = transform
-		return factory
-	}
+	_ = "STUB: not implemented"
+	return *new(SharedInformerOption)
 }
 
 // WithInformerName sets the InformerName for informer identity used in metrics.
@@ -95,19 +84,20 @@ func WithTransform(transform cache.TransformFunc) SharedInformerOption {
 // which validates global uniqueness. Each informer type will register its
 // GVR under this name.
 func WithInformerName(informerName *cache.InformerName) SharedInformerOption {
-	return func(factory *sharedInformerFactory) *sharedInformerFactory {
-		factory.informerName = informerName
-		return factory
-	}
+	_ = "STUB: not implemented"
+	return *new(SharedInformerOption)
 }
 
 func (f *sharedInformerFactory) InformerName() *cache.InformerName {
-	return f.informerName
+	_ = "STUB: not implemented"
+	return nil
+
+	// NewSharedInformerFactory constructs a new instance of sharedInformerFactory for all namespaces.
 }
 
-// NewSharedInformerFactory constructs a new instance of sharedInformerFactory for all namespaces.
 func NewSharedInformerFactory(client versioned.Interface, defaultResync time.Duration) SharedInformerFactory {
-	return NewSharedInformerFactoryWithOptions(client, defaultResync)
+	_ = "STUB: not implemented"
+	return *new(SharedInformerFactory)
 }
 
 // NewFilteredSharedInformerFactory constructs a new instance of sharedInformerFactory.
@@ -116,131 +106,52 @@ func NewSharedInformerFactory(client versioned.Interface, defaultResync time.Dur
 //
 // Deprecated: Please use NewSharedInformerFactoryWithOptions instead
 func NewFilteredSharedInformerFactory(client versioned.Interface, defaultResync time.Duration, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) SharedInformerFactory {
-	return NewSharedInformerFactoryWithOptions(client, defaultResync, WithNamespace(namespace), WithTweakListOptions(tweakListOptions))
+	_ = "STUB: not implemented"
+	return *new(SharedInformerFactory)
 }
 
 // NewSharedInformerFactoryWithOptions constructs a new instance of a SharedInformerFactory with additional options.
 func NewSharedInformerFactoryWithOptions(client versioned.Interface, defaultResync time.Duration, options ...SharedInformerOption) SharedInformerFactory {
-	factory := &sharedInformerFactory{
-		client:           client,
-		namespace:        v1.NamespaceAll,
-		defaultResync:    defaultResync,
-		informers:        make(map[reflect.Type]cache.SharedIndexInformer),
-		startedInformers: make(map[reflect.Type]bool),
-		customResync:     make(map[reflect.Type]time.Duration),
-	}
-
-	// Apply all options
-	for _, opt := range options {
-		factory = opt(factory)
-	}
-
-	return factory
+	_ = "STUB: not implemented"
+	return *new(SharedInformerFactory)
 }
 
-func (f *sharedInformerFactory) Start(stopCh <-chan struct{}) {
-	f.StartWithContext(wait.ContextForChannel(stopCh))
-}
+// Apply all options
+
+func (f *sharedInformerFactory) Start(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
 func (f *sharedInformerFactory) StartWithContext(ctx context.Context) {
-	f.lock.Lock()
-	defer f.lock.Unlock()
-
-	if f.shuttingDown {
-		return
-	}
-
-	for informerType, informer := range f.informers {
-		if !f.startedInformers[informerType] {
-			f.wg.Go(func() {
-				informer.RunWithContext(ctx)
-			})
-			f.startedInformers[informerType] = true
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
-func (f *sharedInformerFactory) Shutdown() {
-	f.lock.Lock()
-	f.shuttingDown = true
-	f.lock.Unlock()
+func (f *sharedInformerFactory) Shutdown() { _ = "STUB: not implemented"; return }
 
-	// Will return immediately if there is nothing to wait for.
-	f.wg.Wait()
-	f.informerName.Release()
-}
+// Will return immediately if there is nothing to wait for.
 
 func (f *sharedInformerFactory) WaitForCacheSync(stopCh <-chan struct{}) map[reflect.Type]bool {
-	result := f.WaitForCacheSyncWithContext(wait.ContextForChannel(stopCh))
-	return result.Synced
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (f *sharedInformerFactory) WaitForCacheSyncWithContext(ctx context.Context) cache.SyncResult {
-	informers := func() map[reflect.Type]cache.SharedIndexInformer {
-		f.lock.Lock()
-		defer f.lock.Unlock()
-
-		informers := map[reflect.Type]cache.SharedIndexInformer{}
-		for informerType, informer := range f.informers {
-			if f.startedInformers[informerType] {
-				informers[informerType] = informer
-			}
-		}
-		return informers
-	}()
-
-	// Wait for informers to sync, without polling.
-	cacheSyncs := make([]cache.DoneChecker, 0, len(informers))
-	for _, informer := range informers {
-		cacheSyncs = append(cacheSyncs, informer.HasSyncedChecker())
-	}
-	cache.WaitFor(ctx, "" /* no logging */, cacheSyncs...)
-
-	res := cache.SyncResult{
-		Synced: make(map[reflect.Type]bool, len(informers)),
-	}
-	failed := false
-	for informType, informer := range informers {
-		hasSynced := informer.HasSynced()
-		if !hasSynced {
-			failed = true
-		}
-		res.Synced[informType] = hasSynced
-	}
-	if failed {
-		// context.Cause is more informative than ctx.Err().
-		// This must be non-nil, otherwise WaitFor wouldn't have stopped
-		// prematurely.
-		res.Err = context.Cause(ctx)
-	}
-
-	return res
+	_ = "STUB: not implemented"
+	return *new(cache.SyncResult)
 }
+
+// Wait for informers to sync, without polling.
+
+/* no logging */
+
+// context.Cause is more informative than ctx.Err().
+// This must be non-nil, otherwise WaitFor wouldn't have stopped
+// prematurely.
 
 // InformerFor returns the SharedIndexInformer for obj using an internal
 // client.
 func (f *sharedInformerFactory) InformerFor(obj runtime.Object, newFunc internalinterfaces.NewInformerFunc) cache.SharedIndexInformer {
-	f.lock.Lock()
-	defer f.lock.Unlock()
-
-	informerType := reflect.TypeOf(obj)
-	informer, exists := f.informers[informerType]
-	if exists {
-		return informer
-	}
-
-	resyncPeriod, exists := f.customResync[informerType]
-	if !exists {
-		resyncPeriod = f.defaultResync
-	}
-
-	informer = newFunc(f.client, resyncPeriod)
-	if f.transform != nil {
-		informer.SetTransform(f.transform)
-	}
-	f.informers[informerType] = informer
-
-	return informer
+	_ = "STUB: not implemented"
+	return *new(cache.SharedIndexInformer)
 }
 
 // SharedInformerFactory provides shared informers for resources in all known
@@ -327,5 +238,6 @@ type SharedInformerFactory interface {
 }
 
 func (f *sharedInformerFactory) Crd() crd.Interface {
-	return crd.New(f, f.namespace, f.tweakListOptions)
+	_ = "STUB: not implemented"
+	return *new(crd.Interface)
 }

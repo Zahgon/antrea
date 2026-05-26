@@ -15,8 +15,6 @@
 package ovsconfig
 
 import (
-	"path/filepath"
-	"strings"
 	"time"
 )
 
@@ -32,8 +30,4 @@ const (
 	defaultOvsVersionMessage = "OVS version not found in ovsdb.  You might try running 'ovs-vsctl --no-wait set Open_vSwitch . ovs_version=$OVS_VERSION'"
 )
 
-func GetConnAddress(ovsRunDir string) string {
-	addr := filepath.Join(filepath.FromSlash(ovsRunDir), defaultOVSDBFile)
-	addr = strings.ReplaceAll(addr, string(filepath.Separator), "")
-	return namedPipePrefix + addr
-}
+func GetConnAddress(ovsRunDir string) string { _ = "STUB: not implemented"; return "" }

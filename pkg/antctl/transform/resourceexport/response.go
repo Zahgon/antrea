@@ -15,7 +15,6 @@
 package resourceexport
 
 import (
-	multiclusterv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
 	"antrea.io/antrea/v2/pkg/antctl/transform/common"
 )
 
@@ -27,46 +26,21 @@ type Response struct {
 }
 
 func Transform(r interface{}, single bool) (interface{}, error) {
-	if single {
-		return objectTransform(r)
-	}
-	return listTransform(r)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func listTransform(l interface{}) (interface{}, error) {
-	resourceExports := l.([]multiclusterv1alpha1.ResourceExport)
-	var result []interface{}
-
-	for i := range resourceExports {
-		item := resourceExports[i]
-		o, _ := objectTransform(item)
-		result = append(result, o.(Response))
-	}
-
-	return result, nil
-}
+func listTransform(l interface{}) (interface{}, error) { _ = "STUB: not implemented"; return nil, nil }
 
 func objectTransform(o interface{}) (interface{}, error) {
-	resourceExport := o.(multiclusterv1alpha1.ResourceExport)
-
-	return Response{
-		ClusterID: resourceExport.Labels["sourceClusterID"],
-		Namespace: resourceExport.Namespace,
-		Name:      resourceExport.Name,
-		Kind:      resourceExport.Spec.Kind,
-	}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 var _ common.TableOutput = new(Response)
 
-func (r Response) GetTableHeader() []string {
-	return []string{"CLUSTER-ID", "NAMESPACE", "NAME", "KIND"}
-}
+func (r Response) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
-func (r Response) GetTableRow(maxColumnLength int) []string {
-	return []string{r.ClusterID, r.Namespace, r.Name, r.Kind}
-}
+func (r Response) GetTableRow(maxColumnLength int) []string { _ = "STUB: not implemented"; return nil }
 
-func (r Response) SortRows() bool {
-	return true
-}
+func (r Response) SortRows() bool { _ = "STUB: not implemented"; return false }

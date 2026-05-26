@@ -15,15 +15,10 @@
 package labelidentity
 
 import (
-	"context"
-	"sync/atomic"
 	"time"
 
-	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/tools/cache"
-	"k8s.io/klog/v2"
 
-	mcv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
 	mcinformers "antrea.io/antrea/v2/multicluster/pkg/client/informers/externalversions/multicluster/v1alpha1"
 )
 
@@ -46,13 +41,9 @@ type eventsCounter struct {
 	count uint64
 }
 
-func (c *eventsCounter) Increment() {
-	atomic.AddUint64(&c.count, 1)
-}
+func (c *eventsCounter) Increment() { _ = "STUB: not implemented"; return }
 
-func (c *eventsCounter) Load() uint64 {
-	return atomic.LoadUint64(&c.count)
-}
+func (c *eventsCounter) Load() uint64 { _ = "STUB: not implemented"; return 0 }
 
 type Controller struct {
 	labelInformer mcinformers.LabelIdentityInformer
@@ -68,67 +59,17 @@ type Controller struct {
 
 func NewLabelIdentityController(index *LabelIdentityIndex,
 	labelInformer mcinformers.LabelIdentityInformer) *Controller {
-	c := &Controller{
-		labelIdentityIndex: index,
-		labelInformer:      labelInformer,
-		labelListerSynced:  labelInformer.Informer().HasSynced,
-		labelAddEvents:     new(eventsCounter),
-	}
-	labelInformer.Informer().AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc: c.addLabelIdentity,
-			// LabelIdentities are not expected to have update events after they are created.
-			// Update will be done by deleting existing one and recreate a new LabelIdentity with new ID.
-			UpdateFunc: nil,
-			DeleteFunc: c.deleteLabelIdentity,
-		},
-		resyncPeriod,
-	)
-	return c
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (c *Controller) Run(stopCh <-chan struct{}) {
-	klog.InfoS("Starting controller", "controller", controllerName)
-	defer klog.InfoS("Shutting down controller", "controller", controllerName)
+// LabelIdentities are not expected to have update events after they are created.
+// Update will be done by deleting existing one and recreate a new LabelIdentity with new ID.
 
-	if !cache.WaitForNamedCacheSync(controllerName, stopCh, c.labelListerSynced) {
-		klog.Error("Failed to wait for label lister sync")
-		return
-	}
-	initialLabelCount := len(c.labelInformer.Informer().GetStore().List())
-	// Wait until initial label identities are processed before setting labelIdentityIndex as synced.
-	if err := wait.PollUntilContextCancel(wait.ContextForChannel(stopCh), 100*time.Millisecond, true, func(ctx context.Context) (done bool, err error) {
-		if uint64(initialLabelCount) > c.labelAddEvents.Load() {
-			return false, nil
-		}
-		return true, nil
-	}); err == nil {
-		c.labelIdentityIndex.setSynced(true)
-	}
-	<-stopCh
-}
+func (c *Controller) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-func (c *Controller) addLabelIdentity(obj interface{}) {
-	labelIdentity := obj.(*mcv1alpha1.LabelIdentity)
-	klog.InfoS("Processing LabelIdentity ADD event", "label", labelIdentity.Spec.Label, "id", labelIdentity.Spec.ID)
-	c.labelIdentityIndex.AddLabelIdentity(labelIdentity.Spec.Label, labelIdentity.Spec.ID)
-	c.labelAddEvents.Increment()
-}
+// Wait until initial label identities are processed before setting labelIdentityIndex as synced.
 
-func (c *Controller) deleteLabelIdentity(obj interface{}) {
-	labelIdentity, ok := obj.(*mcv1alpha1.LabelIdentity)
-	if !ok {
-		tombstone, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			klog.V(2).InfoS("Error decoding object when deleting LabelIdentity, invalid type", "object", obj)
-			return
-		}
-		labelIdentity, ok = tombstone.Obj.(*mcv1alpha1.LabelIdentity)
-		if !ok {
-			klog.V(2).InfoS("Error decoding object tombstone when deleting LabelIdentity, invalid type", "object", tombstone.Obj)
-			return
-		}
-	}
-	klog.InfoS("Processing LabelIdentity DELETE event", "label", labelIdentity.Spec.Label)
-	c.labelIdentityIndex.DeleteLabelIdentity(labelIdentity.Spec.Label)
-}
+func (c *Controller) addLabelIdentity(obj interface{}) { _ = "STUB: not implemented"; return }
+
+func (c *Controller) deleteLabelIdentity(obj interface{}) { _ = "STUB: not implemented"; return }

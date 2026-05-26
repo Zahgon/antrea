@@ -15,10 +15,6 @@
 package exec
 
 import (
-	"bytes"
-	"fmt"
-	"strings"
-
 	"golang.org/x/crypto/ssh"
 )
 
@@ -27,45 +23,16 @@ import (
 // returns a non-zero error code, this function does not report it as an error.
 func RunSSHCommand(host string, config *ssh.ClientConfig, cmd string, envs map[string]string, stdin string, sudo bool) (
 	code int, stdout, stderr string, err error) {
-	client, err := ssh.Dial("tcp", host, config)
-	if err != nil {
-		return 0, "", "", fmt.Errorf("cannot establish SSH connection to host: %v", err)
-	}
-	session, err := client.NewSession()
-	if err != nil {
-		return 0, "", "", fmt.Errorf("cannot create SSH session: %v", err)
-	}
-	defer session.Close()
-
-	// Set environment variables.
-	for e, v := range envs {
-		// Session.Setenv() requires that the remote host's sshd configuration accepts
-		// environment variables set by clients. So, just pre-appending environment
-		// variables to the command.
-		cmd = e + "='" + v + "' " + cmd
-	}
-	if sudo {
-		cmd = "sudo " + cmd
-	}
-
-	var stdoutB, stderrB bytes.Buffer
-	session.Stdout = &stdoutB
-	session.Stderr = &stderrB
-	if stdin != "" {
-		session.Stdin = strings.NewReader(stdin)
-	}
-
-	if err := session.Run(cmd); err != nil {
-		switch e := err.(type) {
-		case *ssh.ExitMissingError:
-			return 0, "", "", fmt.Errorf("did not get an exit status for SSH command: %v", e)
-		case *ssh.ExitError:
-			// SSH operation successful, but command returned error code
-			return e.ExitStatus(), stdoutB.String(), stderrB.String(), nil
-		default:
-			return 0, "", "", fmt.Errorf("unknown error when executing SSH command: %v", err)
-		}
-	}
-	// command is successful
-	return 0, stdoutB.String(), stderrB.String(), nil
+	_ = "STUB: not implemented"
+	return 0, "", "", nil
 }
+
+// Set environment variables.
+
+// Session.Setenv() requires that the remote host's sshd configuration accepts
+// environment variables set by clients. So, just pre-appending environment
+// variables to the command.
+
+// SSH operation successful, but command returned error code
+
+// command is successful

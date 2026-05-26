@@ -41,12 +41,14 @@ type groupLister struct {
 
 // NewGroupLister returns a new GroupLister.
 func NewGroupLister(indexer cache.Indexer) GroupLister {
-	return &groupLister{listers.New[*crdv1beta1.Group](indexer, crdv1beta1.Resource("group"))}
+	_ = "STUB: not implemented"
+	return *new(GroupLister)
 }
 
 // Groups returns an object that can list and get Groups.
 func (s *groupLister) Groups(namespace string) GroupNamespaceLister {
-	return groupNamespaceLister{listers.NewNamespaced[*crdv1beta1.Group](s.ResourceIndexer, namespace)}
+	_ = "STUB: not implemented"
+	return *new(GroupNamespaceLister)
 }
 
 // GroupNamespaceLister helps list and get Groups.

@@ -16,7 +16,6 @@ package common
 
 import (
 	"context"
-	"errors"
 
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -30,28 +29,22 @@ func (fc FakeCtrlRuntimeClient) Create(
 	ctx context.Context,
 	obj client.Object,
 	opts ...client.CreateOption) error {
-	if fc.ShouldError {
-		return errors.New("failed to create object")
-	}
-	return fc.Client.Create(ctx, obj)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (fc FakeCtrlRuntimeClient) Update(
 	ctx context.Context,
 	obj client.Object,
 	opts ...client.UpdateOption) error {
-	if fc.ShouldError {
-		return errors.New("failed to update object")
-	}
-	return fc.Client.Update(ctx, obj)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (fc FakeCtrlRuntimeClient) Delete(
 	ctx context.Context,
 	obj client.Object,
 	opts ...client.DeleteOption) error {
-	if fc.ShouldError {
-		return errors.New("failed to delete object")
-	}
-	return fc.Client.Delete(ctx, obj)
+	_ = "STUB: not implemented"
+	return nil
 }

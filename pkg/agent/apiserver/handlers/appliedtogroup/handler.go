@@ -15,10 +15,8 @@
 package appliedtogroup
 
 import (
-	"encoding/json"
 	"net/http"
 
-	cpv1beta "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
 	"antrea.io/antrea/v2/pkg/querier"
 )
 
@@ -26,26 +24,6 @@ import (
 // to query applied to groups in current agent. The HandlerFunc accepts `name` parameter
 // in URL and returns the specific applied to group.
 func HandleFunc(npq querier.AgentNetworkPolicyInfoQuerier) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		name := r.URL.Query().Get("name")
-		groups := npq.GetAppliedToGroups()
-		var obj interface{}
-		if len(name) > 0 {
-			for _, group := range groups {
-				if group.Name == name {
-					obj = group
-					break
-				}
-			}
-			if obj == nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-		} else {
-			obj = cpv1beta.AppliedToGroupList{Items: groups}
-		}
-		if err := json.NewEncoder(w).Encode(obj); err != nil {
-			http.Error(w, "Failed to encode response: "+err.Error(), http.StatusInternalServerError)
-		}
-	}
+	_ = "STUB: not implemented"
+	return *new(http.HandlerFunc)
 }

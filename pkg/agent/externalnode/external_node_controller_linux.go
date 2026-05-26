@@ -15,8 +15,6 @@
 package externalnode
 
 import (
-	"fmt"
-
 	"github.com/vishvananda/netlink"
 
 	"antrea.io/antrea/v2/pkg/agent/config"
@@ -34,40 +32,15 @@ var (
 )
 
 func (c *ExternalNodeController) moveIFConfigurations(adapterConfig *config.AdapterNetConfig, src string, dst string) error {
-	dstLink, err := linkByName(dst)
-	if err != nil {
-		return fmt.Errorf("failed to find link for destination %s, err %v", dst, err)
-	}
-	if src != "" {
-		srcLink, err := linkByName(src)
-		if err != nil {
-			return fmt.Errorf("failed to find link for source %s, err %v", src, err)
-		}
-		if err := linkSetMTU(dstLink, adapterConfig.MTU); err != nil {
-			return err
-		}
-		if err := linkSetUp(dstLink); err != nil {
-			return err
-		}
-		if err := removeLinkIPs(srcLink); err != nil {
-			return err
-		}
-		if err := removeLinkRoutes(srcLink); err != nil {
-			return err
-		}
-	}
-	dstIndex := dstLink.Attrs().Index
-	// Configure the source interface's IPs on the destination interface.
-	if err := configureLinkAddresses(dstIndex, adapterConfig.IPs); err != nil {
-		return err
-	}
-	// Configure the source interface's routes on the destination interface.
-	if err := configureLinkRoutes(dstLink, adapterConfig.Routes); err != nil {
-		return err
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
+// Configure the source interface's IPs on the destination interface.
+
+// Configure the source interface's routes on the destination interface.
+
 func (c *ExternalNodeController) removeExternalNodeConfig() error {
+	_ = "STUB: not implemented"
 	return nil
 }

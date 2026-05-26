@@ -15,19 +15,12 @@
 package proxy
 
 import (
-	"fmt"
-	"net"
 	"strings"
 	"time"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"k8s.io/client-go/rest"
-	"k8s.io/klog/v2"
 	"k8s.io/kubectl/pkg/proxy"
-
-	"antrea.io/antrea/v2/pkg/antctl/raw"
-	"antrea.io/antrea/v2/pkg/antctl/runtime"
 )
 
 const (
@@ -66,52 +59,9 @@ var defaultFS = afero.NewOsFs()
 
 // validateAndComplete checks the proxyOptions to see if there is sufficient information to run the
 // command, and adds default values when needed.
-func (o *proxyOptions) validateAndComplete() error {
-	if o.port != defaultPort && o.unixSocket != "" {
-		return fmt.Errorf("cannot set --unix-socket and --port at the same time")
-	}
+func (o *proxyOptions) validateAndComplete() error { _ = "STUB: not implemented"; return nil }
 
-	if o.controller && o.agentNodeName != "" {
-		return fmt.Errorf("cannot use --controller and --agent-node at the same time")
-	}
-	if !o.controller && o.agentNodeName == "" {
-		// default to controller
-		o.controller = true
-	}
-
-	if o.staticDir != "" {
-		fileInfo, err := defaultFS.Stat(o.staticDir)
-		if err != nil {
-			klog.InfoS("Failed to stat static file directory", "name", o.staticDir, "error", err)
-		} else if !fileInfo.IsDir() {
-			klog.InfoS("Static file directory is not a directory", "name", o.staticDir)
-		}
-	}
-
-	if !strings.HasSuffix(o.staticPrefix, "/") {
-		o.staticPrefix += "/"
-	}
-
-	if !strings.HasSuffix(o.apiPrefix, "/") {
-		o.apiPrefix += "/"
-	}
-
-	if o.disableFilter {
-		if o.unixSocket == "" {
-			klog.InfoS("Request filter disabled, your proxy is vulnerable to XSRF attacks, please be cautious")
-		}
-		o.filter = nil
-	} else {
-		o.filter = &proxy.FilterServer{
-			AcceptPaths:   proxy.MakeRegexpArrayOrDie(o.acceptPaths),
-			RejectPaths:   proxy.MakeRegexpArrayOrDie(o.rejectPaths),
-			AcceptHosts:   proxy.MakeRegexpArrayOrDie(o.acceptHosts),
-			RejectMethods: proxy.MakeRegexpArrayOrDie(o.rejectMethods),
-		}
-	}
-
-	return nil
-}
+// default to controller
 
 var proxyCommandExample = strings.Trim(`
   Start a reverse proxy for the Antrea Controller API
@@ -153,72 +103,16 @@ func init() {
 	Command.Flags().BoolVar(&o.insecure, "insecure", false, "Skip TLS verification when connecting to Antrea API.")
 }
 
-func runE(cmd *cobra.Command, _ []string) error {
-	ctx := cmd.Context()
-	if runtime.Mode != runtime.ModeController || runtime.InPod {
-		return fmt.Errorf("only remote mode is supported for this command")
-	}
+func runE(cmd *cobra.Command, _ []string) error { _ = "STUB: not implemented"; return nil }
 
-	if err := options.validateAndComplete(); err != nil {
-		return err
-	}
+// The last argument is for "appendLocationPath", which for "kubectl proxy" is used as
+// follows: if the Kubeconfig context provides a server URL which includes a Path comppnent
+// (e.g., https://example.com/PATH), then this path is automatically added to all incoming
+// requests to the proxy.
+// See https://github.com/kubernetes/kubernetes/pull/97350
+// In our case, we craft the config manually and clientCfg.Host never includes a Path
+// component, so we always set "appendLocationPath" to "false", and there is no need to
+// expose a flag like --append-server-path for "antctl proxy".
 
-	kubeconfig, err := raw.ResolveKubeconfig(cmd)
-	if err != nil {
-		return err
-	}
-	if server, _ := Command.Flags().GetString("server"); server != "" {
-		kubeconfig.Host = server
-	}
-
-	k8sClientset, antreaClientset, err := raw.SetupClients(kubeconfig)
-	if err != nil {
-		return fmt.Errorf("failed to create clientset: %w", err)
-	}
-
-	insecure, _ := Command.Flags().GetBool("insecure")
-	var clientCfg *rest.Config
-	if options.controller {
-		clientCfg, err = raw.CreateControllerClientCfg(ctx, k8sClientset, antreaClientset, kubeconfig, insecure)
-		if err != nil {
-			return fmt.Errorf("error when creating Controller client config: %w", err)
-		}
-	} else {
-		clientCfg, err = raw.CreateAgentClientCfg(ctx, k8sClientset, antreaClientset, kubeconfig, options.agentNodeName, insecure)
-		if err != nil {
-			return fmt.Errorf("error when creating Agent client config: %w", err)
-		}
-	}
-
-	// The last argument is for "appendLocationPath", which for "kubectl proxy" is used as
-	// follows: if the Kubeconfig context provides a server URL which includes a Path comppnent
-	// (e.g., https://example.com/PATH), then this path is automatically added to all incoming
-	// requests to the proxy.
-	// See https://github.com/kubernetes/kubernetes/pull/97350
-	// In our case, we craft the config manually and clientCfg.Host never includes a Path
-	// component, so we always set "appendLocationPath" to "false", and there is no need to
-	// expose a flag like --append-server-path for "antctl proxy".
-	server, err := proxy.NewServer(options.staticDir, options.apiPrefix, options.staticPrefix, options.filter, clientCfg, options.keepalive, false)
-
-	if err != nil {
-		return err
-	}
-
-	// Separate listening from serving so we can report the bound port when it is chosen by os
-	// (eg: port == 0).
-	var l net.Listener
-	if options.unixSocket == "" {
-		addr := options.address
-		if net.ParseIP(addr).To4() == nil {
-			addr = fmt.Sprintf("[%s]", addr)
-		}
-		l, err = server.Listen(addr, options.port)
-	} else {
-		l, err = server.ListenUnix(options.unixSocket)
-	}
-	if err != nil {
-		return err
-	}
-	fmt.Printf("Starting to serve on %s\n", l.Addr().String())
-	return server.ServeOnListener(l)
-}
+// Separate listening from serving so we can report the bound port when it is chosen by os
+// (eg: port == 0).

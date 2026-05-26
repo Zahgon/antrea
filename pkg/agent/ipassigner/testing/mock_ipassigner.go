@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	v1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,97 +43,82 @@ type MockIPAssignerMockRecorder struct {
 
 // NewMockIPAssigner creates a new mock instance.
 func NewMockIPAssigner(ctrl *gomock.Controller) *MockIPAssigner {
-	mock := &MockIPAssigner{ctrl: ctrl}
-	mock.recorder = &MockIPAssignerMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockIPAssigner) EXPECT() *MockIPAssignerMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AssignIP mocks base method.
+	return nil
 }
 
-// AssignIP mocks base method.
 func (m *MockIPAssigner) AssignIP(ip string, subnetInfo *v1beta1.SubnetInfo, forceAdvertise bool) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AssignIP", ip, subnetInfo, forceAdvertise)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
 // AssignIP indicates an expected call of AssignIP.
 func (mr *MockIPAssignerMockRecorder) AssignIP(ip, subnetInfo, forceAdvertise any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssignIP", reflect.TypeOf((*MockIPAssigner)(nil).AssignIP), ip, subnetInfo, forceAdvertise)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AssignedIPs mocks base method.
 func (m *MockIPAssigner) AssignedIPs() map[string]*v1beta1.SubnetInfo {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AssignedIPs")
-	ret0, _ := ret[0].(map[string]*v1beta1.SubnetInfo)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AssignedIPs indicates an expected call of AssignedIPs.
 func (mr *MockIPAssignerMockRecorder) AssignedIPs() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssignedIPs", reflect.TypeOf((*MockIPAssigner)(nil).AssignedIPs))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetInterfaceID mocks base method.
 func (m *MockIPAssigner) GetInterfaceID(subnetInfo *v1beta1.SubnetInfo) (int, bool) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInterfaceID", subnetInfo)
-	ret0, _ := ret[0].(int)
-	ret1, _ := ret[1].(bool)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return 0, false
 }
 
 // GetInterfaceID indicates an expected call of GetInterfaceID.
 func (mr *MockIPAssignerMockRecorder) GetInterfaceID(subnetInfo any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInterfaceID", reflect.TypeOf((*MockIPAssigner)(nil).GetInterfaceID), subnetInfo)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InitIPs mocks base method.
 func (m *MockIPAssigner) InitIPs(arg0 map[string]*v1beta1.SubnetInfo) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InitIPs", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InitIPs indicates an expected call of InitIPs.
 func (mr *MockIPAssignerMockRecorder) InitIPs(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InitIPs", reflect.TypeOf((*MockIPAssigner)(nil).InitIPs), arg0)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Run mocks base method.
-func (m *MockIPAssigner) Run(arg0 <-chan struct{}) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Run", arg0)
-}
+func (m *MockIPAssigner) Run(arg0 <-chan struct{}) { _ = "STUB: not implemented"; return }
 
 // Run indicates an expected call of Run.
 func (mr *MockIPAssignerMockRecorder) Run(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockIPAssigner)(nil).Run), arg0)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UnassignIP mocks base method.
 func (m *MockIPAssigner) UnassignIP(ip string) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UnassignIP", ip)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
 // UnassignIP indicates an expected call of UnassignIP.
 func (mr *MockIPAssignerMockRecorder) UnassignIP(ip any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnassignIP", reflect.TypeOf((*MockIPAssigner)(nil).UnassignIP), ip)
+	_ = "STUB: not implemented"
+	return nil
 }

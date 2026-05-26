@@ -16,10 +16,6 @@ package cluster
 
 import (
 	"context"
-	"fmt"
-	"strings"
-
-	"golang.org/x/mod/semver"
 )
 
 type checkK8sVersion struct{}
@@ -29,24 +25,6 @@ func init() {
 }
 
 func (t *checkK8sVersion) Run(ctx context.Context, testContext *testContext) error {
-	discoveryClient := testContext.client.Discovery()
-	serverVersion, err := discoveryClient.ServerVersion()
-	if err != nil {
-		return fmt.Errorf("error getting server version: %w", err)
-	}
-	currentVersion := serverVersion.GitVersion
-	if !strings.HasPrefix(currentVersion, "v") {
-		currentVersion = "v" + currentVersion
-	}
-	currentVersion = semver.Canonical(currentVersion)
-	if currentVersion == "" {
-		return fmt.Errorf("error parsing server version: invalid version %q", serverVersion.GitVersion)
-	}
-	const minVersion = "v1.23.0"
-	if semver.Compare(currentVersion, minVersion) >= 0 {
-		testContext.Log("Kubernetes server version is compatible with Antrea. Kubernetes version: %s", serverVersion.GitVersion)
-	} else {
-		return fmt.Errorf("Kubernetes min version required: %s", minVersion)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }

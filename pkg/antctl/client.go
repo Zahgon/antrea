@@ -15,20 +15,11 @@
 package antctl
 
 import (
-	"bytes"
-	"context"
-	"fmt"
 	"io"
-	"net"
-	"net/url"
 	"time"
 
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/client-go/rest"
-
-	"antrea.io/antrea/v2/pkg/antctl/runtime"
-	"antrea.io/antrea/v2/pkg/apis"
 )
 
 // requestOption describes options to issue requests.
@@ -60,142 +51,35 @@ type client struct {
 }
 
 func newClient(codec serializer.CodecFactory) AntctlClient {
-	return &client{codec: codec}
+	_ = "STUB: not implemented"
+	return *new(AntctlClient)
 }
 
 // resolveKubeconfig tries to load the kubeconfig specified in the requestOption.
 // It will return error if the stating of the file failed or the kubeconfig is malformed.
 // If the default kubeconfig not exists, it will try to use an in-cluster config.
 func (c *client) resolveKubeconfig(opt *requestOption) (*rest.Config, error) {
-	var kubeconfig *rest.Config
-	if runtime.InPod {
-		kubeconfig = &rest.Config{}
-		kubeconfig.Insecure = true
-		kubeconfig.CAFile = ""
-		kubeconfig.CAData = nil
-		kubeconfig.BearerTokenFile = apis.APIServerLoopbackTokenPath
-		switch runtime.Mode {
-		case runtime.ModeAgent:
-			kubeconfig.Host = net.JoinHostPort("127.0.0.1", fmt.Sprint(apis.AntreaAgentAPIPort))
-		case runtime.ModeController:
-			kubeconfig.Host = net.JoinHostPort("127.0.0.1", fmt.Sprint(apis.AntreaControllerAPIPort))
-		case runtime.ModeFlowAggregator:
-			kubeconfig.Host = net.JoinHostPort("127.0.0.1", fmt.Sprint(apis.FlowAggregatorAPIPort))
-		}
-	} else {
-		var err error
-		if kubeconfig, err = runtime.ResolveKubeconfig(opt.kubeconfig); err != nil {
-			return nil, err
-		}
-	}
-	kubeconfig.NegotiatedSerializer = c.codec
-	return kubeconfig, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (c *client) request(opt *requestOption) (io.Reader, error) {
-	var e *endpoint
-	switch runtime.Mode {
-	case runtime.ModeAgent:
-		e = opt.commandDefinition.agentEndpoint
-	case runtime.ModeFlowAggregator:
-		e = opt.commandDefinition.flowAggregatorEndpoint
-	default:
-		e = opt.commandDefinition.controllerEndpoint
-	}
-	if e.resourceEndpoint != nil {
-		return c.resourceRequest(e.resourceEndpoint, opt)
-	}
-	return c.nonResourceRequest(e.nonResourceEndpoint, opt)
+	_ = "STUB: not implemented"
+	return *new(io.Reader), nil
 }
 
 func (c *client) nonResourceRequest(e *nonResourceEndpoint, opt *requestOption) (io.Reader, error) {
-	kubeconfig, err := c.resolveKubeconfig(opt)
-	if err != nil {
-		return nil, err
-	}
-	if opt.server != "" {
-		kubeconfig.Host = opt.server
-	}
-	restClient, err := rest.UnversionedRESTClientFor(kubeconfig)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create rest client: %w", err)
-	}
-	u := url.URL{Path: e.path}
-	q := u.Query()
-	for k, v := range opt.args {
-		q.Set(k, v)
-	}
-	u.RawQuery = q.Encode()
-	getter := restClient.Get().RequestURI(u.RequestURI()).Timeout(opt.timeout)
-	result, err := getter.DoRaw(context.TODO())
-	if err != nil {
-		statusErr, ok := err.(*errors.StatusError)
-		if !ok {
-			return nil, err
-		}
-		return nil, generateMessage(opt.commandDefinition, opt.args, false /* isResourceRequest */, statusErr)
-	}
-	return bytes.NewReader(result), nil
+	_ = "STUB: not implemented"
+	return *new(io.Reader), nil
 }
+
+/* isResourceRequest */
 
 func (c *client) resourceRequest(e *resourceEndpoint, opt *requestOption) (io.Reader, error) {
-	kubeconfig, err := c.resolveKubeconfig(opt)
-	if err != nil {
-		return nil, err
-	}
-	if opt.server != "" {
-		kubeconfig.Host = opt.server
-	}
-	gv := e.groupVersionResource.GroupVersion()
-	kubeconfig.GroupVersion = &gv
-	kubeconfig.APIPath = "/apis"
-
-	restClient, err := rest.RESTClientFor(kubeconfig)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create rest client: %w", err)
-	}
-	// If timeout is zero, there will be no timeout.
-	restClient.Client.Timeout = opt.timeout
-
-	var restRequest *rest.Request
-	switch e.restMethod {
-	case restGet:
-		restRequest = restClient.Get()
-	case restPost:
-		restRequest = restClient.Post()
-	}
-
-	restRequest = restRequest.
-		NamespaceIfScoped(opt.args["namespace"], e.namespaced).
-		Resource(e.groupVersionResource.Resource)
-
-	if len(e.resourceName) != 0 {
-		restRequest = restRequest.Name(e.resourceName)
-	} else if name, ok := opt.args["name"]; ok {
-		restRequest = restRequest.Name(name)
-	}
-
-	for arg, val := range opt.args {
-		if arg != "name" && arg != "namespace" {
-			restRequest = restRequest.Param(arg, val)
-		}
-	}
-
-	if e.parameterTransform != nil {
-		obj, err := e.parameterTransform(opt.args)
-		if err != nil {
-			return nil, err
-		}
-		restRequest = restRequest.Body(obj)
-	}
-
-	result := restRequest.Do(context.TODO())
-	if result.Error() != nil {
-		return nil, generateMessage(opt.commandDefinition, opt.args, true /* isResourceRequest */, result.Error())
-	}
-	raw, err := result.Raw()
-	if err != nil {
-		return nil, err
-	}
-	return bytes.NewReader(raw), nil
+	_ = "STUB: not implemented"
+	return *new(io.Reader), nil
 }
+
+// If timeout is zero, there will be no timeout.
+
+/* isResourceRequest */

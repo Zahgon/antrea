@@ -15,76 +15,22 @@
 package networkpolicy
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
-	"strings"
 
 	agentquerier "antrea.io/antrea/v2/pkg/agent/querier"
-	cpv1beta "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
 	"antrea.io/antrea/v2/pkg/querier"
 )
 
 // HandleFunc creates a http.HandlerFunc which uses an AgentNetworkPolicyInfoQuerier
 // to query network policy rules in current agent.
 func HandleFunc(aq agentquerier.AgentQuerier) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		npFilter, pod, err := newFilterFromURLQuery(r.URL.Query())
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var obj interface{}
-		npq := aq.GetNetworkPolicyInfoQuerier()
-		var nps []cpv1beta.NetworkPolicy
-
-		if pod != "" {
-			namespaceAndPodName := strings.Split(pod, "/")
-			interfaces := aq.GetInterfaceStore().GetContainerInterfacesByPod(namespaceAndPodName[1], namespaceAndPodName[0])
-			if len(interfaces) > 0 {
-				nps = npq.GetAppliedNetworkPolicies(namespaceAndPodName[1], namespaceAndPodName[0], npFilter)
-			}
-		} else {
-			nps = npq.GetNetworkPolicies(npFilter)
-		}
-		obj = cpv1beta.NetworkPolicyList{Items: nps}
-
-		if err := json.NewEncoder(w).Encode(obj); err != nil {
-			http.Error(w, "Failed to encode response: "+err.Error(), http.StatusInternalServerError)
-		}
-	}
+	_ = "STUB: not implemented"
+	return *new(http.HandlerFunc)
 }
 
 // Create a Network Policy Filter from URL Query
 func newFilterFromURLQuery(query url.Values) (*querier.NetworkPolicyQueryFilter, string, error) {
-	namespace, pod := query.Get("namespace"), query.Get("pod")
-	if pod != "" {
-		if !strings.Contains(pod, "/") {
-			return nil, "", fmt.Errorf("invalid pod option format. Expected format is podNamespace/podName")
-		} else if namespace != "" {
-			return nil, "", fmt.Errorf("namespace option should not be used with pod option")
-		}
-	}
-	strSourceType := strings.ToUpper(query.Get("type"))
-	var policyType cpv1beta.NetworkPolicyType
-	if strSourceType != "" {
-		npSourceType, ok := querier.NetworkPolicyTypeMap[strSourceType]
-		if !ok {
-			return nil, "", fmt.Errorf("unknown policy type. Valid types are %v", querier.GetNetworkPolicyTypeShorthands())
-		}
-		policyType = npSourceType
-	}
-	source := query.Get("source")
-	name := query.Get("name")
-	if name != "" && (source != "" || namespace != "" || pod != "" || strSourceType != "") {
-		return nil, "", fmt.Errorf("with a policy name, none of the other options should be set")
-	}
-	return &querier.NetworkPolicyQueryFilter{
-		Name:       name,
-		SourceName: source,
-		Namespace:  namespace,
-		SourceType: policyType,
-	}, pod, nil
+	_ = "STUB: not implemented"
+	return nil, "", nil
 }

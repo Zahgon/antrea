@@ -16,9 +16,7 @@ package flowexporter
 
 import (
 	"context"
-	"fmt"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -32,23 +30,11 @@ const (
 )
 
 func getCACert(ctx context.Context, k8sClient kubernetes.Interface, namespace, name string) ([]byte, error) {
-	caConfigMap, err := k8sClient.CoreV1().ConfigMaps(namespace).Get(ctx, name, metav1.GetOptions{})
-	if err != nil {
-		return nil, fmt.Errorf("error getting ConfigMap %s: %w", name, err)
-	}
-	if caConfigMap.Data == nil || caConfigMap.Data[caConfigMapKey] == "" {
-		return nil, fmt.Errorf("no data in %s ConfigMap", name)
-	}
-	return []byte(caConfigMap.Data[caConfigMapKey]), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func getClientCertKey(ctx context.Context, k8sClient kubernetes.Interface, namespace, name string) ([]byte, []byte, error) {
-	clientSecret, err := k8sClient.CoreV1().Secrets(namespace).Get(ctx, name, metav1.GetOptions{})
-	if err != nil {
-		return nil, nil, fmt.Errorf("error getting Secret %s: %w", name, err)
-	}
-	if clientSecret.Data == nil || clientSecret.Data["tls.crt"] == nil || clientSecret.Data["tls.key"] == nil {
-		return nil, nil, fmt.Errorf("missing tls.crt or tls.key in Secret %s/%s", namespace, name)
-	}
-	return clientSecret.Data["tls.crt"], clientSecret.Data["tls.key"], nil
+	_ = "STUB: not implemented"
+	return nil, nil, nil
 }

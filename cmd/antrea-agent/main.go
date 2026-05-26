@@ -21,10 +21,6 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/log"
-	"antrea.io/antrea/v2/pkg/version"
 )
 
 func main() {
@@ -34,30 +30,4 @@ func main() {
 	}
 }
 
-func newAgentCommand() *cobra.Command {
-	opts := newOptions()
-
-	cmd := &cobra.Command{
-		Use:  "antrea-agent",
-		Long: "The Antrea agent runs on each node.",
-		Run: func(cmd *cobra.Command, args []string) {
-			log.InitLogs(cmd.Flags())
-			defer log.FlushLogs()
-			if err := opts.complete(args); err != nil {
-				klog.Fatalf("Failed to complete: %v", err)
-			}
-			if err := opts.validate(args); err != nil {
-				klog.Fatalf("Failed to validate: %v", err)
-			}
-			if err := run(opts); err != nil {
-				klog.Fatalf("Error running agent: %v", err)
-			}
-		},
-		Version: version.GetFullVersionWithRuntimeInfo(),
-	}
-
-	flags := cmd.Flags()
-	opts.addFlags(flags)
-	log.AddFlags(flags)
-	return cmd
-}
+func newAgentCommand() *cobra.Command { _ = "STUB: not implemented"; return nil }

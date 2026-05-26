@@ -22,56 +22,20 @@ type notifier struct {
 	subscribers map[string]map[string]func()
 }
 
-func newNotifier() *notifier {
-	return &notifier{subscribers: map[string]map[string]func(){}}
-}
+func newNotifier() *notifier { _ = "STUB: not implemented"; return nil }
 
 // Subscribe the subscriber to the given resourceID with a callback.
 // If the subscription already exists, it does nothing.
 func (n *notifier) subscribe(resourceID, subscriberID string, callback func()) {
-	n.mutex.Lock()
-	defer n.mutex.Unlock()
-	subscribers, exists := n.subscribers[resourceID]
-	if !exists {
-		subscribers = map[string]func(){}
-		n.subscribers[resourceID] = subscribers
-	}
-	_, subscribed := subscribers[subscriberID]
-	if subscribed {
-		return
-	}
-	subscribers[subscriberID] = callback
+	_ = "STUB: not implemented"
+	return
 }
 
 // unsubscribe cancels the subscription.
 // If the subscription does not exist, it does nothing.
-func (n *notifier) unsubscribe(resourceID, subscriberID string) {
-	n.mutex.Lock()
-	defer n.mutex.Unlock()
-	subscribers, exists := n.subscribers[resourceID]
-	if !exists {
-		return
-	}
-	_, subscribed := subscribers[subscriberID]
-	if !subscribed {
-		return
-	}
-	delete(subscribers, subscriberID)
-	// If the resource is no longer subscribed by any notifier, remove its key.
-	if len(subscribers) == 0 {
-		delete(n.subscribers, resourceID)
-	}
-}
+func (n *notifier) unsubscribe(resourceID, subscriberID string) { _ = "STUB: not implemented"; return }
+
+// If the resource is no longer subscribed by any notifier, remove its key.
 
 // Notify the subscribers by calling the callbacks they registered.
-func (n *notifier) notify(resourceID string) {
-	n.mutex.RLock()
-	defer n.mutex.RUnlock()
-	subscribers, exists := n.subscribers[resourceID]
-	if !exists {
-		return
-	}
-	for _, callback := range subscribers {
-		callback()
-	}
-}
+func (n *notifier) notify(resourceID string) { _ = "STUB: not implemented"; return }

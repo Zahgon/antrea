@@ -18,7 +18,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"k8s.io/klog/v2"
 
 	flowpb "antrea.io/antrea/v2/pkg/apis/flow/v1alpha1"
 	"antrea.io/antrea/v2/pkg/flowaggregator/options"
@@ -32,42 +31,18 @@ type S3Exporter struct {
 }
 
 func buildS3Input(opt *options.Options) s3uploader.S3Input {
-	return s3uploader.S3Input{
-		Config:         opt.Config.S3Uploader,
-		UploadInterval: opt.S3UploadInterval,
-	}
+	_ = "STUB: not implemented"
+	return *new(s3uploader.S3Input)
 }
 
 func NewS3Exporter(clusterUUID uuid.UUID, opt *options.Options) (*S3Exporter, error) {
-	s3Input := buildS3Input(opt)
-	klog.InfoS("S3Uploader configuration", "bucketName", s3Input.Config.BucketName, "bucketPrefix", s3Input.Config.BucketPrefix, "region", s3Input.Config.Region, "recordFormat", s3Input.Config.RecordFormat, "compress", *s3Input.Config.Compress, "maxRecordsPerFile", s3Input.Config.MaxRecordsPerFile, "uploadInterval", s3Input.UploadInterval)
-	s3UploadProcess, err := s3uploader.NewS3UploadProcess(s3Input, clusterUUID.String())
-	if err != nil {
-		return nil, err
-	}
-	return &S3Exporter{
-		s3Input:         &s3Input,
-		s3UploadProcess: s3UploadProcess,
-	}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Run consumes flow records from the ring buffer and uploads them to S3.
 // It blocks until ctx is cancelled or the consumer signals shutdown.
 func (e *S3Exporter) Run(ctx context.Context, buf ringbuffer.BroadcastBuffer[*flowpb.Flow]) {
-	consumer := buf.NewConsumer(ringbuffer.WithMaxConsumeDeadline(consumeDeadline))
-	e.s3UploadProcess.Start()
-	defer e.s3UploadProcess.Stop()
-
-	records := make([]*flowpb.Flow, consumeMultipleBatchSize)
-	for {
-		n, _, shutdown := consumer.ConsumeMultiple(records)
-		for _, record := range records[:n] {
-			if err := e.s3UploadProcess.CacheRecord(record); err != nil {
-				klog.ErrorS(err, "Error when caching record for S3")
-			}
-		}
-		if shutdown || ctx.Err() != nil {
-			return
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }

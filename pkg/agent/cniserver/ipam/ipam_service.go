@@ -15,7 +15,6 @@
 package ipam
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/containernetworking/cni/pkg/invoke"
@@ -47,33 +46,16 @@ type IPAMDriver interface {
 	Check(args *invoke.Args, k8sArgs *types.K8sArgs, networkConfig []byte) (bool, error)
 }
 
-func RegisterIPAMDriver(ipamType string, ipamDriver IPAMDriver) {
-	if ipamDrivers == nil {
-		ipamDrivers = make(map[string][]IPAMDriver)
-	}
-	ipamDrivers[ipamType] = append(ipamDrivers[ipamType], ipamDriver)
-}
+func RegisterIPAMDriver(ipamType string, ipamDriver IPAMDriver) { _ = "STUB: not implemented"; return }
 
-func ResetIPAMDrivers(ipamType string) {
-	if ipamDrivers != nil {
-		delete(ipamDrivers, ipamType)
-	}
-}
+func ResetIPAMDrivers(ipamType string) { _ = "STUB: not implemented"; return }
 
-func ResetIPAMResults() {
-	ipamResults = sync.Map{}
-}
+func ResetIPAMResults() { _ = "STUB: not implemented"; return }
 
-func argsFromEnv(cniArgs *cnipb.CniCmdArgs) *invoke.Args {
-	return &invoke.Args{
-		ContainerID: cniArgs.ContainerId,
-		NetNS:       cniArgs.Netns,
-		IfName:      cniArgs.Ifname,
-		Path:        cniArgs.Path,
-	}
-}
+func argsFromEnv(cniArgs *cnipb.CniCmdArgs) *invoke.Args { _ = "STUB: not implemented"; return nil }
 
 func ExecIPAMAdd(cniArgs *cnipb.CniCmdArgs, k8sArgs *types.K8sArgs, ipamType string, resultKey string) (*IPAMResult, error) {
+	_ = "STUB: not implemented"
 	// Return the cached IPAM result for the same Pod. This cache helps to ensure CNI ADD is
 	// idempotent. There are two usages of CNI ADD on Windows: 1) add container network
 	// configuration, and 2) query Pod network status. kubelet on Windows excutess CNI ADD
@@ -81,119 +63,55 @@ func ExecIPAMAdd(cniArgs *cnipb.CniCmdArgs, k8sArgs *types.K8sArgs, ipamType str
 	// is to ensure only one IP address is allocated to one Pod.
 	// TODO: A risk of IP re-allocation exists if agent restarts before kubelet queries Pod
 	// status and after the container network configuration is added.
-	obj, ok := GetIPFromCache(resultKey)
-	if ok {
-		return obj, nil
-	}
-
-	args := argsFromEnv(cniArgs)
-	drivers := ipamDrivers[ipamType]
-	for _, driver := range drivers {
-		owns, result, err := driver.Add(args, k8sArgs, cniArgs.NetworkConfiguration)
-		if !owns {
-			// the driver does not own this request - continue to next one
-			continue
-		}
-		if err != nil {
-			return nil, err
-		}
-		ipamResults.Store(resultKey, result)
-		return result, nil
-	}
-
-	return nil, fmt.Errorf("no suitable IPAM driver found")
+	return nil, nil
 }
+
+// the driver does not own this request - continue to next one
 
 func ExecIPAMDelete(cniArgs *cnipb.CniCmdArgs, k8sArgs *types.K8sArgs, ipamType string, resultKey string) error {
-	args := argsFromEnv(cniArgs)
-	drivers := ipamDrivers[ipamType]
-	for _, driver := range drivers {
-		owns, err := driver.Del(args, k8sArgs, cniArgs.NetworkConfiguration)
-		if !owns {
-			// the driver does not own this request - continue to next one
-			continue
-		}
-		if err != nil {
-			return err
-		}
-		ipamResults.Delete(resultKey)
-		return nil
-	}
-	return fmt.Errorf("no suitable IPAM driver found")
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// the driver does not own this request - continue to next one
 
 func ExecIPAMCheck(cniArgs *cnipb.CniCmdArgs, k8sArgs *types.K8sArgs, ipamType string) error {
-	args := argsFromEnv(cniArgs)
-	drivers := ipamDrivers[ipamType]
-	for _, driver := range drivers {
-		owns, err := driver.Check(args, k8sArgs, cniArgs.NetworkConfiguration)
-		if !owns {
-			// the driver does not own this request - continue to next one
-			continue
-		}
-
-		return err
-
-	}
-	return fmt.Errorf("no suitable IPAM driver found")
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// the driver does not own this request - continue to next one
 
 func GetIPFromCache(resultKey string) (*IPAMResult, bool) {
-	obj, ok := ipamResults.Load(resultKey)
-	if ok {
-		result := obj.(*IPAMResult)
-		return result, ok
-	}
-	return nil, ok
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
-func IsIPAMTypeValid(ipamType string) bool {
-	_, valid := ipamDrivers[ipamType]
-	return valid
-}
+func IsIPAMTypeValid(ipamType string) bool { _ = "STUB: not implemented"; return false }
 
 // Antrea IPAM for secondary network.
 func SecondaryNetworkAdd(cniArgs *cnipb.CniCmdArgs, k8sArgs *types.K8sArgs, networkConfig *types.NetworkConfig) (*current.Result, error) {
-	args := argsFromEnv(cniArgs)
-	ipamResult, err := getAntreaIPAMDriver().secondaryNetworkAdd(args, k8sArgs, networkConfig)
-	if err != nil {
-		return nil, err
-	}
-	return &ipamResult.Result, nil
-
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func SecondaryNetworkDel(cniArgs *cnipb.CniCmdArgs, k8sArgs *types.K8sArgs, networkConfig *types.NetworkConfig) error {
-	args := argsFromEnv(cniArgs)
-	return getAntreaIPAMDriver().secondaryNetworkDel(args, k8sArgs, networkConfig)
-
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func SecondaryNetworkCheck(cniArgs *cnipb.CniCmdArgs, k8sArgs *types.K8sArgs, networkConfig *types.NetworkConfig) error {
-	args := argsFromEnv(cniArgs)
-	return getAntreaIPAMDriver().secondaryNetworkCheck(args, k8sArgs, networkConfig)
-
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func getAntreaIPAMDriver() *AntreaIPAM {
-	drivers, ok := ipamDrivers[AntreaIPAMType]
-	if !ok {
-		return nil
-	}
-	return drivers[0].(*AntreaIPAM)
-}
+func getAntreaIPAMDriver() *AntreaIPAM { _ = "STUB: not implemented"; return nil }
 
 // The following functions are only for testing.
-func ResetIPAMDriver(ipamType string, driver IPAMDriver) {
-	ipamDrivers[ipamType] = []IPAMDriver{driver}
-}
+func ResetIPAMDriver(ipamType string, driver IPAMDriver) { _ = "STUB: not implemented"; return }
 
-func AddIPAMResult(key string, result *IPAMResult) {
-	ipamResults.Store(key, result)
-}
+func AddIPAMResult(key string, result *IPAMResult) { _ = "STUB: not implemented"; return }
 
 // GetSecondaryNetworkAllocator returns the Antrea IPAM driver as the
 // SecondaryNetworkIPAMAllocator implementation.
-func GetSecondaryNetworkAllocator() *AntreaIPAM {
-	return getAntreaIPAMDriver()
-}
+func GetSecondaryNetworkAllocator() *AntreaIPAM { _ = "STUB: not implemented"; return nil }

@@ -16,7 +16,6 @@ package ovsctl
 
 import (
 	"context"
-	"os/exec"
 )
 
 type ovsOfctlRunner struct {
@@ -24,14 +23,11 @@ type ovsOfctlRunner struct {
 }
 
 func (r *ovsOfctlRunner) RunOfctlCmd(cmd string, args ...string) ([]byte, error) {
-	return runOfctlCmd(context.TODO(), true, cmd, r.bridge, args...)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func runOfctlCmd(ctx context.Context, openflow15 bool, cmd string, bridge string, args ...string) ([]byte, error) {
-	cmdArgs := append([]string{cmd, bridge}, args...)
-	if openflow15 {
-		cmdArgs = append(cmdArgs, "-O", "Openflow15")
-	}
-	ovsCmd := exec.CommandContext(ctx, "ovs-ofctl", cmdArgs...)
-	return ovsCmd.Output()
+	_ = "STUB: not implemented"
+	return nil, nil
 }

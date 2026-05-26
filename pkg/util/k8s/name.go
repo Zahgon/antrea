@@ -14,51 +14,24 @@
 
 package k8s
 
-import (
-	"fmt"
-	"strconv"
-	"strings"
-)
-
 // NamespacedName generates the conventional K8s resource name,
 // which connects namespace and name with "/".
-func NamespacedName(namespace, name string) string {
-	if namespace == "" {
-		// Cluster scoped resources will contain empty namespace.
-		return name
-	}
-	return namespace + "/" + name
-}
+func NamespacedName(namespace, name string) string { _ = "STUB: not implemented"; return "" }
+
+// Cluster scoped resources will contain empty namespace.
 
 // SplitNamespacedName splits conventional K8s resource name
 // to Namespace and Resource Name
-func SplitNamespacedName(name string) (string, string) {
-	tokens := strings.Split(name, "/")
-
-	if len(tokens) == 2 {
-		return tokens[0], tokens[1]
-	}
-
-	return "", tokens[0]
-}
+func SplitNamespacedName(name string) (string, string) { _ = "STUB: not implemented"; return "", "" }
 
 func ParseStatefulSetName(name string) (statefulSetName string, index int, err error) {
-	splittedName := strings.Split(name, "-")
-	if len(splittedName) < 2 {
-		err = fmt.Errorf("invalid StatefulSet name: %s", name)
-		return
-	}
-	index, err = strconv.Atoi(splittedName[len(splittedName)-1])
-	if err != nil {
-		return
-	}
-	statefulSetName = strings.Join(splittedName[:len(splittedName)-1], "-")
-	return
+	_ = "STUB: not implemented"
+	return "", 0, nil
 }
 
 // GetServiceDNSNames returns the DNS names that can be used to access the given Service.
 // It currently returns one name only and may add other alternate names when needed.
 func GetServiceDNSNames(namespace, serviceName string) []string {
-	dnsName := serviceName + "." + namespace + ".svc"
-	return []string{dnsName}
+	_ = "STUB: not implemented"
+	return nil
 }

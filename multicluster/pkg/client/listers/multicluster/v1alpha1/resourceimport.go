@@ -41,12 +41,14 @@ type resourceImportLister struct {
 
 // NewResourceImportLister returns a new ResourceImportLister.
 func NewResourceImportLister(indexer cache.Indexer) ResourceImportLister {
-	return &resourceImportLister{listers.New[*multiclusterv1alpha1.ResourceImport](indexer, multiclusterv1alpha1.Resource("resourceimport"))}
+	_ = "STUB: not implemented"
+	return *new(ResourceImportLister)
 }
 
 // ResourceImports returns an object that can list and get ResourceImports.
 func (s *resourceImportLister) ResourceImports(namespace string) ResourceImportNamespaceLister {
-	return resourceImportNamespaceLister{listers.NewNamespaced[*multiclusterv1alpha1.ResourceImport](s.ResourceIndexer, namespace)}
+	_ = "STUB: not implemented"
+	return *new(ResourceImportNamespaceLister)
 }
 
 // ResourceImportNamespaceLister helps list and get ResourceImports.

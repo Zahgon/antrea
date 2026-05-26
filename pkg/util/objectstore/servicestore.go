@@ -15,13 +15,10 @@
 package objectstore
 
 import (
-	"fmt"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/tools/cache"
-
-	"antrea.io/antrea/v2/pkg/util/k8s"
 )
 
 const serviceNameIndex = "serviceName"
@@ -42,24 +39,17 @@ type serviceStore struct {
 var _ ServiceStore = &serviceStore{}
 
 func NewServiceStore(serviceInformer cache.SharedIndexInformer) *serviceStore {
-	config := StoreConfig[*corev1.Service]{
-		DeleteQueueName: "serviceStoreServicesToDelete",
-		Indexers:        cache.Indexers{serviceNameIndex: serviceNameIndexFunc},
-	}
-	return &serviceStore{
-		ObjectStore: NewObjectStore(serviceInformer, config),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetServiceByNamespacedNameAndTime provides a Service-specific method for getting Services by name and time
 func (s *serviceStore) GetServiceByNamespacedNameAndTime(namespacedName string, startTime time.Time) (*corev1.Service, bool) {
-	return s.GetObjectByIndexAndTime(serviceNameIndex, namespacedName, startTime)
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 func serviceNameIndexFunc(obj interface{}) ([]string, error) {
-	service, ok := obj.(*corev1.Service)
-	if !ok {
-		return nil, fmt.Errorf("obj is not Service: %+v", obj)
-	}
-	return []string{k8s.NamespacedName(service.Namespace, service.Name)}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }

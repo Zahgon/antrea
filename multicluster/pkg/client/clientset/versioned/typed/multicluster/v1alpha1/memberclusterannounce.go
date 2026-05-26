@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	multiclusterv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
-	scheme "antrea.io/antrea/v2/multicluster/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -53,18 +52,6 @@ type memberClusterAnnounces struct {
 
 // newMemberClusterAnnounces returns a MemberClusterAnnounces
 func newMemberClusterAnnounces(c *MulticlusterV1alpha1Client, namespace string) *memberClusterAnnounces {
-	return &memberClusterAnnounces{
-		gentype.NewClientWithList[*multiclusterv1alpha1.MemberClusterAnnounce, *multiclusterv1alpha1.MemberClusterAnnounceList](
-			"memberclusterannounces",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			namespace,
-			func() *multiclusterv1alpha1.MemberClusterAnnounce {
-				return &multiclusterv1alpha1.MemberClusterAnnounce{}
-			},
-			func() *multiclusterv1alpha1.MemberClusterAnnounceList {
-				return &multiclusterv1alpha1.MemberClusterAnnounceList{}
-			},
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

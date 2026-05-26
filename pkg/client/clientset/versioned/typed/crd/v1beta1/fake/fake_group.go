@@ -29,18 +29,6 @@ type fakeGroups struct {
 }
 
 func newFakeGroups(fake *FakeCrdV1beta1, namespace string) crdv1beta1.GroupInterface {
-	return &fakeGroups{
-		gentype.NewFakeClientWithList[*v1beta1.Group, *v1beta1.GroupList](
-			fake.Fake,
-			namespace,
-			v1beta1.SchemeGroupVersion.WithResource("groups"),
-			v1beta1.SchemeGroupVersion.WithKind("Group"),
-			func() *v1beta1.Group { return &v1beta1.Group{} },
-			func() *v1beta1.GroupList { return &v1beta1.GroupList{} },
-			func(dst, src *v1beta1.GroupList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta1.GroupList) []*v1beta1.Group { return gentype.ToPointerSlice(list.Items) },
-			func(list *v1beta1.GroupList, items []*v1beta1.Group) { list.Items = gentype.FromPointerSlice(items) },
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.GroupInterface)
 }

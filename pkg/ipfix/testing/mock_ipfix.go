@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	entities "github.com/vmware/go-ipfix/pkg/entities"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,55 +43,45 @@ type MockIPFIXExportingProcessMockRecorder struct {
 
 // NewMockIPFIXExportingProcess creates a new mock instance.
 func NewMockIPFIXExportingProcess(ctrl *gomock.Controller) *MockIPFIXExportingProcess {
-	mock := &MockIPFIXExportingProcess{ctrl: ctrl}
-	mock.recorder = &MockIPFIXExportingProcessMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockIPFIXExportingProcess) EXPECT() *MockIPFIXExportingProcessMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// CloseConnToCollector mocks base method.
+	return nil
 }
 
-// CloseConnToCollector mocks base method.
-func (m *MockIPFIXExportingProcess) CloseConnToCollector() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CloseConnToCollector")
-}
+func (m *MockIPFIXExportingProcess) CloseConnToCollector() { _ = "STUB: not implemented"; return }
 
 // CloseConnToCollector indicates an expected call of CloseConnToCollector.
 func (mr *MockIPFIXExportingProcessMockRecorder) CloseConnToCollector() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloseConnToCollector", reflect.TypeOf((*MockIPFIXExportingProcess)(nil).CloseConnToCollector))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewTemplateID mocks base method.
-func (m *MockIPFIXExportingProcess) NewTemplateID() uint16 {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "NewTemplateID")
-	ret0, _ := ret[0].(uint16)
-	return ret0
-}
+func (m *MockIPFIXExportingProcess) NewTemplateID() uint16 { _ = "STUB: not implemented"; return 0 }
 
 // NewTemplateID indicates an expected call of NewTemplateID.
 func (mr *MockIPFIXExportingProcessMockRecorder) NewTemplateID() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewTemplateID", reflect.TypeOf((*MockIPFIXExportingProcess)(nil).NewTemplateID))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendSet mocks base method.
 func (m *MockIPFIXExportingProcess) SendSet(set entities.Set) (int, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendSet", set)
-	ret0, _ := ret[0].(int)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 // SendSet indicates an expected call of SendSet.
 func (mr *MockIPFIXExportingProcessMockRecorder) SendSet(set any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendSet", reflect.TypeOf((*MockIPFIXExportingProcess)(nil).SendSet), set)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockIPFIXBufferedExporter is a mock of IPFIXBufferedExporter interface.
@@ -110,42 +98,36 @@ type MockIPFIXBufferedExporterMockRecorder struct {
 
 // NewMockIPFIXBufferedExporter creates a new mock instance.
 func NewMockIPFIXBufferedExporter(ctrl *gomock.Controller) *MockIPFIXBufferedExporter {
-	mock := &MockIPFIXBufferedExporter{ctrl: ctrl}
-	mock.recorder = &MockIPFIXBufferedExporterMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockIPFIXBufferedExporter) EXPECT() *MockIPFIXBufferedExporterMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddRecord mocks base method.
+	return nil
 }
 
-// AddRecord mocks base method.
 func (m *MockIPFIXBufferedExporter) AddRecord(record entities.Record) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddRecord", record)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddRecord indicates an expected call of AddRecord.
 func (mr *MockIPFIXBufferedExporterMockRecorder) AddRecord(record any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddRecord", reflect.TypeOf((*MockIPFIXBufferedExporter)(nil).AddRecord), record)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Flush mocks base method.
-func (m *MockIPFIXBufferedExporter) Flush() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Flush")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockIPFIXBufferedExporter) Flush() error { _ = "STUB: not implemented"; return nil }
 
 // Flush indicates an expected call of Flush.
 func (mr *MockIPFIXBufferedExporterMockRecorder) Flush() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Flush", reflect.TypeOf((*MockIPFIXBufferedExporter)(nil).Flush))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockIPFIXRegistry is a mock of IPFIXRegistry interface.
@@ -162,39 +144,34 @@ type MockIPFIXRegistryMockRecorder struct {
 
 // NewMockIPFIXRegistry creates a new mock instance.
 func NewMockIPFIXRegistry(ctrl *gomock.Controller) *MockIPFIXRegistry {
-	mock := &MockIPFIXRegistry{ctrl: ctrl}
-	mock.recorder = &MockIPFIXRegistryMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockIPFIXRegistry) EXPECT() *MockIPFIXRegistryMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetInfoElement mocks base method.
+	return nil
 }
 
-// GetInfoElement mocks base method.
 func (m *MockIPFIXRegistry) GetInfoElement(name string, enterpriseID uint32) (*entities.InfoElement, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInfoElement", name, enterpriseID)
-	ret0, _ := ret[0].(*entities.InfoElement)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetInfoElement indicates an expected call of GetInfoElement.
 func (mr *MockIPFIXRegistryMockRecorder) GetInfoElement(name, enterpriseID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInfoElement", reflect.TypeOf((*MockIPFIXRegistry)(nil).GetInfoElement), name, enterpriseID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LoadRegistry mocks base method.
-func (m *MockIPFIXRegistry) LoadRegistry() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "LoadRegistry")
-}
+func (m *MockIPFIXRegistry) LoadRegistry() { _ = "STUB: not implemented"; return }
 
 // LoadRegistry indicates an expected call of LoadRegistry.
 func (mr *MockIPFIXRegistryMockRecorder) LoadRegistry() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadRegistry", reflect.TypeOf((*MockIPFIXRegistry)(nil).LoadRegistry))
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -27,77 +27,41 @@ type ClusterGroupSpecBuilder struct {
 }
 
 func (b *ClusterGroupSpecBuilder) Get() *crdv1beta1.ClusterGroup {
-	return &crdv1beta1.ClusterGroup{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: b.Name,
-		},
-		Spec: b.Spec,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterGroupSpecBuilder) SetName(name string) *ClusterGroupSpecBuilder {
-	b.Name = name
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterGroupSpecBuilder) SetPodSelector(podSelector map[string]string, podSelectorMatchExp []metav1.LabelSelectorRequirement) *ClusterGroupSpecBuilder {
-	var ps *metav1.LabelSelector
-	if podSelector != nil {
-		ps = &metav1.LabelSelector{
-			MatchLabels: podSelector,
-		}
-		if podSelectorMatchExp != nil {
-			ps.MatchExpressions = podSelectorMatchExp
-		}
-	}
-	b.Spec.PodSelector = ps
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterGroupSpecBuilder) SetNamespaceSelector(nsSelector map[string]string, nsSelectorMatchExp []metav1.LabelSelectorRequirement) *ClusterGroupSpecBuilder {
-	var ns *metav1.LabelSelector
-	if nsSelector != nil {
-		ns = &metav1.LabelSelector{
-			MatchLabels: nsSelector,
-		}
-		if nsSelectorMatchExp != nil {
-			ns.MatchExpressions = nsSelectorMatchExp
-		}
-	}
-	b.Spec.NamespaceSelector = ns
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterGroupSpecBuilder) SetNodeSelector(matchLabels map[string]string) *ClusterGroupSpecBuilder {
-	var nodeSelector *metav1.LabelSelector
-	if matchLabels != nil {
-		nodeSelector = &metav1.LabelSelector{
-			MatchLabels: matchLabels,
-		}
-	}
-	b.Spec.NodeSelector = nodeSelector
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterGroupSpecBuilder) SetIPBlocks(ipBlocks []crdv1beta1.IPBlock) *ClusterGroupSpecBuilder {
-	b.Spec.IPBlocks = ipBlocks
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterGroupSpecBuilder) SetServiceReference(svcNS, svcName string) *ClusterGroupSpecBuilder {
-	svcRef := &crdv1beta1.NamespacedName{
-		Namespace: svcNS,
-		Name:      svcName,
-	}
-	b.Spec.ServiceReference = svcRef
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *ClusterGroupSpecBuilder) SetChildGroups(cgs []string) *ClusterGroupSpecBuilder {
-	var childGroups []crdv1beta1.ClusterGroupReference
-	for _, c := range cgs {
-		childGroups = append(childGroups, crdv1beta1.ClusterGroupReference(c))
-	}
-	b.Spec.ChildGroups = childGroups
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }

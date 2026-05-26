@@ -29,22 +29,6 @@ type fakeAppliedToGroups struct {
 }
 
 func newFakeAppliedToGroups(fake *FakeControlplaneV1beta2) controlplanev1beta2.AppliedToGroupInterface {
-	return &fakeAppliedToGroups{
-		gentype.NewFakeClientWithList[*v1beta2.AppliedToGroup, *v1beta2.AppliedToGroupList](
-			fake.Fake,
-			"",
-			v1beta2.SchemeGroupVersion.WithResource("appliedtogroups"),
-			v1beta2.SchemeGroupVersion.WithKind("AppliedToGroup"),
-			func() *v1beta2.AppliedToGroup { return &v1beta2.AppliedToGroup{} },
-			func() *v1beta2.AppliedToGroupList { return &v1beta2.AppliedToGroupList{} },
-			func(dst, src *v1beta2.AppliedToGroupList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta2.AppliedToGroupList) []*v1beta2.AppliedToGroup {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1beta2.AppliedToGroupList, items []*v1beta2.AppliedToGroup) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(controlplanev1beta2.AppliedToGroupInterface)
 }

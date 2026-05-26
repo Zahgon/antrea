@@ -29,14 +29,6 @@ type fakeSupportBundles struct {
 }
 
 func newFakeSupportBundles(fake *FakeSystemV1beta1) systemv1beta1.SupportBundleInterface {
-	return &fakeSupportBundles{
-		gentype.NewFakeClient[*v1beta1.SupportBundle](
-			fake.Fake,
-			"",
-			v1beta1.SchemeGroupVersion.WithResource("supportbundles"),
-			v1beta1.SchemeGroupVersion.WithKind("SupportBundle"),
-			func() *v1beta1.SupportBundle { return &v1beta1.SupportBundle{} },
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(systemv1beta1.SupportBundleInterface)
 }

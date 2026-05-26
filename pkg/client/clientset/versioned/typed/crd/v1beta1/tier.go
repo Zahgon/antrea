@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	crdv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -52,15 +51,4 @@ type tiers struct {
 }
 
 // newTiers returns a Tiers
-func newTiers(c *CrdV1beta1Client) *tiers {
-	return &tiers{
-		gentype.NewClientWithList[*crdv1beta1.Tier, *crdv1beta1.TierList](
-			"tiers",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *crdv1beta1.Tier { return &crdv1beta1.Tier{} },
-			func() *crdv1beta1.TierList { return &crdv1beta1.TierList{} },
-		),
-	}
-}
+func newTiers(c *CrdV1beta1Client) *tiers { _ = "STUB: not implemented"; return nil }

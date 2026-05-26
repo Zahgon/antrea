@@ -18,16 +18,8 @@
 package iptables
 
 import (
-	"bytes"
-	"fmt"
-	"os/exec"
-	"strconv"
-	"time"
-
 	"github.com/coreos/go-iptables/iptables"
-	"golang.org/x/mod/semver"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/util/ipset"
 )
@@ -68,9 +60,7 @@ var protocolStrMap = map[Protocol]string{
 	ProtocolIPv6: "IPv6",
 }
 
-func (p Protocol) String() string {
-	return protocolStrMap[p]
-}
+func (p Protocol) String() string { _ = "STUB: not implemented"; return "" }
 
 const (
 	ProtocolDual Protocol = iota
@@ -154,283 +144,91 @@ type Client struct {
 	randomFullySupported bool
 }
 
-func New(enableIPV4, enableIPV6 bool) (*Client, error) {
-	ipts := make(map[Protocol]*iptables.IPTables)
-	var restoreWaitSupported, randomFullySupported bool
-	if enableIPV4 || enableIPV6 {
-		restoreWaitSupported = true
-		randomFullySupported = true
-	}
-	if enableIPV4 {
-		ipt, err := iptables.New()
-		if err != nil {
-			return nil, fmt.Errorf("error creating IPTables instance: %v", err)
-		}
-		ipts[ProtocolIPv4] = ipt
-		restoreWaitSupported = restoreWaitSupported && isRestoreWaitSupported(ipt)
-		randomFullySupported = randomFullySupported && isRandomFullySupported(ipt)
-	}
-	if enableIPV6 {
-		ip6t, err := iptables.NewWithProtocol(iptables.ProtocolIPv6)
-		if err != nil {
-			return nil, fmt.Errorf("error creating IPTables instance for IPv6: %v", err)
-		}
-		ipts[ProtocolIPv6] = ip6t
-		restoreWaitSupported = restoreWaitSupported && isRestoreWaitSupported(ip6t)
-		randomFullySupported = randomFullySupported && isRandomFullySupported(ip6t)
-	}
-	return &Client{ipts: ipts, restoreWaitSupported: restoreWaitSupported, randomFullySupported: randomFullySupported}, nil
-}
+func New(enableIPV4, enableIPV6 bool) (*Client, error) { _ = "STUB: not implemented"; return nil, nil }
 
-func isRestoreWaitSupported(ipt *iptables.IPTables) bool {
-	major, minor, patch := ipt.GetIptablesVersion()
-	version := fmt.Sprintf("v%d.%d.%d", major, minor, patch)
-	return semver.Compare(version, restoreWaitSupportedMinVersion) >= 0
-}
+func isRestoreWaitSupported(ipt *iptables.IPTables) bool { _ = "STUB: not implemented"; return false }
 
 func isRandomFullySupported(ipt *iptables.IPTables) bool {
+	_ = "STUB: not implemented"
 	// Note that even if the iptables version supports it, the kernel version may not.
 	// For SNAT rules, kernel >= 3.14 is required. For MASQUERADE rules, kernel >= 3.13 is required.
 	// Given how old these kernel releases are, we do not check the version here. This is
 	// consistent with how K8s checks for --random-fully support:
 	// https://github.com/kubernetes/kubernetes/blob/60c4c2b2521fb454ce69dee737e3eb91a25e0535/pkg/util/iptables/iptables.go#L239
-	major, minor, patch := ipt.GetIptablesVersion()
-	version := fmt.Sprintf("v%d.%d.%d", major, minor, patch)
-	return semver.Compare(version, randomFullySupportedMinVersion) >= 0
+	return false
 }
 
 // EnsureChain checks if target chain already exists, creates it if not.
 func (c *Client) EnsureChain(protocol Protocol, table string, chain string) error {
-	for p := range c.ipts {
-		ipt := c.ipts[p]
-		if !matchProtocol(ipt, protocol) {
-			continue
-		}
-		exists, err := ipt.ChainExists(table, chain)
-		if err != nil {
-			return fmt.Errorf("error checking if chain %s exists in table %s: %v", chain, table, err)
-		}
-		if exists {
-			continue
-		}
-		if err := ipt.NewChain(table, chain); err != nil {
-			return fmt.Errorf("error creating chain %s in table %s: %v", chain, table, err)
-		}
-		klog.V(2).InfoS("Created a chain", "chain", chain, "table", table, "protocol", p)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // ChainExists checks if target chain already exists in a table
 func (c *Client) ChainExists(protocol Protocol, table string, chain string) (bool, error) {
-	for p := range c.ipts {
-		ipt := c.ipts[p]
-		if !matchProtocol(ipt, protocol) {
-			continue
-		}
-		exists, err := ipt.ChainExists(table, chain)
-		if err != nil {
-			return false, fmt.Errorf("error checking if chain %s exists in table %s: %v", chain, table, err)
-		}
-		if !exists {
-			return false, nil
-		}
-		klog.V(2).InfoS("A chain exists", "chain", chain, "table", table, "protocol", p)
-	}
-	return true, nil
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
 // AppendRule checks if target rule already exists with the protocol, appends it if not.
 func (c *Client) AppendRule(protocol Protocol, table string, chain string, ruleSpec []string) error {
-	for p := range c.ipts {
-		ipt := c.ipts[p]
-		if !matchProtocol(ipt, protocol) {
-			continue
-		}
-		exist, err := ipt.Exists(table, chain, ruleSpec...)
-		if err != nil {
-			return fmt.Errorf("error checking if rule %v exists in table %s chain %s: %v", ruleSpec, table, chain, err)
-		}
-		if exist {
-			continue
-		}
-		if err := ipt.Append(table, chain, ruleSpec...); err != nil {
-			return fmt.Errorf("error appending rule %v to table %s chain %s: %v", ruleSpec, table, chain, err)
-		}
-		klog.V(2).InfoS("Appended a rule", "rule", ruleSpec, "table", table, "chain", chain, "protocol", p)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // InsertRule checks if target rule already exists, inserts it at the beginning of the chain if not.
 func (c *Client) InsertRule(protocol Protocol, table string, chain string, ruleSpec []string) error {
-	for p := range c.ipts {
-		ipt := c.ipts[p]
-		if !matchProtocol(ipt, protocol) {
-			continue
-		}
-		exist, err := ipt.Exists(table, chain, ruleSpec...)
-		if err != nil {
-			return fmt.Errorf("error checking if rule %v exists in table %s chain %s: %v", ruleSpec, table, chain, err)
-		}
-		if exist {
-			continue
-		}
-		if err := ipt.Insert(table, chain, 1, ruleSpec...); err != nil {
-			return fmt.Errorf("error inserting rule %v to table %s chain %s: %v", ruleSpec, table, chain, err)
-		}
-		klog.V(2).InfoS("Inserted a rule", "rule", ruleSpec, "table", table, "chain", chain, "index", 1)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func matchProtocol(ipt *iptables.IPTables, protocol Protocol) bool {
-	switch protocol {
-	case ProtocolDual:
-		return true
-	case ProtocolIPv4:
-		return ipt.Proto() == iptables.ProtocolIPv4
-	case ProtocolIPv6:
-		return ipt.Proto() == iptables.ProtocolIPv6
-	}
+	_ = "STUB: not implemented"
 	return false
 }
 
 // DeleteRule checks if target rule already exists, deletes the rule if found.
 func (c *Client) DeleteRule(protocol Protocol, table string, chain string, ruleSpec []string) error {
-	for p := range c.ipts {
-		ipt := c.ipts[p]
-		if !matchProtocol(ipt, protocol) {
-			continue
-		}
-		exist, err := ipt.Exists(table, chain, ruleSpec...)
-		if err != nil {
-			return fmt.Errorf("error checking if rule %v exists in table %s chain %s: %v", ruleSpec, table, chain, err)
-		}
-		if !exist {
-			continue
-		}
-		if err := ipt.Delete(table, chain, ruleSpec...); err != nil {
-			return fmt.Errorf("error deleting rule %v from table %s chain %s: %v", ruleSpec, table, chain, err)
-		}
-		klog.V(2).InfoS("Deleted a rule", "rule", ruleSpec, "table", table, "chain", chain, "protocol", p)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // DeleteChain deletes all rules from a chain in a table and then delete the chain.
 func (c *Client) DeleteChain(protocol Protocol, table string, chain string) error {
-	for p := range c.ipts {
-		ipt := c.ipts[p]
-		if !matchProtocol(ipt, protocol) {
-			continue
-		}
-		exists, err := ipt.ChainExists(table, chain)
-		if err != nil {
-			return fmt.Errorf("error checking if chain %s exists in table %s: %v", chain, table, err)
-		}
-		if !exists {
-			continue
-		}
-		if err = ipt.ClearChain(table, chain); err != nil {
-			return fmt.Errorf("error clearing rules from table %s chain %s: %v", table, chain, err)
-		}
-		if err = ipt.DeleteChain(table, chain); err != nil {
-			return fmt.Errorf("error deleting chain %s from table %s: %v", chain, table, err)
-		}
-		klog.V(2).InfoS("Deleted a chain", "chain", chain, "table", table, "protocol", p)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // ListRules lists all rules from a chain in a table.
 func (c *Client) ListRules(protocol Protocol, table string, chain string) (map[Protocol][]string, error) {
-	allRules := make(map[Protocol][]string)
-	for p := range c.ipts {
-		ipt := c.ipts[p]
-		if !matchProtocol(ipt, protocol) {
-			continue
-		}
-		rules, err := ipt.List(table, chain)
-		if err != nil {
-			return nil, fmt.Errorf("error getting rules from table %s chain %s protocol %s: %v", table, chain, p, err)
-		}
-		allRules[p] = rules
-	}
-	return allRules, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Restore calls iptable-restore to restore iptables with the provided content.
 // If flush is true, all previous contents of the respective tables will be flushed.
 // Otherwise only involved chains will be flushed. Restore supports "ip6tables-restore" for IPv6.
 func (c *Client) Restore(data string, flush bool, useIPv6 bool) error {
-	var args []string
-	if !flush {
-		args = append(args, "--noflush")
-	}
-	iptablesCmd := "iptables-restore"
-	if useIPv6 {
-		iptablesCmd = "ip6tables-restore"
-	}
-	cmd := exec.Command(iptablesCmd, args...)
-	cmd.Stdin = bytes.NewBuffer([]byte(data))
-	stderr := &bytes.Buffer{}
-	cmd.Stderr = stderr
-	// We acquire xtables lock for iptables-restore to prevent it from conflicting
-	// with iptables/iptables-restore which might being called by kube-proxy.
-	// iptables supports "--wait" option and go-iptables has enabled it.
-	// iptables-restore doesn't support the option until 1.6.2. We use "-w" if the
-	// detected version is greater than or equal to 1.6.2, otherwise we acquire the
-	// file lock explicitly.
-	// Note that we cannot just acquire the file lock explicitly for all cases because
-	// iptables-restore will try acquiring the lock with or without "-w" provided since 1.6.2.
-	if c.restoreWaitSupported {
-		cmd.Args = append(cmd.Args, "-w", strconv.Itoa(waitSeconds), "-W", strconv.Itoa(waitIntervalMicroSeconds))
-	} else {
-		unlockFunc, err := Lock(XtablesLockFilePath, waitSeconds*time.Second)
-		if err != nil {
-			return err
-		}
-		defer unlockFunc()
-	}
-	if err := cmd.Run(); err != nil {
-		klog.ErrorS(err, "Failed to execute iptables command", "iptablesCmd", iptablesCmd, "stdin", data, "stderr", stderr)
-		return fmt.Errorf("error executing %s: %v", iptablesCmd, err)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
+// We acquire xtables lock for iptables-restore to prevent it from conflicting
+// with iptables/iptables-restore which might being called by kube-proxy.
+// iptables supports "--wait" option and go-iptables has enabled it.
+// iptables-restore doesn't support the option until 1.6.2. We use "-w" if the
+// detected version is greater than or equal to 1.6.2, otherwise we acquire the
+// file lock explicitly.
+// Note that we cannot just acquire the file lock explicitly for all cases because
+// iptables-restore will try acquiring the lock with or without "-w" provided since 1.6.2.
+
 // Save calls iptables-saves to dump chains and tables in iptables.
-func (c *Client) Save() ([]byte, error) {
-	var output []byte
-	for p := range c.ipts {
-		var cmd string
-		ipt := c.ipts[p]
-		switch ipt.Proto() {
-		case iptables.ProtocolIPv6:
-			cmd = "ip6tables-save"
-		default:
-			cmd = "iptables-save"
-		}
-		data, err := exec.Command(cmd, "-c").CombinedOutput()
-		if err != nil {
-			return nil, err
-		}
-		output = append(output, data...)
-	}
-	return output, nil
-}
+func (c *Client) Save() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // HasRandomFully returns true if the iptables version supports --random-fully for SNAT and
 // MASQUERADE rules.
-func (c *Client) HasRandomFully() bool {
-	return c.randomFullySupported
-}
+func (c *Client) HasRandomFully() bool { _ = "STUB: not implemented"; return false }
 
-func MakeChainLine(chain string) string {
-	return fmt.Sprintf(":%s - [0:0]", chain)
-}
+func MakeChainLine(chain string) string { _ = "STUB: not implemented"; return "" }
 
-func IsIPv6Protocol(protocol Protocol) bool {
-	return protocol == ProtocolIPv6
-}
+func IsIPv6Protocol(protocol Protocol) bool { _ = "STUB: not implemented"; return false }

@@ -14,10 +14,4 @@
 
 package v1beta2
 
-import (
-	"net"
-)
-
-func (a IPAddress) MarshalYAML() (interface{}, error) {
-	return net.IP(a).String(), nil
-}
+func (a IPAddress) MarshalYAML() (interface{}, error) { _ = "STUB: not implemented"; return nil, nil }

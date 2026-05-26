@@ -29,22 +29,6 @@ type fakeAntreaControllerInfos struct {
 }
 
 func newFakeAntreaControllerInfos(fake *FakeCrdV1beta1) crdv1beta1.AntreaControllerInfoInterface {
-	return &fakeAntreaControllerInfos{
-		gentype.NewFakeClientWithList[*v1beta1.AntreaControllerInfo, *v1beta1.AntreaControllerInfoList](
-			fake.Fake,
-			"",
-			v1beta1.SchemeGroupVersion.WithResource("antreacontrollerinfos"),
-			v1beta1.SchemeGroupVersion.WithKind("AntreaControllerInfo"),
-			func() *v1beta1.AntreaControllerInfo { return &v1beta1.AntreaControllerInfo{} },
-			func() *v1beta1.AntreaControllerInfoList { return &v1beta1.AntreaControllerInfoList{} },
-			func(dst, src *v1beta1.AntreaControllerInfoList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta1.AntreaControllerInfoList) []*v1beta1.AntreaControllerInfo {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1beta1.AntreaControllerInfoList, items []*v1beta1.AntreaControllerInfo) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.AntreaControllerInfoInterface)
 }

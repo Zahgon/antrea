@@ -22,9 +22,8 @@ package v1alpha1
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -48,17 +47,13 @@ type flowExportServiceClient struct {
 }
 
 func NewFlowExportServiceClient(cc grpc.ClientConnInterface) FlowExportServiceClient {
-	return &flowExportServiceClient{cc}
+	_ = "STUB: not implemented"
+	return *new(FlowExportServiceClient)
 }
 
 func (c *flowExportServiceClient) Export(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[ExportRequest, ExportResponse], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &FlowExportService_ServiceDesc.Streams[0], FlowExportService_Export_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[ExportRequest, ExportResponse]{ClientStream: stream}
-	return x, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
@@ -80,31 +75,39 @@ type FlowExportServiceServer interface {
 type UnimplementedFlowExportServiceServer struct{}
 
 func (UnimplementedFlowExportServiceServer) Export(grpc.ClientStreamingServer[ExportRequest, ExportResponse]) error {
-	return status.Error(codes.Unimplemented, "method Export not implemented")
+	_ = "STUB: not implemented"
+	return nil
 }
-func (UnimplementedFlowExportServiceServer) mustEmbedUnimplementedFlowExportServiceServer() {}
-func (UnimplementedFlowExportServiceServer) testEmbeddedByValue()                           {}
 
-// UnsafeFlowExportServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to FlowExportServiceServer will
-// result in compilation errors.
+func (UnimplementedFlowExportServiceServer) mustEmbedUnimplementedFlowExportServiceServer() {
+	_ = "STUB: not implemented"
+	return
+}
+func (UnimplementedFlowExportServiceServer) testEmbeddedByValue() {
+	_ = "STUB: not implemented"
+	return
+
+	// UnsafeFlowExportServiceServer may be embedded to opt out of forward compatibility for this service.
+	// Use of this interface is not recommended, as added methods to FlowExportServiceServer will
+	// result in compilation errors.
+}
+
 type UnsafeFlowExportServiceServer interface {
 	mustEmbedUnimplementedFlowExportServiceServer()
 }
 
 func RegisterFlowExportServiceServer(s grpc.ServiceRegistrar, srv FlowExportServiceServer) {
+	_ = "STUB: not implemented"
 	// If the following call panics, it indicates UnimplementedFlowExportServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&FlowExportService_ServiceDesc, srv)
+	return
 }
 
 func _FlowExportService_Export_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(FlowExportServiceServer).Export(&grpc.GenericServerStream[ExportRequest, ExportResponse]{ServerStream: stream})
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.

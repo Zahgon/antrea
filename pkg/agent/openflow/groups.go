@@ -37,39 +37,16 @@ type groupAllocator struct {
 // Allocate allocates a new group ID. It allocates id from the "recycled" slices first, then increases the groupIDCounter if no
 // recycled ids exist.
 func (a *groupAllocator) Allocate() binding.GroupIDType {
-	a.mu.Lock()
-	defer a.mu.Unlock()
-	var id binding.GroupIDType
-	if len(a.recycled) != 0 {
-		id = a.recycled[len(a.recycled)-1]
-		a.recycled = a.recycled[:len(a.recycled)-1]
-	} else {
-		a.groupIDCounter += 1
-		id = a.groupIDCounter
-	}
-	return id
+	_ = "STUB: not implemented"
+	return *new(binding.GroupIDType)
 }
 
 // Next is a readonly method which returns the next available group ID. It's useful in tests to predict the group ID.
 func (a *groupAllocator) Next() binding.GroupIDType {
-	a.mu.Lock()
-	defer a.mu.Unlock()
-	var id binding.GroupIDType
-	if len(a.recycled) != 0 {
-		id = a.recycled[len(a.recycled)-1]
-	} else {
-		id = a.groupIDCounter + 1
-	}
-	return id
+	_ = "STUB: not implemented"
+	return *new(binding.GroupIDType)
 }
 
-func (a *groupAllocator) Release(id binding.GroupIDType) {
-	a.mu.Lock()
-	defer a.mu.Unlock()
+func (a *groupAllocator) Release(id binding.GroupIDType) { _ = "STUB: not implemented"; return }
 
-	a.recycled = append(a.recycled, id)
-}
-
-func NewGroupAllocator() GroupAllocator {
-	return &groupAllocator{}
-}
+func NewGroupAllocator() GroupAllocator { _ = "STUB: not implemented"; return *new(GroupAllocator) }

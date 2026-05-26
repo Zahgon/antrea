@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	memberlist "antrea.io/antrea/v2/pkg/agent/memberlist"
 	gomock "go.uber.org/mock/gomock"
 	sets "k8s.io/apimachinery/pkg/util/sets"
@@ -46,78 +44,58 @@ type MockInterfaceMockRecorder struct {
 
 // NewMockInterface creates a new mock instance.
 func NewMockInterface(ctrl *gomock.Controller) *MockInterface {
-	mock := &MockInterface{ctrl: ctrl}
-	mock.recorder = &MockInterfaceMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddClusterEventHandler mocks base method.
+	return nil
 }
 
-// AddClusterEventHandler mocks base method.
 func (m *MockInterface) AddClusterEventHandler(handler memberlist.ClusterNodeEventHandler) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "AddClusterEventHandler", handler)
+	_ = "STUB: not implemented"
+	return
 }
 
 // AddClusterEventHandler indicates an expected call of AddClusterEventHandler.
 func (mr *MockInterfaceMockRecorder) AddClusterEventHandler(handler any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddClusterEventHandler", reflect.TypeOf((*MockInterface)(nil).AddClusterEventHandler), handler)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AliveNodes mocks base method.
-func (m *MockInterface) AliveNodes() sets.Set[string] {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AliveNodes")
-	ret0, _ := ret[0].(sets.Set[string])
-	return ret0
-}
+func (m *MockInterface) AliveNodes() sets.Set[string] { _ = "STUB: not implemented"; return nil }
 
 // AliveNodes indicates an expected call of AliveNodes.
 func (mr *MockInterfaceMockRecorder) AliveNodes() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AliveNodes", reflect.TypeOf((*MockInterface)(nil).AliveNodes))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SelectNodeForIP mocks base method.
 func (m *MockInterface) SelectNodeForIP(ip, externalIPPool string, filters ...func(string) bool) (string, error) {
-	m.ctrl.T.Helper()
-	varargs := []any{ip, externalIPPool}
-	for _, a := range filters {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "SelectNodeForIP", varargs...)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 // SelectNodeForIP indicates an expected call of SelectNodeForIP.
 func (mr *MockInterfaceMockRecorder) SelectNodeForIP(ip, externalIPPool any, filters ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ip, externalIPPool}, filters...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectNodeForIP", reflect.TypeOf((*MockInterface)(nil).SelectNodeForIP), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ShouldSelectIP mocks base method.
 func (m *MockInterface) ShouldSelectIP(ip, pool string, filters ...func(string) bool) (bool, error) {
-	m.ctrl.T.Helper()
-	varargs := []any{ip, pool}
-	for _, a := range filters {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "ShouldSelectIP", varargs...)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
 // ShouldSelectIP indicates an expected call of ShouldSelectIP.
 func (mr *MockInterfaceMockRecorder) ShouldSelectIP(ip, pool any, filters ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ip, pool}, filters...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShouldSelectIP", reflect.TypeOf((*MockInterface)(nil).ShouldSelectIP), varargs...)
+	_ = "STUB: not implemented"
+	return nil
 }

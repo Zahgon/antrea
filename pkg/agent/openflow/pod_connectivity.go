@@ -23,7 +23,6 @@ import (
 	"antrea.io/antrea/v2/pkg/agent/openflow/cookie"
 	"antrea.io/antrea/v2/pkg/apis/crd/v1alpha2"
 	binding "antrea.io/antrea/v2/pkg/ovs/openflow"
-	"antrea.io/antrea/v2/pkg/util/runtime"
 )
 
 type featurePodConnectivity struct {
@@ -57,9 +56,7 @@ type featurePodConnectivity struct {
 	category cookie.Category
 }
 
-func (f *featurePodConnectivity) getFeatureName() string {
-	return "PodConnectivity"
-}
+func (f *featurePodConnectivity) getFeatureName() string { _ = "STUB: not implemented"; return "" }
 
 func newFeaturePodConnectivity(
 	cookieAllocator cookie.Allocator,
@@ -72,140 +69,31 @@ func newFeaturePodConnectivity(
 	enableDSR bool,
 	enableTrafficControl bool,
 ) *featurePodConnectivity {
-	ctZones := make(map[binding.Protocol]int)
-	snatCtZones := make(map[binding.Protocol]int)
-	gatewayIPs := make(map[binding.Protocol]net.IP)
-	localCIDRs := make(map[binding.Protocol]net.IPNet)
-	nodeIPs := make(map[binding.Protocol]net.IP)
-	ipCtZoneTypeRegMarks := make(map[binding.Protocol]*binding.RegMark)
-	for _, ipProtocol := range ipProtocols {
-		switch ipProtocol {
-		case binding.ProtocolIP:
-			ctZones[ipProtocol] = CtZone
-			snatCtZones[ipProtocol] = SNATCtZone
-			gatewayIPs[ipProtocol] = nodeConfig.GatewayConfig.IPv4
-			nodeIPs[ipProtocol] = nodeConfig.NodeIPv4Addr.IP
-			if nodeConfig.PodIPv4CIDR != nil {
-				localCIDRs[ipProtocol] = *nodeConfig.PodIPv4CIDR
-			}
-			ipCtZoneTypeRegMarks[ipProtocol] = IPCtZoneTypeRegMark
-		case binding.ProtocolIPv6:
-			ctZones[ipProtocol] = CtZoneV6
-			snatCtZones[ipProtocol] = SNATCtZoneV6
-			gatewayIPs[ipProtocol] = nodeConfig.GatewayConfig.IPv6
-			nodeIPs[ipProtocol] = nodeConfig.NodeIPv6Addr.IP
-			if nodeConfig.PodIPv6CIDR != nil {
-				localCIDRs[ipProtocol] = *nodeConfig.PodIPv6CIDR
-			}
-			ipCtZoneTypeRegMarks[ipProtocol] = IPv6CtZoneTypeRegMark
-		}
-	}
-
-	gatewayPort := uint32(config.DefaultHostGatewayOFPort)
-	if nodeConfig.GatewayConfig != nil {
-		gatewayPort = nodeConfig.GatewayConfig.OFPort
-	}
-	uplinkPort := uint32(0)
-	if nodeConfig.UplinkNetConfig != nil {
-		uplinkPort = nodeConfig.UplinkNetConfig.OFPort
-	}
-
-	return &featurePodConnectivity{
-		cookieAllocator:       cookieAllocator,
-		ipProtocols:           ipProtocols,
-		nodeCachedFlows:       newFlowCategoryCache(),
-		podCachedFlows:        newFlowCategoryCache(),
-		tcCachedFlows:         newFlowCategoryCache(),
-		gatewayIPs:            gatewayIPs,
-		gatewayPort:           gatewayPort,
-		uplinkPort:            uplinkPort,
-		hostIfacePort:         nodeConfig.HostInterfaceOFPort,
-		tunnelPort:            nodeConfig.TunnelOFPort,
-		ctZones:               ctZones,
-		snatCtZones:           snatCtZones,
-		localCIDRs:            localCIDRs,
-		nodeIPs:               nodeIPs,
-		nodeConfig:            nodeConfig,
-		networkConfig:         networkConfig,
-		connectUplinkToBridge: connectUplinkToBridge,
-		enableTrafficControl:  enableTrafficControl,
-		ipCtZoneTypeRegMarks:  ipCtZoneTypeRegMarks,
-		ctZoneSrcField:        getZoneSrcField(connectUplinkToBridge),
-		enableMulticast:       enableMulticast,
-		proxyAll:              proxyAll,
-		enableDSR:             enableDSR,
-		category:              cookie.PodConnectivity,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (f *featurePodConnectivity) initFlows() []*openflow15.FlowMod {
-	var flows []binding.Flow
-	gatewayMAC := f.nodeConfig.GatewayConfig.MAC
-
-	for _, ipProtocol := range f.ipProtocols {
-		switch ipProtocol {
-		case binding.ProtocolIPv6:
-			flows = append(flows, f.ipv6Flows()...)
-		case binding.ProtocolIP:
-			flows = append(flows, f.arpNormalFlow())
-			flows = append(flows, f.arpSpoofGuardFlow(f.gatewayIPs[ipProtocol], gatewayMAC, f.gatewayPort))
-			if f.connectUplinkToBridge {
-				flows = append(flows, f.arpResponderFlow(f.gatewayIPs[ipProtocol], gatewayMAC))
-				flows = append(flows, f.hostBridgeUplinkVLANFlows()...)
-			}
-			if runtime.IsWindowsPlatform() || f.connectUplinkToBridge {
-				// This installs the flows between bridge local port and uplink port to support host networking.
-				flows = append(flows, f.hostBridgeUplinkFlows()...)
-			}
-		}
-	}
-	if f.connectUplinkToBridge {
-		flows = append(flows, f.l3FwdFlowToNode()...)
-	}
-	flows = append(flows, f.l3FwdFlowToExternal())
-	flows = append(flows, f.decTTLFlows()...)
-	flows = append(flows, f.conntrackFlows()...)
-	flows = append(flows, f.l2ForwardOutputFlow())
-	flows = append(flows, f.gatewayClassifierFlows()...)
-	flows = append(flows, f.l2ForwardCalcFlow(gatewayMAC, f.gatewayPort))
-	flows = append(flows, f.gatewayIPSpoofGuardFlows()...)
-	flows = append(flows, f.l3FwdFlowToGateway()...)
-	// Add flow to ensure the liveliness check packet could be forwarded correctly.
-	flows = append(flows, f.localProbeFlows()...)
-
-	if f.tunnelPort != 0 {
-		flows = append(flows, f.tunnelClassifierFlow(f.tunnelPort))
-		flows = append(flows, f.l2ForwardCalcFlow(GlobalVirtualMAC, f.tunnelPort))
-	}
-
-	if f.networkConfig.TrafficEncapMode.IsNetworkPolicyOnly() {
-		flows = append(flows, f.l3FwdFlowRouteToGW()...)
-		// If IPv6 is enabled, this flow will never get hit. Replies any ARP request with the same global virtual MAC.
-		if f.networkConfig.IPv4Enabled {
-			flows = append(flows, f.arpResponderStaticFlow())
-		}
-	} else {
-		// If NetworkPolicyOnly mode is enabled, IPAM is implemented by the primary CNI, which may not use the Pod CIDR
-		// of the Node. Therefore, it doesn't make sense to install flows for the Pod CIDR. Individual flow for each local
-		// Pod IP will take care of routing the traffic to destination Pod.
-		flows = append(flows, f.l3FwdFlowToLocalPodCIDR()...)
-	}
-	if f.enableTrafficControl {
-		flows = append(flows, f.trafficControlCommonFlows()...)
-	}
-	return GetFlowModMessages(flows, binding.AddMessage)
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// This installs the flows between bridge local port and uplink port to support host networking.
+
+// Add flow to ensure the liveliness check packet could be forwarded correctly.
+
+// If IPv6 is enabled, this flow will never get hit. Replies any ARP request with the same global virtual MAC.
+
+// If NetworkPolicyOnly mode is enabled, IPAM is implemented by the primary CNI, which may not use the Pod CIDR
+// of the Node. Therefore, it doesn't make sense to install flows for the Pod CIDR. Individual flow for each local
+// Pod IP will take care of routing the traffic to destination Pod.
 
 func (f *featurePodConnectivity) replayFlows() []*openflow15.FlowMod {
-	var flows []*openflow15.FlowMod
-
-	// Get cached flows.
-	for _, cachedFlows := range []*flowCategoryCache{f.nodeCachedFlows, f.podCachedFlows, f.tcCachedFlows} {
-		flows = append(flows, getCachedFlowMessages(cachedFlows)...)
-	}
-
-	return flows
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Get cached flows.
 
 // trafficControlMarkFlows generates the flows to mark the packets that need to be redirected or mirrored.
 func (f *featurePodConnectivity) trafficControlMarkFlows(sourceOFPorts []uint32,
@@ -213,88 +101,47 @@ func (f *featurePodConnectivity) trafficControlMarkFlows(sourceOFPorts []uint32,
 	direction v1alpha2.Direction,
 	action v1alpha2.TrafficControlAction,
 	priority uint16) []binding.Flow {
-	cookieID := f.cookieAllocator.Request(f.category).Raw()
-	var actionRegMark *binding.RegMark
-	switch action {
-	case v1alpha2.ActionRedirect:
-		actionRegMark = TrafficControlRedirectRegMark
-	case v1alpha2.ActionMirror:
-		actionRegMark = TrafficControlMirrorRegMark
-	}
-	var flows []binding.Flow
-	for _, port := range sourceOFPorts {
-		if direction == v1alpha2.DirectionIngress || direction == v1alpha2.DirectionBoth {
-			// This generates the flow to mark the packets destined for a provided port.
-			flows = append(flows, TrafficControlTable.ofTable.BuildFlow(priority).
-				Cookie(cookieID).
-				MatchRegFieldWithValue(TargetOFPortField, port).
-				Action().LoadToRegField(TrafficControlTargetOFPortField, targetOFPort).
-				Action().LoadRegMark(actionRegMark).
-				Action().NextTable().
-				Done())
-		}
-		// This generates the flow to mark the packets sourced from a provided port.
-		if direction == v1alpha2.DirectionEgress || direction == v1alpha2.DirectionBoth {
-			flows = append(flows, TrafficControlTable.ofTable.BuildFlow(priority).
-				Cookie(cookieID).
-				MatchInPort(port).
-				Action().LoadToRegField(TrafficControlTargetOFPortField, targetOFPort).
-				Action().LoadRegMark(actionRegMark).
-				Action().NextTable().
-				Done())
-		}
-	}
-	return flows
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// This generates the flow to mark the packets destined for a provided port.
+
+// This generates the flow to mark the packets sourced from a provided port.
 
 // trafficControlReturnClassifierFlow generates the flow to mark the packets from traffic control return port and forward
 // the packets to stageRouting directly. Note that, for the packets which are originally to be output to a tunnel port,
 // value of NXM_NX_TUN_IPV4_DST for the returned packets needs to be loaded in stageRouting.
 func (f *featurePodConnectivity) trafficControlReturnClassifierFlow(returnOFPort uint32) binding.Flow {
-	return ClassifierTable.ofTable.BuildFlow(priorityNormal).
-		Cookie(f.cookieAllocator.Request(f.category).Raw()).
-		MatchInPort(returnOFPort).
-		Action().LoadRegMark(FromTCReturnRegMark).
-		Action().GotoStage(stageRouting).
-		Done()
+	_ = "STUB: not implemented"
+	return *new(binding.Flow)
 }
 
 // trafficControlCommonFlows generates the common flows for traffic control.
 func (f *featurePodConnectivity) trafficControlCommonFlows() []binding.Flow {
-	cookieID := f.cookieAllocator.Request(f.category).Raw()
-	return []binding.Flow{
-		// This generates the flow to output packets to the original target port as well as mirror the packets to the target
-		// traffic control port.
-		OutputTable.ofTable.BuildFlow(priorityHigh+1).
-			Cookie(cookieID).
-			MatchRegMark(OutputToOFPortRegMark, TrafficControlMirrorRegMark).
-			Action().OutputToRegField(TargetOFPortField).
-			Action().OutputToRegField(TrafficControlTargetOFPortField).
-			Done(),
-		// This generates the flow to output the packets to be redirected to the target traffic control port.
-		OutputTable.ofTable.BuildFlow(priorityHigh+1).
-			Cookie(cookieID).
-			MatchRegMark(OutputToOFPortRegMark, TrafficControlRedirectRegMark).
-			Action().OutputToRegField(TrafficControlTargetOFPortField).
-			Done(),
-		// This generates the flow to forward the returned packets (with FromTCReturnRegMark) to stageOutput directly
-		// after loading output port number to reg1 in L2ForwardingCalcTable.
-		TrafficControlTable.ofTable.BuildFlow(priorityHigh).
-			Cookie(cookieID).
-			MatchRegMark(OutputToOFPortRegMark, FromTCReturnRegMark).
-			Action().GotoStage(stageOutput).
-			Done(),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
+// This generates the flow to output packets to the original target port as well as mirror the packets to the target
+// traffic control port.
+
+// This generates the flow to output the packets to be redirected to the target traffic control port.
+
+// This generates the flow to forward the returned packets (with FromTCReturnRegMark) to stageOutput directly
+// after loading output port number to reg1 in L2ForwardingCalcTable.
+
 func (f *featurePodConnectivity) initGroups() []binding.OFEntry {
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (f *featurePodConnectivity) replayGroups() []binding.OFEntry {
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (f *featurePodConnectivity) replayMeters() []binding.OFEntry {
+	_ = "STUB: not implemented"
 	return nil
 }

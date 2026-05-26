@@ -21,5 +21,6 @@ import (
 )
 
 func (c *fakeNetworkPolicies) UpdateStatus(ctx context.Context, name string, status *v1beta2.NetworkPolicyStatus) error {
+	_ = "STUB: not implemented"
 	return nil
 }

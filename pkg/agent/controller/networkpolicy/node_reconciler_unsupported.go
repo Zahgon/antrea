@@ -25,25 +25,28 @@ import (
 type nodeReconciler struct{}
 
 func newNodeReconciler(routeClient route.Interface, ipv4Enabled, ipv6Enabled bool) *nodeReconciler {
-	return &nodeReconciler{}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (r *nodeReconciler) Reconcile(rule *CompletedRule) error {
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (r *nodeReconciler) BatchReconcile(rules []*CompletedRule) error {
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (r *nodeReconciler) Forget(ruleID string) error {
-	return nil
-}
+func (r *nodeReconciler) Forget(ruleID string) error { _ = "STUB: not implemented"; return nil }
 
 func (r *nodeReconciler) GetRuleByFlowID(ruleID uint32) (*types.PolicyRule, bool, error) {
+	_ = "STUB: not implemented"
 	return nil, false, nil
 }
 
 func (r *nodeReconciler) RunIDAllocatorWorker(stopCh <-chan struct{}) {
-
+	_ = "STUB: not implemented"
+	return
 }

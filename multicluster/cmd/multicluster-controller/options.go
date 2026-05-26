@@ -15,19 +15,10 @@
 package main
 
 import (
-	"fmt"
-	"net"
-	"os"
-
 	"github.com/spf13/pflag"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/runtime/serializer"
-	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
-	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
 	mcsv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
-	"antrea.io/antrea/v2/multicluster/controllers/multicluster/common"
 )
 
 type Options struct {
@@ -58,88 +49,21 @@ type Options struct {
 	WebhookConfig mcsv1alpha1.ControllerWebhook
 }
 
-func newOptions() *Options {
-	return &Options{
-		SelfSignedCert: true,
-	}
-}
+func newOptions() *Options { _ = "STUB: not implemented"; return nil }
 
-func (o *Options) complete(args []string) error {
-	var err error
-	o.setDefaults()
-	ctrlConfig := &mcsv1alpha1.MultiClusterConfig{}
-	if len(o.configFile) > 0 {
-		klog.InfoS("Loading config", "file", o.configFile)
-		if err = o.loadConfigFromFile(ctrlConfig); err != nil {
-			return err
-		}
-		if ctrlConfig.ServiceCIDR != "" {
-			if _, _, err := net.ParseCIDR(ctrlConfig.ServiceCIDR); err != nil {
-				return fmt.Errorf("failed to parse serviceCIDR, invalid CIDR string %s", ctrlConfig.ServiceCIDR)
-			}
-		}
-		cidrs := []string{}
-		for _, cidr := range ctrlConfig.PodCIDRs {
-			if _, _, err := net.ParseCIDR(cidr); err != nil && cidr != "" {
-				return fmt.Errorf("failed to parse podCIDRs, invalid CIDR string %s", cidr)
-			}
-			if cidr != "" {
-				cidrs = append(cidrs, cidr)
-			}
-		}
-		o.ServiceCIDR = ctrlConfig.ServiceCIDR
-		o.PodCIDRs = cidrs
-		o.GatewayIPPrecedence = ctrlConfig.GatewayIPPrecedence
-		o.WebhookConfig = ctrlConfig.Webhook
-		if ctrlConfig.EndpointIPType == "" {
-			o.EndpointIPType = common.EndpointIPTypeClusterIP
-		} else {
-			if ctrlConfig.EndpointIPType != common.EndpointIPTypeClusterIP && ctrlConfig.EndpointIPType != common.EndpointIPTypePodIP {
-				return fmt.Errorf("invalid endpointIPType: %s, only 'PodIP' or 'ClusterIP' is allowed", ctrlConfig.EndpointIPType)
-			}
-			o.EndpointIPType = ctrlConfig.EndpointIPType
-		}
-		o.EnableStretchedNetworkPolicy = ctrlConfig.EnableStretchedNetworkPolicy
-		klog.InfoS("Using config from file", "config", o.configFile)
-	} else {
-		klog.InfoS("Using default config")
-	}
-	return nil
-}
+func (o *Options) complete(args []string) error { _ = "STUB: not implemented"; return nil }
 
 // addFlags adds flags to fs and binds them to options.
-func (o *Options) addFlags(fs *pflag.FlagSet) {
-	fs.StringVar(&o.configFile, "config", o.configFile, "The path to the configuration file")
-}
+func (o *Options) addFlags(fs *pflag.FlagSet) { _ = "STUB: not implemented"; return }
 
-func (o *Options) setDefaults() {
-	o.options = ctrl.Options{
-		Scheme: scheme,
-		Metrics: metricsserver.Options{
-			BindAddress: "0",
-		},
-		HealthProbeBindAddress: ":8080",
-	}
-}
+func (o *Options) setDefaults() { _ = "STUB: not implemented"; return }
 
 func (o *Options) loadConfig(data []byte, multiclusterConfig *mcsv1alpha1.MultiClusterConfig) error {
-	codecs := serializer.NewCodecFactory(scheme)
-	if err := runtime.DecodeInto(codecs.UniversalDecoder(), data, multiclusterConfig); err != nil {
-		return err
-	}
-	if multiclusterConfig.Metrics.BindAddress != "" {
-		o.options.Metrics.BindAddress = multiclusterConfig.Metrics.BindAddress
-	}
-	if multiclusterConfig.Health.HealthProbeBindAddress != "" {
-		o.options.HealthProbeBindAddress = multiclusterConfig.Health.HealthProbeBindAddress
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (o *Options) loadConfigFromFile(multiclusterConfig *mcsv1alpha1.MultiClusterConfig) error {
-	data, err := os.ReadFile(o.configFile)
-	if err != nil {
-		return err
-	}
-	return o.loadConfig(data, multiclusterConfig)
+	_ = "STUB: not implemented"
+	return nil
 }

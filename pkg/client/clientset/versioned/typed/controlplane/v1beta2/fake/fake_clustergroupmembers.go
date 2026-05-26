@@ -29,14 +29,6 @@ type fakeClusterGroupMembers struct {
 }
 
 func newFakeClusterGroupMembers(fake *FakeControlplaneV1beta2) controlplanev1beta2.ClusterGroupMembersInterface {
-	return &fakeClusterGroupMembers{
-		gentype.NewFakeClient[*v1beta2.ClusterGroupMembers](
-			fake.Fake,
-			"",
-			v1beta2.SchemeGroupVersion.WithResource("clustergroupmembers"),
-			v1beta2.SchemeGroupVersion.WithKind("ClusterGroupMembers"),
-			func() *v1beta2.ClusterGroupMembers { return &v1beta2.ClusterGroupMembers{} },
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(controlplanev1beta2.ClusterGroupMembersInterface)
 }

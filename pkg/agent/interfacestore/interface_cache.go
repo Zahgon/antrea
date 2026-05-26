@@ -15,13 +15,7 @@
 package interfacestore
 
 import (
-	"fmt"
-
 	"k8s.io/client-go/tools/cache"
-
-	"antrea.io/antrea/v2/pkg/agent/metrics"
-	"antrea.io/antrea/v2/pkg/agent/util"
-	"antrea.io/antrea/v2/pkg/util/k8s"
 )
 
 const (
@@ -71,131 +65,81 @@ type interfaceCache struct {
 }
 
 func (c *interfaceCache) Initialize(interfaces []*InterfaceConfig) {
-	for _, intf := range interfaces {
-		c.cache.Add(intf)
-		if intf.Type == ContainerInterface {
-			metrics.PodCount.Inc()
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // getInterfaceKey returns the key to access interfaceConfig from the cache.
 // It implements cache.KeyFunc.
-func getInterfaceKey(obj interface{}) (string, error) {
-	interfaceConfig := obj.(*InterfaceConfig)
-	var key string
-	switch interfaceConfig.Type {
-	case ContainerInterface:
-		key = util.GenerateContainerInterfaceKey(interfaceConfig.ContainerID, interfaceConfig.IFDev)
-	case IPSecTunnelInterface:
-		// IPsec tunnel interface for a Node.
-		key = util.GenerateNodeTunnelInterfaceKey(interfaceConfig.NodeName)
-	default:
-		// Use the interface name as the key by default.
-		key = interfaceConfig.InterfaceName
-	}
-	return key, nil
-}
+func getInterfaceKey(obj interface{}) (string, error) { _ = "STUB: not implemented"; return "", nil }
+
+// IPsec tunnel interface for a Node.
+
+// Use the interface name as the key by default.
 
 // AddInterface adds interfaceConfig into local cache.
 func (c *interfaceCache) AddInterface(interfaceConfig *InterfaceConfig) {
-	c.cache.Add(interfaceConfig)
-
-	if interfaceConfig.Type == ContainerInterface {
-		metrics.PodCount.Inc()
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // UpdateInterface updates interfaceConfig into local cache.
 func (c *interfaceCache) UpdateInterface(interfaceConfig *InterfaceConfig) {
-	c.cache.Update(interfaceConfig)
+	_ = "STUB: not implemented"
+	return
 }
 
 // DeleteInterface deletes interface from local cache.
 func (c *interfaceCache) DeleteInterface(interfaceConfig *InterfaceConfig) {
-	c.cache.Delete(interfaceConfig)
-
-	if interfaceConfig.Type == ContainerInterface {
-		metrics.PodCount.Dec()
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // GetInterface retrieves interface from local cache given the interface key.
 func (c *interfaceCache) GetInterface(interfaceKey string) (*InterfaceConfig, bool) {
-	iface, found, _ := c.cache.GetByKey(interfaceKey)
-	if !found {
-		return nil, false
-	}
-	return iface.(*InterfaceConfig), found
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // ListInterfacesByType lists all interfaces from local cache.
-func (c *interfaceCache) ListInterfaces() []*InterfaceConfig {
-	interfaceConfigs := make([]*InterfaceConfig, 0)
-	for _, iface := range c.cache.List() {
-		interfaceConfigs = append(interfaceConfigs, iface.(*InterfaceConfig))
-	}
-	return interfaceConfigs
-}
+func (c *interfaceCache) ListInterfaces() []*InterfaceConfig { _ = "STUB: not implemented"; return nil }
 
 // GetInterfaceByName retrieves interface from local cache given the interface
 // name.
 func (c *interfaceCache) GetInterfaceByName(interfaceName string) (*InterfaceConfig, bool) {
-	interfaceConfigs, _ := c.cache.ByIndex(interfaceNameIndex, interfaceName)
-	if len(interfaceConfigs) == 0 {
-		return nil, false
-	}
-	return interfaceConfigs[0].(*InterfaceConfig), true
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // GetInterfaceByIP retrieves interface from local cache given the interface IP.
 func (c *interfaceCache) GetInterfaceByIP(interfaceIP string) (*InterfaceConfig, bool) {
-	interfaceConfigs, _ := c.cache.ByIndex(interfaceIPIndex, interfaceIP)
-	if len(interfaceConfigs) == 0 {
-		return nil, false
-	}
-	return interfaceConfigs[0].(*InterfaceConfig), true
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
-func (c *interfaceCache) GetContainerInterfaceNum() int {
-	keys, _ := c.cache.IndexKeys(interfaceTypeIndex, ContainerInterface.String())
-	return len(keys)
-}
+func (c *interfaceCache) GetContainerInterfaceNum() int { _ = "STUB: not implemented"; return 0 }
 
 func (c *interfaceCache) GetInterfacesByType(interfaceType InterfaceType) []*InterfaceConfig {
-	objs, _ := c.cache.ByIndex(interfaceTypeIndex, interfaceType.String())
-	interfaces := make([]*InterfaceConfig, len(objs))
-	for i := range objs {
-		interfaces[i] = objs[i].(*InterfaceConfig)
-	}
-	return interfaces
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (c *interfaceCache) Len() int {
-	return len(c.cache.ListKeys())
-}
+func (c *interfaceCache) Len() int { _ = "STUB: not implemented"; return 0 }
 
 func (c *interfaceCache) GetInterfaceKeysByType(interfaceType InterfaceType) []string {
-	keys, _ := c.cache.IndexKeys(interfaceTypeIndex, interfaceType.String())
-	return keys
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetContainerInterface retrieves InterfaceConfig by the given container ID.
 func (c *interfaceCache) GetContainerInterface(containerID string) (*InterfaceConfig, bool) {
-	objs, _ := c.cache.ByIndex(containerIDIndex, containerID)
-	if len(objs) == 0 {
-		return nil, false
-	}
-	return objs[0].(*InterfaceConfig), true
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 func (c *interfaceCache) GetInterfacesByEntity(name, namespace string) []*InterfaceConfig {
-	objs, _ := c.cache.ByIndex(externalEntityIndex, k8s.NamespacedName(namespace, name))
-	interfaces := make([]*InterfaceConfig, len(objs))
-	for i := range objs {
-		interfaces[i] = objs[i].(*InterfaceConfig)
-	}
-	return interfaces
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetContainerInterfacesByPod retrieves InterfaceConfigs for the Pod.
@@ -203,101 +147,58 @@ func (c *interfaceCache) GetInterfacesByEntity(name, namespace string) []*Interf
 // name temporarily when the previous Pod is being deleted and the new Pod is being created almost simultaneously.
 // https://github.com/antrea-io/antrea/issues/785#issuecomment-642051884
 func (c *interfaceCache) GetContainerInterfacesByPod(podName string, podNamespace string) []*InterfaceConfig {
-	objs, _ := c.cache.ByIndex(podIndex, k8s.NamespacedName(podNamespace, podName))
-	interfaces := make([]*InterfaceConfig, len(objs))
-	for i := range objs {
-		interfaces[i] = objs[i].(*InterfaceConfig)
-	}
-	return interfaces
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNodeTunnelInterface retrieves InterfaceConfig for the tunnel to the Node.
 func (c *interfaceCache) GetNodeTunnelInterface(nodeName string) (*InterfaceConfig, bool) {
-	key := util.GenerateNodeTunnelInterfaceKey(nodeName)
-	obj, ok, _ := c.cache.GetByKey(key)
-	if !ok {
-		return nil, false
-	}
-	return obj.(*InterfaceConfig), true
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // GetInterfaceByOFPort retrieves InterfaceConfig by the given ofPort number.
 func (c *interfaceCache) GetInterfaceByOFPort(ofPort uint32) (*InterfaceConfig, bool) {
-	ofportStr := fmt.Sprintf("%d", ofPort)
-	interfaceConfigs, _ := c.cache.ByIndex(ofPortIndex, ofportStr)
-	if len(interfaceConfigs) == 0 {
-		return nil, false
-	}
-	return interfaceConfigs[0].(*InterfaceConfig), true
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 func interfaceNameIndexFunc(obj interface{}) ([]string, error) {
-	interfaceConfig := obj.(*InterfaceConfig)
-	return []string{interfaceConfig.InterfaceName}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func interfaceTypeIndexFunc(obj interface{}) ([]string, error) {
-	interfaceConfig := obj.(*InterfaceConfig)
-	return []string{interfaceConfig.Type.String()}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func containerIDIndexFunc(obj interface{}) ([]string, error) {
-	interfaceConfig := obj.(*InterfaceConfig)
-	if interfaceConfig.Type != ContainerInterface {
-		return []string{}, nil
-	}
-	return []string{interfaceConfig.ContainerID}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func podIndexFunc(obj interface{}) ([]string, error) {
-	interfaceConfig := obj.(*InterfaceConfig)
-	if interfaceConfig.Type != ContainerInterface {
-		return []string{}, nil
-	}
-	return []string{k8s.NamespacedName(interfaceConfig.PodNamespace, interfaceConfig.PodName)}, nil
-}
+func podIndexFunc(obj interface{}) ([]string, error) { _ = "STUB: not implemented"; return nil, nil }
 
 func interfaceIPIndexFunc(obj interface{}) ([]string, error) {
-	interfaceConfig := obj.(*InterfaceConfig)
-	if interfaceConfig.IPs == nil {
-		// If interfaceConfig IP is not set, we return empty key.
-		return []string{}, nil
-	}
-	var intfIPs []string
-	for _, ip := range interfaceConfig.IPs {
-		intfIPs = append(intfIPs, ip.String())
-	}
-	return intfIPs, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// If interfaceConfig IP is not set, we return empty key.
 
 func interfaceOFPortIndexFunc(obj interface{}) ([]string, error) {
-	interfaceConfig := obj.(*InterfaceConfig)
-	// OVSPortConfig can be nil for a secondary SR-IOV interface.
-	if interfaceConfig.OVSPortConfig == nil || interfaceConfig.OFPort < 0 {
-		// If interfaceConfig OFport is not valid, we return empty key.
-		return []string{}, nil
-	}
-	return []string{fmt.Sprintf("%d", interfaceConfig.OFPort)}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// OVSPortConfig can be nil for a secondary SR-IOV interface.
+
+// If interfaceConfig OFport is not valid, we return empty key.
 
 func externalEntityIndexFunc(obj interface{}) ([]string, error) {
-	interfaceConfig := obj.(*InterfaceConfig)
-	if interfaceConfig.Type != ExternalEntityInterface {
-		return []string{}, nil
-	}
-	return []string{k8s.NamespacedName(interfaceConfig.EntityNamespace, interfaceConfig.EntityName)}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func NewInterfaceStore() InterfaceStore {
-	return &interfaceCache{
-		cache: cache.NewIndexer(getInterfaceKey, cache.Indexers{
-			interfaceNameIndex:  interfaceNameIndexFunc,
-			interfaceTypeIndex:  interfaceTypeIndexFunc,
-			containerIDIndex:    containerIDIndexFunc,
-			podIndex:            podIndexFunc,
-			interfaceIPIndex:    interfaceIPIndexFunc,
-			ofPortIndex:         interfaceOFPortIndexFunc,
-			externalEntityIndex: externalEntityIndexFunc,
-		}),
-	}
-}
+func NewInterfaceStore() InterfaceStore { _ = "STUB: not implemented"; return *new(InterfaceStore) }

@@ -27,52 +27,63 @@ type FakeCrdV1beta1 struct {
 }
 
 func (c *FakeCrdV1beta1) AntreaAgentInfos() v1beta1.AntreaAgentInfoInterface {
-	return newFakeAntreaAgentInfos(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta1.AntreaAgentInfoInterface)
 }
 
 func (c *FakeCrdV1beta1) AntreaControllerInfos() v1beta1.AntreaControllerInfoInterface {
-	return newFakeAntreaControllerInfos(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta1.AntreaControllerInfoInterface)
 }
 
 func (c *FakeCrdV1beta1) ClusterGroups() v1beta1.ClusterGroupInterface {
-	return newFakeClusterGroups(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta1.ClusterGroupInterface)
 }
 
 func (c *FakeCrdV1beta1) ClusterNetworkPolicies() v1beta1.ClusterNetworkPolicyInterface {
-	return newFakeClusterNetworkPolicies(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta1.ClusterNetworkPolicyInterface)
 }
 
 func (c *FakeCrdV1beta1) Egresses() v1beta1.EgressInterface {
-	return newFakeEgresses(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta1.EgressInterface)
 }
 
 func (c *FakeCrdV1beta1) ExternalIPPools() v1beta1.ExternalIPPoolInterface {
-	return newFakeExternalIPPools(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta1.ExternalIPPoolInterface)
 }
 
 func (c *FakeCrdV1beta1) Groups(namespace string) v1beta1.GroupInterface {
-	return newFakeGroups(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1beta1.GroupInterface)
 }
 
 func (c *FakeCrdV1beta1) IPPools() v1beta1.IPPoolInterface {
-	return newFakeIPPools(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta1.IPPoolInterface)
 }
 
 func (c *FakeCrdV1beta1) NetworkPolicies(namespace string) v1beta1.NetworkPolicyInterface {
-	return newFakeNetworkPolicies(c, namespace)
+	_ = "STUB: not implemented"
+	return *new(v1beta1.NetworkPolicyInterface)
 }
 
 func (c *FakeCrdV1beta1) Tiers() v1beta1.TierInterface {
-	return newFakeTiers(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta1.TierInterface)
 }
 
 func (c *FakeCrdV1beta1) Traceflows() v1beta1.TraceflowInterface {
-	return newFakeTraceflows(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta1.TraceflowInterface)
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeCrdV1beta1) RESTClient() rest.Interface {
-	var ret *rest.RESTClient
-	return ret
+	_ = "STUB: not implemented"
+	return *new(rest.Interface)
 }

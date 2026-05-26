@@ -15,10 +15,7 @@
 package types
 
 import (
-	"fmt"
 	"net"
-	"sort"
-	"strings"
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -59,53 +56,20 @@ type GroupSelector struct {
 // NewGroupSelector converts the podSelector, namespaceSelector, externalEntitySelector and nodeSelector
 // and NetworkPolicy Namespace to a networkpolicy.GroupSelector object.
 func NewGroupSelector(namespace string, podSelector, nsSelector, extEntitySelector, nodeSelector *metav1.LabelSelector) *GroupSelector {
-	groupSelector := GroupSelector{}
-	if podSelector != nil {
-		groupSelector.PodSelector, _ = metav1.LabelSelectorAsSelector(podSelector)
-	}
-	if extEntitySelector != nil {
-		groupSelector.ExternalEntitySelector, _ = metav1.LabelSelectorAsSelector(extEntitySelector)
-	}
-	if nsSelector == nil {
-		// No namespaceSelector indicates that the pods must be selected within
-		// the NetworkPolicy's Namespace.
-		groupSelector.Namespace = namespace
-	} else {
-		groupSelector.NamespaceSelector, _ = metav1.LabelSelectorAsSelector(nsSelector)
-	}
-
-	if nodeSelector != nil {
-		groupSelector.NodeSelector, _ = metav1.LabelSelectorAsSelector(nodeSelector)
-	}
-
-	name := GenerateNormalizedName(groupSelector.Namespace, groupSelector.PodSelector,
-		groupSelector.NamespaceSelector, groupSelector.ExternalEntitySelector, groupSelector.NodeSelector)
-	groupSelector.NormalizedName = name
-	return &groupSelector
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// No namespaceSelector indicates that the pods must be selected within
+// the NetworkPolicy's Namespace.
 
 // GenerateNormalizedName generates a string, based on the selectors, in
 // the following format: "namespace=NamespaceName And podSelector=normalizedPodSelector".
 // Note: Namespace and nsSelector may or may not be set depending on the
 // selector. However, they cannot be set simultaneously.
 func GenerateNormalizedName(namespace string, podSelector, nsSelector, eeSelector labels.Selector, nodeSelector labels.Selector) string {
-	normalizedName := []string{}
-	if nsSelector != nil {
-		normalizedName = append(normalizedName, fmt.Sprintf("namespaceSelector=%s", nsSelector.String()))
-	} else if namespace != "" {
-		normalizedName = append(normalizedName, fmt.Sprintf("namespace=%s", namespace))
-	}
-	if podSelector != nil {
-		normalizedName = append(normalizedName, fmt.Sprintf("podSelector=%s", podSelector.String()))
-	}
-	if eeSelector != nil {
-		normalizedName = append(normalizedName, fmt.Sprintf("eeSelector=%s", eeSelector.String()))
-	}
-	if nodeSelector != nil {
-		normalizedName = append(normalizedName, fmt.Sprintf("nodeSelector=%s", nodeSelector.String()))
-	}
-	sort.Strings(normalizedName)
-	return strings.Join(normalizedName, " And ")
+	_ = "STUB: not implemented"
+	return ""
 }
 
 // Group describes a set of GroupMembers which can be referenced in Antrea-native NetworkPolicies. These Groups can

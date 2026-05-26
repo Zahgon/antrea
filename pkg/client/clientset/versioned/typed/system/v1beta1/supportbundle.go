@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	systemv1beta1 "antrea.io/antrea/v2/pkg/apis/system/v1beta1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	gentype "k8s.io/client-go/gentype"
 )
@@ -46,13 +45,6 @@ type supportBundles struct {
 
 // newSupportBundles returns a SupportBundles
 func newSupportBundles(c *SystemV1beta1Client) *supportBundles {
-	return &supportBundles{
-		gentype.NewClient[*systemv1beta1.SupportBundle](
-			"supportbundles",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *systemv1beta1.SupportBundle { return &systemv1beta1.SupportBundle{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

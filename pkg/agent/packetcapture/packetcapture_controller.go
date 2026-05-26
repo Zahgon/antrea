@@ -16,43 +16,23 @@ package packetcapture
 
 import (
 	"context"
-	"errors"
-	"fmt"
-	"maps"
 	"net"
 	"os"
 	"path/filepath"
-	"slices"
-	"strings"
 	"sync"
 	"time"
 
-	"github.com/gopacket/gopacket"
-	"github.com/gopacket/gopacket/layers"
-	"github.com/gopacket/gopacket/pcapgo"
 	"github.com/spf13/afero"
-	"golang.org/x/time/rate"
 	v1 "k8s.io/api/core/v1"
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
-	"k8s.io/client-go/util/retry"
 	"k8s.io/client-go/util/workqueue"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/interfacestore"
-	"antrea.io/antrea/v2/pkg/agent/packetcapture/capture"
-	"antrea.io/antrea/v2/pkg/agent/util"
 	crdv1alpha1 "antrea.io/antrea/v2/pkg/apis/crd/v1alpha1"
 	clientsetversioned "antrea.io/antrea/v2/pkg/client/clientset/versioned"
 	crdinformers "antrea.io/antrea/v2/pkg/client/informers/externalversions/crd/v1alpha1"
 	crdlisters "antrea.io/antrea/v2/pkg/client/listers/crd/v1alpha1"
-	"antrea.io/antrea/v2/pkg/util/auth"
-	"antrea.io/antrea/v2/pkg/util/env"
 	"antrea.io/antrea/v2/pkg/util/sftp"
 )
 
@@ -115,9 +95,7 @@ type packetCaptureState struct {
 	cancel context.CancelFunc
 }
 
-func (pcs *packetCaptureState) isCaptureSuccessful() bool {
-	return pcs.capturedPacketsNum == pcs.targetCapturedPacketsNum && pcs.targetCapturedPacketsNum > 0
-}
+func (pcs *packetCaptureState) isCaptureSuccessful() bool { _ = "STUB: not implemented"; return false }
 
 type Controller struct {
 	kubeClient            clientset.Interface
@@ -141,255 +119,59 @@ func NewPacketCaptureController(
 	packetCaptureInformer crdinformers.PacketCaptureInformer,
 	interfaceStore interfacestore.InterfaceStore,
 ) (*Controller, error) {
-	c := &Controller{
-		kubeClient:            kubeClient,
-		crdClient:             crdClient,
-		packetCaptureInformer: packetCaptureInformer,
-		packetCaptureLister:   packetCaptureInformer.Lister(),
-		packetCaptureSynced:   packetCaptureInformer.Informer().HasSynced,
-		interfaceStore:        interfaceStore,
-		queue: workqueue.NewTypedRateLimitingQueueWithConfig(
-			workqueue.NewTypedItemExponentialFailureRateLimiter[string](minRetryDelay, maxRetryDelay),
-			workqueue.TypedRateLimitingQueueConfig[string]{Name: "packetcapture"},
-		),
-		sftpUploader: sftp.NewUploader(),
-		captures:     make(map[string]*packetCaptureState),
-	}
-
-	packetCaptureInformer.Informer().AddEventHandlerWithResyncPeriod(cache.ResourceEventHandlerFuncs{
-		AddFunc:    c.addPacketCapture,
-		UpdateFunc: c.updatePacketCapture,
-		DeleteFunc: c.deletePacketCapture,
-	}, resyncPeriod)
-
-	capture, err := capture.NewPcapCapture()
-	if err != nil {
-		return nil, err
-	}
-	c.captureInterface = capture
-	return c, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (c *Controller) enqueuePacketCapture(pc *crdv1alpha1.PacketCapture) {
-	c.queue.Add(pc.Name)
+	_ = "STUB: not implemented"
+	return
+
+	// Run will create defaultWorkers workers (go routines) which will process the PacketCapture events from the
+	// workqueue.
 }
 
-// Run will create defaultWorkers workers (go routines) which will process the PacketCapture events from the
-// workqueue.
-func (c *Controller) Run(stopCh <-chan struct{}) {
-	defer c.queue.ShutDown()
+func (c *Controller) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	klog.InfoS("Starting controller", "name", controllerName)
-	defer klog.InfoS("Shutting down controller", "name", controllerName)
-
-	cacheSynced := []cache.InformerSynced{c.packetCaptureSynced}
-	if !cache.WaitForNamedCacheSync(controllerName, stopCh, cacheSynced...) {
-		return
-	}
-
-	err := defaultFS.MkdirAll(packetDirectory, 0700)
-	if err != nil {
-		klog.ErrorS(err, "Couldn't create the directory for storing captured packets", "directory", packetDirectory)
-		return
-	}
-
-	for i := 0; i < defaultWorkers; i++ {
-		go wait.Until(c.worker, time.Second, stopCh)
-	}
-	<-stopCh
-}
-
-func (c *Controller) addPacketCapture(obj interface{}) {
-	pc := obj.(*crdv1alpha1.PacketCapture)
-	klog.V(2).InfoS("Processing PacketCapture ADD event", "name", pc.Name)
-	c.enqueuePacketCapture(pc)
-}
+func (c *Controller) addPacketCapture(obj interface{}) { _ = "STUB: not implemented"; return }
 
 func (c *Controller) updatePacketCapture(oldObj, newObj interface{}) {
-	newPC := newObj.(*crdv1alpha1.PacketCapture)
-	oldPC := oldObj.(*crdv1alpha1.PacketCapture)
-	if newPC.Generation != oldPC.Generation {
-		klog.V(2).InfoS("Processing PacketCapture UPDATE event", "name", newPC.Name)
-		c.enqueuePacketCapture(newPC)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
-func (c *Controller) deletePacketCapture(obj interface{}) {
-	pc, ok := obj.(*crdv1alpha1.PacketCapture)
-	if !ok {
-		deletedState, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			klog.Errorf("Received unexpected object: %v", obj)
-			return
-		}
-		pc, ok = deletedState.Obj.(*crdv1alpha1.PacketCapture)
-		if !ok {
-			klog.Errorf("DeletedFinalStateUnknown contains non-PacketCapture object: %v", deletedState.Obj)
-			return
-		}
-	}
-	klog.V(2).InfoS("Processing PacketCapture DELETE event", "name", pc.Name)
-	c.enqueuePacketCapture(pc)
-}
+func (c *Controller) deletePacketCapture(obj interface{}) { _ = "STUB: not implemented"; return }
 
-func nameToPath(name string) string {
-	return filepath.Join(packetDirectory, name+".pcapng")
-}
+func nameToPath(name string) string { _ = "STUB: not implemented"; return "" }
 
-func (c *Controller) worker() {
-	for c.processPacketCaptureItem() {
-	}
-}
+func (c *Controller) worker() { _ = "STUB: not implemented"; return }
 
-func (c *Controller) processPacketCaptureItem() bool {
-	key, quit := c.queue.Get()
-	if quit {
-		return false
-	}
-	defer c.queue.Done(key)
-	if err := c.syncPacketCapture(key); err == nil {
-		c.queue.Forget(key)
-	} else {
-		c.queue.AddRateLimited(key)
-		klog.ErrorS(err, "Error syncing PacketCapture, requeuing", "key", key)
-	}
-	return true
-}
+func (c *Controller) processPacketCaptureItem() bool { _ = "STUB: not implemented"; return false }
 
-func (c *Controller) syncPacketCapture(pcName string) error {
-	pc, err := c.packetCaptureLister.Get(pcName)
-	// Lister.Get only returns error when the resource is not found.
-	if err != nil {
-		c.cleanupPacketCapture(pcName)
-		return nil
-	}
+func (c *Controller) syncPacketCapture(pcName string) error { _ = "STUB: not implemented"; return nil }
 
-	// Capture will not occur on this Node if a corresponding Pod interface is not found.
-	device := c.getTargetCaptureDevice(pc)
-	if device == "" {
-		klog.V(4).InfoS("Skipping unrelated PacketCapture", "name", pcName)
-		return nil
-	}
+// Lister.Get only returns error when the resource is not found.
 
-	state, err := func() (packetCaptureState, error) {
-		c.mutex.Lock()
-		defer c.mutex.Unlock()
-		state := c.captures[pcName]
-		if state == nil {
-			state = &packetCaptureState{
-				phase:                    packetCapturePhasePending,
-				targetCapturedPacketsNum: pc.Spec.CaptureConfig.FirstN.Number,
-			}
-			c.captures[pcName] = state
-		}
+// Capture will not occur on this Node if a corresponding Pod interface is not found.
 
-		klog.V(2).InfoS("Processing PacketCapture", "name", pcName, "phase", state.phase)
-		if state.phase != packetCapturePhasePending {
-			return *state, nil
-		}
-		// Do not return the error as it's not a transient error.
-		if err := c.validatePacketCapture(&pc.Spec); err != nil {
-			state.captureErr = err
-			return *state, nil
-		}
-		// Return the error as it's a transient error.
-		if c.numRunningCaptures >= maxConcurrentCaptures {
-			state.captureErr = fmt.Errorf("PacketCapture running count reach limit")
-			return *state, state.captureErr
-		}
+// Do not return the error as it's not a transient error.
 
-		// The OpenAPI schema for the CRD makes sure Spec.Timeout is not nil.
-		timeout := time.Duration(*pc.Spec.Timeout) * time.Second
-		ctx, cancel := context.WithTimeout(context.Background(), timeout)
-		state.cancel = cancel
-		state.phase = packetCapturePhaseStarted
-		// Start the capture goroutine in a separate goroutine. The goroutine will decrease numRunningCaptures on exit.
-		c.numRunningCaptures += 1
-		go c.startCapture(ctx, pc, state, device)
-		return *state, nil
-	}()
+// Return the error as it's a transient error.
 
-	if updateErr := c.updateStatus(context.Background(), pc, state); updateErr != nil {
-		return fmt.Errorf("error when patching status: %w", updateErr)
-	}
-	return err
-}
+// The OpenAPI schema for the CRD makes sure Spec.Timeout is not nil.
+
+// Start the capture goroutine in a separate goroutine. The goroutine will decrease numRunningCaptures on exit.
 
 func (c *Controller) validatePacketCapture(spec *crdv1alpha1.PacketCaptureSpec) error {
-	if spec.Packet != nil {
-		protocol := spec.Packet.Protocol
-		if protocol != nil {
-			if protocol.Type == intstr.String {
-				if _, ok := capture.ProtocolMap[strings.ToUpper(protocol.StrVal)]; !ok {
-					return fmt.Errorf("invalid protocol string, supported values are: %v (case insensitive)", slices.Collect(maps.Keys(capture.ProtocolMap)))
-				}
-			}
-		}
-		if spec.Packet.TransportHeader.ICMP != nil {
-			for _, f := range spec.Packet.TransportHeader.ICMP.Messages {
-				switch f.Type.Type {
-				case intstr.Int:
-					if f.Type.IntVal < 0 || f.Type.IntVal > 255 {
-						return fmt.Errorf("invalid ICMP type integer: %d; must be between 0 and 255", f.Type.IntVal)
-					}
-				case intstr.String:
-					if _, ok := capture.ICMPMsgTypeMap[crdv1alpha1.ICMPMsgType(strings.ToLower(f.Type.StrVal))]; !ok {
-						return fmt.Errorf("invalid ICMP type string: %q; supported values are: %v (case insensitive)",
-							f.Type.StrVal, slices.Collect(maps.Keys(capture.ICMPMsgTypeMap)))
-					}
-				}
-			}
-		}
-		if spec.Packet.TransportHeader.ICMPv6 != nil {
-			for _, f := range spec.Packet.TransportHeader.ICMPv6.Messages {
-				switch f.Type.Type {
-				case intstr.Int:
-					if f.Type.IntVal < 0 || f.Type.IntVal > 255 {
-						return fmt.Errorf("invalid ICMPv6 type integer: %d; must be between 0 and 255", f.Type.IntVal)
-					}
-				case intstr.String:
-					if _, ok := capture.ICMPv6MsgTypeMap[crdv1alpha1.ICMPv6MsgType(strings.ToLower(f.Type.StrVal))]; !ok {
-						return fmt.Errorf("invalid ICMPv6 type string: %q; supported values are: %v (case insensitive)",
-							f.Type.StrVal, slices.Collect(maps.Keys(capture.ICMPv6MsgTypeMap)))
-					}
-				}
-			}
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (c *Controller) cleanupPacketCapture(pcName string) {
-	path := nameToPath(pcName)
-	if err := defaultFS.RemoveAll(path); err == nil {
-		klog.V(2).InfoS("Deleted the captured pcap file successfully", "name", pcName, "path", path)
-	} else {
-		klog.ErrorS(err, "Failed to delete the captured pcap file", "name", pcName, "path", path)
-	}
-	c.mutex.Lock()
-	defer c.mutex.Unlock()
-	state := c.captures[pcName]
-	if state != nil {
-		if state.cancel != nil {
-			state.cancel()
-		}
-		delete(c.captures, pcName)
-	}
-}
+func (c *Controller) cleanupPacketCapture(pcName string) { _ = "STUB: not implemented"; return }
 
 func getPacketFile(filePath string) (afero.File, error) {
-	var file afero.File
-	if _, err := os.Stat(filePath); err == nil {
-		klog.InfoS("Packet file already exists. This may be caused by an unexpected termination, will delete it", "path", filePath)
-		if err := defaultFS.Remove(filePath); err != nil {
-			return nil, err
-		}
-	}
-	file, err := defaultFS.Create(filePath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create pcapng file: %w", err)
-	}
-	return file, nil
+	_ = "STUB: not implemented"
+	return *new(afero.File), nil
 }
 
 // getTargetCaptureDevice is trying to locate the target device for packet capture. If the target
@@ -397,85 +179,29 @@ func getPacketFile(filePath string) (afero.File, error) {
 // In the PacketCapture spec, at least one of `.Spec.Source.Pod` or `.Spec.Destination.Pod`
 // should be set.
 func (c *Controller) getTargetCaptureDevice(pc *crdv1alpha1.PacketCapture) string {
+	_ = "STUB: not implemented"
 	// Set CapturePoint to 'Source' if a Source Pod is specified; otherwise, use 'Destination'.
-	if pc.Spec.CapturePoint == "" {
-		if pc.Spec.Source.Pod != nil {
-			pc.Spec.CapturePoint = crdv1alpha1.CapturePointSource
-		} else {
-			pc.Spec.CapturePoint = crdv1alpha1.CapturePointDestination
-		}
-	}
-
-	var device string
-	switch pc.Spec.CapturePoint {
-	case crdv1alpha1.CapturePointSource:
-		device = c.getPodDevice(pc.Spec.Source.Pod)
-	case crdv1alpha1.CapturePointDestination:
-		device = c.getPodDevice(pc.Spec.Destination.Pod)
-	}
-	return device
+	return ""
 }
 
 // getPodDevice returns the network device name for the given PodReference using the interfaceStore.
 func (c *Controller) getPodDevice(pod *crdv1alpha1.PodReference) string {
-	podInterfaces := c.interfaceStore.GetContainerInterfacesByPod(pod.Name, pod.Namespace)
-	if len(podInterfaces) == 0 {
-		return ""
-	}
-	return podInterfaces[0].InterfaceName
+	_ = "STUB: not implemented"
+	return ""
 }
 
 func (c *Controller) startCapture(ctx context.Context, pc *crdv1alpha1.PacketCapture, state *packetCaptureState, device string) {
-	klog.InfoS("Starting packet capture on the current Node", "name", pc.Name, "device", device)
-	defer klog.InfoS("Stopped packet capture on the current Node", "name", pc.Name, "device", device)
-	// Resync the PacketCapture on exit of the capture goroutine.
-	defer c.enqueuePacketCapture(pc)
-
-	var filePath string
-	var captureErr, uploadErr error
-	func() {
-		localFilePath := nameToPath(pc.Name)
-		file, err := getPacketFile(localFilePath)
-		if err != nil {
-			captureErr = err
-			return
-		}
-		defer file.Close()
-
-		var capturedAny bool
-		capturedAny, captureErr = c.performCapture(ctx, pc, state, file, device)
-		// If nothing is captured, no need to proceed.
-		if !capturedAny {
-			return
-		}
-		// If any is captured, upload it if required and update filePath in the status of the PacketCapture.
-		filePath = env.GetPodName() + ":" + localFilePath
-
-		if pc.Spec.FileServer == nil {
-			return
-		}
-		// It can't use the same context as performCapture because it might have timed out.
-		if uploadErr = c.uploadPackets(context.TODO(), pc, file); uploadErr != nil {
-			return
-		}
-		filePath = fmt.Sprintf("%s/%s.pcapng", pc.Spec.FileServer.URL, pc.Name)
-	}()
-
-	if captureErr != nil {
-		klog.ErrorS(captureErr, "PacketCapture failed capturing packets", "name", pc.Name)
-	}
-	if uploadErr != nil {
-		klog.ErrorS(uploadErr, "PacketCapture failed uploading packets", "name", pc.Name)
-	}
-
-	c.mutex.Lock()
-	defer c.mutex.Unlock()
-	state.phase = packetCapturePhaseComplete
-	state.filePath = filePath
-	state.captureErr = captureErr
-	state.uploadErr = uploadErr
-	c.numRunningCaptures -= 1
+	_ = "STUB: not implemented"
+	return
 }
+
+// Resync the PacketCapture on exit of the capture goroutine.
+
+// If nothing is captured, no need to proceed.
+
+// If any is captured, upload it if required and update filePath in the status of the PacketCapture.
+
+// It can't use the same context as performCapture because it might have timed out.
 
 // performCapture blocks until either the target number of packets have been captured, the context is canceled, or the
 // context reaches its deadline.
@@ -488,309 +214,58 @@ func (c *Controller) performCapture(
 	file afero.File,
 	device string,
 ) (bool, error) {
-	srcIP, dstIP, err := c.parseIPs(ctx, pc)
-	if err != nil {
-		return false, err
-	}
-
-	// set SnapLength here to make tcpdump on Mac OSX works. By default, its value is
-	// 0 and means unlimited, but tcpdump on Mac OSX will complain:
-	// 'tcpdump: pcap_loop: invalid packet capture length <len>, bigger than snaplen of 524288'
-	ngInterface := pcapgo.DefaultNgInterface
-	ngInterface.SnapLength = snapLen
-	ngInterface.LinkType = layers.LinkTypeEthernet
-	pcapngWriter, err := pcapgo.NewNgWriterInterface(file, ngInterface, pcapgo.DefaultNgWriterOptions)
-	if err != nil {
-		return false, fmt.Errorf("couldn't initialize a pcap writer: %w", err)
-	}
-	defer pcapngWriter.Flush()
-	updateRateLimiter := rate.NewLimiter(rate.Every(captureStatusUpdatePeriod), 1)
-	packets, err := c.captureInterface.Capture(ctx, device, snapLen, srcIP, dstIP, pc.Spec.Packet, pc.Spec.Direction)
-	if err != nil {
-		return false, err
-	}
-	// Track whether any packet is captured.
-	capturedAny := false
-	for {
-		select {
-		case packet := <-packets:
-			ci := gopacket.CaptureInfo{
-				Timestamp:     time.Now(),
-				CaptureLength: len(packet.Data()),
-				Length:        len(packet.Data()),
-			}
-			klog.V(5).InfoS("Captured packet", "name", pc.Name, "len", ci.Length)
-			if err = pcapngWriter.WritePacket(ci, packet.Data()); err != nil {
-				return capturedAny, fmt.Errorf("couldn't write packets: %w", err)
-			}
-			capturedAny = true
-
-			if success := func() bool {
-				c.mutex.Lock()
-				defer c.mutex.Unlock()
-				captureState.capturedPacketsNum++
-				klog.V(5).InfoS("Captured packets count", "name", pc.Name, "count", captureState.capturedPacketsNum)
-				return captureState.isCaptureSuccessful()
-			}(); success {
-				return true, nil
-			}
-			// use rate limiter to reduce the times we need to update status.
-			if updateRateLimiter.Allow() {
-				c.enqueuePacketCapture(pc)
-			}
-		case <-ctx.Done():
-			return capturedAny, ctx.Err()
-		}
-	}
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
+// set SnapLength here to make tcpdump on Mac OSX works. By default, its value is
+// 0 and means unlimited, but tcpdump on Mac OSX will complain:
+// 'tcpdump: pcap_loop: invalid packet capture length <len>, bigger than snaplen of 524288'
+
+// Track whether any packet is captured.
+
+// use rate limiter to reduce the times we need to update status.
+
 func (c *Controller) getPodIP(ctx context.Context, podRef *crdv1alpha1.PodReference, ipFamily v1.IPFamily) (net.IP, error) {
-	podInterfaces := c.interfaceStore.GetContainerInterfacesByPod(podRef.Name, podRef.Namespace)
-	var podIP net.IP
-	if len(podInterfaces) > 0 {
-		if ipFamily == v1.IPv6Protocol {
-			podIP = podInterfaces[0].GetIPv6Addr()
-		} else {
-			podIP = podInterfaces[0].GetIPv4Addr()
-		}
-	} else {
-		pod, err := c.kubeClient.CoreV1().Pods(podRef.Namespace).Get(ctx, podRef.Name, metav1.GetOptions{})
-		if err != nil {
-			return nil, fmt.Errorf("failed to get Pod %s/%s: %w", podRef.Namespace, podRef.Name, err)
-		}
-		podIPs := make([]net.IP, len(pod.Status.PodIPs))
-		for i, ip := range pod.Status.PodIPs {
-			podIPs[i] = net.ParseIP(ip.IP)
-		}
-		if ipFamily == v1.IPv6Protocol {
-			podIP, _ = util.GetIPWithFamily(podIPs, util.FamilyIPv6)
-		} else {
-			podIP = util.GetIPv4Addr(podIPs)
-		}
-	}
-	if podIP == nil {
-		return nil, fmt.Errorf("cannot find IP with %s address family for Pod %s/%s", ipFamily, podRef.Namespace, podRef.Name)
-	}
-	return podIP, nil
+	_ = "STUB: not implemented"
+	return *new(net.IP), nil
 }
 
 func (c *Controller) parseIPs(ctx context.Context, pc *crdv1alpha1.PacketCapture) (srcIP, dstIP net.IP, err error) {
-	ipFamily := v1.IPv4Protocol
-	if pc.Spec.Packet != nil {
-		ipFamily = pc.Spec.Packet.IPFamily
-	}
-	if pc.Spec.Source.Pod != nil {
-		srcIP, err = c.getPodIP(ctx, pc.Spec.Source.Pod, ipFamily)
-		if err != nil {
-			return
-		}
-	} else if pc.Spec.Source.IP != nil {
-		srcIP = net.ParseIP(*pc.Spec.Source.IP)
-		if srcIP == nil {
-			err = fmt.Errorf("invalid source IP address: %s", *pc.Spec.Source.IP)
-			return
-		}
-	}
-	if pc.Spec.Destination.Pod != nil {
-		dstIP, err = c.getPodIP(ctx, pc.Spec.Destination.Pod, ipFamily)
-		if err != nil {
-			return
-		}
-	} else if pc.Spec.Destination.IP != nil {
-		dstIP = net.ParseIP(*pc.Spec.Destination.IP)
-		if dstIP == nil {
-			err = fmt.Errorf("invalid destination IP address: %s", *pc.Spec.Destination.IP)
-		}
-	}
-	return
+	_ = "STUB: not implemented"
+	return *new(net.IP), *new(net.IP), nil
 }
 
 func (c *Controller) getUploaderByProtocol(protocol storageProtocolType) (sftp.Uploader, error) {
-	if protocol == sftpProtocol {
-		return c.sftpUploader, nil
-	}
-	return nil, fmt.Errorf("unsupported protocol %s", protocol)
+	_ = "STUB: not implemented"
+	return *new(sftp.Uploader), nil
 }
 
 func (c *Controller) generatePacketsPathForServer(name string) string {
-	return name + ".pcapng"
+	_ = "STUB: not implemented"
+	return ""
 }
 
 func (c *Controller) uploadPackets(ctx context.Context, pc *crdv1alpha1.PacketCapture, outputFile afero.File) error {
-	klog.V(2).InfoS("Uploading captured packets for PacketCapture", "name", pc.Name)
-	uploader, err := c.getUploaderByProtocol(sftpProtocol)
-	if err != nil {
-		return fmt.Errorf("failed to upload packets while getting uploader: %w", err)
-	}
-	if _, err := outputFile.Seek(0, 0); err != nil {
-		return fmt.Errorf("failed to upload to the file server while setting offset: %v", err)
-	}
-	authSecret := v1.SecretReference{
-		Name:      fileServerAuthSecretName,
-		Namespace: env.GetAntreaNamespace(),
-	}
-	serverAuth, err := auth.GetAuthConfigurationFromSecret(ctx, auth.BasicAuthenticationType, &authSecret, c.kubeClient)
-	if err != nil {
-		klog.ErrorS(err, "Failed to get authentication for the file server", "name", pc.Name, "authSecret", authSecret)
-		return err
-	}
-	if serverAuth.BasicAuthentication == nil {
-		return fmt.Errorf("failed to get basic authentication info for the file server")
-	}
-	cfg, err := sftp.GetSSHClientConfig(
-		serverAuth.BasicAuthentication.Username,
-		serverAuth.BasicAuthentication.Password,
-		pc.Spec.FileServer.HostPublicKey,
-	)
-	if err != nil {
-		return fmt.Errorf("failed to generate SSH client config: %w", err)
-	}
-	return uploader.Upload(pc.Spec.FileServer.URL, c.generatePacketsPathForServer(pc.Name), cfg, outputFile)
-}
-
-func (c *Controller) updateStatus(ctx context.Context, pc *crdv1alpha1.PacketCapture, state packetCaptureState) error {
-	// Make a deepcopy as the object returned from lister must not be updated directly.
-	toUpdate := pc.DeepCopy()
-	var conditions []crdv1alpha1.PacketCaptureCondition
-	t := metav1.Now()
-	desiredStatus := crdv1alpha1.PacketCaptureStatus{
-		NumberCaptured: state.capturedPacketsNum,
-		FilePath:       state.filePath,
-	}
-
-	var conditionStarted, conditionComplete, conditionUploaded crdv1alpha1.PacketCaptureCondition
-	switch state.phase {
-	case packetCapturePhasePending:
-		if state.captureErr != nil {
-			conditionStarted = crdv1alpha1.PacketCaptureCondition{
-				Type:               crdv1alpha1.PacketCaptureStarted,
-				Status:             metav1.ConditionStatus(v1.ConditionFalse),
-				LastTransitionTime: t,
-				Reason:             "NotStarted",
-				Message:            state.captureErr.Error(),
-			}
-		} else {
-			conditionStarted = crdv1alpha1.PacketCaptureCondition{
-				Type:               crdv1alpha1.PacketCaptureStarted,
-				Status:             metav1.ConditionStatus(v1.ConditionFalse),
-				LastTransitionTime: t,
-				Reason:             "Pending",
-			}
-		}
-		conditions = append(conditions, conditionStarted)
-	case packetCapturePhaseStarted:
-		conditionStarted = crdv1alpha1.PacketCaptureCondition{
-			Type:               crdv1alpha1.PacketCaptureStarted,
-			Status:             metav1.ConditionStatus(v1.ConditionTrue),
-			LastTransitionTime: t,
-			Reason:             "Started",
-		}
-		conditionComplete = crdv1alpha1.PacketCaptureCondition{
-			Type:               crdv1alpha1.PacketCaptureComplete,
-			Status:             metav1.ConditionStatus(v1.ConditionFalse),
-			LastTransitionTime: t,
-			Reason:             "Progressing",
-		}
-		conditions = append(conditions, conditionStarted, conditionComplete)
-	case packetCapturePhaseComplete:
-		conditionStarted = crdv1alpha1.PacketCaptureCondition{
-			Type:               crdv1alpha1.PacketCaptureStarted,
-			Status:             metav1.ConditionStatus(v1.ConditionTrue),
-			LastTransitionTime: t,
-			Reason:             "Started",
-		}
-		reason := "Succeed"
-		message := ""
-		if state.captureErr != nil {
-			if errors.Is(state.captureErr, context.DeadlineExceeded) {
-				reason = "Timeout"
-			} else {
-				reason = "Failed"
-			}
-			message = state.captureErr.Error()
-		}
-		conditionComplete = crdv1alpha1.PacketCaptureCondition{
-			Type:               crdv1alpha1.PacketCaptureComplete,
-			Status:             metav1.ConditionStatus(v1.ConditionTrue),
-			LastTransitionTime: t,
-			Reason:             reason,
-			Message:            message,
-		}
-		conditions = append(conditions, conditionStarted, conditionComplete)
-		// Set Uploaded condition if applicable.
-		if state.capturedPacketsNum > 0 && pc.Spec.FileServer != nil {
-			if state.uploadErr != nil {
-				conditionUploaded = crdv1alpha1.PacketCaptureCondition{
-					Type:               crdv1alpha1.PacketCaptureFileUploaded,
-					Status:             metav1.ConditionStatus(v1.ConditionFalse),
-					LastTransitionTime: t,
-					Reason:             "Failed",
-					Message:            state.uploadErr.Error(),
-				}
-			} else {
-				conditionUploaded = crdv1alpha1.PacketCaptureCondition{
-					Type:               crdv1alpha1.PacketCaptureFileUploaded,
-					Status:             metav1.ConditionStatus(v1.ConditionTrue),
-					LastTransitionTime: t,
-					Reason:             "Succeed",
-				}
-			}
-			conditions = append(conditions, conditionUploaded)
-		}
-	}
-
-	desiredStatus.Conditions = conditions
-
-	if retryErr := retry.RetryOnConflict(retry.DefaultRetry, func() error {
-		if crdv1alpha1.PacketCaptureStatusEqual(toUpdate.Status, desiredStatus) {
-			return nil
-		}
-
-		desiredStatus.Conditions = mergeConditions(toUpdate.Status.Conditions, desiredStatus.Conditions)
-		toUpdate.Status = desiredStatus
-		klog.V(2).InfoS("Updating PacketCapture", "name", pc.Name, "status", toUpdate.Status)
-		_, updateErr := c.crdClient.CrdV1alpha1().PacketCaptures().UpdateStatus(ctx, toUpdate, metav1.UpdateOptions{})
-		if updateErr != nil && apierrors.IsConflict(updateErr) {
-			var getErr error
-			if toUpdate, getErr = c.crdClient.CrdV1alpha1().PacketCaptures().Get(ctx, pc.Name, metav1.GetOptions{}); getErr != nil {
-				return getErr
-			}
-		}
-		// Return the error from UPDATE.
-		return updateErr
-	}); retryErr != nil {
-		return retryErr
-	}
-	klog.V(2).InfoS("Updated PacketCapture", "name", pc.Name)
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func mergeConditions(oldConditions, newConditions []crdv1alpha1.PacketCaptureCondition) []crdv1alpha1.PacketCaptureCondition {
-	finalConditions := make([]crdv1alpha1.PacketCaptureCondition, 0)
-	newConditionMap := make(map[crdv1alpha1.PacketCaptureConditionType]crdv1alpha1.PacketCaptureCondition)
-	addedConditions := sets.New[string]()
-	for _, condition := range newConditions {
-		newConditionMap[condition.Type] = condition
-	}
-	for _, oldCondition := range oldConditions {
-		newCondition, exists := newConditionMap[oldCondition.Type]
-		if !exists {
-			finalConditions = append(finalConditions, oldCondition)
-			continue
-		}
-		// Use the original Condition if the only change is about lastTransition time
-		if crdv1alpha1.ConditionEqualsIgnoreLastTransitionTime(newCondition, oldCondition) {
-			finalConditions = append(finalConditions, oldCondition)
-		} else {
-			// Use the latest Condition.
-			finalConditions = append(finalConditions, newCondition)
-		}
-		addedConditions.Insert(string(newCondition.Type))
-	}
-	for key, newCondition := range newConditionMap {
-		if !addedConditions.Has(string(key)) {
-			finalConditions = append(finalConditions, newCondition)
-		}
-	}
-	return finalConditions
+func (c *Controller) updateStatus(ctx context.Context, pc *crdv1alpha1.PacketCapture, state packetCaptureState) error {
+	_ = "STUB: not implemented"
+	// Make a deepcopy as the object returned from lister must not be updated directly.
+	return nil
 }
+
+// Set Uploaded condition if applicable.
+
+// Return the error from UPDATE.
+
+func mergeConditions(oldConditions, newConditions []crdv1alpha1.PacketCaptureCondition) []crdv1alpha1.PacketCaptureCondition {
+	_ = "STUB: not implemented"
+	return nil
+}
+
+// Use the original Condition if the only change is about lastTransition time
+
+// Use the latest Condition.

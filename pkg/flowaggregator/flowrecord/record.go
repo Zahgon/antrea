@@ -15,9 +15,6 @@
 package flowrecord
 
 import (
-	"encoding/json"
-	"fmt"
-	"net"
 	"time"
 
 	flowpb "antrea.io/antrea/v2/pkg/apis/flow/v1alpha1"
@@ -79,96 +76,11 @@ type FlowRecord struct {
 // GetFlowRecord converts flowpb.Flow to FlowRecord.
 // It assumes that record.Aggregation is set, so it should only be used in Aggregate mode.
 func GetFlowRecord(record *flowpb.Flow) (*FlowRecord, error) {
-	if record.Aggregation == nil {
-		return nil, fmt.Errorf("aggregation section is unset")
-	}
-
-	var sourcePodLabels, destinationPodLabels string
-	if record.K8S.SourcePodLabels != nil {
-		// flow.K8S.SourcePodLabels.Labels can be nil or an empty map
-		// both cases should be treated the same
-		if len(record.K8S.SourcePodLabels.Labels) > 0 {
-			b, err := json.Marshal(record.K8S.SourcePodLabels.Labels)
-			if err != nil {
-				return nil, fmt.Errorf("failed to marshal sourcePodLabels: %w", err)
-			} else {
-				sourcePodLabels = string(b)
-			}
-		} else {
-			sourcePodLabels = "{}"
-		}
-	}
-	if record.K8S.DestinationPodLabels != nil {
-		if len(record.K8S.DestinationPodLabels.Labels) > 0 {
-			b, err := json.Marshal(record.K8S.DestinationPodLabels.Labels)
-			if err != nil {
-				return nil, fmt.Errorf("failed to marshal destinationPodLabels: %w", err)
-			} else {
-				destinationPodLabels = string(b)
-			}
-		} else {
-			destinationPodLabels = "{}"
-		}
-	}
-
-	ipAddressAsString := func(bytes []byte) string {
-		if len(bytes) == 0 {
-			return ""
-		}
-		return net.IP(bytes).String()
-	}
-
-	return &FlowRecord{
-		FlowStartSeconds:                  record.StartTs.AsTime(),
-		FlowEndSeconds:                    record.EndTs.AsTime(),
-		FlowEndSecondsFromSourceNode:      record.Aggregation.EndTsFromSource.AsTime(),
-		FlowEndSecondsFromDestinationNode: record.Aggregation.EndTsFromDestination.AsTime(),
-		FlowEndReason:                     uint8(record.EndReason),
-		SourceIP:                          ipAddressAsString(record.Ip.Source),
-		DestinationIP:                     ipAddressAsString(record.Ip.Destination),
-		SourceTransportPort:               uint16(record.Transport.SourcePort),
-		DestinationTransportPort:          uint16(record.Transport.DestinationPort),
-		ProtocolIdentifier:                uint8(record.Transport.ProtocolNumber),
-		PacketTotalCount:                  record.Stats.PacketTotalCount,
-		OctetTotalCount:                   record.Stats.OctetTotalCount,
-		PacketDeltaCount:                  record.Stats.PacketDeltaCount,
-		OctetDeltaCount:                   record.Stats.OctetDeltaCount,
-		ReversePacketTotalCount:           record.ReverseStats.PacketTotalCount,
-		ReverseOctetTotalCount:            record.ReverseStats.OctetTotalCount,
-		ReversePacketDeltaCount:           record.ReverseStats.PacketDeltaCount,
-		ReverseOctetDeltaCount:            record.ReverseStats.OctetDeltaCount,
-		SourcePodName:                     record.K8S.SourcePodName,
-		SourcePodNamespace:                record.K8S.SourcePodNamespace,
-		SourceNodeName:                    record.K8S.SourceNodeName,
-		DestinationPodName:                record.K8S.DestinationPodName,
-		DestinationPodNamespace:           record.K8S.DestinationPodNamespace,
-		DestinationNodeName:               record.K8S.DestinationNodeName,
-		DestinationClusterIP:              ipAddressAsString(record.K8S.DestinationClusterIp),
-		DestinationServicePort:            uint16(record.K8S.DestinationServicePort),
-		DestinationServicePortName:        record.K8S.DestinationServicePortName,
-		IngressNetworkPolicyName:          record.K8S.IngressNetworkPolicyName,
-		IngressNetworkPolicyNamespace:     record.K8S.IngressNetworkPolicyNamespace,
-		IngressNetworkPolicyRuleName:      record.K8S.IngressNetworkPolicyRuleName,
-		IngressNetworkPolicyRuleAction:    uint8(record.K8S.IngressNetworkPolicyRuleAction),
-		IngressNetworkPolicyType:          uint8(record.K8S.IngressNetworkPolicyType),
-		EgressNetworkPolicyName:           record.K8S.EgressNetworkPolicyName,
-		EgressNetworkPolicyNamespace:      record.K8S.EgressNetworkPolicyNamespace,
-		EgressNetworkPolicyRuleName:       record.K8S.EgressNetworkPolicyRuleName,
-		EgressNetworkPolicyRuleAction:     uint8(record.K8S.EgressNetworkPolicyRuleAction),
-		EgressNetworkPolicyType:           uint8(record.K8S.EgressNetworkPolicyType),
-		// handles the case where the protocol is not TCP
-		TcpState:                             record.Transport.GetTCP().GetStateName(),
-		FlowType:                             uint8(record.K8S.FlowType),
-		SourcePodLabels:                      sourcePodLabels,
-		DestinationPodLabels:                 destinationPodLabels,
-		Throughput:                           record.Aggregation.Throughput,
-		ReverseThroughput:                    record.Aggregation.ReverseThroughput,
-		ThroughputFromSourceNode:             record.Aggregation.ThroughputFromSource,
-		ReverseThroughputFromSourceNode:      record.Aggregation.ReverseThroughputFromSource,
-		ThroughputFromDestinationNode:        record.Aggregation.ThroughputFromDestination,
-		ReverseThroughputFromDestinationNode: record.Aggregation.ReverseThroughputFromDestination,
-		EgressName:                           record.K8S.EgressName,
-		EgressIP:                             ipAddressAsString(record.K8S.EgressIp),
-		EgressNodeName:                       record.K8S.EgressNodeName,
-	}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// flow.K8S.SourcePodLabels.Labels can be nil or an empty map
+// both cases should be treated the same
+
+// handles the case where the protocol is not TCP

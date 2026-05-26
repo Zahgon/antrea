@@ -18,8 +18,6 @@ import (
 	"sync"
 
 	kmetrics "k8s.io/component-base/metrics"
-	"k8s.io/component-base/metrics/legacyregistry"
-	"k8s.io/klog/v2"
 )
 
 const (
@@ -133,20 +131,4 @@ var (
 	)
 )
 
-func Register() {
-	once.Do(func() {
-		klog.Infof("Registering Antrea Proxy prometheus metrics")
-		legacyregistry.MustRegister(
-			SyncProxyDuration,
-			ServicesInstalledTotal,
-			EndpointsInstalledTotal,
-			ServicesUpdatesTotal,
-			EndpointsUpdatesTotal,
-			SyncProxyDurationV6,
-			ServicesInstalledTotalV6,
-			EndpointsInstalledTotalV6,
-			ServicesUpdatesTotalV6,
-			EndpointsUpdatesTotalV6,
-		)
-	})
-}
+func Register() { _ = "STUB: not implemented"; return }

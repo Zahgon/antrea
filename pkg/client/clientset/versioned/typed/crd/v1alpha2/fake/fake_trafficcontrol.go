@@ -29,22 +29,6 @@ type fakeTrafficControls struct {
 }
 
 func newFakeTrafficControls(fake *FakeCrdV1alpha2) crdv1alpha2.TrafficControlInterface {
-	return &fakeTrafficControls{
-		gentype.NewFakeClientWithList[*v1alpha2.TrafficControl, *v1alpha2.TrafficControlList](
-			fake.Fake,
-			"",
-			v1alpha2.SchemeGroupVersion.WithResource("trafficcontrols"),
-			v1alpha2.SchemeGroupVersion.WithKind("TrafficControl"),
-			func() *v1alpha2.TrafficControl { return &v1alpha2.TrafficControl{} },
-			func() *v1alpha2.TrafficControlList { return &v1alpha2.TrafficControlList{} },
-			func(dst, src *v1alpha2.TrafficControlList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha2.TrafficControlList) []*v1alpha2.TrafficControl {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha2.TrafficControlList, items []*v1alpha2.TrafficControl) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1alpha2.TrafficControlInterface)
 }

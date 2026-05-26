@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -43,88 +41,71 @@ type MockSriovNetMockRecorder struct {
 }
 
 // NewMockSriovNet creates a new mock instance.
-func NewMockSriovNet(ctrl *gomock.Controller) *MockSriovNet {
-	mock := &MockSriovNet{ctrl: ctrl}
-	mock.recorder = &MockSriovNetMockRecorder{mock}
-	return mock
-}
+func NewMockSriovNet(ctrl *gomock.Controller) *MockSriovNet { _ = "STUB: not implemented"; return nil }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockSriovNet) EXPECT() *MockSriovNetMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetNetDevicesFromPCI mocks base method.
+	return nil
 }
 
-// GetNetDevicesFromPCI mocks base method.
 func (m *MockSriovNet) GetNetDevicesFromPCI(pciAddress string) ([]string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNetDevicesFromPCI", pciAddress)
-	ret0, _ := ret[0].([]string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetNetDevicesFromPCI indicates an expected call of GetNetDevicesFromPCI.
 func (mr *MockSriovNetMockRecorder) GetNetDevicesFromPCI(pciAddress any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNetDevicesFromPCI", reflect.TypeOf((*MockSriovNet)(nil).GetNetDevicesFromPCI), pciAddress)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetUplinkRepresentor mocks base method.
 func (m *MockSriovNet) GetUplinkRepresentor(pciAddress string) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUplinkRepresentor", pciAddress)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 // GetUplinkRepresentor indicates an expected call of GetUplinkRepresentor.
 func (mr *MockSriovNetMockRecorder) GetUplinkRepresentor(pciAddress any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUplinkRepresentor", reflect.TypeOf((*MockSriovNet)(nil).GetUplinkRepresentor), pciAddress)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetVFIndexByPCIAddress mocks base method.
 func (m *MockSriovNet) GetVFIndexByPCIAddress(vfPCIAddress string) (int, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetVFIndexByPCIAddress", vfPCIAddress)
-	ret0, _ := ret[0].(int)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 // GetVFIndexByPCIAddress indicates an expected call of GetVFIndexByPCIAddress.
 func (mr *MockSriovNetMockRecorder) GetVFIndexByPCIAddress(vfPCIAddress any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetVFIndexByPCIAddress", reflect.TypeOf((*MockSriovNet)(nil).GetVFIndexByPCIAddress), vfPCIAddress)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetVFLinkNames mocks base method.
 func (m *MockSriovNet) GetVFLinkNames(pciAddr string) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetVFLinkNames", pciAddr)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 // GetVFLinkNames indicates an expected call of GetVFLinkNames.
 func (mr *MockSriovNetMockRecorder) GetVFLinkNames(pciAddr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetVFLinkNames", reflect.TypeOf((*MockSriovNet)(nil).GetVFLinkNames), pciAddr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetVFRepresentor mocks base method.
 func (m *MockSriovNet) GetVFRepresentor(uplink string, vfIndex int) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetVFRepresentor", uplink, vfIndex)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 // GetVFRepresentor indicates an expected call of GetVFRepresentor.
 func (mr *MockSriovNetMockRecorder) GetVFRepresentor(uplink, vfIndex any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetVFRepresentor", reflect.TypeOf((*MockSriovNet)(nil).GetVFRepresentor), uplink, vfIndex)
+	_ = "STUB: not implemented"
+	return nil
 }

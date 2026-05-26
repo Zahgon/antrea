@@ -15,16 +15,10 @@
 package store
 
 import (
-	"fmt"
-	"reflect"
-
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
-	"k8s.io/client-go/tools/cache"
 
 	"antrea.io/antrea/v2/pkg/apis/controlplane"
 	"antrea.io/antrea/v2/pkg/apiserver/storage"
-	"antrea.io/antrea/v2/pkg/apiserver/storage/ram"
 	"antrea.io/antrea/v2/pkg/controller/types"
 )
 
@@ -50,143 +44,48 @@ type appliedToGroupEvent struct {
 // 3. Deleted event will be generated if the Selectors was interested in the object but is not now.
 // 4. If nodeName is specified, only GroupMembers that hosted by the Node will be in the event.
 func (event *appliedToGroupEvent) ToWatchEvent(selectors *storage.Selectors, isInitEvent bool) *watch.Event {
-	prevObjSelected, currObjSelected := isSelected(event.Key, event.PrevGroup, event.CurrGroup, selectors, isInitEvent)
-
-	// If nodeName is specified in selectors, only GroupMembers that hosted by the Node should be in the event.
-	nodeName, nodeSpecified := selectors.Field.RequiresExactMatch("nodeName")
-
-	switch {
-	case !currObjSelected && !prevObjSelected:
-		// Watcher is not interested in that object.
-		return nil
-	case currObjSelected && !prevObjSelected:
-		// Watcher was not interested in that object but is now, an added event will be generated.
-		obj := new(controlplane.AppliedToGroup)
-		if nodeSpecified {
-			ToAppliedToGroupMsg(event.CurrGroup, obj, true, &nodeName)
-		} else {
-			ToAppliedToGroupMsg(event.CurrGroup, obj, true, nil)
-		}
-		return &watch.Event{Type: watch.Added, Object: obj}
-	case currObjSelected && prevObjSelected:
-		// Watcher was and is interested in that object, a modified event will be generated.
-		obj := new(controlplane.AppliedToGroupPatch)
-		obj.UID = event.CurrGroup.UID
-		obj.Name = event.CurrGroup.Name
-
-		var currMembers, prevMembers controlplane.GroupMemberSet
-		if nodeSpecified {
-			currMembers = event.CurrGroup.GroupMemberByNode[nodeName]
-			prevMembers = event.PrevGroup.GroupMemberByNode[nodeName]
-		} else {
-			currMembers = controlplane.GroupMemberSet{}
-			for _, members := range event.CurrGroup.GroupMemberByNode {
-				currMembers.Merge(members)
-			}
-			prevMembers = controlplane.GroupMemberSet{}
-			for _, members := range event.PrevGroup.GroupMemberByNode {
-				prevMembers.Merge(members)
-			}
-		}
-		for _, member := range currMembers.Difference(prevMembers) {
-			obj.AddedGroupMembers = append(obj.AddedGroupMembers, *member)
-		}
-		for _, member := range prevMembers.Difference(currMembers) {
-			obj.RemovedGroupMembers = append(obj.RemovedGroupMembers, *member)
-		}
-
-		if len(obj.AddedGroupMembers)+len(obj.RemovedGroupMembers) == 0 {
-			// No change for the watcher.
-			return nil
-		}
-		return &watch.Event{Type: watch.Modified, Object: obj}
-	case !currObjSelected && prevObjSelected:
-		// Watcher was interested in that object but is not interested now, a deleted event will be generated.
-		obj := new(controlplane.AppliedToGroup)
-		if nodeSpecified {
-			ToAppliedToGroupMsg(event.PrevGroup, obj, false, &nodeName)
-		} else {
-			ToAppliedToGroupMsg(event.PrevGroup, obj, false, nil)
-		}
-		return &watch.Event{Type: watch.Deleted, Object: obj}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (event *appliedToGroupEvent) GetResourceVersion() uint64 {
-	return event.ResourceVersion
-}
+// If nodeName is specified in selectors, only GroupMembers that hosted by the Node should be in the event.
+
+// Watcher is not interested in that object.
+
+// Watcher was not interested in that object but is now, an added event will be generated.
+
+// Watcher was and is interested in that object, a modified event will be generated.
+
+// No change for the watcher.
+
+// Watcher was interested in that object but is not interested now, a deleted event will be generated.
+
+func (event *appliedToGroupEvent) GetResourceVersion() uint64 { _ = "STUB: not implemented"; return 0 }
 
 var _ storage.GenEventFunc = genAppliedToGroupEvent
 
 // genAppliedToGroupEvent generates InternalEvent from the given versions of an AppliedToGroup.
 func genAppliedToGroupEvent(key string, prevObj, currObj interface{}, rv uint64) (storage.InternalEvent, error) {
-	if reflect.DeepEqual(prevObj, currObj) {
-		return nil, nil
-	}
-
-	event := &appliedToGroupEvent{Key: key, ResourceVersion: rv}
-
-	if prevObj != nil {
-		event.PrevGroup = prevObj.(*types.AppliedToGroup)
-	}
-	if currObj != nil {
-		event.CurrGroup = currObj.(*types.AppliedToGroup)
-	}
-
-	return event, nil
+	_ = "STUB: not implemented"
+	return *new(storage.InternalEvent), nil
 }
 
 // ToAppliedToGroupMsg converts the stored AppliedToGroup to its message form.
 // If includeBody is true, GroupMembers will be copied.
 // If nodeName is provided, only GroupMembers that hosted by the Node will be copied.
 func ToAppliedToGroupMsg(in *types.AppliedToGroup, out *controlplane.AppliedToGroup, includeBody bool, nodeName *string) {
-	out.Name = in.Name
-	out.UID = in.UID
-	if !includeBody || in.GroupMemberByNode == nil {
-		return
-	}
-	if nodeName != nil {
-		if members, exists := in.GroupMemberByNode[*nodeName]; exists {
-			for _, member := range members {
-				out.GroupMembers = append(out.GroupMembers, *member)
-			}
-		}
-	} else {
-		for _, members := range in.GroupMemberByNode {
-			for _, member := range members {
-				out.GroupMembers = append(out.GroupMembers, *member)
-			}
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // AppliedToGroupKeyFunc knows how to get the key of an AppliedToGroup.
 func AppliedToGroupKeyFunc(obj interface{}) (string, error) {
-	group, ok := obj.(*types.AppliedToGroup)
-	if !ok {
-		return "", fmt.Errorf("object is not *types.AppliedToGroup: %v", obj)
-	}
-	return group.Name, nil
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 // NewAppliedToGroupStore creates a store of AppliedToGroup.
 func NewAppliedToGroupStore() storage.Interface {
-	indexers := cache.Indexers{
-		IsAppliedToServiceIndex: func(obj interface{}) ([]string, error) {
-			atg, ok := obj.(*types.AppliedToGroup)
-			if !ok || atg.Service == nil {
-				return []string{}, nil
-			}
-			return []string{"true"}, nil
-		},
-		SourceGroupIndex: func(obj interface{}) ([]string, error) {
-			atg, ok := obj.(*types.AppliedToGroup)
-			if !ok || atg.SourceGroup == "" {
-				return []string{}, nil
-			}
-			return []string{atg.SourceGroup}, nil
-		},
-	}
-	return ram.NewStore(AppliedToGroupKeyFunc, indexers, genAppliedToGroupEvent, keyAndSpanSelectFunc, func() runtime.Object { return new(controlplane.AppliedToGroup) })
+	_ = "STUB: not implemented"
+	return *new(storage.Interface)
 }

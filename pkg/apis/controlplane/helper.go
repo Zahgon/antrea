@@ -14,31 +14,15 @@
 
 package controlplane
 
-import "fmt"
+func (r *NetworkPolicyReference) ToString() string { _ = "STUB: not implemented"; return "" }
 
-func (r *NetworkPolicyReference) ToString() string {
-	if r.Type == AntreaClusterNetworkPolicy {
-		return fmt.Sprintf("%s:%s", r.Type, r.Name)
-	}
-	return fmt.Sprintf("%s:%s/%s", r.Type, r.Namespace, r.Name)
-}
-
-func (r *GroupReference) ToGroupName() string {
-	if r.Namespace == "" {
-		return r.Name
-	}
-	return fmt.Sprintf("%s/%s", r.Namespace, r.Name)
-}
+func (r *GroupReference) ToGroupName() string { _ = "STUB: not implemented"; return "" }
 
 // ToTypedString returns the Group or ClusterGroup namespaced name as a string along with its type.
 // Typed strings are typically used in log messages.
-func (r *GroupReference) ToTypedString() string {
-	if r.Namespace == "" {
-		return fmt.Sprintf("ClusterGroup:%s", r.Name)
-	}
-	return fmt.Sprintf("Group:%s/%s", r.Namespace, r.Name)
-}
+func (r *GroupReference) ToTypedString() string { _ = "STUB: not implemented"; return "" }
 
 func IsSourceAntreaNativePolicy(npRef *NetworkPolicyReference) bool {
-	return npRef.Type == AntreaClusterNetworkPolicy || npRef.Type == AntreaNetworkPolicy
+	_ = "STUB: not implemented"
+	return false
 }

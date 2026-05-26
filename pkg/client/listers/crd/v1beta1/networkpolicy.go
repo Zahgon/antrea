@@ -41,12 +41,14 @@ type networkPolicyLister struct {
 
 // NewNetworkPolicyLister returns a new NetworkPolicyLister.
 func NewNetworkPolicyLister(indexer cache.Indexer) NetworkPolicyLister {
-	return &networkPolicyLister{listers.New[*crdv1beta1.NetworkPolicy](indexer, crdv1beta1.Resource("networkpolicy"))}
+	_ = "STUB: not implemented"
+	return *new(NetworkPolicyLister)
 }
 
 // NetworkPolicies returns an object that can list and get NetworkPolicies.
 func (s *networkPolicyLister) NetworkPolicies(namespace string) NetworkPolicyNamespaceLister {
-	return networkPolicyNamespaceLister{listers.NewNamespaced[*crdv1beta1.NetworkPolicy](s.ResourceIndexer, namespace)}
+	_ = "STUB: not implemented"
+	return *new(NetworkPolicyNamespaceLister)
 }
 
 // NetworkPolicyNamespaceLister helps list and get NetworkPolicies.

@@ -352,35 +352,14 @@ func init() {
 }
 
 // SupportedOnWindows checks whether a feature is supported on a Windows Node.
-func SupportedOnWindows(feature featuregate.Feature) bool {
-	_, exists := DefaultAntreaFeatureGates[feature]
-	if !exists {
-		return false
-	}
-	_, exists = unsupportedFeaturesOnWindows[feature]
-	return !exists
-}
+func SupportedOnWindows(feature featuregate.Feature) bool { _ = "STUB: not implemented"; return false }
 
 // SupportedOnExternalNode checks whether a feature is supported on an external Node.
 func SupportedOnExternalNode(feature featuregate.Feature) bool {
-	_, exists := DefaultAntreaFeatureGates[feature]
-	if !exists {
-		return false
-	}
-	_, exists = supportedFeaturesOnExternalNode[feature]
-	return exists
+	_ = "STUB: not implemented"
+	return false
 }
 
-func GetVersion(version string) string {
-	if version == "" {
-		version = "GA"
-	}
-	return version
-}
+func GetVersion(version string) string { _ = "STUB: not implemented"; return "" }
 
-func GetStatus(status bool) string {
-	if status {
-		return "Enabled"
-	}
-	return "Disabled"
-}
+func GetStatus(status bool) string { _ = "STUB: not implemented"; return "" }

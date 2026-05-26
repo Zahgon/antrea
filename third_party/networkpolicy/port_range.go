@@ -18,7 +18,6 @@ package networkpolicy
 
 import (
 	"errors"
-	"math"
 )
 
 var (
@@ -42,91 +41,30 @@ type BitRange struct {
 
 // BitwiseMatch returns an array of BitRanges that represent the range of integers
 // in the PortRange.
-func (r *PortRange) BitwiseMatch() ([]BitRange, error) {
-	if r.Start <= 0 || r.End <= 0 {
-		return nil, ErrInvalidPortRange
-	}
-	if r.Start > r.End {
-		return nil, ErrInvalidPortRange
-	}
+func (r *PortRange) BitwiseMatch() ([]BitRange, error) { _ = "STUB: not implemented"; return nil, nil }
 
-	if r.Start == r.End {
-		return []BitRange{
-			{Value: r.Start, Mask: 0xffff},
-		}, nil
-	}
+// Find the largest window we can get on a binary boundary
 
-	bitRanges := []BitRange{}
+// Decrement our mask until we fit inside the range we want from a binary boundary.
 
-	// Find the largest window we can get on a binary boundary
-	window := (r.End - r.Start) + 1
-	bitLength := uint(math.Floor(math.Log2(float64(window))))
+// The range we picked out was from the middle of our set, so we'll need to recurse on
+// the remaining values for anything less than or greater than the current
+// range.
 
-	rangeStart, rangeEnd := getRange(r.End, bitLength)
-
-	// Decrement our mask until we fit inside the range we want from a binary boundary.
-	for rangeEnd > r.End {
-		bitLength--
-		rangeStart, rangeEnd = getRange(r.End, bitLength)
-	}
-
-	current := BitRange{
-		Value: rangeStart,
-		Mask:  getMask(bitLength),
-	}
-
-	// The range we picked out was from the middle of our set, so we'll need to recurse on
-	// the remaining values for anything less than or greater than the current
-	// range.
-
-	if r.Start != rangeStart {
-		leftRemainder := PortRange{
-			Start: r.Start,
-			End:   rangeStart - 1,
-		}
-
-		leftRemainingBitRanges, err := leftRemainder.BitwiseMatch()
-		if err != nil {
-			return nil, err
-		}
-
-		bitRanges = append(bitRanges, leftRemainingBitRanges...)
-	}
-
-	// We append our current range here, so we're ordered properly.
-	bitRanges = append(bitRanges, current)
-
-	if r.End != rangeEnd {
-		rightRemainder := PortRange{
-			Start: rangeEnd + 1,
-			End:   r.End,
-		}
-
-		rightRemainingBitRanges, err := rightRemainder.BitwiseMatch()
-		if err != nil {
-			return nil, err
-		}
-
-		bitRanges = append(bitRanges, rightRemainingBitRanges...)
-	}
-
-	return bitRanges, nil
-}
+// We append our current range here, so we're ordered properly.
 
 func getMask(bitLength uint) uint16 {
+	_ = "STUB: not implemented"
 	// All 1s for everything that doesn't change in the range
-	return math.MaxUint16 ^ uint16((1<<bitLength)-1)
+	return 0
 }
 
 func getRange(end uint16, bitLength uint) (rangeStart uint16, rangeEnd uint16) {
+	_ = "STUB: not implemented"
 	// Represents the upper bound of our range window (all 1s to binary boundary)
-	rangeLength := uint16((1 << bitLength) - 1)
-
-	// Zero out our mask, so we start at a binary boundary.
-	rangeStart = end &^ rangeLength
-
-	// Simply add the mask so we end at a binary boundary.
-	rangeEnd = rangeStart + rangeLength
-
-	return rangeStart, rangeEnd
+	return 0, 0
 }
+
+// Zero out our mask, so we start at a binary boundary.
+
+// Simply add the mask so we end at a binary boundary.

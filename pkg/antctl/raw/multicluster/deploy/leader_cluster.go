@@ -15,8 +15,6 @@
 package deploy
 
 import (
-	"fmt"
-	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -41,46 +39,8 @@ The following CRDs will be defined:
 - CRDs: ClusterSet, MemberClusterAnnounce, ResourceExport, ResourceImport
 `, "\n")
 
-func (o *leaderClusterOptions) validateAndComplete() error {
-	if o.filename != "" {
-		if _, err := os.Stat(o.filename); err != nil {
-			return err
-		}
-	}
-	if o.namespace == "" {
-		return fmt.Errorf("Namespace must be specified")
-	}
-	if o.antreaVersion == "" {
-		o.antreaVersion = "latest"
-	}
-	return nil
-}
+func (o *leaderClusterOptions) validateAndComplete() error { _ = "STUB: not implemented"; return nil }
 
-func NewLeaderClusterCmd() *cobra.Command {
-	command := &cobra.Command{
-		Use:     "leadercluster",
-		Args:    cobra.MaximumNArgs(0),
-		Short:   "Deploy Antrea Multi-cluster to a leader cluster",
-		Long:    "Deploy Antrea Multi-cluster to a leader cluster in a Namespace",
-		Example: leaderClusterExamples,
-		RunE:    leaderClusterRunE,
-	}
-	o := &leaderClusterOptions{}
-	leaderClusterOpts = o
-	command.Flags().StringVarP(&o.namespace, "namespace", "n", "", "Namespace to deploy Antrea Multi-cluster")
-	command.Flags().StringVarP(&o.antreaVersion, "antrea-version", "", "",
-		"version of Antrea Multi-cluster to deploy. If not specified, the latest version from Antrea main branch will be used. "+
-			"When manifest-file is not provided, the Antrea Multi-cluster deployment manifest of the specified version will be downloaded and applied; "+
-			"when manifest-file is provided, this option will be ignored")
-	command.Flags().StringVarP(&o.filename, "manifest-file", "f", "", "path to the Antrea Multi-cluster deployment manifest file for leader cluster")
+func NewLeaderClusterCmd() *cobra.Command { _ = "STUB: not implemented"; return nil }
 
-	return command
-}
-
-func leaderClusterRunE(cmd *cobra.Command, _ []string) error {
-	if err := leaderClusterOpts.validateAndComplete(); err != nil {
-		return err
-	}
-
-	return deploy(cmd, leaderRole, leaderClusterOpts.antreaVersion, leaderClusterOpts.namespace, leaderClusterOpts.filename)
-}
+func leaderClusterRunE(cmd *cobra.Command, _ []string) error { _ = "STUB: not implemented"; return nil }

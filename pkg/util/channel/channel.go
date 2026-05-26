@@ -15,11 +15,8 @@
 package channel
 
 import (
-	"slices"
 	"sync"
 	"time"
-
-	"k8s.io/klog/v2"
 )
 
 const (
@@ -66,67 +63,21 @@ type SubscribableChannel struct {
 }
 
 func NewSubscribableChannel(name string, bufferSize int) *SubscribableChannel {
-	n := &SubscribableChannel{
-		name:    name,
-		eventCh: make(chan interface{}, bufferSize),
-	}
-	return n
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (n *SubscribableChannel) Subscribe(h eventHandler) SubscriberID {
-	n.subscribersMutex.Lock()
-	defer n.subscribersMutex.Unlock()
-
-	subscriber := subscriber{
-		id:      n.nextSubscriberID,
-		handler: h,
-	}
-
-	n.subscribers = append(n.subscribers, subscriber)
-	n.nextSubscriberID++
-
-	return subscriber.id
+	_ = "STUB: not implemented"
+	return *new(SubscriberID)
 }
 
-func (n *SubscribableChannel) Unsubscribe(id SubscriberID) {
-	n.subscribersMutex.Lock()
-	defer n.subscribersMutex.Unlock()
-	n.subscribers = slices.DeleteFunc(n.subscribers, func(e subscriber) bool {
-		return e.id == id
-	})
-}
+func (n *SubscribableChannel) Unsubscribe(id SubscriberID) { _ = "STUB: not implemented"; return }
 
-func (n *SubscribableChannel) Notify(e interface{}) bool {
-	timer := time.NewTimer(notifyTimeout)
-	defer timer.Stop()
-	select {
-	case n.eventCh <- e:
-		return true
-	case <-timer.C:
-		// This shouldn't happen as we expect handlers to execute quickly and eventCh can buffer some messages.
-		// If the error is ever seen, either the buffer is too small, or some handlers have improper workload blocking
-		// the event consumption.
-		klog.ErrorS(nil, "Failed to send event to channel, will discard it", "name", n.name, "event", e)
-		return false
-	}
-}
+func (n *SubscribableChannel) Notify(e interface{}) bool { _ = "STUB: not implemented"; return false }
 
-func (n *SubscribableChannel) Run(stopCh <-chan struct{}) {
-	klog.InfoS("Starting SubscribableChannel", "name", n.name)
-	subscribers := make([]subscriber, 0)
-	for {
-		select {
-		case <-stopCh:
-			klog.InfoS("Stopping SubscribableChannel", "name", n.name)
-			return
-		case obj := <-n.eventCh:
-			n.subscribersMutex.Lock()
-			subscribers = append(subscribers[:0], n.subscribers...)
-			n.subscribersMutex.Unlock()
-			for _, h := range subscribers {
-				h.handler(obj)
-			}
-			subscribers = subscribers[:0]
-		}
-	}
-}
+// This shouldn't happen as we expect handlers to execute quickly and eventCh can buffer some messages.
+// If the error is ever seen, either the buffer is too small, or some handlers have improper workload blocking
+// the event consumption.
+
+func (n *SubscribableChannel) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }

@@ -15,69 +15,16 @@
 package webhook
 
 import (
-	"encoding/json"
-	"fmt"
-	"io"
 	"net/http"
 
 	admv1 "k8s.io/api/admission/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/klog/v2"
 )
 
 type validateFunc func(*admv1.AdmissionReview) *admv1.AdmissionResponse
 
 func HandlerForValidateFunc(fn validateFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		klog.V(2).Info("Received request to validate Antrea CRD")
-		var reqBody []byte
-		if r.Body != nil {
-			reqBody, _ = io.ReadAll(r.Body)
-		}
-		if len(reqBody) == 0 {
-			klog.Errorf("Validation webhook crdvalidator received empty request body")
-			http.Error(w, "empty request body", http.StatusBadRequest)
-			return
-		}
-		// verify the content type is accurate
-		contentType := r.Header.Get("Content-Type")
-		if contentType != "application/json" {
-			klog.Errorf("Invalid content-Type=%s, expected application/json", contentType)
-			http.Error(w, "invalid Content-Type, expected `application/json`", http.StatusUnsupportedMediaType)
-			return
-		}
-		var admissionResponse *admv1.AdmissionResponse
-		ar := admv1.AdmissionReview{}
-		ar.TypeMeta.Kind = "AdmissionReview"
-		ar.TypeMeta.APIVersion = "admission.k8s.io/v1"
-		if err := json.Unmarshal(reqBody, &ar); err != nil {
-			klog.Errorf("CRD validation received incorrect body")
-			admissionResponse = &admv1.AdmissionResponse{
-				Result: &metav1.Status{
-					Message: err.Error(),
-				},
-			}
-		} else {
-			admissionResponse = fn(&ar)
-		}
-		aReview := admv1.AdmissionReview{}
-		aReview.TypeMeta.Kind = "AdmissionReview"
-		aReview.TypeMeta.APIVersion = "admission.k8s.io/v1"
-		if admissionResponse != nil {
-			aReview.Response = admissionResponse
-			if ar.Request != nil {
-				aReview.Response.UID = ar.Request.UID
-			}
-		}
-		resp, err := json.Marshal(aReview)
-		if err != nil {
-			klog.Errorf("Unable to encode response during validation: %v", err)
-			http.Error(w, fmt.Sprintf("could not encode response: %v", err), http.StatusInternalServerError)
-		}
-		klog.V(2).Infof("Writing validation response to ValidationAdmissionHook")
-		if _, err := w.Write(resp); err != nil {
-			klog.Errorf("Unable to write response during validation: %v", err)
-			http.Error(w, fmt.Sprintf("could not write response: %v", err), http.StatusInternalServerError)
-		}
-	}
+	_ = "STUB: not implemented"
+	return *new(http.HandlerFunc)
 }
+
+// verify the content type is accurate

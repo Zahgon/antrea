@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	ipset "antrea.io/antrea/v2/pkg/agent/util/ipset"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,98 +43,70 @@ type MockInterfaceMockRecorder struct {
 
 // NewMockInterface creates a new mock instance.
 func NewMockInterface(ctrl *gomock.Controller) *MockInterface {
-	mock := &MockInterface{ctrl: ctrl}
-	mock.recorder = &MockInterfaceMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddEntry mocks base method.
+	return nil
 }
 
-// AddEntry mocks base method.
-func (m *MockInterface) AddEntry(name, entry string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddEntry", name, entry)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockInterface) AddEntry(name, entry string) error { _ = "STUB: not implemented"; return nil }
 
 // AddEntry indicates an expected call of AddEntry.
 func (mr *MockInterfaceMockRecorder) AddEntry(name, entry any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddEntry", reflect.TypeOf((*MockInterface)(nil).AddEntry), name, entry)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // CreateIPSet mocks base method.
 func (m *MockInterface) CreateIPSet(name string, setType ipset.SetType, isIPv6 bool) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateIPSet", name, setType, isIPv6)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // CreateIPSet indicates an expected call of CreateIPSet.
 func (mr *MockInterfaceMockRecorder) CreateIPSet(name, setType, isIPv6 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateIPSet", reflect.TypeOf((*MockInterface)(nil).CreateIPSet), name, setType, isIPv6)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DelEntry mocks base method.
-func (m *MockInterface) DelEntry(name, entry string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DelEntry", name, entry)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockInterface) DelEntry(name, entry string) error { _ = "STUB: not implemented"; return nil }
 
 // DelEntry indicates an expected call of DelEntry.
 func (mr *MockInterfaceMockRecorder) DelEntry(name, entry any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DelEntry", reflect.TypeOf((*MockInterface)(nil).DelEntry), name, entry)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DestroyIPSet mocks base method.
-func (m *MockInterface) DestroyIPSet(name string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DestroyIPSet", name)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockInterface) DestroyIPSet(name string) error { _ = "STUB: not implemented"; return nil }
 
 // DestroyIPSet indicates an expected call of DestroyIPSet.
 func (mr *MockInterfaceMockRecorder) DestroyIPSet(name any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyIPSet", reflect.TypeOf((*MockInterface)(nil).DestroyIPSet), name)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ListEntries mocks base method.
 func (m *MockInterface) ListEntries(name string) ([]string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListEntries", name)
-	ret0, _ := ret[0].([]string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // ListEntries indicates an expected call of ListEntries.
 func (mr *MockInterfaceMockRecorder) ListEntries(name any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListEntries", reflect.TypeOf((*MockInterface)(nil).ListEntries), name)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Save mocks base method.
-func (m *MockInterface) Save() ([]byte, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Save")
-	ret0, _ := ret[0].([]byte)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
+func (m *MockInterface) Save() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // Save indicates an expected call of Save.
-func (mr *MockInterfaceMockRecorder) Save() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockInterface)(nil).Save))
-}
+func (mr *MockInterfaceMockRecorder) Save() *gomock.Call { _ = "STUB: not implemented"; return nil }

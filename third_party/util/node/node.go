@@ -19,11 +19,9 @@ limitations under the License.
 package node
 
 import (
-	"fmt"
 	"net"
 
 	v1 "k8s.io/api/core/v1"
-	netutils "k8s.io/utils/net"
 )
 
 const (
@@ -42,21 +40,13 @@ type NoMatchError struct {
 
 // Error is the implementation of the conventional interface for
 // representing an error condition, with the nil value representing no error.
-func (e *NoMatchError) Error() string {
-	return fmt.Sprintf("no preferred addresses found; known addresses: %v", e.addresses)
-}
+func (e *NoMatchError) Error() string { _ = "STUB: not implemented"; return "" }
 
 // GetPreferredNodeAddress returns the address of the provided node, using the provided preference order.
 // If none of the preferred address types are found, an error is returned.
 func GetPreferredNodeAddress(node *v1.Node, preferredAddressTypes []v1.NodeAddressType) (string, error) {
-	for _, addressType := range preferredAddressTypes {
-		for _, address := range node.Status.Addresses {
-			if address.Type == addressType {
-				return address.Address, nil
-			}
-		}
-	}
-	return "", &NoMatchError{addresses: node.Status.Addresses}
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 // GetNodeHostIPs returns the provided node's IP(s); either a single "primary IP" for the
@@ -65,45 +55,10 @@ func GetPreferredNodeAddress(node *v1.Node, preferredAddressTypes []v1.NodeAddre
 // from this function are used as the `.status.PodIPs` values for host-network pods on the
 // node, and the first IP is used as the `.status.HostIP` for all pods on the node.
 func GetNodeHostIPs(node *v1.Node) ([]net.IP, error) {
+	_ = "STUB: not implemented"
 	// Re-sort the addresses with InternalIPs first and then ExternalIPs
-	allIPs := make([]net.IP, 0, len(node.Status.Addresses))
-	for _, addr := range node.Status.Addresses {
-		if addr.Type == v1.NodeInternalIP {
-			ip := netutils.ParseIPSloppy(addr.Address)
-			if ip != nil {
-				allIPs = append(allIPs, ip)
-			}
-		}
-	}
-	for _, addr := range node.Status.Addresses {
-		if addr.Type == v1.NodeExternalIP {
-			ip := netutils.ParseIPSloppy(addr.Address)
-			if ip != nil {
-				allIPs = append(allIPs, ip)
-			}
-		}
-	}
-	if len(allIPs) == 0 {
-		return nil, fmt.Errorf("host IP unknown; known addresses: %v", node.Status.Addresses)
-	}
-
-	nodeIPs := []net.IP{allIPs[0]}
-	for _, ip := range allIPs {
-		if netutils.IsIPv6(ip) != netutils.IsIPv6(nodeIPs[0]) {
-			nodeIPs = append(nodeIPs, ip)
-			break
-		}
-	}
-
-	return nodeIPs, nil
+	return nil, nil
 }
 
 // IsNodeReady returns true if a node is ready; false otherwise.
-func IsNodeReady(node *v1.Node) bool {
-	for _, c := range node.Status.Conditions {
-		if c.Type == v1.NodeReady {
-			return c.Status == v1.ConditionTrue
-		}
-	}
-	return false
-}
+func IsNodeReady(node *v1.Node) bool { _ = "STUB: not implemented"; return false }

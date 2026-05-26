@@ -29,27 +29,31 @@ type MockNetIO struct {
 }
 
 func NewMockNetIO(testMibIPForwardRows []antreasyscall.MibIPForwardRow) antreasyscall.NetIOInterface {
-	return &MockNetIO{
-		IPForwardRows: testMibIPForwardRows,
-	}
+	_ = "STUB: not implemented"
+	return *new(antreasyscall.NetIOInterface)
 }
 
 func (n *MockNetIO) GetIPInterfaceEntry(_ *antreasyscall.MibIPInterfaceRow) (errcode error) {
-	return n.GetIPInterfaceEntryErr
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (n *MockNetIO) SetIPInterfaceEntry(_ *antreasyscall.MibIPInterfaceRow) (errcode error) {
-	return n.SetIPInterfaceEntryErr
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (n *MockNetIO) CreateIPForwardEntry(_ *antreasyscall.MibIPForwardRow) (errcode error) {
-	return n.CreateIPForwardEntryErr
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (n *MockNetIO) DeleteIPForwardEntry(_ *antreasyscall.MibIPForwardRow) (errcode error) {
-	return n.DeleteIPForwardEntryErr
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (n *MockNetIO) ListIPForwardRows(_ uint16) ([]antreasyscall.MibIPForwardRow, error) {
-	return n.IPForwardRows, n.ListIPForwardRowsErr
+	_ = "STUB: not implemented"
+	return nil, nil
 }

@@ -19,18 +19,15 @@ package rules
 
 import (
 	"bytes"
-	"fmt"
-	"net"
-
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/util/iptables"
 )
 
 // InitRules initializes rules based on the underlying implementation
 func InitRules(isIPv6 bool) PodPortRules {
+	_ = "STUB: not implemented"
 	// This can be extended based on the system capability.
-	return NewIPTableRules(isIPv6)
+	return *new(PodPortRules)
 }
 
 // NodePortLocalChain is the name of the chain in IPTABLES for Node Port Local
@@ -44,128 +41,46 @@ type iptablesRules struct {
 }
 
 // NewIPTableRules retruns a new instance of IPTableRules
-func NewIPTableRules(isIPv6 bool) *iptablesRules {
-	ipv4Enabled := !isIPv6
-	ipv6Enabled := isIPv6
-	iptInstance, _ := iptables.New(ipv4Enabled, ipv6Enabled)
-	protocol := iptables.ProtocolIPv4
-	if isIPv6 {
-		protocol = iptables.ProtocolIPv6
-	}
-	iptRule := iptablesRules{
-		table:    iptInstance,
-		isIPv6:   isIPv6,
-		protocol: protocol,
-	}
-	return &iptRule
-}
+func NewIPTableRules(isIPv6 bool) *iptablesRules { _ = "STUB: not implemented"; return nil }
 
 // Init initializes IPTABLES rules for NPL. Currently it deletes existing rules to ensure that no stale entries are present.
-func (ipt *iptablesRules) Init() error {
-	if err := ipt.initRules(); err != nil {
-		return fmt.Errorf("initialization of NPL iptables rules failed: %v", err)
-	}
-	return nil
-}
+func (ipt *iptablesRules) Init() error { _ = "STUB: not implemented"; return nil }
 
 // initRules creates the NPL chain and links it to the PREROUTING (for incoming
 // traffic) and OUTPUT chain (for locally-generated traffic). All NPL DNAT rules
 // will be added to this chain.
-func (ipt *iptablesRules) initRules() error {
-	if err := ipt.table.EnsureChain(ipt.protocol, iptables.NATTable, NodePortLocalChain); err != nil {
-		return err
-	}
-	ruleSpec := []string{
-		"-p", "all", "-m", "addrtype", "--dst-type", "LOCAL", "-j", NodePortLocalChain,
-	}
-	if err := ipt.table.AppendRule(ipt.protocol, iptables.NATTable, iptables.PreRoutingChain, ruleSpec); err != nil {
-		return err
-	}
-	if err := ipt.table.AppendRule(ipt.protocol, iptables.NATTable, iptables.OutputChain, ruleSpec); err != nil {
-		return err
-	}
-	return nil
-}
+func (ipt *iptablesRules) initRules() error { _ = "STUB: not implemented"; return nil }
 
 func buildRuleForPod(nodePort int, podIP string, podPort int, protocol string) []string {
-	podAddr := net.JoinHostPort(podIP, fmt.Sprint(podPort))
-	return []string{
-		"-p", protocol, "-m", protocol, "--dport", fmt.Sprint(nodePort),
-		"-j", "DNAT", "--to-destination", podAddr,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddRule appends a DNAT rule in NodePortLocalChain chain of NAT table.
 func (ipt *iptablesRules) AddRule(nodePort int, podIP string, podPort int, protocol string) error {
-	rule := buildRuleForPod(nodePort, podIP, podPort, protocol)
-	if err := ipt.table.AppendRule(ipt.protocol, iptables.NATTable, NodePortLocalChain, rule); err != nil {
-		return err
-	}
-	klog.InfoS("Successfully added DNAT rule", "podIP", podIP, "podPort", podPort, "nodePort", nodePort, "protocol", protocol, "ipFamily", ipt.protocol)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // AddAllRules constructs a list of iptables rules for the NPL chain and performs a
 // iptables-restore on this chain. It uses --no-flush to keep the previous rules intact.
 func (ipt *iptablesRules) AddAllRules(nplList []PodNodePort) error {
-	iptablesData := bytes.NewBuffer(nil)
-	writeLine(iptablesData, "*nat")
-	writeLine(iptablesData, iptables.MakeChainLine(NodePortLocalChain))
-
-	for _, nplData := range nplList {
-		rule := buildRuleForPod(nplData.NodePort, nplData.PodIP, nplData.PodPort, nplData.Protocol)
-		ruleWithChain := append([]string{"-A", NodePortLocalChain}, rule...)
-		writeLine(iptablesData, ruleWithChain...)
-	}
-
-	writeLine(iptablesData, "COMMIT")
-	return ipt.table.Restore(iptablesData.String(), false, ipt.isIPv6)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteRule deletes a specific NPL rule from NodePortLocalChain chain
 func (ipt *iptablesRules) DeleteRule(nodePort int, podIP string, podPort int, protocol string) error {
-	rule := buildRuleForPod(nodePort, podIP, podPort, protocol)
-	if err := ipt.table.DeleteRule(ipt.protocol, iptables.NATTable, NodePortLocalChain, rule); err != nil {
-		return err
-	}
-	klog.InfoS("Successfully deleted DNAT rule", "podIP", podIP, "podPort", podPort, "nodePort", nodePort, "protocol", protocol, "ipFamily", ipt.protocol)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 // DeleteAllRules deletes all NPL rules programmed in the node
-func (ipt *iptablesRules) DeleteAllRules() error {
-	exists, err := ipt.table.ChainExists(ipt.protocol, iptables.NATTable, NodePortLocalChain)
-	if err != nil {
-		return fmt.Errorf("failed to check if NodePortLocal chain exists in NAT table: %w", err)
-	}
-	if !exists {
-		return nil
-	}
-	ruleSpec := []string{
-		"-p", "all", "-m", "addrtype", "--dst-type", "LOCAL", "-j", NodePortLocalChain,
-	}
-
-	if err := ipt.table.DeleteRule(ipt.protocol, iptables.NATTable, iptables.PreRoutingChain, ruleSpec); err != nil {
-		return err
-	}
-	if err := ipt.table.DeleteRule(ipt.protocol, iptables.NATTable, iptables.OutputChain, ruleSpec); err != nil {
-		return err
-	}
-	if err := ipt.table.DeleteChain(ipt.protocol, iptables.NATTable, NodePortLocalChain); err != nil {
-		return err
-	}
-	return nil
-}
+func (ipt *iptablesRules) DeleteAllRules() error { _ = "STUB: not implemented"; return nil }
 
 // Join all words with spaces, terminate with newline and write to buf.
 func writeLine(buf *bytes.Buffer, words ...string) {
+	_ = "STUB: not implemented"
 	// We avoid strings.Join for performance reasons.
-	for i := range words {
-		buf.WriteString(words[i])
-		if i < len(words)-1 {
-			buf.WriteByte(' ')
-		} else {
-			buf.WriteByte('\n')
-		}
-	}
+	return
 }

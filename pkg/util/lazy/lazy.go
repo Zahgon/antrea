@@ -16,7 +16,6 @@ package lazy
 
 import (
 	"sync"
-	"sync/atomic"
 )
 
 // Lazy defers the evaluation of getter until it's accessed the first access.
@@ -36,27 +35,10 @@ type lazy[T any] struct {
 }
 
 // New returns a new lazily evaluated value. The getter is executed only when it's accessed the first access.
-func New[T any](getter func() T) Lazy[T] {
-	return &lazy[T]{getter: getter}
-}
+func New[T any](getter func() T) Lazy[T] { _ = "STUB: not implemented"; return nil }
 
-func (l *lazy[T]) Get() T {
-	if atomic.LoadUint32(&l.done) == 0 {
-		return l.doSlow()
-	}
-	return l.res
-}
+func (l *lazy[T]) Get() T { _ = "STUB: not implemented"; return *new(T) }
 
-func (l *lazy[T]) doSlow() T {
-	l.m.Lock()
-	defer l.m.Unlock()
-	if l.done == 0 {
-		defer atomic.StoreUint32(&l.done, 1)
-		l.res = l.getter()
-	}
-	return l.res
-}
+func (l *lazy[T]) doSlow() T { _ = "STUB: not implemented"; return *new(T) }
 
-func (l *lazy[T]) Evaluated() bool {
-	return atomic.LoadUint32(&l.done) == 1
-}
+func (l *lazy[T]) Evaluated() bool { _ = "STUB: not implemented"; return false }

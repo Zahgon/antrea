@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	crdv1alpha1 "antrea.io/antrea/v2/pkg/apis/crd/v1alpha1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -53,14 +52,6 @@ type nodeLatencyMonitors struct {
 
 // newNodeLatencyMonitors returns a NodeLatencyMonitors
 func newNodeLatencyMonitors(c *CrdV1alpha1Client) *nodeLatencyMonitors {
-	return &nodeLatencyMonitors{
-		gentype.NewClientWithList[*crdv1alpha1.NodeLatencyMonitor, *crdv1alpha1.NodeLatencyMonitorList](
-			"nodelatencymonitors",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *crdv1alpha1.NodeLatencyMonitor { return &crdv1alpha1.NodeLatencyMonitor{} },
-			func() *crdv1alpha1.NodeLatencyMonitorList { return &crdv1alpha1.NodeLatencyMonitorList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

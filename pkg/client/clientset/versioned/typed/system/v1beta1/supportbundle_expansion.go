@@ -24,9 +24,6 @@ type SupportBundleExpansion interface {
 }
 
 func (c *supportBundles) Download(ctx context.Context, name string) (io.ReadCloser, error) {
-	return c.GetClient().Get().
-		Resource("supportbundles").
-		Name(name).
-		SubResource("download").
-		Stream(ctx)
+	_ = "STUB: not implemented"
+	return *new(io.ReadCloser), nil
 }

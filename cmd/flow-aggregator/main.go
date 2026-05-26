@@ -21,10 +21,6 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/log"
-	"antrea.io/antrea/v2/pkg/version"
 )
 
 func main() {
@@ -34,26 +30,4 @@ func main() {
 	}
 }
 
-func newFlowAggregatorCommand() *cobra.Command {
-
-	cmd := &cobra.Command{
-		Use:  "flow-aggregator",
-		Long: "The Flow Aggregator.",
-		Run: func(cmd *cobra.Command, args []string) {
-			log.InitLogs(cmd.Flags())
-			defer log.FlushLogs()
-			configFile, err := cmd.Flags().GetString("config")
-			if err != nil {
-				klog.Fatalf("Error when finding the path of config: %v", err)
-			}
-			if err := run(configFile); err != nil {
-				klog.Fatalf("Error running flow aggregator: %v", err)
-			}
-		},
-		Version: version.GetFullVersionWithRuntimeInfo(),
-	}
-	flags := cmd.Flags()
-	flags.String("config", "", "The path to the configuration file")
-	log.AddFlags(flags)
-	return cmd
-}
+func newFlowAggregatorCommand() *cobra.Command { _ = "STUB: not implemented"; return nil }

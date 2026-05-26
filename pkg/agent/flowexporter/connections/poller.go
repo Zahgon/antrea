@@ -17,11 +17,7 @@ package connections
 import (
 	"time"
 
-	"k8s.io/klog/v2"
-
 	"antrea.io/antrea/v2/pkg/agent/flowexporter/connection"
-	"antrea.io/antrea/v2/pkg/agent/metrics"
-	"antrea.io/antrea/v2/pkg/agent/openflow"
 	"antrea.io/antrea/v2/pkg/util/channel"
 )
 
@@ -39,58 +35,14 @@ type Poller struct {
 }
 
 func NewPoller(ctDumper ConnTrackDumper, notifier channel.Notifier, pollInterval time.Duration, v4Enabled, v6Enabled, connectUplinkToBridge bool) *Poller {
-	var zones []uint16
-	if v4Enabled {
-		if connectUplinkToBridge {
-			zones = append(zones, uint16(openflow.IPCtZoneTypeRegMark.GetValue()<<12))
-		} else {
-			zones = append(zones, openflow.CtZone)
-		}
-	}
-	if v6Enabled {
-		if connectUplinkToBridge {
-			zones = append(zones, uint16(openflow.IPv6CtZoneTypeRegMark.GetValue()<<12))
-		} else {
-			zones = append(zones, openflow.CtZoneV6)
-		}
-	}
-
-	return &Poller{
-		connTrackDumper:       ctDumper,
-		zones:                 zones,
-		notifier:              notifier,
-		pollInterval:          pollInterval,
-		v4Enabled:             v4Enabled,
-		v6Enabled:             v6Enabled,
-		connectUplinkToBridge: connectUplinkToBridge,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (p *Poller) Run(stopCh <-chan struct{}) {
-	klog.InfoS("Started conntrack poller", "interval", p.pollInterval)
+func (p *Poller) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	pollTicker := time.NewTicker(p.pollInterval)
-	defer pollTicker.Stop()
-
-	for {
-		select {
-		case <-stopCh:
-			return
-		case <-pollTicker.C:
-			conns, _, err := p.Poll()
-			if err != nil {
-				// Not failing here as errors can be transient and could be resolved in future poll cycles.
-				// TODO: Come up with a backoff/retry mechanism by increasing poll interval and adding retry timeout
-				klog.ErrorS(err, "Error during conntrack poll cycle")
-				continue
-			}
-
-			if p.notifier != nil {
-				p.notifier.Notify(conns)
-			}
-		}
-	}
-}
+// Not failing here as errors can be transient and could be resolved in future poll cycles.
+// TODO: Come up with a backoff/retry mechanism by increasing poll interval and adding retry timeout
 
 // Poll calls into conntrackDumper interface to dump conntrack flows. It returns the connections
 // filtered by zones and number of connections for each address family, as a slice.
@@ -98,32 +50,6 @@ func (p *Poller) Run(stopCh <-chan struct{}) {
 // number of IPv6 connections).
 // TODO: As optimization, only poll invalid/closed connections during every poll, and poll the established connections right before the export.
 func (p *Poller) Poll() ([]*connection.Connection, []int, error) {
-	klog.V(2).InfoS("Polling conntrack")
-	startTime := time.Now()
-	defer func() {
-		duration := time.Since(startTime)
-		metrics.ConntrackPollCycleDuration.Observe(duration.Seconds())
-		klog.V(2).InfoS("Polled conntrack", "duration", duration)
-	}()
-
-	var connsLens []int
-	var totalConns int
-	var filteredConnsList []*connection.Connection
-	for _, zone := range p.zones {
-		filteredConnsListPerZone, totalConnsPerZone, err := p.connTrackDumper.DumpFlows(zone)
-		if err != nil {
-			return nil, nil, err
-		}
-		totalConns += totalConnsPerZone
-		filteredConnsList = append(filteredConnsList, filteredConnsListPerZone...)
-		connsLens = append(connsLens, len(filteredConnsListPerZone))
-	}
-
-	metrics.TotalConnectionsInConnTrackTable.Set(float64(totalConns))
-	maxConns, err := p.connTrackDumper.GetMaxConnections()
-	if err != nil {
-		return nil, nil, err
-	}
-	metrics.MaxConnectionsInConnTrackTable.Set(float64(maxConns))
-	return filteredConnsList, connsLens, nil
+	_ = "STUB: not implemented"
+	return nil, nil, nil
 }

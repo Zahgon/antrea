@@ -15,15 +15,10 @@
 package store
 
 import (
-	"fmt"
-	"reflect"
-
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 
 	"antrea.io/antrea/v2/pkg/apis/controlplane"
 	"antrea.io/antrea/v2/pkg/apiserver/storage"
-	"antrea.io/antrea/v2/pkg/apiserver/storage/ram"
 	"antrea.io/antrea/v2/pkg/controller/types"
 )
 
@@ -42,103 +37,60 @@ type supportBundleCollectionEvent struct {
 // 1. Added event will be generated if the Selectors was not interested in the object but is now.
 // 2. Deleted event will be generated if the Selectors was interested in the object but is not now.
 func (event *supportBundleCollectionEvent) ToWatchEvent(selectors *storage.Selectors, isInitEvent bool) *watch.Event {
-	prevObjSelected, currObjSelected := isSelected(event.Key, event.prevBundleCollection, event.currBundleCollection, selectors, isInitEvent)
-
-	switch {
-	case !currObjSelected && !prevObjSelected:
-		// Watcher is not interested in that object.
-		return nil
-	case currObjSelected && !prevObjSelected:
-		// Watcher was not interested in that object but is now, an added event will be generated.
-		obj := new(controlplane.SupportBundleCollection)
-		ToSupportBundleCollectionMsg(event.currBundleCollection, obj, true)
-		return &watch.Event{Type: watch.Added, Object: obj}
-	case !currObjSelected && prevObjSelected:
-		// Watcher was interested in that object but is not interested now, a deleted event will be generated.
-		obj := new(controlplane.SupportBundleCollection)
-		ToSupportBundleCollectionMsg(event.prevBundleCollection, obj, false)
-		return &watch.Event{Type: watch.Deleted, Object: obj}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
+// Watcher is not interested in that object.
+
+// Watcher was not interested in that object but is now, an added event will be generated.
+
+// Watcher was interested in that object but is not interested now, a deleted event will be generated.
+
 func (event *supportBundleCollectionEvent) GetResourceVersion() uint64 {
-	return event.ResourceVersion
+	_ = "STUB: not implemented"
+	return 0
 }
 
 var _ storage.GenEventFunc = genSupportBundleEvent
 
 // genSupportBundleEvent generates InternalEvent from the given versions of an SupportBundleCollection.
 func genSupportBundleEvent(key string, prevObj, currObj interface{}, rv uint64) (storage.InternalEvent, error) {
-	if reflect.DeepEqual(prevObj, currObj) {
-		return nil, nil
-	}
-
-	event := &supportBundleCollectionEvent{Key: key, ResourceVersion: rv}
-
-	if prevObj != nil {
-		event.prevBundleCollection = prevObj.(*types.SupportBundleCollection)
-	}
-	if currObj != nil {
-		event.currBundleCollection = currObj.(*types.SupportBundleCollection)
-	}
-
-	return event, nil
+	_ = "STUB: not implemented"
+	return *new(storage.InternalEvent), nil
 }
 
 // ToSupportBundleCollectionMsg converts the stored SupportBundleCollection to its message form.
 // If includeBody is true, the detailed configurations are copied.
 func ToSupportBundleCollectionMsg(in *types.SupportBundleCollection, out *controlplane.SupportBundleCollection, includeBody bool) {
-	out.Name = in.Name
-	out.UID = in.UID
-	if !includeBody {
-		return
-	}
-	out.ExpiredAt = in.ExpiredAt
-	out.SinceTime = in.SinceTime
-	out.FileServer = controlplane.BundleFileServer{
-		URL:           in.FileServer.URL,
-		HostPublicKey: in.FileServer.HostPublicKey,
-	}
-	out.Authentication = in.Authentication
+	_ = "STUB: not implemented"
+	return
 }
 
 // SupportBundleCollectionKeyFunc knows how to get the key of a SupportBundleCollection.
 func SupportBundleCollectionKeyFunc(obj interface{}) (string, error) {
-	bundle, ok := obj.(*types.SupportBundleCollection)
-	if !ok {
-		return "", fmt.Errorf("object is not *types.SupportBundleCollection: %v", obj)
-	}
-	return bundle.Name, nil
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 // NewSupportBundleCollectionStore creates a store of SupportBundleCollection.
 func NewSupportBundleCollectionStore() storage.Interface {
-	return ram.NewStore(SupportBundleCollectionKeyFunc, nil, genSupportBundleEvent, keyAndSpanSelectFunc, func() runtime.Object { return new(controlplane.SupportBundleCollection) })
+	_ = "STUB: not implemented"
+	return *new(storage.Interface)
 }
 
 // keyAndSpanSelectFunc returns whether the provided selectors match the key and/or the nodeNames.
 func keyAndSpanSelectFunc(selectors *storage.Selectors, key string, obj interface{}) bool {
+	_ = "STUB: not implemented"
 	// If Key is present in selectors, the provided key must match it.
-	if selectors.Key != "" && key != selectors.Key {
-		return false
-	}
-	// If nodeName is present in selectors' Field selector, the provided nodeNames must contain it.
-	if nodeName, found := selectors.Field.RequiresExactMatch("nodeName"); found {
-		if !obj.(types.Span).Has(nodeName) {
-			return false
-		}
-	}
-	return true
+	return false
 }
+
+// If nodeName is present in selectors' Field selector, the provided nodeNames must contain it.
 
 // isSelected determines if the previous and the current version of an object should be selected by the given selectors.
 func isSelected(key string, prevObj, currObj interface{}, selectors *storage.Selectors, isInitEvent bool) (bool, bool) {
+	_ = "STUB: not implemented"
 	// We have filtered out init events that we are not interested in, so the current object must be selected.
-	if isInitEvent {
-		return false, true
-	}
-	prevObjSelected := !reflect.ValueOf(prevObj).IsNil() && keyAndSpanSelectFunc(selectors, key, prevObj)
-	currObjSelected := !reflect.ValueOf(currObj).IsNil() && keyAndSpanSelectFunc(selectors, key, currObj)
-	return prevObjSelected, currObjSelected
+	return false, false
 }

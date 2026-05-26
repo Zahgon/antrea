@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	openflow "antrea.io/antrea/v2/pkg/ovs/openflow"
 	openflow15 "antrea.io/libOpenflow/openflow15"
 	gomock "go.uber.org/mock/gomock"
@@ -46,110 +44,97 @@ type MockOFEntryOperationsMockRecorder struct {
 
 // NewMockOFEntryOperations creates a new mock instance.
 func NewMockOFEntryOperations(ctrl *gomock.Controller) *MockOFEntryOperations {
-	mock := &MockOFEntryOperations{ctrl: ctrl}
-	mock.recorder = &MockOFEntryOperationsMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockOFEntryOperations) EXPECT() *MockOFEntryOperationsMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddAll mocks base method.
+	return nil
 }
 
-// AddAll mocks base method.
 func (m *MockOFEntryOperations) AddAll(flows []*openflow15.FlowMod) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddAll", flows)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddAll indicates an expected call of AddAll.
 func (mr *MockOFEntryOperationsMockRecorder) AddAll(flows any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddAll", reflect.TypeOf((*MockOFEntryOperations)(nil).AddAll), flows)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddOFEntries mocks base method.
 func (m *MockOFEntryOperations) AddOFEntries(ofEntries []openflow.OFEntry) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddOFEntries", ofEntries)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddOFEntries indicates an expected call of AddOFEntries.
 func (mr *MockOFEntryOperationsMockRecorder) AddOFEntries(ofEntries any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddOFEntries", reflect.TypeOf((*MockOFEntryOperations)(nil).AddOFEntries), ofEntries)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // BundleOps mocks base method.
 func (m *MockOFEntryOperations) BundleOps(adds, mods, dels []*openflow15.FlowMod) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BundleOps", adds, mods, dels)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // BundleOps indicates an expected call of BundleOps.
 func (mr *MockOFEntryOperationsMockRecorder) BundleOps(adds, mods, dels any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BundleOps", reflect.TypeOf((*MockOFEntryOperations)(nil).BundleOps), adds, mods, dels)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteAll mocks base method.
 func (m *MockOFEntryOperations) DeleteAll(flows []*openflow15.FlowMod) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteAll", flows)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteAll indicates an expected call of DeleteAll.
 func (mr *MockOFEntryOperationsMockRecorder) DeleteAll(flows any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAll", reflect.TypeOf((*MockOFEntryOperations)(nil).DeleteAll), flows)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteOFEntries mocks base method.
 func (m *MockOFEntryOperations) DeleteOFEntries(ofEntries []openflow.OFEntry) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteOFEntries", ofEntries)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteOFEntries indicates an expected call of DeleteOFEntries.
 func (mr *MockOFEntryOperationsMockRecorder) DeleteOFEntries(ofEntries any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOFEntries", reflect.TypeOf((*MockOFEntryOperations)(nil).DeleteOFEntries), ofEntries)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ModifyAll mocks base method.
 func (m *MockOFEntryOperations) ModifyAll(flows []*openflow15.FlowMod) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ModifyAll", flows)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ModifyAll indicates an expected call of ModifyAll.
 func (mr *MockOFEntryOperationsMockRecorder) ModifyAll(flows any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ModifyAll", reflect.TypeOf((*MockOFEntryOperations)(nil).ModifyAll), flows)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ModifyOFEntries mocks base method.
 func (m *MockOFEntryOperations) ModifyOFEntries(ofEntries []openflow.OFEntry) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ModifyOFEntries", ofEntries)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ModifyOFEntries indicates an expected call of ModifyOFEntries.
 func (mr *MockOFEntryOperationsMockRecorder) ModifyOFEntries(ofEntries any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ModifyOFEntries", reflect.TypeOf((*MockOFEntryOperations)(nil).ModifyOFEntries), ofEntries)
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -26,70 +26,38 @@ import (
 )
 
 func (f *featurePodConnectivity) matchUplinkInPortInClassifierTable(flowBuilder binding.FlowBuilder) binding.FlowBuilder {
-	return flowBuilder.MatchInPort(f.uplinkPort)
+	_ = "STUB: not implemented"
+	return *new(binding.FlowBuilder)
 }
 
 // hostBridgeUplinkFlows generates the flows that forward traffic between the bridge local port and the uplink port to
 // support the host traffic.
 // TODO(gran): sync latest changes from pipeline_windows.go
 func (f *featurePodConnectivity) hostBridgeUplinkFlows() []binding.Flow {
+	_ = "STUB: not implemented"
 	// outputToBridgeRegMark marks that the output interface is OVS bridge.
-	outputToBridgeRegMark := binding.NewRegMark(TargetOFPortField, f.hostIfacePort)
-	cookieID := f.cookieAllocator.Request(f.category).Raw()
-	flows := f.hostBridgeLocalFlows()
-	if f.networkConfig.IPv4Enabled {
-		flows = append(flows,
-			// This generates the flow to forward ARP packets from uplink port in normal way since uplink port is set to enable
-			// flood.
-			ARPSpoofGuardTable.ofTable.BuildFlow(priorityHigh).
-				Cookie(cookieID).
-				MatchInPort(f.uplinkPort).
-				MatchProtocol(binding.ProtocolARP).
-				Action().Normal().
-				Done(),
-			// This generates the flow to forward ARP from bridge local port in normal way since bridge port is set to enable
-			// flood.
-			ARPSpoofGuardTable.ofTable.BuildFlow(priorityHigh).
-				Cookie(cookieID).
-				MatchInPort(f.hostIfacePort).
-				MatchProtocol(binding.ProtocolARP).
-				Action().Normal().
-				Done())
-	}
-	flows = append(flows,
-		// Handle packet to Node.
-		// Must use a separate flow to Output(config.BridgeOFPort), otherwise OVS will drop the packet:
-		//   output:NXM_NX_REG1[]
-		//   >> output port 4294967294 is out of range
-		//   Datapath actions: drop
-		// TODO(gran): support Traceflow
-		L2ForwardingCalcTable.ofTable.BuildFlow(priorityNormal).
-			Cookie(cookieID).
-			MatchDstMAC(f.nodeConfig.UplinkNetConfig.MAC).
-			Action().LoadToRegField(TargetOFPortField, f.hostIfacePort).
-			Action().LoadRegMark(OutputToOFPortRegMark).
-			Action().GotoStage(stageConntrack).
-			Done(),
-		OutputTable.ofTable.BuildFlow(priorityHigh).
-			Cookie(cookieID).
-			MatchProtocol(binding.ProtocolIP).
-			MatchRegMark(outputToBridgeRegMark, OutputToOFPortRegMark).
-			Action().Output(f.hostIfacePort).
-			Done(),
-		// Handle outgoing packet from AntreaFlexibleIPAM Pods. Broadcast is not supported.
-		L2ForwardingCalcTable.ofTable.BuildFlow(priorityLow).
-			Cookie(cookieID).
-			MatchRegMark(AntreaFlexibleIPAMRegMark).
-			Action().LoadToRegField(TargetOFPortField, f.uplinkPort).
-			Action().LoadRegMark(OutputToOFPortRegMark).
-			Action().GotoStage(stageConntrack).
-			Done())
-	return flows
+	return nil
 }
+
+// This generates the flow to forward ARP packets from uplink port in normal way since uplink port is set to enable
+// flood.
+
+// This generates the flow to forward ARP from bridge local port in normal way since bridge port is set to enable
+// flood.
+
+// Handle packet to Node.
+// Must use a separate flow to Output(config.BridgeOFPort), otherwise OVS will drop the packet:
+//   output:NXM_NX_REG1[]
+//   >> output port 4294967294 is out of range
+//   Datapath actions: drop
+// TODO(gran): support Traceflow
+
+// Handle outgoing packet from AntreaFlexibleIPAM Pods. Broadcast is not supported.
 
 func (f *featurePodConnectivity) l3FwdFlowToRemoteViaRouting(localGatewayMAC net.HardwareAddr,
 	remoteGatewayMAC net.HardwareAddr,
 	peerIP net.IP,
 	peerPodCIDR *net.IPNet) []binding.Flow {
-	return []binding.Flow{f.l3FwdFlowToRemoteViaGW(localGatewayMAC, *peerPodCIDR)}
+	_ = "STUB: not implemented"
+	return nil
 }

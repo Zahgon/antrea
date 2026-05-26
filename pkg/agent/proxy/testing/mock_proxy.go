@@ -25,8 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
-
 	openflow "antrea.io/antrea/v2/pkg/ovs/openflow"
 	proxy "antrea.io/antrea/v2/third_party/proxy"
 	gomock "go.uber.org/mock/gomock"
@@ -46,43 +44,37 @@ type MockProxyQuerierMockRecorder struct {
 
 // NewMockProxyQuerier creates a new mock instance.
 func NewMockProxyQuerier(ctrl *gomock.Controller) *MockProxyQuerier {
-	mock := &MockProxyQuerier{ctrl: ctrl}
-	mock.recorder = &MockProxyQuerierMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockProxyQuerier) EXPECT() *MockProxyQuerierMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetServiceByIP mocks base method.
+	return nil
 }
 
-// GetServiceByIP mocks base method.
 func (m *MockProxyQuerier) GetServiceByIP(serviceStr string) (proxy.ServicePortName, bool) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetServiceByIP", serviceStr)
-	ret0, _ := ret[0].(proxy.ServicePortName)
-	ret1, _ := ret[1].(bool)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return *new(proxy.ServicePortName), false
 }
 
 // GetServiceByIP indicates an expected call of GetServiceByIP.
 func (mr *MockProxyQuerierMockRecorder) GetServiceByIP(serviceStr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServiceByIP", reflect.TypeOf((*MockProxyQuerier)(nil).GetServiceByIP), serviceStr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetServiceFlowKeys mocks base method.
 func (m *MockProxyQuerier) GetServiceFlowKeys(serviceName, namespace string) ([]string, []openflow.GroupIDType, bool) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetServiceFlowKeys", serviceName, namespace)
-	ret0, _ := ret[0].([]string)
-	ret1, _ := ret[1].([]openflow.GroupIDType)
-	ret2, _ := ret[2].(bool)
-	return ret0, ret1, ret2
+	_ = "STUB: not implemented"
+	return nil, nil, false
 }
 
 // GetServiceFlowKeys indicates an expected call of GetServiceFlowKeys.
 func (mr *MockProxyQuerierMockRecorder) GetServiceFlowKeys(serviceName, namespace any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServiceFlowKeys", reflect.TypeOf((*MockProxyQuerier)(nil).GetServiceFlowKeys), serviceName, namespace)
+	_ = "STUB: not implemented"
+	return nil
 }

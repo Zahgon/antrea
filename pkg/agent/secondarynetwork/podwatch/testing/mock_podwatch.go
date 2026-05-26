@@ -26,7 +26,6 @@ package testing
 
 import (
 	net "net"
-	reflect "reflect"
 
 	ipam "antrea.io/antrea/v2/pkg/agent/cniserver/ipam"
 	types "antrea.io/antrea/v2/pkg/agent/cniserver/types"
@@ -50,70 +49,63 @@ type MockInterfaceConfiguratorMockRecorder struct {
 
 // NewMockInterfaceConfigurator creates a new mock instance.
 func NewMockInterfaceConfigurator(ctrl *gomock.Controller) *MockInterfaceConfigurator {
-	mock := &MockInterfaceConfigurator{ctrl: ctrl}
-	mock.recorder = &MockInterfaceConfiguratorMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockInterfaceConfigurator) EXPECT() *MockInterfaceConfiguratorMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// ConfigureSriovSecondaryInterface mocks base method.
+	return nil
 }
 
-// ConfigureSriovSecondaryInterface mocks base method.
 func (m *MockInterfaceConfigurator) ConfigureSriovSecondaryInterface(podName, podNamespace, containerID, containerNetNS, containerInterfaceName string, mtu int, podSriovVFDeviceID string, result *types100.Result) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ConfigureSriovSecondaryInterface", podName, podNamespace, containerID, containerNetNS, containerInterfaceName, mtu, podSriovVFDeviceID, result)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ConfigureSriovSecondaryInterface indicates an expected call of ConfigureSriovSecondaryInterface.
 func (mr *MockInterfaceConfiguratorMockRecorder) ConfigureSriovSecondaryInterface(podName, podNamespace, containerID, containerNetNS, containerInterfaceName, mtu, podSriovVFDeviceID, result any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConfigureSriovSecondaryInterface", reflect.TypeOf((*MockInterfaceConfigurator)(nil).ConfigureSriovSecondaryInterface), podName, podNamespace, containerID, containerNetNS, containerInterfaceName, mtu, podSriovVFDeviceID, result)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ConfigureVLANSecondaryInterface mocks base method.
 func (m *MockInterfaceConfigurator) ConfigureVLANSecondaryInterface(podName, podNamespace, containerID, containerNetNS, containerInterfaceName string, mtu int, ipamResult *ipam.IPAMResult, mac net.HardwareAddr) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ConfigureVLANSecondaryInterface", podName, podNamespace, containerID, containerNetNS, containerInterfaceName, mtu, ipamResult, mac)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ConfigureVLANSecondaryInterface indicates an expected call of ConfigureVLANSecondaryInterface.
 func (mr *MockInterfaceConfiguratorMockRecorder) ConfigureVLANSecondaryInterface(podName, podNamespace, containerID, containerNetNS, containerInterfaceName, mtu, ipamResult, mac any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConfigureVLANSecondaryInterface", reflect.TypeOf((*MockInterfaceConfigurator)(nil).ConfigureVLANSecondaryInterface), podName, podNamespace, containerID, containerNetNS, containerInterfaceName, mtu, ipamResult, mac)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteSriovSecondaryInterface mocks base method.
 func (m *MockInterfaceConfigurator) DeleteSriovSecondaryInterface(interfaceConfig *interfacestore.InterfaceConfig) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteSriovSecondaryInterface", interfaceConfig)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteSriovSecondaryInterface indicates an expected call of DeleteSriovSecondaryInterface.
 func (mr *MockInterfaceConfiguratorMockRecorder) DeleteSriovSecondaryInterface(interfaceConfig any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSriovSecondaryInterface", reflect.TypeOf((*MockInterfaceConfigurator)(nil).DeleteSriovSecondaryInterface), interfaceConfig)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteVLANSecondaryInterface mocks base method.
 func (m *MockInterfaceConfigurator) DeleteVLANSecondaryInterface(interfaceConfig *interfacestore.InterfaceConfig) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteVLANSecondaryInterface", interfaceConfig)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteVLANSecondaryInterface indicates an expected call of DeleteVLANSecondaryInterface.
 func (mr *MockInterfaceConfiguratorMockRecorder) DeleteVLANSecondaryInterface(interfaceConfig any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteVLANSecondaryInterface", reflect.TypeOf((*MockInterfaceConfigurator)(nil).DeleteVLANSecondaryInterface), interfaceConfig)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockIPAMAllocator is a mock of IPAMAllocator interface.
@@ -130,41 +122,37 @@ type MockIPAMAllocatorMockRecorder struct {
 
 // NewMockIPAMAllocator creates a new mock instance.
 func NewMockIPAMAllocator(ctrl *gomock.Controller) *MockIPAMAllocator {
-	mock := &MockIPAMAllocator{ctrl: ctrl}
-	mock.recorder = &MockIPAMAllocatorMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockIPAMAllocator) EXPECT() *MockIPAMAllocatorMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// SecondaryNetworkAllocate mocks base method.
+	return nil
 }
 
-// SecondaryNetworkAllocate mocks base method.
 func (m *MockIPAMAllocator) SecondaryNetworkAllocate(podOwner *v1beta1.PodOwner, networkConfig *types.NetworkConfig) (*ipam.IPAMResult, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SecondaryNetworkAllocate", podOwner, networkConfig)
-	ret0, _ := ret[0].(*ipam.IPAMResult)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // SecondaryNetworkAllocate indicates an expected call of SecondaryNetworkAllocate.
 func (mr *MockIPAMAllocatorMockRecorder) SecondaryNetworkAllocate(podOwner, networkConfig any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SecondaryNetworkAllocate", reflect.TypeOf((*MockIPAMAllocator)(nil).SecondaryNetworkAllocate), podOwner, networkConfig)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SecondaryNetworkRelease mocks base method.
 func (m *MockIPAMAllocator) SecondaryNetworkRelease(podOwner *v1beta1.PodOwner) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SecondaryNetworkRelease", podOwner)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SecondaryNetworkRelease indicates an expected call of SecondaryNetworkRelease.
 func (mr *MockIPAMAllocatorMockRecorder) SecondaryNetworkRelease(podOwner any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SecondaryNetworkRelease", reflect.TypeOf((*MockIPAMAllocator)(nil).SecondaryNetworkRelease), podOwner)
+	_ = "STUB: not implemented"
+	return nil
 }

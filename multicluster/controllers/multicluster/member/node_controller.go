@@ -18,22 +18,13 @@ package member
 
 import (
 	"context"
-	"fmt"
-	"net"
 	"sync"
 
 	corev1 "k8s.io/api/core/v1"
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/event"
-	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
@@ -98,19 +89,8 @@ func NewNodeReconciler(
 	serviceCIDR string,
 	precedence mcv1alpha1.Precedence,
 	commonAreaGetter commonarea.RemoteCommonAreaGetter) *NodeReconciler {
-	if string(precedence) == "" {
-		precedence = mcv1alpha1.PrecedenceInternal
-	}
-	reconciler := &NodeReconciler{
-		Client:            client,
-		Scheme:            scheme,
-		namespace:         namespace,
-		serviceCIDR:       serviceCIDR,
-		precedence:        precedence,
-		gatewayCandidates: make(map[string]bool),
-		commonAreaGetter:  commonAreaGetter,
-	}
-	return reconciler
+	_ = "STUB: not implemented"
+	return nil
 }
 
 //+kubebuilder:rbac:groups=multicluster.crd.antrea.io,resources=gateways,verbs=get;list;watch;create;update;patch;delete
@@ -119,308 +99,65 @@ func NewNodeReconciler(
 //+kubebuilder:rbac:groups=multicluster.crd.antrea.io,resources=gateways/finalizers,verbs=update
 
 func (r *NodeReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	var commonArea commonarea.RemoteCommonArea
-	commonArea, _, _ = r.commonAreaGetter.GetRemoteCommonAreaAndLocalID()
-	if commonArea == nil {
-		klog.V(2).InfoS("Skip reconciling Gateway since there is no connection to the leader")
-		return ctrl.Result{}, nil
-	}
-
-	klog.V(2).InfoS("Reconciling Node", "node", req.Name)
-	if !r.initialized {
-		if err := r.initialize(); err != nil {
-			return ctrl.Result{}, err
-		}
-		r.initialized = true
-	}
-	gw := &mcv1alpha1.Gateway{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      req.Name,
-			Namespace: r.namespace,
-		},
-	}
-
-	r.activeGatewayMutex.Lock()
-	defer r.activeGatewayMutex.Unlock()
-	noActiveGateway := r.activeGateway == ""
-	isActiveGateway := r.activeGateway == req.Name
-	stillGatewayNode := false
-
-	node := &corev1.Node{}
-	if err := r.Client.Get(ctx, req.NamespacedName, node); err != nil {
-		if !apierrors.IsNotFound(err) {
-			klog.ErrorS(err, "Failed to get Node", "node", req.Name)
-			return ctrl.Result{}, err
-		}
-	} else {
-		_, hasGWAnnotation := node.Annotations[common.GatewayAnnotation]
-		stillGatewayNode = hasGWAnnotation
-	}
-
-	if stillGatewayNode {
-		r.gatewayCandidates[req.Name] = true
-	} else {
-		delete(r.gatewayCandidates, req.Name)
-	}
-
-	var err error
-	var isValidGateway bool
-
-	if stillGatewayNode {
-		gw.ServiceCIDR = r.serviceCIDR
-		gw.InternalIP, gw.GatewayIP, err = r.getGatawayNodeIP(node)
-		if err != nil {
-			klog.ErrorS(err, "There is no valid Gateway IP for Node", "node", node.Name)
-		}
-		isValidGateway = err == nil
-	}
-
-	if isActiveGateway {
-		if !isValidGateway || !isReadyNode(node) {
-			if err := r.recreateActiveGateway(ctx, gw); err != nil {
-				return ctrl.Result{}, err
-			}
-		} else {
-			if err := r.updateActiveGateway(ctx, gw); err != nil {
-				return ctrl.Result{}, err
-			}
-		}
-		return ctrl.Result{}, nil
-	}
-
-	if noActiveGateway && isValidGateway && isReadyNode(node) {
-		if err := r.createGateway(gw); err != nil {
-			return ctrl.Result{}, err
-		}
-	}
-	return ctrl.Result{}, nil
+	_ = "STUB: not implemented"
+	return *new(ctrl.Result), nil
 }
 
 // initialize initializes 'activeGateway' and 'gatewayCandidates' and removes
 // stale Gateway during controller startup.
-func (r *NodeReconciler) initialize() error {
-	ctx := context.Background()
-	nodeList := &corev1.NodeList{}
-	if err := r.Client.List(ctx, nodeList, &client.ListOptions{}); err != nil {
-		return err
-	}
+func (r *NodeReconciler) initialize() error { _ = "STUB: not implemented"; return nil }
 
-	gwList := &mcv1alpha1.GatewayList{}
-	if err := r.Client.List(ctx, gwList, &client.ListOptions{}); err != nil {
-		return err
-	}
-	// Gateway webhook guarantees that there is at most one Gateway in the member cluster.
-	if len(gwList.Items) > 0 {
-		existingGWName := gwList.Items[0].Name
-		node := &corev1.Node{}
-		if err := r.Client.Get(ctx, types.NamespacedName{Name: existingGWName}, node); err != nil {
-			if !apierrors.IsNotFound(err) {
-				return err
-			}
-			staleGateway := &mcv1alpha1.Gateway{
-				ObjectMeta: metav1.ObjectMeta{
-					Namespace: r.namespace,
-					Name:      existingGWName},
-			}
-			err := r.Client.Delete(ctx, staleGateway, &client.DeleteOptions{})
-			if err != nil && !apierrors.IsNotFound(err) {
-				return err
-			}
-		} else {
-			r.activeGateway = existingGWName
-		}
-	}
-	for _, n := range nodeList.Items {
-		if _, isGW := n.Annotations[common.GatewayAnnotation]; isGW {
-			r.gatewayCandidates[n.Name] = true
-		}
-	}
-	return nil
-}
+// Gateway webhook guarantees that there is at most one Gateway in the member cluster.
 
 func (r *NodeReconciler) updateActiveGateway(ctx context.Context, newGateway *mcv1alpha1.Gateway) error {
-	existingGW := &mcv1alpha1.Gateway{}
-	// TODO: cache might be stale. Need to revisit here and other reconcilers to
-	// check if we can improve this with 'Owns' or other methods.
-	if err := r.Client.Get(ctx, types.NamespacedName{Name: newGateway.Name, Namespace: r.namespace}, existingGW); err != nil {
-		if apierrors.IsNotFound(err) {
-			r.activeGateway = ""
-			return nil
-		}
-		return err
-	}
-	if existingGW.GatewayIP == newGateway.GatewayIP && existingGW.InternalIP == newGateway.InternalIP &&
-		existingGW.ServiceCIDR == newGateway.ServiceCIDR {
-		return nil
-	}
-	existingGW.GatewayIP = newGateway.GatewayIP
-	existingGW.InternalIP = newGateway.InternalIP
-	existingGW.ServiceCIDR = newGateway.ServiceCIDR
-	// If the Gateway version in the client cache is stale, the update operation will fail,
-	// then the reconciler will retry with latest state again.
-	if err := r.Client.Update(ctx, existingGW, &client.UpdateOptions{}); err != nil {
-		return err
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// TODO: cache might be stale. Need to revisit here and other reconcilers to
+// check if we can improve this with 'Owns' or other methods.
+
+// If the Gateway version in the client cache is stale, the update operation will fail,
+// then the reconciler will retry with latest state again.
 
 // recreateActiveGateway will delete the existing Gateway CR and create a new Gateway
 // from the pool of Gateway candidates.
 func (r *NodeReconciler) recreateActiveGateway(ctx context.Context, gateway *mcv1alpha1.Gateway) error {
-	err := r.Client.Delete(ctx, gateway, &client.DeleteOptions{})
-	if err != nil && !apierrors.IsNotFound(err) {
-		return err
-	}
-	r.activeGateway = ""
-	// Check remaining Gateway candidates and create a new Gateway.
-	newGateway, err := r.getValidGatewayFromCandidates()
-	if err != nil {
-		return err
-	}
-	if newGateway != nil {
-		return r.createGateway(newGateway)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// Check remaining Gateway candidates and create a new Gateway.
 
 // getValidGatewayFromCandidates picks a valid Node from Gateway candidates and
 // creates a Gateway. It returns no error if no good Gateway candidate.
 func (r *NodeReconciler) getValidGatewayFromCandidates() (*mcv1alpha1.Gateway, error) {
-	var activeGateway *mcv1alpha1.Gateway
-	var internalIP, gwIP string
-	var err error
-
-	gatewayNode := &corev1.Node{}
-	for name := range r.gatewayCandidates {
-		if err = r.Client.Get(context.Background(), types.NamespacedName{Name: name}, gatewayNode); err == nil {
-			if !isReadyNode(gatewayNode) {
-				continue
-			}
-			if internalIP, gwIP, err = r.getGatawayNodeIP(gatewayNode); err != nil {
-				klog.V(2).ErrorS(err, "Node has no valid IP", "node", gatewayNode.Name)
-				continue
-			}
-
-			activeGateway = &mcv1alpha1.Gateway{
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      gatewayNode.Name,
-					Namespace: r.namespace,
-				},
-				GatewayIP:   gwIP,
-				InternalIP:  internalIP,
-				ServiceCIDR: r.serviceCIDR,
-			}
-			klog.InfoS("Found good Gateway candidate", "node", gatewayNode.Name)
-			return activeGateway, nil
-		}
-		if !apierrors.IsNotFound(err) {
-			return nil, err
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil, nil
 }
 
 func (r *NodeReconciler) createGateway(gateway *mcv1alpha1.Gateway) error {
-	if err := r.Client.Create(context.Background(), gateway, &client.CreateOptions{}); err != nil {
-		if apierrors.IsAlreadyExists(err) {
-			r.activeGateway = gateway.Name
-			return nil
-		}
-		return err
-	}
-	r.activeGateway = gateway.Name
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (r *NodeReconciler) getGatawayNodeIP(node *corev1.Node) (string, string, error) {
-	var gatewayIP, internalIP string
-	for _, addr := range node.Status.Addresses {
-		if addr.Type == corev1.NodeInternalIP {
-			if r.precedence == mcv1alpha1.PrecedencePrivate || r.precedence == mcv1alpha1.PrecedenceInternal {
-				gatewayIP = addr.Address
-			}
-			internalIP = addr.Address
-		}
-		if (r.precedence == mcv1alpha1.PrecedencePublic || r.precedence == mcv1alpha1.PrecedenceExternal) &&
-			addr.Type == corev1.NodeExternalIP {
-			gatewayIP = addr.Address
-		}
-	}
-
-	if ip, ok := node.Annotations[common.GatewayIPAnnotation]; ok {
-		parsedIP := net.ParseIP(ip)
-		if parsedIP == nil {
-			return "", "", fmt.Errorf("the Gateway IP annotation %s on Node %s is not a valid IP address", ip, node.Name)
-		}
-		gatewayIP = ip
-	}
-
-	if gatewayIP == "" || internalIP == "" {
-		return "", "", fmt.Errorf("no valid IP address for Gateway Node %s", node.Name)
-	}
-	return internalIP, gatewayIP, nil
+	_ = "STUB: not implemented"
+	return "", "", nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *NodeReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	if r.serviceCIDR == "" {
-		var err error
-		r.serviceCIDR, err = ServiceCIDRDiscoverFn(context.Background(), mgr.GetConfig(), mgr.GetAPIReader(), r.Client, r.namespace)
-		if err != nil {
-			return err
-		}
-	}
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&corev1.Node{}).
-		Named("node").
-		Watches(&mcv1alpha2.ClusterSet{},
-			handler.EnqueueRequestsFromMapFunc(r.clusterSetMapFunc),
-			builder.WithPredicates(statusReadyPredicate)).
-		WithOptions(controller.Options{
-			MaxConcurrentReconciles: 1,
-		}).
-		Complete(r)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (r *NodeReconciler) clusterSetMapFunc(ctx context.Context, a client.Object) []reconcile.Request {
-	clusterSet := &mcv1alpha2.ClusterSet{}
-	requests := []reconcile.Request{}
-	if a.GetNamespace() != r.namespace {
-		return requests
-	}
-	err := r.Client.Get(ctx, types.NamespacedName{Namespace: a.GetNamespace(), Name: a.GetName()}, clusterSet)
-	if err == nil {
-		if len(clusterSet.Status.Conditions) > 0 && clusterSet.Status.Conditions[0].Status == corev1.ConditionTrue {
-			nodeList := &corev1.NodeList{}
-			r.Client.List(ctx, nodeList)
-			for idx := range nodeList.Items {
-				n := &nodeList.Items[idx]
-				if _, ok := n.Annotations[common.GatewayAnnotation]; ok {
-					requests = append(requests, reconcile.Request{
-						NamespacedName: types.NamespacedName{
-							Name: n.GetName(),
-						},
-					})
-				}
-			}
-		}
-	} else if apierrors.IsNotFound(err) {
-		r.activeGatewayMutex.Lock()
-		defer r.activeGatewayMutex.Unlock()
-		// All auto-generated resources will be deleted by the ClusterSet controller when a ClusterSet is
-		// deleted, so here we can set the activeGateway to empty directly.
-		r.activeGateway = ""
-	}
-	return requests
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func isReadyNode(node *corev1.Node) bool {
-	var nodeIsReady bool
-	for _, s := range node.Status.Conditions {
-		if s.Type == corev1.NodeReady && s.Status == corev1.ConditionTrue {
-			nodeIsReady = true
-			break
-		}
-	}
-	return nodeIsReady
-}
+// All auto-generated resources will be deleted by the ClusterSet controller when a ClusterSet is
+// deleted, so here we can set the activeGateway to empty directly.
+
+func isReadyNode(node *corev1.Node) bool { _ = "STUB: not implemented"; return false }

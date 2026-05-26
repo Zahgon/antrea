@@ -15,51 +15,24 @@
 package memberlist
 
 import (
-	"encoding/json"
 	"net/http"
-	"reflect"
 
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/apis"
 	"antrea.io/antrea/v2/pkg/agent/querier"
 )
 
 func generateResponse(node *v1.Node, aliveNodes sets.Set[string]) apis.MemberlistResponse {
-	status := "Dead"
-	if aliveNodes.Has(node.Name) {
-		status = "Alive"
-	}
-	return apis.MemberlistResponse{
-		NodeName: node.Name,
-		Status:   status,
-		IP:       node.Status.Addresses[0].Address,
-	}
+	_ = "STUB: not implemented"
+	return *new(apis.MemberlistResponse)
 }
 
 // HandleFunc returns the function which can handle queries issued by the memberlist command.
 func HandleFunc(aq querier.AgentQuerier) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		memberlistCluster := aq.GetMemberlistCluster()
-		if reflect.ValueOf(memberlistCluster).IsNil() {
-			// The error message must match the "FOO is not enabled" pattern to pass antctl e2e tests.
-			http.Error(w, "memberlist is not enabled", http.StatusServiceUnavailable)
-			return
-		}
-		var memberlist []apis.MemberlistResponse
-		allNodes, _ := aq.GetNodeLister().List(labels.Everything())
-		aliveNodes := memberlistCluster.AliveNodes()
-		for _, node := range allNodes {
-			memberlist = append(memberlist, generateResponse(node, aliveNodes))
-		}
-
-		err := json.NewEncoder(w).Encode(memberlist)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			klog.Errorf("Error when encoding Memberlist to json: %v", err)
-		}
-	}
+	_ = "STUB: not implemented"
+	return *new(http.HandlerFunc)
 }
+
+// The error message must match the "FOO is not enabled" pattern to pass antctl e2e tests.

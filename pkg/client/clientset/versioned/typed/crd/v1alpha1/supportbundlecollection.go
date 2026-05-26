@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	crdv1alpha1 "antrea.io/antrea/v2/pkg/apis/crd/v1alpha1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -55,14 +54,6 @@ type supportBundleCollections struct {
 
 // newSupportBundleCollections returns a SupportBundleCollections
 func newSupportBundleCollections(c *CrdV1alpha1Client) *supportBundleCollections {
-	return &supportBundleCollections{
-		gentype.NewClientWithList[*crdv1alpha1.SupportBundleCollection, *crdv1alpha1.SupportBundleCollectionList](
-			"supportbundlecollections",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *crdv1alpha1.SupportBundleCollection { return &crdv1alpha1.SupportBundleCollection{} },
-			func() *crdv1alpha1.SupportBundleCollectionList { return &crdv1alpha1.SupportBundleCollectionList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

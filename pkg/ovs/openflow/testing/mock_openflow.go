@@ -26,7 +26,6 @@ package testing
 
 import (
 	net "net"
-	reflect "reflect"
 
 	openflow "antrea.io/antrea/v2/pkg/ovs/openflow"
 	openflow15 "antrea.io/libOpenflow/openflow15"
@@ -49,309 +48,247 @@ type MockBridgeMockRecorder struct {
 }
 
 // NewMockBridge creates a new mock instance.
-func NewMockBridge(ctrl *gomock.Controller) *MockBridge {
-	mock := &MockBridge{ctrl: ctrl}
-	mock.recorder = &MockBridgeMockRecorder{mock}
-	return mock
-}
+func NewMockBridge(ctrl *gomock.Controller) *MockBridge { _ = "STUB: not implemented"; return nil }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockBridge) EXPECT() *MockBridgeMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddFlowsInBundle mocks base method.
+	return nil
 }
 
-// AddFlowsInBundle mocks base method.
 func (m *MockBridge) AddFlowsInBundle(addflows, modFlows, delFlows []*openflow15.FlowMod) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddFlowsInBundle", addflows, modFlows, delFlows)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddFlowsInBundle indicates an expected call of AddFlowsInBundle.
 func (mr *MockBridgeMockRecorder) AddFlowsInBundle(addflows, modFlows, delFlows any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddFlowsInBundle", reflect.TypeOf((*MockBridge)(nil).AddFlowsInBundle), addflows, modFlows, delFlows)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddOFEntriesInBundle mocks base method.
 func (m *MockBridge) AddOFEntriesInBundle(addEntries, modEntries, delEntries []openflow.OFEntry) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddOFEntriesInBundle", addEntries, modEntries, delEntries)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddOFEntriesInBundle indicates an expected call of AddOFEntriesInBundle.
 func (mr *MockBridgeMockRecorder) AddOFEntriesInBundle(addEntries, modEntries, delEntries any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddOFEntriesInBundle", reflect.TypeOf((*MockBridge)(nil).AddOFEntriesInBundle), addEntries, modEntries, delEntries)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // BuildPacketOut mocks base method.
 func (m *MockBridge) BuildPacketOut() openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuildPacketOut")
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // BuildPacketOut indicates an expected call of BuildPacketOut.
 func (mr *MockBridgeMockRecorder) BuildPacketOut() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuildPacketOut", reflect.TypeOf((*MockBridge)(nil).BuildPacketOut))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Connect mocks base method.
 func (m *MockBridge) Connect(maxRetrySec int, connectCh chan struct{}) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Connect", maxRetrySec, connectCh)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Connect indicates an expected call of Connect.
 func (mr *MockBridgeMockRecorder) Connect(maxRetrySec, connectCh any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Connect", reflect.TypeOf((*MockBridge)(nil).Connect), maxRetrySec, connectCh)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteFlowsByCookie mocks base method.
 func (m *MockBridge) DeleteFlowsByCookie(cookieID, cookieMask uint64) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteFlowsByCookie", cookieID, cookieMask)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteFlowsByCookie indicates an expected call of DeleteFlowsByCookie.
 func (mr *MockBridgeMockRecorder) DeleteFlowsByCookie(cookieID, cookieMask any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteFlowsByCookie", reflect.TypeOf((*MockBridge)(nil).DeleteFlowsByCookie), cookieID, cookieMask)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteGroupAll mocks base method.
-func (m *MockBridge) DeleteGroupAll() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteGroupAll")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockBridge) DeleteGroupAll() error { _ = "STUB: not implemented"; return nil }
 
 // DeleteGroupAll indicates an expected call of DeleteGroupAll.
 func (mr *MockBridgeMockRecorder) DeleteGroupAll() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteGroupAll", reflect.TypeOf((*MockBridge)(nil).DeleteGroupAll))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteMeterAll mocks base method.
-func (m *MockBridge) DeleteMeterAll() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteMeterAll")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockBridge) DeleteMeterAll() error { _ = "STUB: not implemented"; return nil }
 
 // DeleteMeterAll indicates an expected call of DeleteMeterAll.
 func (mr *MockBridgeMockRecorder) DeleteMeterAll() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteMeterAll", reflect.TypeOf((*MockBridge)(nil).DeleteMeterAll))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Disconnect mocks base method.
-func (m *MockBridge) Disconnect() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Disconnect")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockBridge) Disconnect() error { _ = "STUB: not implemented"; return nil }
 
 // Disconnect indicates an expected call of Disconnect.
-func (mr *MockBridgeMockRecorder) Disconnect() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Disconnect", reflect.TypeOf((*MockBridge)(nil).Disconnect))
-}
+func (mr *MockBridgeMockRecorder) Disconnect() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // DumpFlows mocks base method.
 func (m *MockBridge) DumpFlows(cookieID, cookieMask uint64) (map[uint64]*openflow.FlowStates, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DumpFlows", cookieID, cookieMask)
-	ret0, _ := ret[0].(map[uint64]*openflow.FlowStates)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // DumpFlows indicates an expected call of DumpFlows.
 func (mr *MockBridgeMockRecorder) DumpFlows(cookieID, cookieMask any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DumpFlows", reflect.TypeOf((*MockBridge)(nil).DumpFlows), cookieID, cookieMask)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DumpTableStatus mocks base method.
 func (m *MockBridge) DumpTableStatus() []openflow.TableStatus {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DumpTableStatus")
-	ret0, _ := ret[0].([]openflow.TableStatus)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DumpTableStatus indicates an expected call of DumpTableStatus.
 func (mr *MockBridgeMockRecorder) DumpTableStatus() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DumpTableStatus", reflect.TypeOf((*MockBridge)(nil).DumpTableStatus))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetMeterStats mocks base method.
 func (m *MockBridge) GetMeterStats(handleMeterStatsReply func(int, int64)) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetMeterStats", handleMeterStatsReply)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetMeterStats indicates an expected call of GetMeterStats.
 func (mr *MockBridgeMockRecorder) GetMeterStats(handleMeterStatsReply any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMeterStats", reflect.TypeOf((*MockBridge)(nil).GetMeterStats), handleMeterStatsReply)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetTableByID mocks base method.
 func (m *MockBridge) GetTableByID(id uint8) (openflow.Table, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTableByID", id)
-	ret0, _ := ret[0].(openflow.Table)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return *new(openflow.Table), nil
 }
 
 // GetTableByID indicates an expected call of GetTableByID.
 func (mr *MockBridgeMockRecorder) GetTableByID(id any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTableByID", reflect.TypeOf((*MockBridge)(nil).GetTableByID), id)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // IsConnected mocks base method.
-func (m *MockBridge) IsConnected() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsConnected")
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
+func (m *MockBridge) IsConnected() bool { _ = "STUB: not implemented"; return false }
 
 // IsConnected indicates an expected call of IsConnected.
-func (mr *MockBridgeMockRecorder) IsConnected() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsConnected", reflect.TypeOf((*MockBridge)(nil).IsConnected))
-}
+func (mr *MockBridgeMockRecorder) IsConnected() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // NewGroup mocks base method.
 func (m *MockBridge) NewGroup(id openflow.GroupIDType) openflow.Group {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "NewGroup", id)
-	ret0, _ := ret[0].(openflow.Group)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.Group)
 }
 
 // NewGroup indicates an expected call of NewGroup.
 func (mr *MockBridgeMockRecorder) NewGroup(id any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewGroup", reflect.TypeOf((*MockBridge)(nil).NewGroup), id)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewGroupTypeAll mocks base method.
 func (m *MockBridge) NewGroupTypeAll(id openflow.GroupIDType) openflow.Group {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "NewGroupTypeAll", id)
-	ret0, _ := ret[0].(openflow.Group)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.Group)
 }
 
 // NewGroupTypeAll indicates an expected call of NewGroupTypeAll.
 func (mr *MockBridgeMockRecorder) NewGroupTypeAll(id any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewGroupTypeAll", reflect.TypeOf((*MockBridge)(nil).NewGroupTypeAll), id)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewMeter mocks base method.
 func (m *MockBridge) NewMeter(id openflow.MeterIDType, flags ofctrl.MeterFlag) openflow.Meter {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "NewMeter", id, flags)
-	ret0, _ := ret[0].(openflow.Meter)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.Meter)
 }
 
 // NewMeter indicates an expected call of NewMeter.
 func (mr *MockBridgeMockRecorder) NewMeter(id, flags any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewMeter", reflect.TypeOf((*MockBridge)(nil).NewMeter), id, flags)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewTable mocks base method.
 func (m *MockBridge) NewTable(table openflow.Table, next uint8, missAction openflow.MissActionType) openflow.Table {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "NewTable", table, next, missAction)
-	ret0, _ := ret[0].(openflow.Table)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.Table)
 }
 
 // NewTable indicates an expected call of NewTable.
 func (mr *MockBridgeMockRecorder) NewTable(table, next, missAction any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewTable", reflect.TypeOf((*MockBridge)(nil).NewTable), table, next, missAction)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ResumePacket mocks base method.
 func (m *MockBridge) ResumePacket(packetIn *ofctrl.PacketIn) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ResumePacket", packetIn)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ResumePacket indicates an expected call of ResumePacket.
 func (mr *MockBridgeMockRecorder) ResumePacket(packetIn any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResumePacket", reflect.TypeOf((*MockBridge)(nil).ResumePacket), packetIn)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendPacketOut mocks base method.
 func (m *MockBridge) SendPacketOut(packetOut *ofctrl.PacketOut) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendPacketOut", packetOut)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendPacketOut indicates an expected call of SendPacketOut.
 func (mr *MockBridgeMockRecorder) SendPacketOut(packetOut any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendPacketOut", reflect.TypeOf((*MockBridge)(nil).SendPacketOut), packetOut)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SubscribePacketIn mocks base method.
 func (m *MockBridge) SubscribePacketIn(category uint8, pktInQueue *openflow.PacketInQueue) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SubscribePacketIn", category, pktInQueue)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SubscribePacketIn indicates an expected call of SubscribePacketIn.
 func (mr *MockBridgeMockRecorder) SubscribePacketIn(category, pktInQueue any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SubscribePacketIn", reflect.TypeOf((*MockBridge)(nil).SubscribePacketIn), category, pktInQueue)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SubscribePortStatusConsumer mocks base method.
 func (m *MockBridge) SubscribePortStatusConsumer(statusCh chan *openflow15.PortStatus) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SubscribePortStatusConsumer", statusCh)
+	_ = "STUB: not implemented"
+	return
 }
 
 // SubscribePortStatusConsumer indicates an expected call of SubscribePortStatusConsumer.
 func (mr *MockBridgeMockRecorder) SubscribePortStatusConsumer(statusCh any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SubscribePortStatusConsumer", reflect.TypeOf((*MockBridge)(nil).SubscribePortStatusConsumer), statusCh)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockTable is a mock of Table interface.
@@ -367,150 +304,101 @@ type MockTableMockRecorder struct {
 }
 
 // NewMockTable creates a new mock instance.
-func NewMockTable(ctrl *gomock.Controller) *MockTable {
-	mock := &MockTable{ctrl: ctrl}
-	mock.recorder = &MockTableMockRecorder{mock}
-	return mock
-}
+func NewMockTable(ctrl *gomock.Controller) *MockTable { _ = "STUB: not implemented"; return nil }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockTable) EXPECT() *MockTableMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// BuildFlow mocks base method.
+	return nil
 }
 
-// BuildFlow mocks base method.
 func (m *MockTable) BuildFlow(priority uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BuildFlow", priority)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // BuildFlow indicates an expected call of BuildFlow.
 func (mr *MockTableMockRecorder) BuildFlow(priority any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuildFlow", reflect.TypeOf((*MockTable)(nil).BuildFlow), priority)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetID mocks base method.
-func (m *MockTable) GetID() uint8 {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetID")
-	ret0, _ := ret[0].(uint8)
-	return ret0
-}
+func (m *MockTable) GetID() uint8 { _ = "STUB: not implemented"; return 0 }
 
 // GetID indicates an expected call of GetID.
-func (mr *MockTableMockRecorder) GetID() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetID", reflect.TypeOf((*MockTable)(nil).GetID))
-}
+func (mr *MockTableMockRecorder) GetID() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GetMissAction mocks base method.
 func (m *MockTable) GetMissAction() openflow.MissActionType {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetMissAction")
-	ret0, _ := ret[0].(openflow.MissActionType)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.MissActionType)
 }
 
 // GetMissAction indicates an expected call of GetMissAction.
 func (mr *MockTableMockRecorder) GetMissAction() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMissAction", reflect.TypeOf((*MockTable)(nil).GetMissAction))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetName mocks base method.
-func (m *MockTable) GetName() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetName")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
+func (m *MockTable) GetName() string { _ = "STUB: not implemented"; return "" }
 
 // GetName indicates an expected call of GetName.
-func (mr *MockTableMockRecorder) GetName() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetName", reflect.TypeOf((*MockTable)(nil).GetName))
-}
+func (mr *MockTableMockRecorder) GetName() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GetNext mocks base method.
-func (m *MockTable) GetNext() uint8 {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNext")
-	ret0, _ := ret[0].(uint8)
-	return ret0
-}
+func (m *MockTable) GetNext() uint8 { _ = "STUB: not implemented"; return 0 }
 
 // GetNext indicates an expected call of GetNext.
-func (mr *MockTableMockRecorder) GetNext() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNext", reflect.TypeOf((*MockTable)(nil).GetNext))
-}
+func (mr *MockTableMockRecorder) GetNext() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GetStageID mocks base method.
 func (m *MockTable) GetStageID() openflow.StageID {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetStageID")
-	ret0, _ := ret[0].(openflow.StageID)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.StageID)
 }
 
 // GetStageID indicates an expected call of GetStageID.
-func (mr *MockTableMockRecorder) GetStageID() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStageID", reflect.TypeOf((*MockTable)(nil).GetStageID))
-}
+func (mr *MockTableMockRecorder) GetStageID() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // SetMissAction mocks base method.
 func (m *MockTable) SetMissAction(action openflow.MissActionType) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetMissAction", action)
+	_ = "STUB: not implemented"
+	return
 }
 
 // SetMissAction indicates an expected call of SetMissAction.
 func (mr *MockTableMockRecorder) SetMissAction(action any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetMissAction", reflect.TypeOf((*MockTable)(nil).SetMissAction), action)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetNext mocks base method.
-func (m *MockTable) SetNext(next uint8) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetNext", next)
-}
+func (m *MockTable) SetNext(next uint8) { _ = "STUB: not implemented"; return }
 
 // SetNext indicates an expected call of SetNext.
 func (mr *MockTableMockRecorder) SetNext(next any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetNext", reflect.TypeOf((*MockTable)(nil).SetNext), next)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetTable mocks base method.
-func (m *MockTable) SetTable() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetTable")
-}
+func (m *MockTable) SetTable() { _ = "STUB: not implemented"; return }
 
 // SetTable indicates an expected call of SetTable.
-func (mr *MockTableMockRecorder) SetTable() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTable", reflect.TypeOf((*MockTable)(nil).SetTable))
-}
+func (mr *MockTableMockRecorder) SetTable() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Status mocks base method.
 func (m *MockTable) Status() openflow.TableStatus {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Status")
-	ret0, _ := ret[0].(openflow.TableStatus)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.TableStatus)
 }
 
 // Status indicates an expected call of Status.
-func (mr *MockTableMockRecorder) Status() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Status", reflect.TypeOf((*MockTable)(nil).Status))
-}
+func (mr *MockTableMockRecorder) Status() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // MockFlow is a mock of Flow interface.
 type MockFlow struct {
@@ -525,155 +413,92 @@ type MockFlowMockRecorder struct {
 }
 
 // NewMockFlow creates a new mock instance.
-func NewMockFlow(ctrl *gomock.Controller) *MockFlow {
-	mock := &MockFlow{ctrl: ctrl}
-	mock.recorder = &MockFlowMockRecorder{mock}
-	return mock
-}
+func NewMockFlow(ctrl *gomock.Controller) *MockFlow { _ = "STUB: not implemented"; return nil }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockFlow) EXPECT() *MockFlowMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// Add mocks base method.
+	return nil
 }
 
-// Add mocks base method.
-func (m *MockFlow) Add() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Add")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockFlow) Add() error { _ = "STUB: not implemented"; return nil }
 
 // Add indicates an expected call of Add.
-func (mr *MockFlowMockRecorder) Add() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockFlow)(nil).Add))
-}
+func (mr *MockFlowMockRecorder) Add() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // CopyToBuilder mocks base method.
 func (m *MockFlow) CopyToBuilder(priority uint16, copyActions bool) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CopyToBuilder", priority, copyActions)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // CopyToBuilder indicates an expected call of CopyToBuilder.
 func (mr *MockFlowMockRecorder) CopyToBuilder(priority, copyActions any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CopyToBuilder", reflect.TypeOf((*MockFlow)(nil).CopyToBuilder), priority, copyActions)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Delete mocks base method.
-func (m *MockFlow) Delete() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockFlow) Delete() error { _ = "STUB: not implemented"; return nil }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockFlowMockRecorder) Delete() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockFlow)(nil).Delete))
-}
+func (mr *MockFlowMockRecorder) Delete() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // FlowPriority mocks base method.
-func (m *MockFlow) FlowPriority() uint16 {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FlowPriority")
-	ret0, _ := ret[0].(uint16)
-	return ret0
-}
+func (m *MockFlow) FlowPriority() uint16 { _ = "STUB: not implemented"; return 0 }
 
 // FlowPriority indicates an expected call of FlowPriority.
-func (mr *MockFlowMockRecorder) FlowPriority() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlowPriority", reflect.TypeOf((*MockFlow)(nil).FlowPriority))
-}
+func (mr *MockFlowMockRecorder) FlowPriority() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // FlowProtocol mocks base method.
 func (m *MockFlow) FlowProtocol() openflow.Protocol {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FlowProtocol")
-	ret0, _ := ret[0].(openflow.Protocol)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.Protocol)
 }
 
 // FlowProtocol indicates an expected call of FlowProtocol.
-func (mr *MockFlowMockRecorder) FlowProtocol() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlowProtocol", reflect.TypeOf((*MockFlow)(nil).FlowProtocol))
-}
+func (mr *MockFlowMockRecorder) FlowProtocol() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GetBundleMessages mocks base method.
 func (m *MockFlow) GetBundleMessages(operation openflow.OFOperation) ([]ofctrl.OpenFlowModMessage, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBundleMessages", operation)
-	ret0, _ := ret[0].([]ofctrl.OpenFlowModMessage)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetBundleMessages indicates an expected call of GetBundleMessages.
 func (mr *MockFlowMockRecorder) GetBundleMessages(operation any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBundleMessages", reflect.TypeOf((*MockFlow)(nil).GetBundleMessages), operation)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchString mocks base method.
-func (m *MockFlow) MatchString() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchString")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
+func (m *MockFlow) MatchString() string { _ = "STUB: not implemented"; return "" }
 
 // MatchString indicates an expected call of MatchString.
-func (mr *MockFlowMockRecorder) MatchString() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchString", reflect.TypeOf((*MockFlow)(nil).MatchString))
-}
+func (mr *MockFlowMockRecorder) MatchString() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Modify mocks base method.
-func (m *MockFlow) Modify() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Modify")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockFlow) Modify() error { _ = "STUB: not implemented"; return nil }
 
 // Modify indicates an expected call of Modify.
-func (mr *MockFlowMockRecorder) Modify() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Modify", reflect.TypeOf((*MockFlow)(nil).Modify))
-}
+func (mr *MockFlowMockRecorder) Modify() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Reset mocks base method.
-func (m *MockFlow) Reset() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Reset")
-}
+func (m *MockFlow) Reset() { _ = "STUB: not implemented"; return }
 
 // Reset indicates an expected call of Reset.
-func (mr *MockFlowMockRecorder) Reset() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockFlow)(nil).Reset))
-}
+func (mr *MockFlowMockRecorder) Reset() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Type mocks base method.
 func (m *MockFlow) Type() openflow.EntryType {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Type")
-	ret0, _ := ret[0].(openflow.EntryType)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.EntryType)
 }
 
 // Type indicates an expected call of Type.
-func (mr *MockFlowMockRecorder) Type() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Type", reflect.TypeOf((*MockFlow)(nil).Type))
-}
+func (mr *MockFlowMockRecorder) Type() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // MockAction is a mock of Action interface.
 type MockAction struct {
@@ -688,555 +513,451 @@ type MockActionMockRecorder struct {
 }
 
 // NewMockAction creates a new mock instance.
-func NewMockAction(ctrl *gomock.Controller) *MockAction {
-	mock := &MockAction{ctrl: ctrl}
-	mock.recorder = &MockActionMockRecorder{mock}
-	return mock
-}
+func NewMockAction(ctrl *gomock.Controller) *MockAction { _ = "STUB: not implemented"; return nil }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAction) EXPECT() *MockActionMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// CT mocks base method.
+	return nil
 }
 
-// CT mocks base method.
 func (m *MockAction) CT(commit bool, tableID uint8, zone int, zoneSrcField *openflow.RegField) openflow.CTAction {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CT", commit, tableID, zone, zoneSrcField)
-	ret0, _ := ret[0].(openflow.CTAction)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.CTAction)
 }
 
 // CT indicates an expected call of CT.
 func (mr *MockActionMockRecorder) CT(commit, tableID, zone, zoneSrcField any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CT", reflect.TypeOf((*MockAction)(nil).CT), commit, tableID, zone, zoneSrcField)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Conjunction mocks base method.
 func (m *MockAction) Conjunction(conjID uint32, clauseID, nClause uint8) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Conjunction", conjID, clauseID, nClause)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // Conjunction indicates an expected call of Conjunction.
 func (mr *MockActionMockRecorder) Conjunction(conjID, clauseID, nClause any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Conjunction", reflect.TypeOf((*MockAction)(nil).Conjunction), conjID, clauseID, nClause)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DecTTL mocks base method.
 func (m *MockAction) DecTTL() openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DecTTL")
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // DecTTL indicates an expected call of DecTTL.
-func (mr *MockActionMockRecorder) DecTTL() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DecTTL", reflect.TypeOf((*MockAction)(nil).DecTTL))
-}
+func (mr *MockActionMockRecorder) DecTTL() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Drop mocks base method.
 func (m *MockAction) Drop() openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Drop")
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // Drop indicates an expected call of Drop.
-func (mr *MockActionMockRecorder) Drop() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Drop", reflect.TypeOf((*MockAction)(nil).Drop))
-}
+func (mr *MockActionMockRecorder) Drop() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GotoStage mocks base method.
 func (m *MockAction) GotoStage(stage openflow.StageID) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GotoStage", stage)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // GotoStage indicates an expected call of GotoStage.
 func (mr *MockActionMockRecorder) GotoStage(stage any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GotoStage", reflect.TypeOf((*MockAction)(nil).GotoStage), stage)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GotoTable mocks base method.
 func (m *MockAction) GotoTable(table uint8) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GotoTable", table)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // GotoTable indicates an expected call of GotoTable.
 func (mr *MockActionMockRecorder) GotoTable(table any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GotoTable", reflect.TypeOf((*MockAction)(nil).GotoTable), table)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Group mocks base method.
 func (m *MockAction) Group(id openflow.GroupIDType) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Group", id)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // Group indicates an expected call of Group.
-func (mr *MockActionMockRecorder) Group(id any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Group", reflect.TypeOf((*MockAction)(nil).Group), id)
-}
+func (mr *MockActionMockRecorder) Group(id any) *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Learn mocks base method.
 func (m *MockAction) Learn(id uint8, priority, idleTimeout, hardTimeout, finIdleTimeout, finHardTimeout uint16, cookieID uint64) openflow.LearnAction {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Learn", id, priority, idleTimeout, hardTimeout, finIdleTimeout, finHardTimeout, cookieID)
-	ret0, _ := ret[0].(openflow.LearnAction)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.LearnAction)
 }
 
 // Learn indicates an expected call of Learn.
 func (mr *MockActionMockRecorder) Learn(id, priority, idleTimeout, hardTimeout, finIdleTimeout, finHardTimeout, cookieID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Learn", reflect.TypeOf((*MockAction)(nil).Learn), id, priority, idleTimeout, hardTimeout, finIdleTimeout, finHardTimeout, cookieID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LoadARPOperation mocks base method.
 func (m *MockAction) LoadARPOperation(value uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadARPOperation", value)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // LoadARPOperation indicates an expected call of LoadARPOperation.
 func (mr *MockActionMockRecorder) LoadARPOperation(value any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadARPOperation", reflect.TypeOf((*MockAction)(nil).LoadARPOperation), value)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LoadIPDSCP mocks base method.
 func (m *MockAction) LoadIPDSCP(value uint8) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadIPDSCP", value)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // LoadIPDSCP indicates an expected call of LoadIPDSCP.
 func (mr *MockActionMockRecorder) LoadIPDSCP(value any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadIPDSCP", reflect.TypeOf((*MockAction)(nil).LoadIPDSCP), value)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LoadPktMarkRange mocks base method.
 func (m *MockAction) LoadPktMarkRange(value uint32, to *openflow.Range) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadPktMarkRange", value, to)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // LoadPktMarkRange indicates an expected call of LoadPktMarkRange.
 func (mr *MockActionMockRecorder) LoadPktMarkRange(value, to any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadPktMarkRange", reflect.TypeOf((*MockAction)(nil).LoadPktMarkRange), value, to)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LoadRegMark mocks base method.
 func (m *MockAction) LoadRegMark(marks ...*openflow.RegMark) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	varargs := []any{}
-	for _, a := range marks {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "LoadRegMark", varargs...)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // LoadRegMark indicates an expected call of LoadRegMark.
 func (mr *MockActionMockRecorder) LoadRegMark(marks ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadRegMark", reflect.TypeOf((*MockAction)(nil).LoadRegMark), marks...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LoadToRegField mocks base method.
 func (m *MockAction) LoadToRegField(field *openflow.RegField, value uint32) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadToRegField", field, value)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // LoadToRegField indicates an expected call of LoadToRegField.
 func (mr *MockActionMockRecorder) LoadToRegField(field, value any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadToRegField", reflect.TypeOf((*MockAction)(nil).LoadToRegField), field, value)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Meter mocks base method.
 func (m *MockAction) Meter(meterID uint32) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Meter", meterID)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // Meter indicates an expected call of Meter.
 func (mr *MockActionMockRecorder) Meter(meterID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Meter", reflect.TypeOf((*MockAction)(nil).Meter), meterID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Move mocks base method.
 func (m *MockAction) Move(from, to string) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Move", from, to)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // Move indicates an expected call of Move.
 func (mr *MockActionMockRecorder) Move(from, to any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Move", reflect.TypeOf((*MockAction)(nil).Move), from, to)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MoveRange mocks base method.
 func (m *MockAction) MoveRange(fromName, toName string, from, to openflow.Range) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MoveRange", fromName, toName, from, to)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MoveRange indicates an expected call of MoveRange.
 func (mr *MockActionMockRecorder) MoveRange(fromName, toName, from, to any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MoveRange", reflect.TypeOf((*MockAction)(nil).MoveRange), fromName, toName, from, to)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NextTable mocks base method.
 func (m *MockAction) NextTable() openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "NextTable")
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // NextTable indicates an expected call of NextTable.
-func (mr *MockActionMockRecorder) NextTable() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NextTable", reflect.TypeOf((*MockAction)(nil).NextTable))
-}
+func (mr *MockActionMockRecorder) NextTable() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Normal mocks base method.
 func (m *MockAction) Normal() openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Normal")
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // Normal indicates an expected call of Normal.
-func (mr *MockActionMockRecorder) Normal() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Normal", reflect.TypeOf((*MockAction)(nil).Normal))
-}
+func (mr *MockActionMockRecorder) Normal() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Note mocks base method.
 func (m *MockAction) Note(notes string) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Note", notes)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // Note indicates an expected call of Note.
 func (mr *MockActionMockRecorder) Note(notes any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Note", reflect.TypeOf((*MockAction)(nil).Note), notes)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Output mocks base method.
 func (m *MockAction) Output(port uint32) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Output", port)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // Output indicates an expected call of Output.
 func (mr *MockActionMockRecorder) Output(port any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Output", reflect.TypeOf((*MockAction)(nil).Output), port)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OutputFieldRange mocks base method.
 func (m *MockAction) OutputFieldRange(from string, rng *openflow.Range) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OutputFieldRange", from, rng)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // OutputFieldRange indicates an expected call of OutputFieldRange.
 func (mr *MockActionMockRecorder) OutputFieldRange(from, rng any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OutputFieldRange", reflect.TypeOf((*MockAction)(nil).OutputFieldRange), from, rng)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OutputInPort mocks base method.
 func (m *MockAction) OutputInPort() openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OutputInPort")
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // OutputInPort indicates an expected call of OutputInPort.
 func (mr *MockActionMockRecorder) OutputInPort() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OutputInPort", reflect.TypeOf((*MockAction)(nil).OutputInPort))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // OutputToRegField mocks base method.
 func (m *MockAction) OutputToRegField(field *openflow.RegField) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "OutputToRegField", field)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // OutputToRegField indicates an expected call of OutputToRegField.
 func (mr *MockActionMockRecorder) OutputToRegField(field any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OutputToRegField", reflect.TypeOf((*MockAction)(nil).OutputToRegField), field)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PopVLAN mocks base method.
 func (m *MockAction) PopVLAN() openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PopVLAN")
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // PopVLAN indicates an expected call of PopVLAN.
-func (mr *MockActionMockRecorder) PopVLAN() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PopVLAN", reflect.TypeOf((*MockAction)(nil).PopVLAN))
-}
+func (mr *MockActionMockRecorder) PopVLAN() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // PushVLAN mocks base method.
 func (m *MockAction) PushVLAN(etherType uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PushVLAN", etherType)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // PushVLAN indicates an expected call of PushVLAN.
 func (mr *MockActionMockRecorder) PushVLAN(etherType any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PushVLAN", reflect.TypeOf((*MockAction)(nil).PushVLAN), etherType)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ResubmitToTables mocks base method.
 func (m *MockAction) ResubmitToTables(tables ...uint8) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	varargs := []any{}
-	for _, a := range tables {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "ResubmitToTables", varargs...)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // ResubmitToTables indicates an expected call of ResubmitToTables.
 func (mr *MockActionMockRecorder) ResubmitToTables(tables ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResubmitToTables", reflect.TypeOf((*MockAction)(nil).ResubmitToTables), tables...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendToController mocks base method.
 func (m *MockAction) SendToController(userdata []byte, pause bool) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendToController", userdata, pause)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SendToController indicates an expected call of SendToController.
 func (mr *MockActionMockRecorder) SendToController(userdata, pause any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendToController", reflect.TypeOf((*MockAction)(nil).SendToController), userdata, pause)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetARPSha mocks base method.
 func (m *MockAction) SetARPSha(addr net.HardwareAddr) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetARPSha", addr)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SetARPSha indicates an expected call of SetARPSha.
 func (mr *MockActionMockRecorder) SetARPSha(addr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetARPSha", reflect.TypeOf((*MockAction)(nil).SetARPSha), addr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetARPSpa mocks base method.
 func (m *MockAction) SetARPSpa(addr net.IP) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetARPSpa", addr)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SetARPSpa indicates an expected call of SetARPSpa.
 func (mr *MockActionMockRecorder) SetARPSpa(addr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetARPSpa", reflect.TypeOf((*MockAction)(nil).SetARPSpa), addr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetARPTha mocks base method.
 func (m *MockAction) SetARPTha(addr net.HardwareAddr) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetARPTha", addr)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SetARPTha indicates an expected call of SetARPTha.
 func (mr *MockActionMockRecorder) SetARPTha(addr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetARPTha", reflect.TypeOf((*MockAction)(nil).SetARPTha), addr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetARPTpa mocks base method.
 func (m *MockAction) SetARPTpa(addr net.IP) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetARPTpa", addr)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SetARPTpa indicates an expected call of SetARPTpa.
 func (mr *MockActionMockRecorder) SetARPTpa(addr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetARPTpa", reflect.TypeOf((*MockAction)(nil).SetARPTpa), addr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetDstIP mocks base method.
 func (m *MockAction) SetDstIP(addr net.IP) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetDstIP", addr)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SetDstIP indicates an expected call of SetDstIP.
 func (mr *MockActionMockRecorder) SetDstIP(addr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDstIP", reflect.TypeOf((*MockAction)(nil).SetDstIP), addr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetDstMAC mocks base method.
 func (m *MockAction) SetDstMAC(addr net.HardwareAddr) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetDstMAC", addr)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SetDstMAC indicates an expected call of SetDstMAC.
 func (mr *MockActionMockRecorder) SetDstMAC(addr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDstMAC", reflect.TypeOf((*MockAction)(nil).SetDstMAC), addr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetSrcIP mocks base method.
 func (m *MockAction) SetSrcIP(addr net.IP) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetSrcIP", addr)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SetSrcIP indicates an expected call of SetSrcIP.
 func (mr *MockActionMockRecorder) SetSrcIP(addr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetSrcIP", reflect.TypeOf((*MockAction)(nil).SetSrcIP), addr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetSrcMAC mocks base method.
 func (m *MockAction) SetSrcMAC(addr net.HardwareAddr) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetSrcMAC", addr)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SetSrcMAC indicates an expected call of SetSrcMAC.
 func (mr *MockActionMockRecorder) SetSrcMAC(addr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetSrcMAC", reflect.TypeOf((*MockAction)(nil).SetSrcMAC), addr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetTunnelDst mocks base method.
 func (m *MockAction) SetTunnelDst(addr net.IP) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTunnelDst", addr)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SetTunnelDst indicates an expected call of SetTunnelDst.
 func (mr *MockActionMockRecorder) SetTunnelDst(addr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTunnelDst", reflect.TypeOf((*MockAction)(nil).SetTunnelDst), addr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetTunnelID mocks base method.
 func (m *MockAction) SetTunnelID(tunnelID uint64) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTunnelID", tunnelID)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SetTunnelID indicates an expected call of SetTunnelID.
 func (mr *MockActionMockRecorder) SetTunnelID(tunnelID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTunnelID", reflect.TypeOf((*MockAction)(nil).SetTunnelID), tunnelID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetVLAN mocks base method.
 func (m *MockAction) SetVLAN(vlanID uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetVLAN", vlanID)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SetVLAN indicates an expected call of SetVLAN.
 func (mr *MockActionMockRecorder) SetVLAN(vlanID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetVLAN", reflect.TypeOf((*MockAction)(nil).SetVLAN), vlanID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockCTAction is a mock of CTAction interface.
@@ -1252,131 +973,103 @@ type MockCTActionMockRecorder struct {
 }
 
 // NewMockCTAction creates a new mock instance.
-func NewMockCTAction(ctrl *gomock.Controller) *MockCTAction {
-	mock := &MockCTAction{ctrl: ctrl}
-	mock.recorder = &MockCTActionMockRecorder{mock}
-	return mock
-}
+func NewMockCTAction(ctrl *gomock.Controller) *MockCTAction { _ = "STUB: not implemented"; return nil }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockCTAction) EXPECT() *MockCTActionMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// CTDone mocks base method.
+	return nil
 }
 
-// CTDone mocks base method.
 func (m *MockCTAction) CTDone() openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CTDone")
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // CTDone indicates an expected call of CTDone.
-func (mr *MockCTActionMockRecorder) CTDone() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CTDone", reflect.TypeOf((*MockCTAction)(nil).CTDone))
-}
+func (mr *MockCTActionMockRecorder) CTDone() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // DNAT mocks base method.
 func (m *MockCTAction) DNAT(ipRange *openflow.IPRange, portRange *openflow.PortRange) openflow.CTAction {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DNAT", ipRange, portRange)
-	ret0, _ := ret[0].(openflow.CTAction)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.CTAction)
 }
 
 // DNAT indicates an expected call of DNAT.
 func (mr *MockCTActionMockRecorder) DNAT(ipRange, portRange any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DNAT", reflect.TypeOf((*MockCTAction)(nil).DNAT), ipRange, portRange)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LoadToCtMark mocks base method.
 func (m *MockCTAction) LoadToCtMark(marks ...*openflow.CtMark) openflow.CTAction {
-	m.ctrl.T.Helper()
-	varargs := []any{}
-	for _, a := range marks {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "LoadToCtMark", varargs...)
-	ret0, _ := ret[0].(openflow.CTAction)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.CTAction)
 }
 
 // LoadToCtMark indicates an expected call of LoadToCtMark.
 func (mr *MockCTActionMockRecorder) LoadToCtMark(marks ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadToCtMark", reflect.TypeOf((*MockCTAction)(nil).LoadToCtMark), marks...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LoadToLabelField mocks base method.
 func (m *MockCTAction) LoadToLabelField(value uint64, labelField *openflow.CtLabel) openflow.CTAction {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadToLabelField", value, labelField)
-	ret0, _ := ret[0].(openflow.CTAction)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.CTAction)
 }
 
 // LoadToLabelField indicates an expected call of LoadToLabelField.
 func (mr *MockCTActionMockRecorder) LoadToLabelField(value, labelField any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadToLabelField", reflect.TypeOf((*MockCTAction)(nil).LoadToLabelField), value, labelField)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MoveToCtMarkField mocks base method.
 func (m *MockCTAction) MoveToCtMarkField(fromRegField *openflow.RegField, ctMark *openflow.CtMarkField) openflow.CTAction {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MoveToCtMarkField", fromRegField, ctMark)
-	ret0, _ := ret[0].(openflow.CTAction)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.CTAction)
 }
 
 // MoveToCtMarkField indicates an expected call of MoveToCtMarkField.
 func (mr *MockCTActionMockRecorder) MoveToCtMarkField(fromRegField, ctMark any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MoveToCtMarkField", reflect.TypeOf((*MockCTAction)(nil).MoveToCtMarkField), fromRegField, ctMark)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MoveToLabel mocks base method.
 func (m *MockCTAction) MoveToLabel(fromName string, fromRng, labelRng *openflow.Range) openflow.CTAction {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MoveToLabel", fromName, fromRng, labelRng)
-	ret0, _ := ret[0].(openflow.CTAction)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.CTAction)
 }
 
 // MoveToLabel indicates an expected call of MoveToLabel.
 func (mr *MockCTActionMockRecorder) MoveToLabel(fromName, fromRng, labelRng any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MoveToLabel", reflect.TypeOf((*MockCTAction)(nil).MoveToLabel), fromName, fromRng, labelRng)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NAT mocks base method.
 func (m *MockCTAction) NAT() openflow.CTAction {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "NAT")
-	ret0, _ := ret[0].(openflow.CTAction)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.CTAction)
 }
 
 // NAT indicates an expected call of NAT.
-func (mr *MockCTActionMockRecorder) NAT() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NAT", reflect.TypeOf((*MockCTAction)(nil).NAT))
-}
+func (mr *MockCTActionMockRecorder) NAT() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // SNAT mocks base method.
 func (m *MockCTAction) SNAT(ipRange *openflow.IPRange, portRange *openflow.PortRange) openflow.CTAction {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SNAT", ipRange, portRange)
-	ret0, _ := ret[0].(openflow.CTAction)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.CTAction)
 }
 
 // SNAT indicates an expected call of SNAT.
 func (mr *MockCTActionMockRecorder) SNAT(ipRange, portRange any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SNAT", reflect.TypeOf((*MockCTAction)(nil).SNAT), ipRange, portRange)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockFlowBuilder is a mock of FlowBuilder interface.
@@ -1393,792 +1086,669 @@ type MockFlowBuilderMockRecorder struct {
 
 // NewMockFlowBuilder creates a new mock instance.
 func NewMockFlowBuilder(ctrl *gomock.Controller) *MockFlowBuilder {
-	mock := &MockFlowBuilder{ctrl: ctrl}
-	mock.recorder = &MockFlowBuilderMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockFlowBuilder) EXPECT() *MockFlowBuilderMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// Action mocks base method.
+	return nil
 }
 
-// Action mocks base method.
 func (m *MockFlowBuilder) Action() openflow.Action {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Action")
-	ret0, _ := ret[0].(openflow.Action)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.Action)
 }
 
 // Action indicates an expected call of Action.
-func (mr *MockFlowBuilderMockRecorder) Action() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Action", reflect.TypeOf((*MockFlowBuilder)(nil).Action))
-}
+func (mr *MockFlowBuilderMockRecorder) Action() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Cookie mocks base method.
 func (m *MockFlowBuilder) Cookie(cookieID uint64) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Cookie", cookieID)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // Cookie indicates an expected call of Cookie.
 func (mr *MockFlowBuilderMockRecorder) Cookie(cookieID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Cookie", reflect.TypeOf((*MockFlowBuilder)(nil).Cookie), cookieID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Done mocks base method.
 func (m *MockFlowBuilder) Done() openflow.Flow {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Done")
-	ret0, _ := ret[0].(openflow.Flow)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.Flow)
 }
 
 // Done indicates an expected call of Done.
-func (mr *MockFlowBuilderMockRecorder) Done() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Done", reflect.TypeOf((*MockFlowBuilder)(nil).Done))
-}
+func (mr *MockFlowBuilderMockRecorder) Done() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // MatchARPOp mocks base method.
 func (m *MockFlowBuilder) MatchARPOp(op uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchARPOp", op)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchARPOp indicates an expected call of MatchARPOp.
 func (mr *MockFlowBuilderMockRecorder) MatchARPOp(op any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchARPOp", reflect.TypeOf((*MockFlowBuilder)(nil).MatchARPOp), op)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchARPSha mocks base method.
 func (m *MockFlowBuilder) MatchARPSha(mac net.HardwareAddr) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchARPSha", mac)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchARPSha indicates an expected call of MatchARPSha.
 func (mr *MockFlowBuilderMockRecorder) MatchARPSha(mac any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchARPSha", reflect.TypeOf((*MockFlowBuilder)(nil).MatchARPSha), mac)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchARPSpa mocks base method.
 func (m *MockFlowBuilder) MatchARPSpa(ip net.IP) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchARPSpa", ip)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchARPSpa indicates an expected call of MatchARPSpa.
 func (mr *MockFlowBuilderMockRecorder) MatchARPSpa(ip any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchARPSpa", reflect.TypeOf((*MockFlowBuilder)(nil).MatchARPSpa), ip)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchARPTha mocks base method.
 func (m *MockFlowBuilder) MatchARPTha(mac net.HardwareAddr) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchARPTha", mac)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchARPTha indicates an expected call of MatchARPTha.
 func (mr *MockFlowBuilderMockRecorder) MatchARPTha(mac any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchARPTha", reflect.TypeOf((*MockFlowBuilder)(nil).MatchARPTha), mac)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchARPTpa mocks base method.
 func (m *MockFlowBuilder) MatchARPTpa(ip net.IP) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchARPTpa", ip)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchARPTpa indicates an expected call of MatchARPTpa.
 func (mr *MockFlowBuilderMockRecorder) MatchARPTpa(ip any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchARPTpa", reflect.TypeOf((*MockFlowBuilder)(nil).MatchARPTpa), ip)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTDstIP mocks base method.
 func (m *MockFlowBuilder) MatchCTDstIP(ip net.IP) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTDstIP", ip)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTDstIP indicates an expected call of MatchCTDstIP.
 func (mr *MockFlowBuilderMockRecorder) MatchCTDstIP(ip any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTDstIP", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTDstIP), ip)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTDstIPNet mocks base method.
 func (m *MockFlowBuilder) MatchCTDstIPNet(ipNet net.IPNet) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTDstIPNet", ipNet)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTDstIPNet indicates an expected call of MatchCTDstIPNet.
 func (mr *MockFlowBuilderMockRecorder) MatchCTDstIPNet(ipNet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTDstIPNet", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTDstIPNet), ipNet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTDstPort mocks base method.
 func (m *MockFlowBuilder) MatchCTDstPort(port uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTDstPort", port)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTDstPort indicates an expected call of MatchCTDstPort.
 func (mr *MockFlowBuilderMockRecorder) MatchCTDstPort(port any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTDstPort", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTDstPort), port)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTLabelField mocks base method.
 func (m *MockFlowBuilder) MatchCTLabelField(high, low uint64, field *openflow.CtLabel) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTLabelField", high, low, field)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTLabelField indicates an expected call of MatchCTLabelField.
 func (mr *MockFlowBuilderMockRecorder) MatchCTLabelField(high, low, field any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTLabelField", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTLabelField), high, low, field)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTMark mocks base method.
 func (m *MockFlowBuilder) MatchCTMark(marks ...*openflow.CtMark) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	varargs := []any{}
-	for _, a := range marks {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "MatchCTMark", varargs...)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTMark indicates an expected call of MatchCTMark.
 func (mr *MockFlowBuilderMockRecorder) MatchCTMark(marks ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTMark", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTMark), marks...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTProtocol mocks base method.
 func (m *MockFlowBuilder) MatchCTProtocol(proto openflow.Protocol) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTProtocol", proto)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTProtocol indicates an expected call of MatchCTProtocol.
 func (mr *MockFlowBuilderMockRecorder) MatchCTProtocol(proto any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTProtocol", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTProtocol), proto)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTSrcIP mocks base method.
 func (m *MockFlowBuilder) MatchCTSrcIP(ip net.IP) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTSrcIP", ip)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTSrcIP indicates an expected call of MatchCTSrcIP.
 func (mr *MockFlowBuilderMockRecorder) MatchCTSrcIP(ip any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTSrcIP", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTSrcIP), ip)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTSrcIPNet mocks base method.
 func (m *MockFlowBuilder) MatchCTSrcIPNet(ipnet net.IPNet) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTSrcIPNet", ipnet)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTSrcIPNet indicates an expected call of MatchCTSrcIPNet.
 func (mr *MockFlowBuilderMockRecorder) MatchCTSrcIPNet(ipnet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTSrcIPNet", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTSrcIPNet), ipnet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTSrcPort mocks base method.
 func (m *MockFlowBuilder) MatchCTSrcPort(port uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTSrcPort", port)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTSrcPort indicates an expected call of MatchCTSrcPort.
 func (mr *MockFlowBuilderMockRecorder) MatchCTSrcPort(port any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTSrcPort", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTSrcPort), port)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTState mocks base method.
 func (m *MockFlowBuilder) MatchCTState(ctStates *openflow15.CTStates) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTState", ctStates)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTState indicates an expected call of MatchCTState.
 func (mr *MockFlowBuilderMockRecorder) MatchCTState(ctStates any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTState", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTState), ctStates)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTStateDNAT mocks base method.
 func (m *MockFlowBuilder) MatchCTStateDNAT(isSet bool) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTStateDNAT", isSet)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTStateDNAT indicates an expected call of MatchCTStateDNAT.
 func (mr *MockFlowBuilderMockRecorder) MatchCTStateDNAT(isSet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTStateDNAT", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTStateDNAT), isSet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTStateEst mocks base method.
 func (m *MockFlowBuilder) MatchCTStateEst(isSet bool) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTStateEst", isSet)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTStateEst indicates an expected call of MatchCTStateEst.
 func (mr *MockFlowBuilderMockRecorder) MatchCTStateEst(isSet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTStateEst", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTStateEst), isSet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTStateInv mocks base method.
 func (m *MockFlowBuilder) MatchCTStateInv(isSet bool) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTStateInv", isSet)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTStateInv indicates an expected call of MatchCTStateInv.
 func (mr *MockFlowBuilderMockRecorder) MatchCTStateInv(isSet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTStateInv", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTStateInv), isSet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTStateNew mocks base method.
 func (m *MockFlowBuilder) MatchCTStateNew(isSet bool) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTStateNew", isSet)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTStateNew indicates an expected call of MatchCTStateNew.
 func (mr *MockFlowBuilderMockRecorder) MatchCTStateNew(isSet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTStateNew", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTStateNew), isSet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTStateRel mocks base method.
 func (m *MockFlowBuilder) MatchCTStateRel(isSet bool) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTStateRel", isSet)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTStateRel indicates an expected call of MatchCTStateRel.
 func (mr *MockFlowBuilderMockRecorder) MatchCTStateRel(isSet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTStateRel", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTStateRel), isSet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTStateRpl mocks base method.
 func (m *MockFlowBuilder) MatchCTStateRpl(isSet bool) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTStateRpl", isSet)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTStateRpl indicates an expected call of MatchCTStateRpl.
 func (mr *MockFlowBuilderMockRecorder) MatchCTStateRpl(isSet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTStateRpl", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTStateRpl), isSet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTStateSNAT mocks base method.
 func (m *MockFlowBuilder) MatchCTStateSNAT(isSet bool) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTStateSNAT", isSet)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTStateSNAT indicates an expected call of MatchCTStateSNAT.
 func (mr *MockFlowBuilderMockRecorder) MatchCTStateSNAT(isSet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTStateSNAT", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTStateSNAT), isSet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTStateTrk mocks base method.
 func (m *MockFlowBuilder) MatchCTStateTrk(isSet bool) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTStateTrk", isSet)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTStateTrk indicates an expected call of MatchCTStateTrk.
 func (mr *MockFlowBuilderMockRecorder) MatchCTStateTrk(isSet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTStateTrk", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTStateTrk), isSet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchCTZone mocks base method.
 func (m *MockFlowBuilder) MatchCTZone(zone int) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchCTZone", zone)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchCTZone indicates an expected call of MatchCTZone.
 func (mr *MockFlowBuilderMockRecorder) MatchCTZone(zone any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchCTZone", reflect.TypeOf((*MockFlowBuilder)(nil).MatchCTZone), zone)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchConjID mocks base method.
 func (m *MockFlowBuilder) MatchConjID(value uint32) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchConjID", value)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchConjID indicates an expected call of MatchConjID.
 func (mr *MockFlowBuilderMockRecorder) MatchConjID(value any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchConjID", reflect.TypeOf((*MockFlowBuilder)(nil).MatchConjID), value)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchDstIP mocks base method.
 func (m *MockFlowBuilder) MatchDstIP(ip net.IP) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchDstIP", ip)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchDstIP indicates an expected call of MatchDstIP.
 func (mr *MockFlowBuilderMockRecorder) MatchDstIP(ip any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchDstIP", reflect.TypeOf((*MockFlowBuilder)(nil).MatchDstIP), ip)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchDstIPNet mocks base method.
 func (m *MockFlowBuilder) MatchDstIPNet(ipNet net.IPNet) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchDstIPNet", ipNet)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchDstIPNet indicates an expected call of MatchDstIPNet.
 func (mr *MockFlowBuilderMockRecorder) MatchDstIPNet(ipNet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchDstIPNet", reflect.TypeOf((*MockFlowBuilder)(nil).MatchDstIPNet), ipNet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchDstMAC mocks base method.
 func (m *MockFlowBuilder) MatchDstMAC(mac net.HardwareAddr) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchDstMAC", mac)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchDstMAC indicates an expected call of MatchDstMAC.
 func (mr *MockFlowBuilderMockRecorder) MatchDstMAC(mac any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchDstMAC", reflect.TypeOf((*MockFlowBuilder)(nil).MatchDstMAC), mac)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchDstPort mocks base method.
 func (m *MockFlowBuilder) MatchDstPort(port uint16, portMask *uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchDstPort", port, portMask)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchDstPort indicates an expected call of MatchDstPort.
 func (mr *MockFlowBuilderMockRecorder) MatchDstPort(port, portMask any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchDstPort", reflect.TypeOf((*MockFlowBuilder)(nil).MatchDstPort), port, portMask)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchICMPCode mocks base method.
 func (m *MockFlowBuilder) MatchICMPCode(icmpCode byte) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchICMPCode", icmpCode)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchICMPCode indicates an expected call of MatchICMPCode.
 func (mr *MockFlowBuilderMockRecorder) MatchICMPCode(icmpCode any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchICMPCode", reflect.TypeOf((*MockFlowBuilder)(nil).MatchICMPCode), icmpCode)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchICMPType mocks base method.
 func (m *MockFlowBuilder) MatchICMPType(icmpType byte) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchICMPType", icmpType)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchICMPType indicates an expected call of MatchICMPType.
 func (mr *MockFlowBuilderMockRecorder) MatchICMPType(icmpType any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchICMPType", reflect.TypeOf((*MockFlowBuilder)(nil).MatchICMPType), icmpType)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchICMPv6Code mocks base method.
 func (m *MockFlowBuilder) MatchICMPv6Code(icmp6Code byte) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchICMPv6Code", icmp6Code)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchICMPv6Code indicates an expected call of MatchICMPv6Code.
 func (mr *MockFlowBuilderMockRecorder) MatchICMPv6Code(icmp6Code any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchICMPv6Code", reflect.TypeOf((*MockFlowBuilder)(nil).MatchICMPv6Code), icmp6Code)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchICMPv6Type mocks base method.
 func (m *MockFlowBuilder) MatchICMPv6Type(icmp6Type byte) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchICMPv6Type", icmp6Type)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchICMPv6Type indicates an expected call of MatchICMPv6Type.
 func (mr *MockFlowBuilderMockRecorder) MatchICMPv6Type(icmp6Type any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchICMPv6Type", reflect.TypeOf((*MockFlowBuilder)(nil).MatchICMPv6Type), icmp6Type)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchIPDSCP mocks base method.
 func (m *MockFlowBuilder) MatchIPDSCP(dscp uint8) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchIPDSCP", dscp)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchIPDSCP indicates an expected call of MatchIPDSCP.
 func (mr *MockFlowBuilderMockRecorder) MatchIPDSCP(dscp any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchIPDSCP", reflect.TypeOf((*MockFlowBuilder)(nil).MatchIPDSCP), dscp)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchIPProtocolValue mocks base method.
 func (m *MockFlowBuilder) MatchIPProtocolValue(isIPv6 bool, protoValue uint8) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchIPProtocolValue", isIPv6, protoValue)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchIPProtocolValue indicates an expected call of MatchIPProtocolValue.
 func (mr *MockFlowBuilderMockRecorder) MatchIPProtocolValue(isIPv6, protoValue any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchIPProtocolValue", reflect.TypeOf((*MockFlowBuilder)(nil).MatchIPProtocolValue), isIPv6, protoValue)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchInPort mocks base method.
 func (m *MockFlowBuilder) MatchInPort(inPort uint32) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchInPort", inPort)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchInPort indicates an expected call of MatchInPort.
 func (mr *MockFlowBuilderMockRecorder) MatchInPort(inPort any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchInPort", reflect.TypeOf((*MockFlowBuilder)(nil).MatchInPort), inPort)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchPktMark mocks base method.
 func (m *MockFlowBuilder) MatchPktMark(value uint32, mask *uint32) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchPktMark", value, mask)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchPktMark indicates an expected call of MatchPktMark.
 func (mr *MockFlowBuilderMockRecorder) MatchPktMark(value, mask any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchPktMark", reflect.TypeOf((*MockFlowBuilder)(nil).MatchPktMark), value, mask)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchPriority mocks base method.
 func (m *MockFlowBuilder) MatchPriority(arg0 uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchPriority", arg0)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchPriority indicates an expected call of MatchPriority.
 func (mr *MockFlowBuilderMockRecorder) MatchPriority(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchPriority", reflect.TypeOf((*MockFlowBuilder)(nil).MatchPriority), arg0)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchProtocol mocks base method.
 func (m *MockFlowBuilder) MatchProtocol(name openflow.Protocol) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchProtocol", name)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchProtocol indicates an expected call of MatchProtocol.
 func (mr *MockFlowBuilderMockRecorder) MatchProtocol(name any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchProtocol", reflect.TypeOf((*MockFlowBuilder)(nil).MatchProtocol), name)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchRegFieldWithValue mocks base method.
 func (m *MockFlowBuilder) MatchRegFieldWithValue(field *openflow.RegField, data uint32) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchRegFieldWithValue", field, data)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchRegFieldWithValue indicates an expected call of MatchRegFieldWithValue.
 func (mr *MockFlowBuilderMockRecorder) MatchRegFieldWithValue(field, data any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchRegFieldWithValue", reflect.TypeOf((*MockFlowBuilder)(nil).MatchRegFieldWithValue), field, data)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchRegMark mocks base method.
 func (m *MockFlowBuilder) MatchRegMark(marks ...*openflow.RegMark) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	varargs := []any{}
-	for _, a := range marks {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "MatchRegMark", varargs...)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchRegMark indicates an expected call of MatchRegMark.
 func (mr *MockFlowBuilderMockRecorder) MatchRegMark(marks ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchRegMark", reflect.TypeOf((*MockFlowBuilder)(nil).MatchRegMark), marks...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchSrcIP mocks base method.
 func (m *MockFlowBuilder) MatchSrcIP(ip net.IP) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchSrcIP", ip)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchSrcIP indicates an expected call of MatchSrcIP.
 func (mr *MockFlowBuilderMockRecorder) MatchSrcIP(ip any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchSrcIP", reflect.TypeOf((*MockFlowBuilder)(nil).MatchSrcIP), ip)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchSrcIPNet mocks base method.
 func (m *MockFlowBuilder) MatchSrcIPNet(ipNet net.IPNet) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchSrcIPNet", ipNet)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchSrcIPNet indicates an expected call of MatchSrcIPNet.
 func (mr *MockFlowBuilderMockRecorder) MatchSrcIPNet(ipNet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchSrcIPNet", reflect.TypeOf((*MockFlowBuilder)(nil).MatchSrcIPNet), ipNet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchSrcMAC mocks base method.
 func (m *MockFlowBuilder) MatchSrcMAC(mac net.HardwareAddr) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchSrcMAC", mac)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchSrcMAC indicates an expected call of MatchSrcMAC.
 func (mr *MockFlowBuilderMockRecorder) MatchSrcMAC(mac any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchSrcMAC", reflect.TypeOf((*MockFlowBuilder)(nil).MatchSrcMAC), mac)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchSrcPort mocks base method.
 func (m *MockFlowBuilder) MatchSrcPort(port uint16, portMask *uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchSrcPort", port, portMask)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchSrcPort indicates an expected call of MatchSrcPort.
 func (mr *MockFlowBuilderMockRecorder) MatchSrcPort(port, portMask any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchSrcPort", reflect.TypeOf((*MockFlowBuilder)(nil).MatchSrcPort), port, portMask)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchTCPFlags mocks base method.
 func (m *MockFlowBuilder) MatchTCPFlags(flag, mask uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchTCPFlags", flag, mask)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchTCPFlags indicates an expected call of MatchTCPFlags.
 func (mr *MockFlowBuilderMockRecorder) MatchTCPFlags(flag, mask any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchTCPFlags", reflect.TypeOf((*MockFlowBuilder)(nil).MatchTCPFlags), flag, mask)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchTunnelDst mocks base method.
 func (m *MockFlowBuilder) MatchTunnelDst(dstIP net.IP) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchTunnelDst", dstIP)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchTunnelDst indicates an expected call of MatchTunnelDst.
 func (mr *MockFlowBuilderMockRecorder) MatchTunnelDst(dstIP any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchTunnelDst", reflect.TypeOf((*MockFlowBuilder)(nil).MatchTunnelDst), dstIP)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchTunnelID mocks base method.
 func (m *MockFlowBuilder) MatchTunnelID(tunnelID uint64) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchTunnelID", tunnelID)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchTunnelID indicates an expected call of MatchTunnelID.
 func (mr *MockFlowBuilderMockRecorder) MatchTunnelID(tunnelID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchTunnelID", reflect.TypeOf((*MockFlowBuilder)(nil).MatchTunnelID), tunnelID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchVLAN mocks base method.
 func (m *MockFlowBuilder) MatchVLAN(nonVLAN bool, vlanId uint16, vlanMask *uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchVLAN", nonVLAN, vlanId, vlanMask)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchVLAN indicates an expected call of MatchVLAN.
 func (mr *MockFlowBuilderMockRecorder) MatchVLAN(nonVLAN, vlanId, vlanMask any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchVLAN", reflect.TypeOf((*MockFlowBuilder)(nil).MatchVLAN), nonVLAN, vlanId, vlanMask)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MatchXXReg mocks base method.
 func (m *MockFlowBuilder) MatchXXReg(regID int, data []byte) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MatchXXReg", regID, data)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // MatchXXReg indicates an expected call of MatchXXReg.
 func (mr *MockFlowBuilderMockRecorder) MatchXXReg(regID, data any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MatchXXReg", reflect.TypeOf((*MockFlowBuilder)(nil).MatchXXReg), regID, data)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetHardTimeout mocks base method.
 func (m *MockFlowBuilder) SetHardTimeout(timout uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetHardTimeout", timout)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SetHardTimeout indicates an expected call of SetHardTimeout.
 func (mr *MockFlowBuilderMockRecorder) SetHardTimeout(timout any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetHardTimeout", reflect.TypeOf((*MockFlowBuilder)(nil).SetHardTimeout), timout)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetIdleTimeout mocks base method.
 func (m *MockFlowBuilder) SetIdleTimeout(timeout uint16) openflow.FlowBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetIdleTimeout", timeout)
-	ret0, _ := ret[0].(openflow.FlowBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.FlowBuilder)
 }
 
 // SetIdleTimeout indicates an expected call of SetIdleTimeout.
 func (mr *MockFlowBuilderMockRecorder) SetIdleTimeout(timeout any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetIdleTimeout", reflect.TypeOf((*MockFlowBuilder)(nil).SetIdleTimeout), timeout)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockGroup is a mock of Group interface.
@@ -2194,141 +1764,86 @@ type MockGroupMockRecorder struct {
 }
 
 // NewMockGroup creates a new mock instance.
-func NewMockGroup(ctrl *gomock.Controller) *MockGroup {
-	mock := &MockGroup{ctrl: ctrl}
-	mock.recorder = &MockGroupMockRecorder{mock}
-	return mock
-}
+func NewMockGroup(ctrl *gomock.Controller) *MockGroup { _ = "STUB: not implemented"; return nil }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockGroup) EXPECT() *MockGroupMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// Add mocks base method.
+	return nil
 }
 
-// Add mocks base method.
-func (m *MockGroup) Add() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Add")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockGroup) Add() error { _ = "STUB: not implemented"; return nil }
 
 // Add indicates an expected call of Add.
-func (mr *MockGroupMockRecorder) Add() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockGroup)(nil).Add))
-}
+func (mr *MockGroupMockRecorder) Add() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Bucket mocks base method.
 func (m *MockGroup) Bucket() openflow.BucketBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Bucket")
-	ret0, _ := ret[0].(openflow.BucketBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.BucketBuilder)
 }
 
 // Bucket indicates an expected call of Bucket.
-func (mr *MockGroupMockRecorder) Bucket() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Bucket", reflect.TypeOf((*MockGroup)(nil).Bucket))
-}
+func (mr *MockGroupMockRecorder) Bucket() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Delete mocks base method.
-func (m *MockGroup) Delete() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockGroup) Delete() error { _ = "STUB: not implemented"; return nil }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockGroupMockRecorder) Delete() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockGroup)(nil).Delete))
-}
+func (mr *MockGroupMockRecorder) Delete() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GetBundleMessages mocks base method.
 func (m *MockGroup) GetBundleMessages(operation openflow.OFOperation) ([]ofctrl.OpenFlowModMessage, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBundleMessages", operation)
-	ret0, _ := ret[0].([]ofctrl.OpenFlowModMessage)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetBundleMessages indicates an expected call of GetBundleMessages.
 func (mr *MockGroupMockRecorder) GetBundleMessages(operation any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBundleMessages", reflect.TypeOf((*MockGroup)(nil).GetBundleMessages), operation)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetID mocks base method.
 func (m *MockGroup) GetID() openflow.GroupIDType {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetID")
-	ret0, _ := ret[0].(openflow.GroupIDType)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.GroupIDType)
 }
 
 // GetID indicates an expected call of GetID.
-func (mr *MockGroupMockRecorder) GetID() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetID", reflect.TypeOf((*MockGroup)(nil).GetID))
-}
+func (mr *MockGroupMockRecorder) GetID() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Modify mocks base method.
-func (m *MockGroup) Modify() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Modify")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockGroup) Modify() error { _ = "STUB: not implemented"; return nil }
 
 // Modify indicates an expected call of Modify.
-func (mr *MockGroupMockRecorder) Modify() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Modify", reflect.TypeOf((*MockGroup)(nil).Modify))
-}
+func (mr *MockGroupMockRecorder) Modify() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Reset mocks base method.
-func (m *MockGroup) Reset() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Reset")
-}
+func (m *MockGroup) Reset() { _ = "STUB: not implemented"; return }
 
 // Reset indicates an expected call of Reset.
-func (mr *MockGroupMockRecorder) Reset() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockGroup)(nil).Reset))
-}
+func (mr *MockGroupMockRecorder) Reset() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // ResetBuckets mocks base method.
 func (m *MockGroup) ResetBuckets() openflow.Group {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ResetBuckets")
-	ret0, _ := ret[0].(openflow.Group)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.Group)
 }
 
 // ResetBuckets indicates an expected call of ResetBuckets.
-func (mr *MockGroupMockRecorder) ResetBuckets() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetBuckets", reflect.TypeOf((*MockGroup)(nil).ResetBuckets))
-}
+func (mr *MockGroupMockRecorder) ResetBuckets() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Type mocks base method.
 func (m *MockGroup) Type() openflow.EntryType {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Type")
-	ret0, _ := ret[0].(openflow.EntryType)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.EntryType)
 }
 
 // Type indicates an expected call of Type.
-func (mr *MockGroupMockRecorder) Type() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Type", reflect.TypeOf((*MockGroup)(nil).Type))
-}
+func (mr *MockGroupMockRecorder) Type() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // MockBucketBuilder is a mock of BucketBuilder interface.
 type MockBucketBuilder struct {
@@ -2344,112 +1859,96 @@ type MockBucketBuilderMockRecorder struct {
 
 // NewMockBucketBuilder creates a new mock instance.
 func NewMockBucketBuilder(ctrl *gomock.Controller) *MockBucketBuilder {
-	mock := &MockBucketBuilder{ctrl: ctrl}
-	mock.recorder = &MockBucketBuilderMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockBucketBuilder) EXPECT() *MockBucketBuilderMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// Done mocks base method.
+	return nil
 }
 
-// Done mocks base method.
 func (m *MockBucketBuilder) Done() openflow.Group {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Done")
-	ret0, _ := ret[0].(openflow.Group)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.Group)
 }
 
 // Done indicates an expected call of Done.
-func (mr *MockBucketBuilderMockRecorder) Done() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Done", reflect.TypeOf((*MockBucketBuilder)(nil).Done))
-}
+func (mr *MockBucketBuilderMockRecorder) Done() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // LoadRegMark mocks base method.
 func (m *MockBucketBuilder) LoadRegMark(mark *openflow.RegMark) openflow.BucketBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadRegMark", mark)
-	ret0, _ := ret[0].(openflow.BucketBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.BucketBuilder)
 }
 
 // LoadRegMark indicates an expected call of LoadRegMark.
 func (mr *MockBucketBuilderMockRecorder) LoadRegMark(mark any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadRegMark", reflect.TypeOf((*MockBucketBuilder)(nil).LoadRegMark), mark)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LoadToRegField mocks base method.
 func (m *MockBucketBuilder) LoadToRegField(field *openflow.RegField, data uint32) openflow.BucketBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadToRegField", field, data)
-	ret0, _ := ret[0].(openflow.BucketBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.BucketBuilder)
 }
 
 // LoadToRegField indicates an expected call of LoadToRegField.
 func (mr *MockBucketBuilderMockRecorder) LoadToRegField(field, data any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadToRegField", reflect.TypeOf((*MockBucketBuilder)(nil).LoadToRegField), field, data)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LoadXXReg mocks base method.
 func (m *MockBucketBuilder) LoadXXReg(regID int, data []byte) openflow.BucketBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadXXReg", regID, data)
-	ret0, _ := ret[0].(openflow.BucketBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.BucketBuilder)
 }
 
 // LoadXXReg indicates an expected call of LoadXXReg.
 func (mr *MockBucketBuilderMockRecorder) LoadXXReg(regID, data any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadXXReg", reflect.TypeOf((*MockBucketBuilder)(nil).LoadXXReg), regID, data)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ResubmitToTable mocks base method.
 func (m *MockBucketBuilder) ResubmitToTable(tableID uint8) openflow.BucketBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ResubmitToTable", tableID)
-	ret0, _ := ret[0].(openflow.BucketBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.BucketBuilder)
 }
 
 // ResubmitToTable indicates an expected call of ResubmitToTable.
 func (mr *MockBucketBuilderMockRecorder) ResubmitToTable(tableID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResubmitToTable", reflect.TypeOf((*MockBucketBuilder)(nil).ResubmitToTable), tableID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetTunnelDst mocks base method.
 func (m *MockBucketBuilder) SetTunnelDst(addr net.IP) openflow.BucketBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTunnelDst", addr)
-	ret0, _ := ret[0].(openflow.BucketBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.BucketBuilder)
 }
 
 // SetTunnelDst indicates an expected call of SetTunnelDst.
 func (mr *MockBucketBuilderMockRecorder) SetTunnelDst(addr any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTunnelDst", reflect.TypeOf((*MockBucketBuilder)(nil).SetTunnelDst), addr)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Weight mocks base method.
 func (m *MockBucketBuilder) Weight(val uint16) openflow.BucketBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Weight", val)
-	ret0, _ := ret[0].(openflow.BucketBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.BucketBuilder)
 }
 
 // Weight indicates an expected call of Weight.
 func (mr *MockBucketBuilderMockRecorder) Weight(val any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Weight", reflect.TypeOf((*MockBucketBuilder)(nil).Weight), val)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockPacketOutBuilder is a mock of PacketOutBuilder interface.
@@ -2466,476 +1965,408 @@ type MockPacketOutBuilderMockRecorder struct {
 
 // NewMockPacketOutBuilder creates a new mock instance.
 func NewMockPacketOutBuilder(ctrl *gomock.Controller) *MockPacketOutBuilder {
-	mock := &MockPacketOutBuilder{ctrl: ctrl}
-	mock.recorder = &MockPacketOutBuilderMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockPacketOutBuilder) EXPECT() *MockPacketOutBuilderMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddLoadRegMark mocks base method.
+	return nil
 }
 
-// AddLoadRegMark mocks base method.
 func (m *MockPacketOutBuilder) AddLoadRegMark(mark *openflow.RegMark) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddLoadRegMark", mark)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // AddLoadRegMark indicates an expected call of AddLoadRegMark.
 func (mr *MockPacketOutBuilderMockRecorder) AddLoadRegMark(mark any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddLoadRegMark", reflect.TypeOf((*MockPacketOutBuilder)(nil).AddLoadRegMark), mark)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddResubmitAction mocks base method.
 func (m *MockPacketOutBuilder) AddResubmitAction(inPort *uint16, table *uint8) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddResubmitAction", inPort, table)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // AddResubmitAction indicates an expected call of AddResubmitAction.
 func (mr *MockPacketOutBuilderMockRecorder) AddResubmitAction(inPort, table any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddResubmitAction", reflect.TypeOf((*MockPacketOutBuilder)(nil).AddResubmitAction), inPort, table)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddSetIPTOSAction mocks base method.
 func (m *MockPacketOutBuilder) AddSetIPTOSAction(data uint8) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddSetIPTOSAction", data)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // AddSetIPTOSAction indicates an expected call of AddSetIPTOSAction.
 func (mr *MockPacketOutBuilderMockRecorder) AddSetIPTOSAction(data any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddSetIPTOSAction", reflect.TypeOf((*MockPacketOutBuilder)(nil).AddSetIPTOSAction), data)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Done mocks base method.
-func (m *MockPacketOutBuilder) Done() *ofctrl.PacketOut {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Done")
-	ret0, _ := ret[0].(*ofctrl.PacketOut)
-	return ret0
-}
+func (m *MockPacketOutBuilder) Done() *ofctrl.PacketOut { _ = "STUB: not implemented"; return nil }
 
 // Done indicates an expected call of Done.
 func (mr *MockPacketOutBuilderMockRecorder) Done() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Done", reflect.TypeOf((*MockPacketOutBuilder)(nil).Done))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetDstIP mocks base method.
 func (m *MockPacketOutBuilder) SetDstIP(ip net.IP) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetDstIP", ip)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetDstIP indicates an expected call of SetDstIP.
 func (mr *MockPacketOutBuilderMockRecorder) SetDstIP(ip any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDstIP", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetDstIP), ip)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetDstMAC mocks base method.
 func (m *MockPacketOutBuilder) SetDstMAC(mac net.HardwareAddr) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetDstMAC", mac)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetDstMAC indicates an expected call of SetDstMAC.
 func (mr *MockPacketOutBuilderMockRecorder) SetDstMAC(mac any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDstMAC", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetDstMAC), mac)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetEthPacket mocks base method.
 func (m *MockPacketOutBuilder) SetEthPacket(packet *protocol.Ethernet) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetEthPacket", packet)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetEthPacket indicates an expected call of SetEthPacket.
 func (mr *MockPacketOutBuilderMockRecorder) SetEthPacket(packet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetEthPacket", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetEthPacket), packet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetICMPCode mocks base method.
 func (m *MockPacketOutBuilder) SetICMPCode(icmpCode uint8) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetICMPCode", icmpCode)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetICMPCode indicates an expected call of SetICMPCode.
 func (mr *MockPacketOutBuilderMockRecorder) SetICMPCode(icmpCode any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetICMPCode", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetICMPCode), icmpCode)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetICMPData mocks base method.
 func (m *MockPacketOutBuilder) SetICMPData(data []byte) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetICMPData", data)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetICMPData indicates an expected call of SetICMPData.
 func (mr *MockPacketOutBuilderMockRecorder) SetICMPData(data any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetICMPData", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetICMPData), data)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetICMPID mocks base method.
 func (m *MockPacketOutBuilder) SetICMPID(id uint16) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetICMPID", id)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetICMPID indicates an expected call of SetICMPID.
 func (mr *MockPacketOutBuilderMockRecorder) SetICMPID(id any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetICMPID", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetICMPID), id)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetICMPSequence mocks base method.
 func (m *MockPacketOutBuilder) SetICMPSequence(seq uint16) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetICMPSequence", seq)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetICMPSequence indicates an expected call of SetICMPSequence.
 func (mr *MockPacketOutBuilderMockRecorder) SetICMPSequence(seq any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetICMPSequence", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetICMPSequence), seq)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetICMPType mocks base method.
 func (m *MockPacketOutBuilder) SetICMPType(icmpType uint8) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetICMPType", icmpType)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetICMPType indicates an expected call of SetICMPType.
 func (mr *MockPacketOutBuilderMockRecorder) SetICMPType(icmpType any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetICMPType", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetICMPType), icmpType)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetIPFlags mocks base method.
 func (m *MockPacketOutBuilder) SetIPFlags(flags uint16) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetIPFlags", flags)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetIPFlags indicates an expected call of SetIPFlags.
 func (mr *MockPacketOutBuilderMockRecorder) SetIPFlags(flags any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetIPFlags", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetIPFlags), flags)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetIPHeaderID mocks base method.
 func (m *MockPacketOutBuilder) SetIPHeaderID(id uint16) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetIPHeaderID", id)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetIPHeaderID indicates an expected call of SetIPHeaderID.
 func (mr *MockPacketOutBuilderMockRecorder) SetIPHeaderID(id any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetIPHeaderID", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetIPHeaderID), id)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetIPProtocol mocks base method.
 func (m *MockPacketOutBuilder) SetIPProtocol(arg0 openflow.Protocol) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetIPProtocol", arg0)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetIPProtocol indicates an expected call of SetIPProtocol.
 func (mr *MockPacketOutBuilderMockRecorder) SetIPProtocol(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetIPProtocol", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetIPProtocol), arg0)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetIPProtocolValue mocks base method.
 func (m *MockPacketOutBuilder) SetIPProtocolValue(isIPv6 bool, protoValue uint8) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetIPProtocolValue", isIPv6, protoValue)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetIPProtocolValue indicates an expected call of SetIPProtocolValue.
 func (mr *MockPacketOutBuilderMockRecorder) SetIPProtocolValue(isIPv6, protoValue any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetIPProtocolValue", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetIPProtocolValue), isIPv6, protoValue)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetInport mocks base method.
 func (m *MockPacketOutBuilder) SetInport(inPort uint32) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetInport", inPort)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetInport indicates an expected call of SetInport.
 func (mr *MockPacketOutBuilderMockRecorder) SetInport(inPort any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetInport", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetInport), inPort)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetL4Packet mocks base method.
 func (m *MockPacketOutBuilder) SetL4Packet(packet util.Message) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetL4Packet", packet)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetL4Packet indicates an expected call of SetL4Packet.
 func (mr *MockPacketOutBuilderMockRecorder) SetL4Packet(packet any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetL4Packet", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetL4Packet), packet)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetOutport mocks base method.
 func (m *MockPacketOutBuilder) SetOutport(outport uint32) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetOutport", outport)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetOutport indicates an expected call of SetOutport.
 func (mr *MockPacketOutBuilderMockRecorder) SetOutport(outport any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOutport", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetOutport), outport)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetSrcIP mocks base method.
 func (m *MockPacketOutBuilder) SetSrcIP(ip net.IP) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetSrcIP", ip)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetSrcIP indicates an expected call of SetSrcIP.
 func (mr *MockPacketOutBuilderMockRecorder) SetSrcIP(ip any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetSrcIP", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetSrcIP), ip)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetSrcMAC mocks base method.
 func (m *MockPacketOutBuilder) SetSrcMAC(mac net.HardwareAddr) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetSrcMAC", mac)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetSrcMAC indicates an expected call of SetSrcMAC.
 func (mr *MockPacketOutBuilderMockRecorder) SetSrcMAC(mac any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetSrcMAC", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetSrcMAC), mac)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetTCPAckNum mocks base method.
 func (m *MockPacketOutBuilder) SetTCPAckNum(ackNum uint32) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTCPAckNum", ackNum)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetTCPAckNum indicates an expected call of SetTCPAckNum.
 func (mr *MockPacketOutBuilderMockRecorder) SetTCPAckNum(ackNum any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTCPAckNum", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetTCPAckNum), ackNum)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetTCPData mocks base method.
 func (m *MockPacketOutBuilder) SetTCPData(data []byte) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTCPData", data)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetTCPData indicates an expected call of SetTCPData.
 func (mr *MockPacketOutBuilderMockRecorder) SetTCPData(data any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTCPData", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetTCPData), data)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetTCPDstPort mocks base method.
 func (m *MockPacketOutBuilder) SetTCPDstPort(port uint16) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTCPDstPort", port)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetTCPDstPort indicates an expected call of SetTCPDstPort.
 func (mr *MockPacketOutBuilderMockRecorder) SetTCPDstPort(port any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTCPDstPort", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetTCPDstPort), port)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetTCPFlags mocks base method.
 func (m *MockPacketOutBuilder) SetTCPFlags(flags uint8) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTCPFlags", flags)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetTCPFlags indicates an expected call of SetTCPFlags.
 func (mr *MockPacketOutBuilderMockRecorder) SetTCPFlags(flags any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTCPFlags", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetTCPFlags), flags)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetTCPHdrLen mocks base method.
 func (m *MockPacketOutBuilder) SetTCPHdrLen(hdrLen uint8) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTCPHdrLen", hdrLen)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetTCPHdrLen indicates an expected call of SetTCPHdrLen.
 func (mr *MockPacketOutBuilderMockRecorder) SetTCPHdrLen(hdrLen any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTCPHdrLen", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetTCPHdrLen), hdrLen)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetTCPSeqNum mocks base method.
 func (m *MockPacketOutBuilder) SetTCPSeqNum(seqNum uint32) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTCPSeqNum", seqNum)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetTCPSeqNum indicates an expected call of SetTCPSeqNum.
 func (mr *MockPacketOutBuilderMockRecorder) SetTCPSeqNum(seqNum any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTCPSeqNum", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetTCPSeqNum), seqNum)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetTCPSrcPort mocks base method.
 func (m *MockPacketOutBuilder) SetTCPSrcPort(port uint16) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTCPSrcPort", port)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetTCPSrcPort indicates an expected call of SetTCPSrcPort.
 func (mr *MockPacketOutBuilderMockRecorder) SetTCPSrcPort(port any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTCPSrcPort", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetTCPSrcPort), port)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetTCPWinSize mocks base method.
 func (m *MockPacketOutBuilder) SetTCPWinSize(winSize uint16) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTCPWinSize", winSize)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetTCPWinSize indicates an expected call of SetTCPWinSize.
 func (mr *MockPacketOutBuilderMockRecorder) SetTCPWinSize(winSize any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTCPWinSize", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetTCPWinSize), winSize)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetTTL mocks base method.
 func (m *MockPacketOutBuilder) SetTTL(ttl uint8) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTTL", ttl)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetTTL indicates an expected call of SetTTL.
 func (mr *MockPacketOutBuilderMockRecorder) SetTTL(ttl any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTTL", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetTTL), ttl)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetUDPData mocks base method.
 func (m *MockPacketOutBuilder) SetUDPData(data []byte) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetUDPData", data)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetUDPData indicates an expected call of SetUDPData.
 func (mr *MockPacketOutBuilderMockRecorder) SetUDPData(data any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetUDPData", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetUDPData), data)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetUDPDstPort mocks base method.
 func (m *MockPacketOutBuilder) SetUDPDstPort(port uint16) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetUDPDstPort", port)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetUDPDstPort indicates an expected call of SetUDPDstPort.
 func (mr *MockPacketOutBuilderMockRecorder) SetUDPDstPort(port any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetUDPDstPort", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetUDPDstPort), port)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SetUDPSrcPort mocks base method.
 func (m *MockPacketOutBuilder) SetUDPSrcPort(port uint16) openflow.PacketOutBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetUDPSrcPort", port)
-	ret0, _ := ret[0].(openflow.PacketOutBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.PacketOutBuilder)
 }
 
 // SetUDPSrcPort indicates an expected call of SetUDPSrcPort.
 func (mr *MockPacketOutBuilderMockRecorder) SetUDPSrcPort(port any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetUDPSrcPort", reflect.TypeOf((*MockPacketOutBuilder)(nil).SetUDPSrcPort), port)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockMeter is a mock of Meter interface.
@@ -2951,127 +2382,80 @@ type MockMeterMockRecorder struct {
 }
 
 // NewMockMeter creates a new mock instance.
-func NewMockMeter(ctrl *gomock.Controller) *MockMeter {
-	mock := &MockMeter{ctrl: ctrl}
-	mock.recorder = &MockMeterMockRecorder{mock}
-	return mock
-}
+func NewMockMeter(ctrl *gomock.Controller) *MockMeter { _ = "STUB: not implemented"; return nil }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockMeter) EXPECT() *MockMeterMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// Add mocks base method.
+	return nil
 }
 
-// Add mocks base method.
-func (m *MockMeter) Add() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Add")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockMeter) Add() error { _ = "STUB: not implemented"; return nil }
 
 // Add indicates an expected call of Add.
-func (mr *MockMeterMockRecorder) Add() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockMeter)(nil).Add))
-}
+func (mr *MockMeterMockRecorder) Add() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Delete mocks base method.
-func (m *MockMeter) Delete() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockMeter) Delete() error { _ = "STUB: not implemented"; return nil }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockMeterMockRecorder) Delete() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockMeter)(nil).Delete))
-}
+func (mr *MockMeterMockRecorder) Delete() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GetBundleMessages mocks base method.
 func (m *MockMeter) GetBundleMessages(operation openflow.OFOperation) ([]ofctrl.OpenFlowModMessage, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBundleMessages", operation)
-	ret0, _ := ret[0].([]ofctrl.OpenFlowModMessage)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // GetBundleMessages indicates an expected call of GetBundleMessages.
 func (mr *MockMeterMockRecorder) GetBundleMessages(operation any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBundleMessages", reflect.TypeOf((*MockMeter)(nil).GetBundleMessages), operation)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MeterBand mocks base method.
 func (m *MockMeter) MeterBand() openflow.MeterBandBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MeterBand")
-	ret0, _ := ret[0].(openflow.MeterBandBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.MeterBandBuilder)
 }
 
 // MeterBand indicates an expected call of MeterBand.
-func (mr *MockMeterMockRecorder) MeterBand() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MeterBand", reflect.TypeOf((*MockMeter)(nil).MeterBand))
-}
+func (mr *MockMeterMockRecorder) MeterBand() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Modify mocks base method.
-func (m *MockMeter) Modify() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Modify")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockMeter) Modify() error { _ = "STUB: not implemented"; return nil }
 
 // Modify indicates an expected call of Modify.
-func (mr *MockMeterMockRecorder) Modify() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Modify", reflect.TypeOf((*MockMeter)(nil).Modify))
-}
+func (mr *MockMeterMockRecorder) Modify() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Reset mocks base method.
-func (m *MockMeter) Reset() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Reset")
-}
+func (m *MockMeter) Reset() { _ = "STUB: not implemented"; return }
 
 // Reset indicates an expected call of Reset.
-func (mr *MockMeterMockRecorder) Reset() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Reset", reflect.TypeOf((*MockMeter)(nil).Reset))
-}
+func (mr *MockMeterMockRecorder) Reset() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // ResetMeterBands mocks base method.
 func (m *MockMeter) ResetMeterBands() openflow.Meter {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ResetMeterBands")
-	ret0, _ := ret[0].(openflow.Meter)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.Meter)
 }
 
 // ResetMeterBands indicates an expected call of ResetMeterBands.
 func (mr *MockMeterMockRecorder) ResetMeterBands() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetMeterBands", reflect.TypeOf((*MockMeter)(nil).ResetMeterBands))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Type mocks base method.
 func (m *MockMeter) Type() openflow.EntryType {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Type")
-	ret0, _ := ret[0].(openflow.EntryType)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.EntryType)
 }
 
 // Type indicates an expected call of Type.
-func (mr *MockMeterMockRecorder) Type() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Type", reflect.TypeOf((*MockMeter)(nil).Type))
-}
+func (mr *MockMeterMockRecorder) Type() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // MockMeterBandBuilder is a mock of MeterBandBuilder interface.
 type MockMeterBandBuilder struct {
@@ -3087,96 +2471,85 @@ type MockMeterBandBuilderMockRecorder struct {
 
 // NewMockMeterBandBuilder creates a new mock instance.
 func NewMockMeterBandBuilder(ctrl *gomock.Controller) *MockMeterBandBuilder {
-	mock := &MockMeterBandBuilder{ctrl: ctrl}
-	mock.recorder = &MockMeterBandBuilderMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockMeterBandBuilder) EXPECT() *MockMeterBandBuilderMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// Burst mocks base method.
+	return nil
 }
 
-// Burst mocks base method.
 func (m *MockMeterBandBuilder) Burst(burst uint32) openflow.MeterBandBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Burst", burst)
-	ret0, _ := ret[0].(openflow.MeterBandBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.MeterBandBuilder)
 }
 
 // Burst indicates an expected call of Burst.
 func (mr *MockMeterBandBuilderMockRecorder) Burst(burst any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Burst", reflect.TypeOf((*MockMeterBandBuilder)(nil).Burst), burst)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Done mocks base method.
 func (m *MockMeterBandBuilder) Done() openflow.Meter {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Done")
-	ret0, _ := ret[0].(openflow.Meter)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.Meter)
 }
 
 // Done indicates an expected call of Done.
 func (mr *MockMeterBandBuilderMockRecorder) Done() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Done", reflect.TypeOf((*MockMeterBandBuilder)(nil).Done))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Experimenter mocks base method.
 func (m *MockMeterBandBuilder) Experimenter(experimenter uint32) openflow.MeterBandBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Experimenter", experimenter)
-	ret0, _ := ret[0].(openflow.MeterBandBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.MeterBandBuilder)
 }
 
 // Experimenter indicates an expected call of Experimenter.
 func (mr *MockMeterBandBuilderMockRecorder) Experimenter(experimenter any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Experimenter", reflect.TypeOf((*MockMeterBandBuilder)(nil).Experimenter), experimenter)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MeterType mocks base method.
 func (m *MockMeterBandBuilder) MeterType(meterType ofctrl.MeterType) openflow.MeterBandBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MeterType", meterType)
-	ret0, _ := ret[0].(openflow.MeterBandBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.MeterBandBuilder)
 }
 
 // MeterType indicates an expected call of MeterType.
 func (mr *MockMeterBandBuilderMockRecorder) MeterType(meterType any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MeterType", reflect.TypeOf((*MockMeterBandBuilder)(nil).MeterType), meterType)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // PrecLevel mocks base method.
 func (m *MockMeterBandBuilder) PrecLevel(precLevel uint8) openflow.MeterBandBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PrecLevel", precLevel)
-	ret0, _ := ret[0].(openflow.MeterBandBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.MeterBandBuilder)
 }
 
 // PrecLevel indicates an expected call of PrecLevel.
 func (mr *MockMeterBandBuilderMockRecorder) PrecLevel(precLevel any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PrecLevel", reflect.TypeOf((*MockMeterBandBuilder)(nil).PrecLevel), precLevel)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Rate mocks base method.
 func (m *MockMeterBandBuilder) Rate(rate uint32) openflow.MeterBandBuilder {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Rate", rate)
-	ret0, _ := ret[0].(openflow.MeterBandBuilder)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(openflow.MeterBandBuilder)
 }
 
 // Rate indicates an expected call of Rate.
 func (mr *MockMeterBandBuilderMockRecorder) Rate(rate any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Rate", reflect.TypeOf((*MockMeterBandBuilder)(nil).Rate), rate)
+	_ = "STUB: not implemented"
+	return nil
 }

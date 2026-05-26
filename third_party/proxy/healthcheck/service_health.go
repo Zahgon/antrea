@@ -41,19 +41,11 @@ Modifies:
 package healthcheck
 
 import (
-	"context"
-	"fmt"
-	"net"
 	"net/http"
-	"strconv"
-	"strings"
 	"sync"
 
-	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
-	utilerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/client-go/tools/events"
-	"k8s.io/klog/v2"
 )
 
 // ServiceHealthServer serves HTTP endpoints for each service name, with results
@@ -78,20 +70,14 @@ type proxyHealthChecker interface {
 }
 
 func newServiceHealthServer(nodeName string, recorder events.EventRecorder, listener listener, factory httpServerFactory, nodeIPs []string, healthzServer proxyHealthChecker) ServiceHealthServer {
-	return &server{
-		nodeName:      nodeName,
-		recorder:      recorder,
-		listener:      listener,
-		httpFactory:   factory,
-		healthzServer: healthzServer,
-		services:      map[types.NamespacedName]*hcInstance{},
-		nodeIPs:       nodeIPs,
-	}
+	_ = "STUB: not implemented"
+	return *new(ServiceHealthServer)
 }
 
 // NewServiceHealthServer allocates a new service healthcheck server manager
 func NewServiceHealthServer(nodeName string, recorder events.EventRecorder, nodePortAddresses []string, healthzServer proxyHealthChecker) ServiceHealthServer {
-	return newServiceHealthServer(nodeName, recorder, stdNetListener{}, stdHTTPServerFactory{}, nodePortAddresses, healthzServer)
+	_ = "STUB: not implemented"
+	return *new(ServiceHealthServer)
 }
 
 type server struct {
@@ -109,53 +95,15 @@ type server struct {
 }
 
 func (hcs *server) SyncServices(newServices map[types.NamespacedName]uint16) error {
-	hcs.lock.Lock()
-	defer hcs.lock.Unlock()
-
-	// Remove any that are not needed any more.
-	for nsn, svc := range hcs.services {
-		if port, found := newServices[nsn]; !found || port != svc.port {
-			klog.V(2).InfoS("Closing healthcheck", "service", nsn, "port", svc.port)
-
-			// errors are loged in closeAll()
-			_ = svc.closeAll()
-
-			delete(hcs.services, nsn)
-
-		}
-	}
-
-	// Add any that are needed.
-	for nsn, port := range newServices {
-		if hcs.services[nsn] != nil {
-			klog.V(3).InfoS("Existing healthcheck", "service", nsn, "port", port)
-			continue
-		}
-
-		klog.V(2).InfoS("Opening healthcheck", "service", nsn, "port", port)
-
-		svc := &hcInstance{nsn: nsn, port: port}
-		err := svc.listenAndServeAll(hcs)
-
-		if err != nil {
-			msg := fmt.Sprintf("node %s failed to start healthcheck %q on port %d: %v", hcs.nodeName, nsn.String(), port, err)
-
-			if hcs.recorder != nil {
-				hcs.recorder.Eventf(
-					&v1.ObjectReference{
-						Kind:      "Service",
-						Namespace: nsn.Namespace,
-						Name:      nsn.Name,
-						UID:       types.UID(nsn.String()),
-					}, nil, "Warning", "FailedToStartServiceHealthcheck", "Listen", msg)
-			}
-			klog.ErrorS(err, "Failed to start healthcheck", "node", hcs.nodeName, "service", nsn, "port", port)
-			continue
-		}
-		hcs.services[nsn] = svc
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// Remove any that are not needed any more.
+
+// errors are loged in closeAll()
+
+// Add any that are needed.
 
 type hcInstance struct {
 	nsn  types.NamespacedName
@@ -167,58 +115,22 @@ type hcInstance struct {
 }
 
 // listenAll opens health check port on all the addresses provided
-func (hcI *hcInstance) listenAndServeAll(hcs *server) error {
-	var err error
-	var listener net.Listener
+func (hcI *hcInstance) listenAndServeAll(hcs *server) error { _ = "STUB: not implemented"; return nil }
 
-	hcI.httpServers = make([]httpServer, 0, len(hcs.nodeIPs))
+// for each of the node addresses start listening and serving
 
-	// for each of the node addresses start listening and serving
-	for _, ip := range hcs.nodeIPs {
-		addr := net.JoinHostPort(ip, fmt.Sprint(hcI.port))
-		// create http server
-		httpSrv := hcs.httpFactory.New(hcHandler{name: hcI.nsn, hcs: hcs})
-		// start listener
-		listener, err = hcs.listener.Listen(context.TODO(), addr)
-		if err != nil {
-			// must close whatever have been previously opened
-			// to allow a retry/or port ownership change as needed
-			_ = hcI.closeAll()
-			return err
-		}
+// create http server
 
-		// start serving
-		go func(hcI *hcInstance, listener net.Listener, httpSrv httpServer) {
-			// Serve() will exit and return ErrServerClosed when the http server is closed.
-			klog.V(3).InfoS("Starting goroutine for healthcheck", "service", hcI.nsn, "address", listener.Addr())
-			if err := httpSrv.Serve(listener); err != nil && err != http.ErrServerClosed {
-				klog.ErrorS(err, "Healthcheck closed", "service", hcI.nsn)
-				return
-			}
-			klog.V(3).InfoS("Healthcheck closed", "service", hcI.nsn, "address", listener.Addr())
-		}(hcI, listener, httpSrv)
+// start listener
 
-		hcI.httpServers = append(hcI.httpServers, httpSrv)
-	}
+// must close whatever have been previously opened
+// to allow a retry/or port ownership change as needed
 
-	return nil
-}
+// start serving
 
-func (hcI *hcInstance) closeAll() error {
-	errors := []error{}
-	for _, server := range hcI.httpServers {
-		if err := server.Close(); err != nil {
-			klog.ErrorS(err, "Error closing server for health check service", "service", hcI.nsn)
-			errors = append(errors, err)
-		}
-	}
+// Serve() will exit and return ErrServerClosed when the http server is closed.
 
-	if len(errors) > 0 {
-		return utilerrors.NewAggregate(errors)
-	}
-
-	return nil
-}
+func (hcI *hcInstance) closeAll() error { _ = "STUB: not implemented"; return nil }
 
 type hcHandler struct {
 	name types.NamespacedName
@@ -228,54 +140,12 @@ type hcHandler struct {
 var _ http.Handler = hcHandler{}
 
 func (h hcHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
-	h.hcs.lock.RLock()
-	svc, ok := h.hcs.services[h.name]
-	if !ok || svc == nil {
-		h.hcs.lock.RUnlock()
-		klog.ErrorS(nil, "Received request for closed healthcheck", "service", h.name)
-		return
-	}
-	count := svc.endpoints
-	h.hcs.lock.RUnlock()
-	kubeProxyHealthy := h.hcs.healthzServer.Health().Healthy
-
-	resp.Header().Set("Content-Type", "application/json")
-	resp.Header().Set("X-Content-Type-Options", "nosniff")
-	resp.Header().Set("X-Load-Balancing-Endpoint-Weight", strconv.Itoa(count))
-
-	if count != 0 && kubeProxyHealthy {
-		resp.WriteHeader(http.StatusOK)
-	} else {
-		resp.WriteHeader(http.StatusServiceUnavailable)
-	}
-	fmt.Fprint(resp, strings.TrimSpace(fmt.Sprintf(`
-{
-	"service": {
-		"namespace": %q,
-		"name": %q
-	},
-	"localEndpoints": %d,
-	"serviceProxyHealthy": %v
-}
-`, h.name.Namespace, h.name.Name, count, kubeProxyHealthy)))
+	_ = "STUB: not implemented"
+	return
 }
 
 func (hcs *server) SyncEndpoints(newEndpoints map[types.NamespacedName]int) error {
-	hcs.lock.Lock()
-	defer hcs.lock.Unlock()
-
-	for nsn, count := range newEndpoints {
-		if hcs.services[nsn] == nil {
-			continue
-		}
-		klog.V(3).InfoS("Reporting endpoints for healthcheck", "endpointCount", count, "service", nsn)
-		hcs.services[nsn].endpoints = count
-	}
-	for nsn, hci := range hcs.services {
-		if _, found := newEndpoints[nsn]; !found {
-			hci.endpoints = 0
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
@@ -284,15 +154,19 @@ type FakeServiceHealthServer struct{}
 
 // NewFakeServiceHealthServer allocates a new fake service healthcheck server manager
 func NewFakeServiceHealthServer() ServiceHealthServer {
-	return FakeServiceHealthServer{}
+	_ = "STUB: not implemented"
+	return *new(ServiceHealthServer)
 }
 
 // SyncServices is part of ServiceHealthServer
 func (fake FakeServiceHealthServer) SyncServices(_ map[types.NamespacedName]uint16) error {
+	_ = "STUB: not implemented"
+
+	// SyncEndpoints is part of ServiceHealthServer
 	return nil
 }
 
-// SyncEndpoints is part of ServiceHealthServer
 func (fake FakeServiceHealthServer) SyncEndpoints(_ map[types.NamespacedName]int) error {
+	_ = "STUB: not implemented"
 	return nil
 }

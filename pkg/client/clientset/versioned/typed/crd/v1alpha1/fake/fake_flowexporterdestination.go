@@ -29,22 +29,6 @@ type fakeFlowExporterDestinations struct {
 }
 
 func newFakeFlowExporterDestinations(fake *FakeCrdV1alpha1) crdv1alpha1.FlowExporterDestinationInterface {
-	return &fakeFlowExporterDestinations{
-		gentype.NewFakeClientWithList[*v1alpha1.FlowExporterDestination, *v1alpha1.FlowExporterDestinationList](
-			fake.Fake,
-			"",
-			v1alpha1.SchemeGroupVersion.WithResource("flowexporterdestinations"),
-			v1alpha1.SchemeGroupVersion.WithKind("FlowExporterDestination"),
-			func() *v1alpha1.FlowExporterDestination { return &v1alpha1.FlowExporterDestination{} },
-			func() *v1alpha1.FlowExporterDestinationList { return &v1alpha1.FlowExporterDestinationList{} },
-			func(dst, src *v1alpha1.FlowExporterDestinationList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.FlowExporterDestinationList) []*v1alpha1.FlowExporterDestination {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha1.FlowExporterDestinationList, items []*v1alpha1.FlowExporterDestination) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1alpha1.FlowExporterDestinationInterface)
 }

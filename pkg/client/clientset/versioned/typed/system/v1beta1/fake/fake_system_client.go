@@ -27,12 +27,13 @@ type FakeSystemV1beta1 struct {
 }
 
 func (c *FakeSystemV1beta1) SupportBundles() v1beta1.SupportBundleInterface {
-	return newFakeSupportBundles(c)
+	_ = "STUB: not implemented"
+	return *new(v1beta1.SupportBundleInterface)
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeSystemV1beta1) RESTClient() rest.Interface {
-	var ret *rest.RESTClient
-	return ret
+	_ = "STUB: not implemented"
+	return *new(rest.Interface)
 }

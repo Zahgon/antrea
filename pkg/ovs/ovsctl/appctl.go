@@ -14,35 +14,16 @@
 
 package ovsctl
 
-import (
-	"context"
-	"fmt"
-	"os/exec"
-)
-
 type ovsAppctlRunner struct {
 	bridge string
 }
 
 func (r *ovsAppctlRunner) RunAppctlCmd(cmd string, needsBridge bool, args ...string) ([]byte, error) {
+	_ = "STUB: not implemented"
 	// Use the control UNIX domain socket to connect to ovs-vswitchd, as Agent can
 	// run in a different PID namespace from ovs-vswitchd. Relying on ovs-appctl to
 	// determine the control socket based on the pidfile will then give a "stale
 	// pidfile" error, as it tries to validate that the PID read from the pidfile
 	// corresponds to a valid process in the current PID namespace.
-	uds, err := ovsVSwitchdUDS(context.TODO())
-	if err != nil {
-		return nil, fmt.Errorf("failed to get UDS for OVS: %w", err)
-	}
-	cmdArgs := []string{"-t", uds, cmd}
-	if needsBridge {
-		cmdArgs = append(cmdArgs, r.bridge)
-	}
-	cmdArgs = append(cmdArgs, args...)
-	ovsCmd := exec.CommandContext(context.TODO(), "ovs-appctl", cmdArgs...)
-	out, err := ovsCmd.CombinedOutput()
-	if err != nil {
-		return nil, NewExecError(err, string(out))
-	}
-	return out, nil
+	return nil, nil
 }

@@ -14,16 +14,6 @@
 
 package env
 
-import (
-	"os"
-	"strconv"
-	"strings"
-
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/util/runtime"
-)
-
 const (
 	NodeNameEnvKey        = "NODE_NAME"
 	podNameEnvKey         = "POD_NAME"
@@ -42,95 +32,32 @@ const (
 // GetNodeName returns the node's name used in Kubernetes, based on the priority:
 // - Environment variable NODE_NAME, which should be set by Downward API
 // - OS's hostname
-func GetNodeName() (string, error) {
-	lowerWindowsNodeName := func(name string) string {
-		if runtime.IsWindowsPlatform() {
-			return strings.ToLower(name)
-		}
-		return name
-	}
-	nodeName := os.Getenv(NodeNameEnvKey)
-	if nodeName != "" {
-		return lowerWindowsNodeName(nodeName), nil
-	}
-	klog.Infof("Environment variable %s not found, using hostname instead", NodeNameEnvKey)
-	var err error
-	nodeName, err = os.Hostname()
-	if err != nil {
-		klog.Errorf("Failed to get local hostname: %v", err)
-		return "", err
-	}
-	return lowerWindowsNodeName(nodeName), nil
-}
+func GetNodeName() (string, error) { _ = "STUB: not implemented"; return "", nil }
 
 // GetPodName returns name of the Pod where the code executes.
-func GetPodName() string {
-	podName := os.Getenv(podNameEnvKey)
-	if podName == "" {
-		klog.InfoS("Environment variable not found", "variable", podNameEnvKey)
-	}
-	return podName
-}
+func GetPodName() string { _ = "STUB: not implemented"; return "" }
 
 // GetAntreaConfigMapName returns the configMap name of Antrea config.
-func GetAntreaConfigMapName() string {
-	configMapName := os.Getenv(antreaConfigMapEnvKey)
-	if configMapName == "" {
-		klog.InfoS("Environment variable not found", "variable", antreaConfigMapEnvKey)
-	}
-	return configMapName
-}
+func GetAntreaConfigMapName() string { _ = "STUB: not implemented"; return "" }
 
 // GetPodNamespace returns Namespace of the Pod where the code executes.
-func GetPodNamespace() string {
-	podNamespace := os.Getenv(PodNamespaceEnvKey)
-	if podNamespace == "" {
-		klog.InfoS("Environment variable not found", "variable", PodNamespaceEnvKey)
-	}
-	return podNamespace
-}
+func GetPodNamespace() string { _ = "STUB: not implemented"; return "" }
 
 // GetAntreaControllerServiceAccountName returns the ServiceAccount name associated with antrea-controller.
-func GetAntreaControllerServiceAccount() string {
-	svcAcctName := os.Getenv(svcAcctNameEnvKey)
-	if svcAcctName == "" {
-		// default value set for antrea-controller
-		svcAcctName = "antrea-controller"
-	}
-	return svcAcctName
-}
+func GetAntreaControllerServiceAccount() string { _ = "STUB: not implemented"; return "" }
 
-func getBoolEnvVar(name string, defaultValue bool) bool {
-	if strValue := os.Getenv(name); strValue != "" {
-		parsedValue, err := strconv.ParseBool(strValue)
-		if err != nil {
-			klog.Errorf("Failed to parse env variable '%s' (using default '%t'): %v", name, defaultValue, err)
-			return defaultValue
-		}
-		return parsedValue
-	}
-	return defaultValue
-}
+// default value set for antrea-controller
+
+func getBoolEnvVar(name string, defaultValue bool) bool { _ = "STUB: not implemented"; return false }
 
 // IsCloudEKS returns true if Antrea is used to enforce NetworkPolicies in an EKS cluster.
-func IsCloudEKS() bool {
-	return getBoolEnvVar(antreaCloudEKSEnvKey, false)
-}
+func IsCloudEKS() bool { _ = "STUB: not implemented"; return false }
 
 // GetAntreaNamespace tries to determine the Namespace in which Antrea is running by looking at the
 // POD_NAMESPACE environment variable. If this environment variable is not set (e.g. because the
 // Antrea component is not run as a Pod), "kube-system" is returned.
-func GetAntreaNamespace() string {
-	namespace := GetPodNamespace()
-	if namespace == "" {
-		klog.InfoS("Failed to get Pod Namespace from environment, using default Namespace for Antrea Service", "defaultNamespace", defaultAntreaNamespace)
-		namespace = defaultAntreaNamespace
-	}
-	return namespace
-}
+func GetAntreaNamespace() string { _ = "STUB: not implemented"; return "" }
 
 // GetAllowNoEncapWithoutAntreaProxy returns whether AntreaProxy can be disabled for traffic
 // modes which support noEncap.
-func GetAllowNoEncapWithoutAntreaProxy() bool {
-	return getBoolEnvVar(allowNoEncapWithoutAntreaProxyEnvKey, false)
-}
+func GetAllowNoEncapWithoutAntreaProxy() bool { _ = "STUB: not implemented"; return false }

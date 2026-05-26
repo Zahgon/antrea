@@ -18,19 +18,12 @@
 package connections
 
 import (
-	"fmt"
 	"net/netip"
-	"slices"
-	"time"
 
 	"github.com/ti-mo/conntrack"
-	"golang.org/x/sys/cpu"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/config"
 	"antrea.io/antrea/v2/pkg/agent/flowexporter/connection"
-	"antrea.io/antrea/v2/pkg/agent/openflow"
-	"antrea.io/antrea/v2/pkg/agent/util/sysctl"
 )
 
 // connTrackSystem implements ConnTrackDumper. This is for linux kernel datapath.
@@ -47,46 +40,23 @@ type connTrackSystem struct {
 // TODO: detect the endianness of the system when initializing conntrack dumper to handle situations on big-endian platforms.
 // All connection labels are required to store in little endian format in conntrack dumper.
 func NewConnTrackSystem(nodeConfig *config.NodeConfig, serviceCIDRv4 netip.Prefix, serviceCIDRv6 netip.Prefix, isAntreaProxyEnabled bool) *connTrackSystem {
-	if err := SetupConntrackParameters(); err != nil {
-		// Do not fail, but continue after logging an error as we can still dump flows with missing information.
-		klog.Errorf("Error when setting up conntrack parameters, some information may be missing from exported flows: %v", err)
-	}
-
-	return &connTrackSystem{
-		nodeConfig,
-		serviceCIDRv4,
-		serviceCIDRv6,
-		isAntreaProxyEnabled,
-		&netFilterConnTrack{},
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Do not fail, but continue after logging an error as we can still dump flows with missing information.
 
 // DumpFlows opens netlink connection and dumps all the flows in Antrea ZoneID of conntrack table.
 func (ct *connTrackSystem) DumpFlows(zoneFilter uint16) ([]*connection.Connection, int, error) {
-	svcCIDR := ct.serviceCIDRv4
-	if zoneFilter == openflow.CtZoneV6 {
-		svcCIDR = ct.serviceCIDRv6
-	}
-	// Get connection to netlink socket
-	err := ct.connTrack.Dial()
-	if err != nil {
-		return nil, 0, fmt.Errorf("error when getting netlink socket: %w", err)
-	}
-	defer ct.connTrack.Close()
-
-	// ZoneID filter is not supported currently in tl-mo/conntrack library.
-	// Link to issue: https://github.com/ti-mo/conntrack/issues/23
-	// Dump all flows in the conntrack table for now.
-	conns, err := ct.connTrack.DumpFlowsInCtZone(zoneFilter)
-	if err != nil {
-		return nil, 0, fmt.Errorf("error when dumping flows from conntrack: %w", err)
-	}
-
-	filteredConns := filterAntreaConns(conns, ct.nodeConfig, svcCIDR, zoneFilter, ct.isAntreaProxyEnabled)
-	klog.V(2).InfoS("Finished filtering flows from conntrack", "zone", zoneFilter, "numConns", len(filteredConns))
-
-	return filteredConns, len(conns), nil
+	_ = "STUB: not implemented"
+	return nil, 0, nil
 }
+
+// Get connection to netlink socket
+
+// ZoneID filter is not supported currently in tl-mo/conntrack library.
+// Link to issue: https://github.com/ti-mo/conntrack/issues/23
+// Dump all flows in the conntrack table for now.
 
 // NetFilterConnTrack interface helps for testing the code that contains the third party library functions ("github.com/ti-mo/conntrack")
 type NetFilterConnTrack interface {
@@ -100,119 +70,36 @@ type netFilterConnTrack struct {
 }
 
 func (nfct *netFilterConnTrack) Dial() error {
+	_ = "STUB: not implemented"
 	// Get netlink client in current namespace
-	conn, err := conntrack.Dial(nil)
-	if err != nil {
-		return err
-	}
-	nfct.netlinkConn = conn
 	return nil
 }
 
-func (nfct *netFilterConnTrack) Close() error {
-	return nfct.netlinkConn.Close()
-}
+func (nfct *netFilterConnTrack) Close() error { _ = "STUB: not implemented"; return nil }
 
 func (nfct *netFilterConnTrack) DumpFlowsInCtZone(zoneFilter uint16) ([]*connection.Connection, error) {
-	conns, err := nfct.netlinkConn.DumpFilter(conntrack.NewFilter().Zone(zoneFilter), nil)
-	if err != nil {
-		return nil, err
-	}
-	antreaConns := make([]*connection.Connection, len(conns))
-	for i := range conns {
-		antreaConns[i] = NetlinkFlowToAntreaConnection(&conns[i])
-	}
-
-	klog.V(2).InfoS("Finished dumping from conntrack", "zone", zoneFilter, "numConns", len(antreaConns))
-
-	return antreaConns, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func NetlinkFlowToAntreaConnection(conn *conntrack.Flow) *connection.Connection {
-	newConn := connection.Connection{
-		ID:         conn.ID,
-		Timeout:    conn.Timeout,
-		StartTime:  conn.Timestamp.Start,
-		IsPresent:  true,
-		Zone:       conn.Zone,
-		Mark:       conn.Mark,
-		Labels:     conn.Labels,
-		LabelsMask: conn.LabelsMask,
-		StatusFlag: uint32(conn.Status),
-		FlowKey: connection.Tuple{
-			SourceAddress:      conn.TupleOrig.IP.SourceAddress,
-			DestinationAddress: conn.TupleReply.IP.SourceAddress,
-			Protocol:           conn.TupleOrig.Proto.Protocol,
-			SourcePort:         conn.TupleOrig.Proto.SourcePort,
-			DestinationPort:    conn.TupleReply.Proto.SourcePort,
-		},
-		OriginalDestinationAddress: conn.TupleOrig.IP.DestinationAddress,
-		OriginalDestinationPort:    conn.TupleOrig.Proto.DestinationPort,
-		OriginalPackets:            conn.CountersOrig.Packets,
-		OriginalBytes:              conn.CountersOrig.Bytes,
-		ReversePackets:             conn.CountersReply.Packets,
-		ReverseBytes:               conn.CountersReply.Bytes,
-		SourcePodNamespace:         "",
-		SourcePodName:              "",
-		DestinationPodNamespace:    "",
-		DestinationPodName:         "",
-		TCPState:                   "",
-	}
-	// github.com/ti-mo/conntrack uses native endianness (binary.NativeEndian), but we require a
-	// big-endian representation for the Labels / LabelsMask fields in connection.Connection.
-	if !cpu.IsBigEndian {
-		slices.Reverse(newConn.Labels)
-		slices.Reverse(newConn.LabelsMask)
-	}
-	if conn.ProtoInfo.TCP != nil {
-		newConn.TCPState = stateToString(conn.ProtoInfo.TCP.State)
-	}
-
-	// Get the stop time from dumped connection if the connection is terminated(dying state).
-	if conn.Status.Dying() {
-		newConn.StopTime = conn.Timestamp.Stop
-	} else {
-		newConn.StopTime = time.Now()
-	}
-
-	return &newConn
-}
-
-func SetupConntrackParameters() error {
-	parametersWithErrors := []string{}
-	if sysctl.EnsureSysctlNetValue("netfilter/nf_conntrack_acct", 1) != nil {
-		parametersWithErrors = append(parametersWithErrors, "net.netfilter.nf_conntrack_acct")
-	}
-	if sysctl.EnsureSysctlNetValue("netfilter/nf_conntrack_timestamp", 1) != nil {
-		parametersWithErrors = append(parametersWithErrors, "net.netfilter.nf_conntrack_timestamp")
-	}
-	if len(parametersWithErrors) > 0 {
-		return fmt.Errorf("the following kernel parameters could not be verified / set: %v", parametersWithErrors)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
+// github.com/ti-mo/conntrack uses native endianness (binary.NativeEndian), but we require a
+// big-endian representation for the Labels / LabelsMask fields in connection.Connection.
+
+// Get the stop time from dumped connection if the connection is terminated(dying state).
+
+func SetupConntrackParameters() error { _ = "STUB: not implemented"; return nil }
+
 func (ct *connTrackSystem) GetMaxConnections() (int, error) {
-	maxConns, err := sysctl.GetSysctlNet("netfilter/nf_conntrack_max")
-	return maxConns, err
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 // reference: https://github.com/torvalds/linux/blob/master/net/netfilter/nf_conntrack_proto_tcp.c#L51-L62
-func stateToString(state uint8) string {
-	stateList := []string{
-		"NONE",
-		"SYN_SENT",
-		"SYN_RECV",
-		"ESTABLISHED",
-		"FIN_WAIT",
-		"CLOSE_WAIT",
-		"LAST_ACK",
-		"TIME_WAIT",
-		"CLOSE",
-		"SYN_SENT2",
-	}
-	if state > uint8(9) { // invalid state number
-		return ""
-	}
-	return stateList[state]
-}
+func stateToString(state uint8) string { _ = "STUB: not implemented"; return "" }
+
+// invalid state number

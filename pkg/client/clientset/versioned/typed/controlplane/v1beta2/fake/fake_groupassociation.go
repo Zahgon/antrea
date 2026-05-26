@@ -29,14 +29,6 @@ type fakeGroupAssociations struct {
 }
 
 func newFakeGroupAssociations(fake *FakeControlplaneV1beta2, namespace string) controlplanev1beta2.GroupAssociationInterface {
-	return &fakeGroupAssociations{
-		gentype.NewFakeClient[*v1beta2.GroupAssociation](
-			fake.Fake,
-			namespace,
-			v1beta2.SchemeGroupVersion.WithResource("groupassociations"),
-			v1beta2.SchemeGroupVersion.WithKind("GroupAssociation"),
-			func() *v1beta2.GroupAssociation { return &v1beta2.GroupAssociation{} },
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(controlplanev1beta2.GroupAssociationInterface)
 }

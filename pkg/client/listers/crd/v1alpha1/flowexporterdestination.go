@@ -42,5 +42,6 @@ type flowExporterDestinationLister struct {
 
 // NewFlowExporterDestinationLister returns a new FlowExporterDestinationLister.
 func NewFlowExporterDestinationLister(indexer cache.Indexer) FlowExporterDestinationLister {
-	return &flowExporterDestinationLister{listers.New[*crdv1alpha1.FlowExporterDestination](indexer, crdv1alpha1.Resource("flowexporterdestination"))}
+	_ = "STUB: not implemented"
+	return *new(FlowExporterDestinationLister)
 }

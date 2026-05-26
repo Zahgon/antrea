@@ -16,7 +16,6 @@ package egress
 
 import (
 	"container/list"
-	"fmt"
 	"sync"
 )
 
@@ -27,35 +26,8 @@ type idAllocator struct {
 	availableIDs *list.List
 }
 
-func (a *idAllocator) allocate() (uint32, error) {
-	a.Lock()
-	defer a.Unlock()
+func (a *idAllocator) allocate() (uint32, error) { _ = "STUB: not implemented"; return 0, nil }
 
-	front := a.availableIDs.Front()
-	if front != nil {
-		return a.availableIDs.Remove(front).(uint32), nil
-	}
-	if a.nextID <= a.maxID {
-		allocated := a.nextID
-		a.nextID += 1
-		return allocated, nil
-	}
-	return 0, fmt.Errorf("no ID available")
-}
+func (a *idAllocator) release(id uint32) error { _ = "STUB: not implemented"; return nil }
 
-func (a *idAllocator) release(id uint32) error {
-	a.Lock()
-	defer a.Unlock()
-
-	a.availableIDs.PushBack(id)
-	return nil
-}
-
-func newIDAllocator(minID, maxID uint32) *idAllocator {
-	availableIDs := list.New()
-	return &idAllocator{
-		nextID:       minID,
-		maxID:        maxID,
-		availableIDs: availableIDs,
-	}
-}
+func newIDAllocator(minID, maxID uint32) *idAllocator { _ = "STUB: not implemented"; return nil }

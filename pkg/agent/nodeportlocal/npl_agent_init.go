@@ -15,14 +15,11 @@
 package nodeportlocal
 
 import (
-	"fmt"
-
 	coreinformers "k8s.io/client-go/informers/core/v1"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 
 	nplk8s "antrea.io/antrea/v2/pkg/agent/nodeportlocal/k8s"
-	"antrea.io/antrea/v2/pkg/agent/nodeportlocal/portcache"
 )
 
 // InitializeNPLAgent initializes the NodePortLocal agent.
@@ -39,19 +36,6 @@ func InitializeNPLAgent(
 	ipv4Enabled bool,
 	ipv6Enabled bool,
 ) (*nplk8s.NPLController, error) {
-	var portTableIPv4, portTableIPv6 *portcache.PortTable
-	var err error
-	if ipv4Enabled {
-		portTableIPv4, err = portcache.NewPortTable(startPort, endPort, false)
-		if err != nil {
-			return nil, fmt.Errorf("error when initializing NodePortLocal IPv4 port table: %w", err)
-		}
-	}
-	if ipv6Enabled {
-		portTableIPv6, err = portcache.NewPortTable(startPort, endPort, true)
-		if err != nil {
-			return nil, fmt.Errorf("error when initializing NodePortLocal IPv6 port table: %w", err)
-		}
-	}
-	return nplk8s.NewNPLController(kubeClient, podInformer, serviceInformer.Informer(), nodeInformer.Informer(), portTableIPv4, portTableIPv6, nodeName), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }

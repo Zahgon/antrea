@@ -18,180 +18,36 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"time"
-
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/fields"
-	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/watch"
-	componentbaseconfig "k8s.io/component-base/config"
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/agent/client"
-	"antrea.io/antrea/v2/pkg/signals"
-	"antrea.io/antrea/v2/pkg/util/env"
-	"antrea.io/antrea/v2/pkg/util/k8s"
-	"antrea.io/antrea/v2/pkg/version"
 )
 
-func run() error {
-	klog.InfoS("Starting Antrea agent simulator", "version", version.GetFullVersion())
-	k8sClient, _, _, _, _, _, err := k8s.CreateClients(componentbaseconfig.ClientConnectionConfiguration{}, "")
-	if err != nil {
-		return fmt.Errorf("error creating K8s clients: %v", err)
-	}
+func run() error { _ = "STUB: not implemented"; return nil }
 
-	nodeName, err := env.GetNodeName()
-	if err != nil {
-		return fmt.Errorf("failed to get hostname: %v", err)
-	}
+// Create Antrea Clientset for the given config.
 
-	// Create Antrea Clientset for the given config.
-	antreaClientProvider, err := client.NewAntreaClientProvider(componentbaseconfig.ClientConnectionConfiguration{}, k8sClient)
-	if err != nil {
-		return err
-	}
+// Create the stop chan with signals
 
-	if err = antreaClientProvider.RunOnce(); err != nil {
-		return err
-	}
+// Generate a context for functions which require one (instead of stopCh).
+// We cancel the context when the function returns, which in the normal case will be when
+// stopCh is closed.
 
-	// Create the stop chan with signals
-	stopCh := signals.RegisterSignalHandlers()
-	// Generate a context for functions which require one (instead of stopCh).
-	// We cancel the context when the function returns, which in the normal case will be when
-	// stopCh is closed.
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+// Add loop to check whether client is ready
 
-	go antreaClientProvider.Run(ctx)
+// Wrapper watcher to call watch
 
-	// Add loop to check whether client is ready
-	attempts := 0
-	if err := wait.PollUntilContextCancel(wait.ContextForChannel(stopCh), 200*time.Millisecond, true, func(ctx context.Context) (bool, error) {
-		if attempts%10 == 0 {
-			klog.Info("Waiting for Antrea client to be ready")
-		}
-		if _, err := antreaClientProvider.GetAntreaClient(); err != nil {
-			attempts++
-			return false, nil
-		}
-		return true, nil
-	}); err != nil {
-		klog.Info("Stopped waiting for Antrea client")
-		return err
-	}
-
-	klog.Info("Antrea client is ready")
-
-	options := metav1.ListOptions{
-		FieldSelector: fields.OneTermEqualSelector("nodeName", nodeName).String(),
-	}
-	klog.Infof("Nodename: %s", nodeName)
-
-	// Wrapper watcher to call watch
-	networkPolicyControllerWatcher := &watchWrapper{
-		func() (watch.Interface, error) {
-			antreaClient, err := antreaClientProvider.GetAntreaClient()
-			if err != nil {
-				return nil, fmt.Errorf("failed to get antrea client: %s", err.Error())
-			}
-			return antreaClient.ControlplaneV1beta2().NetworkPolicies().Watch(context.TODO(), options)
-		},
-		"networkPolicy",
-	}
-	addressGroupWatcher := &watchWrapper{
-		func() (watch.Interface, error) {
-			antreaClient, err := antreaClientProvider.GetAntreaClient()
-			if err != nil {
-				return nil, fmt.Errorf("failed to get antrea client: %s", err.Error())
-			}
-			return antreaClient.ControlplaneV1beta2().AddressGroups().Watch(context.TODO(), options)
-		},
-		"addressGroup",
-	}
-	appliedGroupWatcher := &watchWrapper{
-		func() (watch.Interface, error) {
-			antreaClient, err := antreaClientProvider.GetAntreaClient()
-			if err != nil {
-				return nil, fmt.Errorf("failed to get antrea client: %s", err.Error())
-			}
-			return antreaClient.ControlplaneV1beta2().AppliedToGroups().Watch(context.TODO(), options)
-		},
-		"appliedGroup",
-	}
-
-	// watch NetworkPolicies, AddressGroups, AppliedToGroups
-	go wait.NonSlidingUntil(networkPolicyControllerWatcher.watch, 5*time.Second, stopCh)
-	go wait.NonSlidingUntil(addressGroupWatcher.watch, 5*time.Second, stopCh)
-	go wait.NonSlidingUntil(appliedGroupWatcher.watch, 5*time.Second, stopCh)
-
-	<-stopCh
-	klog.Info("Stopping Antrea agent simulator")
-	return nil
-}
+// watch NetworkPolicies, AddressGroups, AppliedToGroups
 
 type watchWrapper struct {
 	watchFunc func() (watch.Interface, error)
 	name      string
 }
 
-func (w *watchWrapper) watch() {
-	klog.Infof("Starting watch for %s", w.name)
+func (w *watchWrapper) watch() { _ = "STUB: not implemented"; return }
 
-	// Call the watch func which is initialized in watchWrapper
-	watcher, err := w.watchFunc()
-	if err != nil {
-		klog.ErrorS(err, "Failed to start watch", "name", w.name)
-		return
-	}
-	eventCount := 0
+// Call the watch func which is initialized in watchWrapper
 
-	// Stop the watcher upon exit
-	defer func() {
-		klog.Infof("Stopped watch for %s, total items received %d", w.name, eventCount)
-		watcher.Stop()
-	}()
-	initCount := 0
+// Stop the watcher upon exit
 
-	// Watch the init events from chan, and log the events
-loop:
-	for {
-		event, ok := <-watcher.ResultChan()
-		if !ok {
-			klog.InfoS("Result channel was closed", "name", w.name)
-			return
-		}
-		switch event.Type {
-		case watch.Added:
-			klog.V(2).Infof("Added %s (%#v)", w.name, event.Object)
-			initCount++
-		case watch.Bookmark:
-			break loop
-		}
-	}
-	klog.Infof("Received %d init events for %s", initCount, w.name)
-	eventCount += initCount
+// Watch the init events from chan, and log the events
 
-	// Watch the events from chan, and log the events
-	for {
-		event, ok := <-watcher.ResultChan()
-		if !ok {
-			return
-		}
-		switch event.Type {
-		case watch.Added:
-			klog.V(2).Infof("Added %s (%#v)", w.name, event.Object)
-		case watch.Modified:
-			klog.V(2).Infof("Updated %s (%#v)", w.name, event.Object)
-		case watch.Deleted:
-			klog.V(2).Infof("Removed %s (%#v)", w.name, event.Object)
-		default:
-			klog.Errorf("Unknown event: %v", event)
-			return
-		}
-		eventCount++
-	}
-}
+// Watch the events from chan, and log the events

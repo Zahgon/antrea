@@ -20,14 +20,8 @@ type FakeNodeIPChecker struct {
 	nodeIPs sets.Set[string]
 }
 
-func NewFakeNodeIPChecker(ips ...string) *FakeNodeIPChecker {
-	return &FakeNodeIPChecker{nodeIPs: sets.New[string](ips...)}
-}
+func NewFakeNodeIPChecker(ips ...string) *FakeNodeIPChecker { _ = "STUB: not implemented"; return nil }
 
-func (f *FakeNodeIPChecker) IsNodeIP(ip string) bool {
-	return f.nodeIPs.Has(ip)
-}
+func (f *FakeNodeIPChecker) IsNodeIP(ip string) bool { _ = "STUB: not implemented"; return false }
 
-func (f *FakeNodeIPChecker) HasSynced() bool {
-	return true
-}
+func (f *FakeNodeIPChecker) HasSynced() bool { _ = "STUB: not implemented"; return false }

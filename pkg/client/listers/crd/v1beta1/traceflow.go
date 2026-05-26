@@ -42,5 +42,6 @@ type traceflowLister struct {
 
 // NewTraceflowLister returns a new TraceflowLister.
 func NewTraceflowLister(indexer cache.Indexer) TraceflowLister {
-	return &traceflowLister{listers.New[*crdv1beta1.Traceflow](indexer, crdv1beta1.Resource("traceflow"))}
+	_ = "STUB: not implemented"
+	return *new(TraceflowLister)
 }

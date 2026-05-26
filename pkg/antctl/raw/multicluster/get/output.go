@@ -16,31 +16,10 @@ package get
 
 import (
 	"io"
-
-	antctlOutput "antrea.io/antrea/v2/pkg/antctl/output"
 )
 
 func output(resources interface{}, single bool, outputFormat string, output io.Writer,
 	transform func(r interface{}, single bool) (interface{}, error)) error {
-	switch outputFormat {
-	case "json":
-		if err := antctlOutput.JsonOutput(resources, output); err != nil {
-			return err
-		}
-	case "yaml":
-		if err := antctlOutput.YamlOutput(resources, output); err != nil {
-			return err
-		}
-	default:
-		obj, err := transform(resources, single)
-		if err != nil {
-			return err
-		}
-		err = antctlOutput.TableOutputForGetCommands(obj, output)
-		if err != nil {
-			return err
-		}
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }

@@ -41,12 +41,14 @@ type externalNodeLister struct {
 
 // NewExternalNodeLister returns a new ExternalNodeLister.
 func NewExternalNodeLister(indexer cache.Indexer) ExternalNodeLister {
-	return &externalNodeLister{listers.New[*crdv1alpha1.ExternalNode](indexer, crdv1alpha1.Resource("externalnode"))}
+	_ = "STUB: not implemented"
+	return *new(ExternalNodeLister)
 }
 
 // ExternalNodes returns an object that can list and get ExternalNodes.
 func (s *externalNodeLister) ExternalNodes(namespace string) ExternalNodeNamespaceLister {
-	return externalNodeNamespaceLister{listers.NewNamespaced[*crdv1alpha1.ExternalNode](s.ResourceIndexer, namespace)}
+	_ = "STUB: not implemented"
+	return *new(ExternalNodeNamespaceLister)
 }
 
 // ExternalNodeNamespaceLister helps list and get ExternalNodes.

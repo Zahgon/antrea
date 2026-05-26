@@ -15,16 +15,12 @@
 package responder
 
 import (
-	"fmt"
 	"net"
 	"net/netip"
 	"sync"
-	"time"
 
 	"antrea.io/arp"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/klog/v2"
 )
 
 type arpResponder struct {
@@ -37,143 +33,35 @@ type arpResponder struct {
 
 var _ Responder = (*arpResponder)(nil)
 
-func (r *arpResponder) InterfaceName() string {
-	return r.linkName
-}
+func (r *arpResponder) InterfaceName() string { _ = "STUB: not implemented"; return "" }
 
-func (r *arpResponder) AddIP(ip netip.Addr) error {
-	if !ip.Is4() {
-		return fmt.Errorf("only IPv4 is supported")
-	}
-	if r.addIP(ip) {
-		klog.InfoS("Assigned IP to ARP responder", "ip", ip, "interface", r.linkName)
-	}
-	return nil
-}
+func (r *arpResponder) AddIP(ip netip.Addr) error { _ = "STUB: not implemented"; return nil }
 
-func (r *arpResponder) RemoveIP(ip netip.Addr) error {
-	if !ip.Is4() {
-		return fmt.Errorf("only IPv4 is supported")
-	}
-	if r.deleteIP(ip) {
-		klog.InfoS("Removed IP from ARP responder", "ip", ip, "interface", r.linkName)
-	}
-	return nil
-}
+func (r *arpResponder) RemoveIP(ip netip.Addr) error { _ = "STUB: not implemented"; return nil }
 
 func (r *arpResponder) handleARPRequest(client *arp.Client, iface *net.Interface) error {
-	pkt, _, err := client.Read()
-	if err != nil {
-		return err
-	}
-	if pkt.Operation != arp.OperationRequest {
-		return nil
-	}
-	if !r.isIPAssigned(pkt.TargetIP) {
-		klog.V(4).InfoS("Ignored ARP request", "ip", pkt.TargetIP, "interface", r.linkName)
-		return nil
-	}
-	if err := client.Reply(pkt, iface.HardwareAddr, pkt.TargetIP); err != nil {
-		return fmt.Errorf("failed to reply ARP packet for IP %s: %v", pkt.TargetIP, err)
-	}
-	klog.V(4).InfoS("Sent ARP response", "ip", pkt.TargetIP, "interface", r.linkName)
+	_ = "STUB: not implemented"
 	return nil
 }
 
 func (r *arpResponder) Run(stopCh <-chan struct{}) {
+	_ = "STUB: not implemented"
 	// The responder instance is created by the factory and can be shared by multiple callers.
 	// Using once.Do here ensures it is started only once.
-	r.once.Do(func() {
-		go wait.NonSlidingUntil(func() {
-			r.dialAndHandleRequests(stopCh)
-		}, time.Second, stopCh)
-	})
-	<-stopCh
+	return
 }
 
 func (r *arpResponder) dialAndHandleRequests(stopCh <-chan struct{}) {
-	transportInterface, err := net.InterfaceByName(r.linkName)
-	if err != nil {
-		klog.ErrorS(err, "Failed to get interface by name", "deviceName", r.linkName)
-		return
-	}
-	client, err := arp.Dial(transportInterface)
-	if err != nil {
-		klog.ErrorS(err, "Failed to dial ARP client", "deviceName", r.linkName)
-		return
-	}
-	reloadCh := make(chan struct{})
-
-	klog.InfoS("ARP responder started", "interface", transportInterface.Name, "index", transportInterface.Index)
-	defer klog.InfoS("ARP responder stopped", "interface", transportInterface.Name, "index", transportInterface.Index)
-
-	go func() {
-		defer client.Close()
-		defer close(reloadCh)
-
-		for {
-			select {
-			case <-stopCh:
-				return
-			case <-r.linkEventCh:
-				newTransportInterface, err := net.InterfaceByName(r.linkName)
-				if err != nil {
-					klog.ErrorS(err, "Failed to get interface by name", "name", r.linkName)
-					continue
-				}
-				if transportInterface.Index != newTransportInterface.Index {
-					klog.InfoS("Transport interface index changed, restarting ARP responder", "name", transportInterface.Name, "oldIndex", transportInterface.Index, "newIndex", newTransportInterface.Index)
-					return
-				}
-				klog.V(4).InfoS("Transport interface not changed")
-			}
-		}
-	}()
-
-	for {
-		select {
-		case <-reloadCh:
-			return
-		default:
-			err := r.handleARPRequest(client, transportInterface)
-			if err != nil {
-				klog.ErrorS(err, "Failed to handle ARP request", "deviceName", r.linkName)
-			}
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
-func (r *arpResponder) isIPAssigned(ip netip.Addr) bool {
-	r.mutex.Lock()
-	defer r.mutex.Unlock()
-	return r.assignedIPs.Has(ip)
-}
+func (r *arpResponder) isIPAssigned(ip netip.Addr) bool { _ = "STUB: not implemented"; return false }
 
-func (r *arpResponder) deleteIP(ip netip.Addr) bool {
-	r.mutex.Lock()
-	defer r.mutex.Unlock()
-	exist := r.assignedIPs.Has(ip)
-	if exist {
-		r.assignedIPs.Delete(ip)
-	}
-	return exist
-}
+func (r *arpResponder) deleteIP(ip netip.Addr) bool { _ = "STUB: not implemented"; return false }
 
-func (r *arpResponder) addIP(ip netip.Addr) bool {
-	r.mutex.Lock()
-	defer r.mutex.Unlock()
-	exist := r.assignedIPs.Has(ip)
-	if !exist {
-		r.assignedIPs.Insert(ip)
-	}
-	return !exist
-}
+func (r *arpResponder) addIP(ip netip.Addr) bool { _ = "STUB: not implemented"; return false }
 
-func (r *arpResponder) onLinkUpdate(linkName string) {
-	klog.V(4).InfoS("Received link update event", "name", linkName)
-	select {
-	// if an event is already present in the channel, we can drop this new one as we only monitor one link
-	case r.linkEventCh <- struct{}{}:
-	default:
-	}
-}
+func (r *arpResponder) onLinkUpdate(linkName string) { _ = "STUB: not implemented"; return }
+
+// if an event is already present in the channel, we can drop this new one as we only monitor one link

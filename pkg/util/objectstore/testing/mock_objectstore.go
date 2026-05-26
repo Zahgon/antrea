@@ -25,7 +25,6 @@
 package testing
 
 import (
-	reflect "reflect"
 	time "time"
 
 	gomock "go.uber.org/mock/gomock"
@@ -46,55 +45,45 @@ type MockNodeStoreMockRecorder struct {
 
 // NewMockNodeStore creates a new mock instance.
 func NewMockNodeStore(ctrl *gomock.Controller) *MockNodeStore {
-	mock := &MockNodeStore{ctrl: ctrl}
-	mock.recorder = &MockNodeStoreMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockNodeStore) EXPECT() *MockNodeStoreMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetNodeByNameAndTime mocks base method.
+	return nil
 }
 
-// GetNodeByNameAndTime mocks base method.
 func (m *MockNodeStore) GetNodeByNameAndTime(name string, startTime time.Time) (*v1.Node, bool) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNodeByNameAndTime", name, startTime)
-	ret0, _ := ret[0].(*v1.Node)
-	ret1, _ := ret[1].(bool)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // GetNodeByNameAndTime indicates an expected call of GetNodeByNameAndTime.
 func (mr *MockNodeStoreMockRecorder) GetNodeByNameAndTime(name, startTime any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNodeByNameAndTime", reflect.TypeOf((*MockNodeStore)(nil).GetNodeByNameAndTime), name, startTime)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // HasSynced mocks base method.
-func (m *MockNodeStore) HasSynced() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "HasSynced")
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
+func (m *MockNodeStore) HasSynced() bool { _ = "STUB: not implemented"; return false }
 
 // HasSynced indicates an expected call of HasSynced.
 func (mr *MockNodeStoreMockRecorder) HasSynced() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasSynced", reflect.TypeOf((*MockNodeStore)(nil).HasSynced))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Run mocks base method.
-func (m *MockNodeStore) Run(stopCh <-chan struct{}) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Run", stopCh)
-}
+func (m *MockNodeStore) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
 // Run indicates an expected call of Run.
 func (mr *MockNodeStoreMockRecorder) Run(stopCh any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockNodeStore)(nil).Run), stopCh)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockPodStore is a mock of PodStore interface.
@@ -110,56 +99,40 @@ type MockPodStoreMockRecorder struct {
 }
 
 // NewMockPodStore creates a new mock instance.
-func NewMockPodStore(ctrl *gomock.Controller) *MockPodStore {
-	mock := &MockPodStore{ctrl: ctrl}
-	mock.recorder = &MockPodStoreMockRecorder{mock}
-	return mock
-}
+func NewMockPodStore(ctrl *gomock.Controller) *MockPodStore { _ = "STUB: not implemented"; return nil }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockPodStore) EXPECT() *MockPodStoreMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetPodByIPAndTime mocks base method.
+	return nil
 }
 
-// GetPodByIPAndTime mocks base method.
 func (m *MockPodStore) GetPodByIPAndTime(ip string, startTime time.Time) (*v1.Pod, bool) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPodByIPAndTime", ip, startTime)
-	ret0, _ := ret[0].(*v1.Pod)
-	ret1, _ := ret[1].(bool)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // GetPodByIPAndTime indicates an expected call of GetPodByIPAndTime.
 func (mr *MockPodStoreMockRecorder) GetPodByIPAndTime(ip, startTime any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPodByIPAndTime", reflect.TypeOf((*MockPodStore)(nil).GetPodByIPAndTime), ip, startTime)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // HasSynced mocks base method.
-func (m *MockPodStore) HasSynced() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "HasSynced")
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
+func (m *MockPodStore) HasSynced() bool { _ = "STUB: not implemented"; return false }
 
 // HasSynced indicates an expected call of HasSynced.
-func (mr *MockPodStoreMockRecorder) HasSynced() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasSynced", reflect.TypeOf((*MockPodStore)(nil).HasSynced))
-}
+func (mr *MockPodStoreMockRecorder) HasSynced() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // Run mocks base method.
-func (m *MockPodStore) Run(stopCh <-chan struct{}) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Run", stopCh)
-}
+func (m *MockPodStore) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
 // Run indicates an expected call of Run.
 func (mr *MockPodStoreMockRecorder) Run(stopCh any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockPodStore)(nil).Run), stopCh)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MockServiceStore is a mock of ServiceStore interface.
@@ -176,53 +149,43 @@ type MockServiceStoreMockRecorder struct {
 
 // NewMockServiceStore creates a new mock instance.
 func NewMockServiceStore(ctrl *gomock.Controller) *MockServiceStore {
-	mock := &MockServiceStore{ctrl: ctrl}
-	mock.recorder = &MockServiceStoreMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockServiceStore) EXPECT() *MockServiceStoreMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// GetServiceByNamespacedNameAndTime mocks base method.
+	return nil
 }
 
-// GetServiceByNamespacedNameAndTime mocks base method.
 func (m *MockServiceStore) GetServiceByNamespacedNameAndTime(namespacedName string, startTime time.Time) (*v1.Service, bool) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetServiceByNamespacedNameAndTime", namespacedName, startTime)
-	ret0, _ := ret[0].(*v1.Service)
-	ret1, _ := ret[1].(bool)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, false
 }
 
 // GetServiceByNamespacedNameAndTime indicates an expected call of GetServiceByNamespacedNameAndTime.
 func (mr *MockServiceStoreMockRecorder) GetServiceByNamespacedNameAndTime(namespacedName, startTime any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServiceByNamespacedNameAndTime", reflect.TypeOf((*MockServiceStore)(nil).GetServiceByNamespacedNameAndTime), namespacedName, startTime)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // HasSynced mocks base method.
-func (m *MockServiceStore) HasSynced() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "HasSynced")
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
+func (m *MockServiceStore) HasSynced() bool { _ = "STUB: not implemented"; return false }
 
 // HasSynced indicates an expected call of HasSynced.
 func (mr *MockServiceStoreMockRecorder) HasSynced() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasSynced", reflect.TypeOf((*MockServiceStore)(nil).HasSynced))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Run mocks base method.
-func (m *MockServiceStore) Run(stopCh <-chan struct{}) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Run", stopCh)
-}
+func (m *MockServiceStore) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
 // Run indicates an expected call of Run.
 func (mr *MockServiceStoreMockRecorder) Run(stopCh any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockServiceStore)(nil).Run), stopCh)
+	_ = "STUB: not implemented"
+	return nil
 }

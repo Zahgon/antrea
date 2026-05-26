@@ -15,14 +15,11 @@
 package apis
 
 import (
-	"strconv"
-	"strings"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
 
 	"antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
-	"antrea.io/antrea/v2/pkg/util/printers"
 )
 
 // AntreaAgentInfoResponse is the struct for the response of agentinfo command.
@@ -42,40 +39,19 @@ type AntreaAgentInfoResponse struct {
 	NetworkInfo            v1beta1.NetworkInfo `json:"networkInfo,omitempty"`            // Network information
 }
 
-func (r AntreaAgentInfoResponse) GetTableHeader() []string {
-	return []string{"POD", "NODE", "STATUS", "NODE-SUBNET", "NETWORK-POLICIES", "ADDRESS-GROUPS", "APPLIED-TO-GROUPS", "LOCAL-PODS"}
-}
+func (r AntreaAgentInfoResponse) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
 func (r AntreaAgentInfoResponse) getAgentConditionStr() string {
-	if r.AgentConditions == nil {
-		return ""
-	}
-	agentCondition := "Healthy"
-	for _, cond := range r.AgentConditions {
-		if cond.Status == corev1.ConditionUnknown {
-			agentCondition = "Unknown"
-		}
-		if cond.Status == corev1.ConditionFalse {
-			return "Unhealthy"
-		}
-	}
-	return agentCondition
+	_ = "STUB: not implemented"
+	return ""
 }
 
 func (r AntreaAgentInfoResponse) GetTableRow(maxColumnLength int) []string {
-	return []string{r.PodRef.Namespace + "/" + r.PodRef.Name,
-		r.NodeRef.Name,
-		r.getAgentConditionStr(),
-		printers.GenerateTableElementWithSummary(r.NodeSubnets, maxColumnLength),
-		strconv.Itoa(int(r.NetworkPolicyControllerInfo.NetworkPolicyNum)),
-		strconv.Itoa(int(r.NetworkPolicyControllerInfo.AddressGroupNum)),
-		strconv.Itoa(int(r.NetworkPolicyControllerInfo.AppliedToGroupNum)),
-		strconv.Itoa(int(r.LocalPodNum))}
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (r AntreaAgentInfoResponse) SortRows() bool {
-	return true
-}
+func (r AntreaAgentInfoResponse) SortRows() bool { _ = "STUB: not implemented"; return false }
 
 type FQDNCacheResponse struct {
 	FQDNName       string    `json:"fqdnName,omitempty"`
@@ -83,21 +59,14 @@ type FQDNCacheResponse struct {
 	ExpirationTime time.Time `json:"expirationTime,omitempty"`
 }
 
-func (r FQDNCacheResponse) GetTableHeader() []string {
-	return []string{"FQDN", "ADDRESS", "EXPIRATION TIME"}
-}
+func (r FQDNCacheResponse) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
 func (r FQDNCacheResponse) GetTableRow(maxColumn int) []string {
-	return []string{
-		r.FQDNName,
-		r.IPAddress,
-		r.ExpirationTime.String(),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (r FQDNCacheResponse) SortRows() bool {
-	return true
-}
+func (r FQDNCacheResponse) SortRows() bool { _ = "STUB: not implemented"; return false }
 
 type FeatureGateResponse struct {
 	Component string `json:"component,omitempty"`
@@ -113,17 +82,11 @@ type MemberlistResponse struct {
 	Status   string `json:"status,omitempty"`
 }
 
-func (r MemberlistResponse) GetTableHeader() []string {
-	return []string{"NODE", "IP", "STATUS"}
-}
+func (r MemberlistResponse) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
-func (r MemberlistResponse) GetTableRow(_ int) []string {
-	return []string{r.NodeName, r.IP, r.Status}
-}
+func (r MemberlistResponse) GetTableRow(_ int) []string { _ = "STUB: not implemented"; return nil }
 
-func (r MemberlistResponse) SortRows() bool {
-	return true
-}
+func (r MemberlistResponse) SortRows() bool { _ = "STUB: not implemented"; return false }
 
 type MulticastResponse struct {
 	PodName      string `json:"name,omitempty" antctl:"name,Name of the Pod"`
@@ -132,36 +95,35 @@ type MulticastResponse struct {
 	Outbound     string `json:"outbound,omitempty"`
 }
 
-func (r MulticastResponse) GetTableHeader() []string {
-	return []string{"NAMESPACE", "NAME", "INBOUND", "OUTBOUND"}
-}
+func (r MulticastResponse) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
-func (r MulticastResponse) GetTableRow(_ int) []string {
-	return []string{r.PodNamespace, r.PodName, r.Inbound, r.Outbound}
-}
+func (r MulticastResponse) GetTableRow(_ int) []string { _ = "STUB: not implemented"; return nil }
 
 func (r MulticastResponse) SortRows() bool {
-	return true
+	_ = "STUB: not implemented"
+
+	// OVSFlowResponse is the response struct of ovsflows command.
+	return false
 }
 
-// OVSFlowResponse is the response struct of ovsflows command.
 type OVSFlowResponse struct {
 	Flow string `json:"flow,omitempty"`
 }
 
-func (r OVSFlowResponse) GetTableHeader() []string {
-	return []string{""}
-}
+func (r OVSFlowResponse) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
 func (r OVSFlowResponse) GetTableRow(maxColumnLength int) []string {
-	return []string{r.Flow}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (r OVSFlowResponse) SortRows() bool {
+	_ = "STUB: not implemented"
+
+	// OVSTracingResponse is the response struct of ovstracing command.
 	return false
 }
 
-// OVSTracingResponse is the response struct of ovstracing command.
 type OVSTracingResponse struct {
 	Result string `json:"result,omitempty"`
 }
@@ -178,26 +140,19 @@ type PodInterfaceResponse struct {
 	ContainerID   string   `json:"containerID,omitempty"`
 }
 
-func (r PodInterfaceResponse) GetTableHeader() []string {
-	return []string{"NAMESPACE", "NAME", "INTERFACE-NAME", "IP", "MAC", "PORT-UUID", "OF-PORT", "CONTAINER-ID"}
-}
+func (r PodInterfaceResponse) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
-func (r PodInterfaceResponse) getContainerIDStr() string {
-	if len(r.ContainerID) > 12 {
-		return r.ContainerID[0:11]
-	}
-	return r.ContainerID
-}
+func (r PodInterfaceResponse) getContainerIDStr() string { _ = "STUB: not implemented"; return "" }
 
-func (r PodInterfaceResponse) GetTableRow(_ int) []string {
-	return []string{r.PodNamespace, r.PodName, r.InterfaceName, strings.Join(r.IPs, ", "), r.MAC, r.PortUUID, strconv.Itoa(int(r.OFPort)), r.getContainerIDStr()}
-}
+func (r PodInterfaceResponse) GetTableRow(_ int) []string { _ = "STUB: not implemented"; return nil }
 
 func (r PodInterfaceResponse) SortRows() bool {
-	return true
+	_ = "STUB: not implemented"
+
+	// ServiceExternalIPInfo contains the essential information for Services with type of Loadbalancer managed by Antrea.
+	return false
 }
 
-// ServiceExternalIPInfo contains the essential information for Services with type of Loadbalancer managed by Antrea.
 type ServiceExternalIPInfo struct {
 	ServiceName    string `json:"serviceName,omitempty" antctl:"name,Name of the Service"`
 	Namespace      string `json:"namespace,omitempty"`
@@ -206,19 +161,17 @@ type ServiceExternalIPInfo struct {
 	AssignedNode   string `json:"assignedNode,omitempty"`
 }
 
-func (r ServiceExternalIPInfo) GetTableHeader() []string {
-	return []string{"NAMESPACE", "NAME", "EXTERNAL-IP-POOL", "EXTERNAL-IP", "ASSIGNED-NODE"}
-}
+func (r ServiceExternalIPInfo) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
-func (r ServiceExternalIPInfo) GetTableRow(_ int) []string {
-	return []string{r.Namespace, r.ServiceName, r.ExternalIPPool, r.ExternalIP, r.AssignedNode}
-}
+func (r ServiceExternalIPInfo) GetTableRow(_ int) []string { _ = "STUB: not implemented"; return nil }
 
 func (r ServiceExternalIPInfo) SortRows() bool {
-	return true
+	_ = "STUB: not implemented"
+
+	// BGPPolicyResponse describes the response struct of bgppolicy command.
+	return false
 }
 
-// BGPPolicyResponse describes the response struct of bgppolicy command.
 type BGPPolicyResponse struct {
 	BGPPolicyName           string   `json:"name,omitempty"`
 	RouterID                string   `json:"routerID,omitempty"`
@@ -228,61 +181,45 @@ type BGPPolicyResponse struct {
 	MemberASNs              []uint32 `json:"memberASNs,omitempty"`
 }
 
-func (r BGPPolicyResponse) GetTableHeader() []string {
-	return []string{"NAME", "ROUTER-ID", "LOCAL-ASN", "LISTEN-PORT", "CONFEDERATION-IDENTIFIER", "MEMBER-ASNs"}
-}
+func (r BGPPolicyResponse) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
 func (r BGPPolicyResponse) GetTableRow(maxColumnLength int) []string {
-	confederationIdentifierStr := ""
-	memberASNs := []string{}
-	if r.ConfederationIdentifier != 0 {
-		confederationIdentifierStr = strconv.Itoa(int(r.ConfederationIdentifier))
-	}
-	for _, memberASN := range r.MemberASNs {
-		memberASNs = append(memberASNs, strconv.Itoa(int(memberASN)))
-	}
-	return []string{r.BGPPolicyName, r.RouterID, strconv.Itoa(int(r.LocalASN)), strconv.Itoa(int(r.ListenPort)),
-		confederationIdentifierStr, printers.GenerateTableElementWithSummary(memberASNs, maxColumnLength)}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (r BGPPolicyResponse) SortRows() bool {
-	return true
+	_ = "STUB: not implemented"
+
+	// BGPPeerResponse describes the response struct of bgppeers command.
+	return false
 }
 
-// BGPPeerResponse describes the response struct of bgppeers command.
 type BGPPeerResponse struct {
 	Peer  string `json:"peer,omitempty"`
 	ASN   int32  `json:"asn,omitempty"`
 	State string `json:"state,omitempty"`
 }
 
-func (r BGPPeerResponse) GetTableHeader() []string {
-	return []string{"PEER", "ASN", "STATE"}
-}
+func (r BGPPeerResponse) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
-func (r BGPPeerResponse) GetTableRow(_ int) []string {
-	return []string{r.Peer, strconv.Itoa(int(r.ASN)), r.State}
-}
+func (r BGPPeerResponse) GetTableRow(_ int) []string { _ = "STUB: not implemented"; return nil }
 
 func (r BGPPeerResponse) SortRows() bool {
-	return true
+	_ = "STUB: not implemented"
+
+	// BGPRouteResponse describes the response struct of bgproutes command.
+	return false
 }
 
-// BGPRouteResponse describes the response struct of bgproutes command.
 type BGPRouteResponse struct {
 	Route     string `json:"route,omitempty"`
 	Type      string `json:"type,omitempty"`
 	K8sObjRef string `json:"k8sObjRef,omitempty"`
 }
 
-func (r BGPRouteResponse) GetTableHeader() []string {
-	return []string{"ROUTE", "TYPE", "K8S-OBJ-REF"}
-}
+func (r BGPRouteResponse) GetTableHeader() []string { _ = "STUB: not implemented"; return nil }
 
-func (r BGPRouteResponse) GetTableRow(_ int) []string {
-	return []string{r.Route, r.Type, r.K8sObjRef}
-}
+func (r BGPRouteResponse) GetTableRow(_ int) []string { _ = "STUB: not implemented"; return nil }
 
-func (r BGPRouteResponse) SortRows() bool {
-	return true
-}
+func (r BGPRouteResponse) SortRows() bool { _ = "STUB: not implemented"; return false }

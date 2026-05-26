@@ -16,7 +16,6 @@ package installation
 
 import (
 	"context"
-	"fmt"
 )
 
 type PodToPodInterNodeConnectivityTest struct{}
@@ -26,20 +25,6 @@ func init() {
 }
 
 func (t *PodToPodInterNodeConnectivityTest) Run(ctx context.Context, testContext *testContext) error {
-	if testContext.echoOtherNodePod == nil {
-		return newNotRunnableError("Inter-Node test requires multiple Nodes")
-	}
-	for _, clientPod := range testContext.clientPods {
-		srcPod := testContext.namespace + "/" + clientPod.Name
-		dstPod := testContext.namespace + "/" + testContext.echoOtherNodePod.Name
-		for _, podIP := range testContext.echoOtherNodePod.Status.PodIPs {
-			echoIP := podIP.IP
-			testContext.Log("Validating from Pod %s to Pod %s at IP %s...", srcPod, dstPod, echoIP)
-			if err := testContext.tcpProbe(ctx, clientPod.Name, "", echoIP, 80); err != nil {
-				return fmt.Errorf("client Pod %s was not able to communicate with echo Pod %s (%s): %w", clientPod.Name, testContext.echoOtherNodePod.Name, echoIP, err)
-			}
-			testContext.Log("client Pod %s was able to communicate with echo Pod %s (%s)", clientPod.Name, testContext.echoOtherNodePod.Name, echoIP)
-		}
-	}
+	_ = "STUB: not implemented"
 	return nil
 }

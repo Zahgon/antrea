@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	controlplanev1beta2 "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	watch "k8s.io/apimachinery/pkg/watch"
 	gentype "k8s.io/client-go/gentype"
@@ -47,18 +46,6 @@ type supportBundleCollections struct {
 
 // newSupportBundleCollections returns a SupportBundleCollections
 func newSupportBundleCollections(c *ControlplaneV1beta2Client) *supportBundleCollections {
-	return &supportBundleCollections{
-		gentype.NewClientWithList[*controlplanev1beta2.SupportBundleCollection, *controlplanev1beta2.SupportBundleCollectionList](
-			"supportbundlecollections",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *controlplanev1beta2.SupportBundleCollection {
-				return &controlplanev1beta2.SupportBundleCollection{}
-			},
-			func() *controlplanev1beta2.SupportBundleCollectionList {
-				return &controlplanev1beta2.SupportBundleCollectionList{}
-			},
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

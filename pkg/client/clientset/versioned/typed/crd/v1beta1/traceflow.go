@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	crdv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -54,15 +53,4 @@ type traceflows struct {
 }
 
 // newTraceflows returns a Traceflows
-func newTraceflows(c *CrdV1beta1Client) *traceflows {
-	return &traceflows{
-		gentype.NewClientWithList[*crdv1beta1.Traceflow, *crdv1beta1.TraceflowList](
-			"traceflows",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *crdv1beta1.Traceflow { return &crdv1beta1.Traceflow{} },
-			func() *crdv1beta1.TraceflowList { return &crdv1beta1.TraceflowList{} },
-		),
-	}
-}
+func newTraceflows(c *CrdV1beta1Client) *traceflows { _ = "STUB: not implemented"; return nil }

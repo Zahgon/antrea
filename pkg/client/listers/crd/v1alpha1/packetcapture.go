@@ -42,5 +42,6 @@ type packetCaptureLister struct {
 
 // NewPacketCaptureLister returns a new PacketCaptureLister.
 func NewPacketCaptureLister(indexer cache.Indexer) PacketCaptureLister {
-	return &packetCaptureLister{listers.New[*crdv1alpha1.PacketCapture](indexer, crdv1alpha1.Resource("packetcapture"))}
+	_ = "STUB: not implemented"
+	return *new(PacketCaptureLister)
 }

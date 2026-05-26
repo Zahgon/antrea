@@ -42,5 +42,6 @@ type clusterNetworkPolicyLister struct {
 
 // NewClusterNetworkPolicyLister returns a new ClusterNetworkPolicyLister.
 func NewClusterNetworkPolicyLister(indexer cache.Indexer) ClusterNetworkPolicyLister {
-	return &clusterNetworkPolicyLister{listers.New[*crdv1beta1.ClusterNetworkPolicy](indexer, crdv1beta1.Resource("clusternetworkpolicy"))}
+	_ = "STUB: not implemented"
+	return *new(ClusterNetworkPolicyLister)
 }

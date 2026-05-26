@@ -29,20 +29,6 @@ type fakeGateways struct {
 }
 
 func newFakeGateways(fake *FakeMulticlusterV1alpha1, namespace string) multiclusterv1alpha1.GatewayInterface {
-	return &fakeGateways{
-		gentype.NewFakeClientWithList[*v1alpha1.Gateway, *v1alpha1.GatewayList](
-			fake.Fake,
-			namespace,
-			v1alpha1.SchemeGroupVersion.WithResource("gateways"),
-			v1alpha1.SchemeGroupVersion.WithKind("Gateway"),
-			func() *v1alpha1.Gateway { return &v1alpha1.Gateway{} },
-			func() *v1alpha1.GatewayList { return &v1alpha1.GatewayList{} },
-			func(dst, src *v1alpha1.GatewayList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.GatewayList) []*v1alpha1.Gateway { return gentype.ToPointerSlice(list.Items) },
-			func(list *v1alpha1.GatewayList, items []*v1alpha1.Gateway) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(multiclusterv1alpha1.GatewayInterface)
 }

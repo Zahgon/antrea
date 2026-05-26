@@ -42,5 +42,6 @@ type egressLister struct {
 
 // NewEgressLister returns a new EgressLister.
 func NewEgressLister(indexer cache.Indexer) EgressLister {
-	return &egressLister{listers.New[*crdv1beta1.Egress](indexer, crdv1beta1.Resource("egress"))}
+	_ = "STUB: not implemented"
+	return *new(EgressLister)
 }

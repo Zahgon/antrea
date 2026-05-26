@@ -18,18 +18,11 @@
 package support
 
 import (
-	"bytes"
-	"fmt"
-	"path"
-	"path/filepath"
-	"strings"
 	"sync"
 
 	"k8s.io/klog/v2"
 
-	"antrea.io/antrea/v2/pkg/agent/util/iptables"
 	"antrea.io/antrea/v2/pkg/agent/util/nftables"
-	"antrea.io/antrea/v2/pkg/util/logdir"
 )
 
 // nftablesIPv4Supported and nftablesIPv6Supported check if the kernel supports nftables.
@@ -50,99 +43,21 @@ var nftablesIPv6Supported = sync.OnceValue(func() bool {
 	return true
 })
 
-func (d *agentDumper) DumpLog(basedir string) error {
-	logDir := logdir.GetLogDir()
-	timeFilter := timestampFilter(d.since)
-
-	if err := directoryCopy(d.fs, path.Join(basedir, "logs", "agent"), logDir, "antrea-agent", timeFilter); err != nil {
-		return err
-	}
-	return directoryCopy(d.fs, path.Join(basedir, "logs", "ovs"), logDir, "ovs", timeFilter)
-}
+func (d *agentDumper) DumpLog(basedir string) error { _ = "STUB: not implemented"; return nil }
 
 func (d *agentDumper) DumpHostNetworkInfo(basedir string) error {
-	if err := d.dumpIPTables(basedir); err != nil {
-		return err
-	}
-	if err := d.dumpIPSet(basedir); err != nil {
-		return err
-	}
-	if err := d.dumpNFTables(basedir); err != nil {
-		return err
-	}
-	if err := d.dumpIPToolInfo(basedir); err != nil {
-		return err
-	}
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (d *agentDumper) dumpIPTables(basedir string) error {
-	c, err := iptables.New(d.v4Enabled, d.v6Enabled)
-	if err != nil {
-		return err
-	}
-	data, err := c.Save()
-	if err != nil {
-		return err
-	}
-	return writeFile(d.fs, filepath.Join(basedir, "iptables"), "iptables", data)
-}
+func (d *agentDumper) dumpIPTables(basedir string) error { _ = "STUB: not implemented"; return nil }
 
-func (d *agentDumper) dumpIPSet(basedir string) error {
-	data, err := d.ipsetClient.Save()
-	if err != nil {
-		return err
-	}
-	return writeFile(d.fs, filepath.Join(basedir, "ipset"), "ipset", data)
-}
+func (d *agentDumper) dumpIPSet(basedir string) error { _ = "STUB: not implemented"; return nil }
 
-func (d *agentDumper) dumpNFTables(basedir string) error {
-	var data bytes.Buffer
+func (d *agentDumper) dumpNFTables(basedir string) error { _ = "STUB: not implemented"; return nil }
 
-	if d.v4Enabled && nftablesIPv4Supported() || d.v6Enabled && nftablesIPv6Supported() {
-		output, err := d.executor.Command("nft", "list", "ruleset").CombinedOutput()
-		if err != nil {
-			return fmt.Errorf("failed to dump nftables: %w", err)
-		}
-		if len(output) == 0 {
-			return nil
-		}
-		data.Write(output)
-		data.WriteByte('\n')
-	}
+func (d *agentDumper) dumpIPToolInfo(basedir string) error { _ = "STUB: not implemented"; return nil }
 
-	fileName := "nftables"
-	if err := writeFile(d.fs, filepath.Join(basedir, fileName), fileName, data.Bytes()); err != nil {
-		return fmt.Errorf("failed to write nftables file: %w", err)
-	}
+// Dump routes from all routing tables (Antrea installs per-Egress custom tables).
 
-	return nil
-}
-
-func (d *agentDumper) dumpIPToolInfo(basedir string) error {
-	dump := func(filename string, args ...string) error {
-		output, err := d.executor.Command("ip", args...).CombinedOutput()
-		if err != nil {
-			return fmt.Errorf("error when dumping ip %s: %w", strings.Join(args, " "), err)
-		}
-		return writeFile(d.fs, filepath.Join(basedir, filename), filename, output)
-	}
-	for _, item := range []string{"rule", "route", "link", "address"} {
-		if err := dump(item, item); err != nil {
-			return err
-		}
-	}
-	// Dump routes from all routing tables (Antrea installs per-Egress custom tables).
-	if err := dump("route-table-all", "route", "show", "table", "all"); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (d *agentDumper) DumpMemberlist(basedir string) error {
-	output, err := d.executor.Command("antctl", "-oyaml", "get", "memberlist").CombinedOutput()
-	if err != nil && !strings.Contains(string(output), "memberlist is not enabled") {
-		return fmt.Errorf("error when dumping memberlist: %w", err)
-	}
-	return writeFile(d.fs, filepath.Join(basedir, "memberlist"), "memberlist", output)
-}
+func (d *agentDumper) DumpMemberlist(basedir string) error { _ = "STUB: not implemented"; return nil }

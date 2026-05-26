@@ -42,5 +42,6 @@ type bGPPolicyLister struct {
 
 // NewBGPPolicyLister returns a new BGPPolicyLister.
 func NewBGPPolicyLister(indexer cache.Indexer) BGPPolicyLister {
-	return &bGPPolicyLister{listers.New[*crdv1alpha1.BGPPolicy](indexer, crdv1alpha1.Resource("bgppolicy"))}
+	_ = "STUB: not implemented"
+	return *new(BGPPolicyLister)
 }

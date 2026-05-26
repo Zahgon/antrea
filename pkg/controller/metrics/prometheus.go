@@ -16,8 +16,6 @@ package metrics
 
 import (
 	"k8s.io/component-base/metrics"
-	"k8s.io/component-base/metrics/legacyregistry"
-	"k8s.io/klog/v2"
 )
 
 const (
@@ -120,40 +118,4 @@ var (
 )
 
 // Initialize Prometheus metrics collection.
-func InitializePrometheusMetrics() {
-	klog.Info("Initializing prometheus metrics")
-
-	if err := legacyregistry.Register(OpsAppliedToGroupProcessed); err != nil {
-		klog.Errorf("Failed to register antrea_controller_applied_to_group_processed with Prometheus: %s", err.Error())
-	}
-	if err := legacyregistry.Register(OpsAddressGroupProcessed); err != nil {
-		klog.Errorf("Failed to register antrea_controller_address_group_processed with Prometheus: %s", err.Error())
-	}
-	if err := legacyregistry.Register(OpsInternalNetworkPolicyProcessed); err != nil {
-		klog.Errorf("Failed to register antrea_controller_network_policy_processed with Prometheus: %s", err.Error())
-	}
-	if err := legacyregistry.Register(DurationAppliedToGroupSyncing); err != nil {
-		klog.Errorf("Failed to register antrea_controller_applied_to_group_sync_duration_milliseconds with Prometheus: %s", err.Error())
-	}
-	if err := legacyregistry.Register(DurationAddressGroupSyncing); err != nil {
-		klog.Errorf("Failed to register antrea_controller_address_group_sync_duration_milliseconds with Prometheus: %s", err.Error())
-	}
-	if err := legacyregistry.Register(DurationInternalNetworkPolicySyncing); err != nil {
-		klog.Errorf("Failed to register antrea_controller_network_policy_sync_duration_milliseconds with Prometheus: %s", err.Error())
-	}
-	if err := legacyregistry.Register(LengthAppliedToGroupQueue); err != nil {
-		klog.Errorf("Failed to register antrea_controller_length_applied_to_group_queue with Prometheus: %s", err.Error())
-	}
-	if err := legacyregistry.Register(LengthAddressGroupQueue); err != nil {
-		klog.Errorf("Failed to register antrea_controller_length_address_group_queue with Prometheus: %s", err.Error())
-	}
-	if err := legacyregistry.Register(LengthInternalNetworkPolicyQueue); err != nil {
-		klog.Errorf("Failed to register antrea_controller_length_network_policy_queue with Prometheus: %s", err.Error())
-	}
-	if err := legacyregistry.Register(AntreaNetworkPolicyStatusUpdates); err != nil {
-		klog.Errorf("Failed to register antrea_controller_annp_status_updates with Prometheus: %s", err.Error())
-	}
-	if err := legacyregistry.Register(AntreaClusterNetworkPolicyStatusUpdates); err != nil {
-		klog.Errorf("Failed to register antrea_controller_acnp_status_updates with Prometheus: %s", err.Error())
-	}
-}
+func InitializePrometheusMetrics() { _ = "STUB: not implemented"; return }

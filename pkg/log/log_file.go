@@ -17,14 +17,9 @@ package log
 import (
 	"os"
 	"path/filepath"
-	"sort"
-	"strings"
 	"time"
 
 	"github.com/spf13/pflag"
-
-	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/klog/v2"
 )
 
 const (
@@ -50,143 +45,35 @@ var (
 
 // initLogFileLimits initializes log file maximum size and maximum number limits based on the
 // command line flags.
-func initLogFileLimits(fs *pflag.FlagSet) {
-	var err error
-	var logToStdErr bool
-	var logFile string
-	var maxSize uint64
+func initLogFileLimits(fs *pflag.FlagSet) { _ = "STUB: not implemented"; return }
 
-	logToStdErr, err = fs.GetBool(logToStdErrFlag)
-	if err != nil {
-		// Should not happen. Return for safety.
-		return
-	}
-	if logToStdErr {
-		// Logging to files is not enabled.
-		return
-	}
+// Should not happen. Return for safety.
 
-	logFile, err = fs.GetString(logFileFlag)
-	if err != nil {
-		return
-	}
-	if logFile != "" {
-		// Log to a single file. klog will take care of the max size limit.
-		return
-	}
+// Logging to files is not enabled.
 
-	// Max log file size in MB.
-	maxSize, err = fs.GetUint64(maxSizeFlag)
-	if err != nil {
-		return
-	}
-	if maxSize > maxMaxSizeMB {
-		klog.Errorf("The specified log file max size %d is too big (maximum: %d), ignored", maxSize, maxMaxSizeMB)
-	} else {
-		maxSize = maxSize * 1024 * 1024
+// Log to a single file. klog will take care of the max size limit.
 
-		// klog does not respect the max file size specified by --log_file_max_size
-		// when --log_file is not used. Here as a workaround, we directly set the
-		// specified max size to klog.MaxSize.
-		if klog.MaxSize != maxSize {
-			klog.MaxSize = maxSize
-			klog.Infof("Set log file max size to %d", maxSize)
-		}
-	}
+// Max log file size in MB.
 
-	if maxNumArg > 0 {
-		logDir, err = fs.GetString(logDirFlag)
-		if err != nil {
-			return
-		}
+// klog does not respect the max file size specified by --log_file_max_size
+// when --log_file is not used. Here as a workaround, we directly set the
+// specified max size to klog.MaxSize.
 
-		logFileMaxNum = maxNumArg
-		if logDir == "" {
-			// Log to the tmp dir.
-			logDir = os.TempDir()
-		}
-	}
-}
+// Log to the tmp dir.
 
 // StartLogFileNumberMonitor starts monitoring the log files to make sure the
 // number of log files does not exceed the maximum limit, when the log file
 // number limit is configured.
-func StartLogFileNumberMonitor(stopCh <-chan struct{}) {
-	if logFileMaxNum == 0 {
-		// The maximum log file number limit is not configured.
-		return
-	}
+func StartLogFileNumberMonitor(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	go func() {
-		klog.Infof("Starting log file monitoring. Maximum log file number is %d", logFileMaxNum)
-		wait.Until(checkLogFiles, logFileCheckInterval, stopCh)
-	}()
-}
+// The maximum log file number limit is not configured.
 
-func checkLogFiles() {
-	f, err := os.Open(logDir)
-	if err != nil {
-		klog.Errorf("Failed to open log directory %s: %v", logDir, err)
-		return
-	}
-	allFiles, err := f.Readdir(-1)
-	f.Close()
-	if err != nil {
-		klog.Errorf("Failed to read log directory %s: %v", logDir, err)
-		return
-	}
+func checkLogFiles() { _ = "STUB: not implemented"; return }
 
-	maxNum := int(logFileMaxNum)
-	if len(allFiles) <= maxNum {
-		return
-	}
+// Skip dir, symbol link, etc.
 
-	infoLogFiles := []os.FileInfo{}
-	warningLogFiles := []os.FileInfo{}
-	errorLogFiles := []os.FileInfo{}
-	fatalLogFIles := []os.FileInfo{}
+// Sort files by modification time.
 
-	for _, file := range allFiles {
-		if !file.Mode().IsRegular() {
-			// Skip dir, symbol link, etc.
-			continue
-		}
-		if !strings.HasPrefix(file.Name(), executableName) {
-			continue
-		}
-		if strings.Contains(file.Name(), ".log.INFO.") {
-			infoLogFiles = append(infoLogFiles, file)
-		} else if strings.Contains(file.Name(), ".log.WARNING.") {
-			warningLogFiles = append(warningLogFiles, file)
-		} else if strings.Contains(file.Name(), ".log.ERROR.") {
-			errorLogFiles = append(errorLogFiles, file)
-		} else if strings.Contains(file.Name(), ".log.FATAL.") {
-			fatalLogFIles = append(fatalLogFIles, file)
-		}
-	}
+// Remove the oldest files.
 
-	checkFilesFn := func(files []os.FileInfo) {
-		if len(files) <= maxNum {
-			return
-		}
-		// Sort files by modification time.
-		sort.Slice(files, func(i, j int) bool {
-			return files[i].ModTime().After(files[j].ModTime())
-		})
-		// Remove the oldest files.
-		for _, file := range files[maxNum:] {
-			// #nosec G703: Path provided via config by admin; no privilege boundary crossed.
-			err := os.Remove(logDir + "/" + file.Name())
-			if err != nil {
-				klog.Errorf("Failed to delete log file %s: %v", file.Name(), err)
-			} else {
-				klog.Infof("Deleted log file %s", file.Name())
-			}
-		}
-	}
-
-	checkFilesFn(infoLogFiles)
-	checkFilesFn(warningLogFiles)
-	checkFilesFn(errorLogFiles)
-	checkFilesFn(fatalLogFIles)
-}
+// #nosec G703: Path provided via config by admin; no privilege boundary crossed.

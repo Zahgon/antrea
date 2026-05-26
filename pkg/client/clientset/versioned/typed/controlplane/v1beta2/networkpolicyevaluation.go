@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	controlplanev1beta2 "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	gentype "k8s.io/client-go/gentype"
 )
@@ -44,15 +43,6 @@ type networkPolicyEvaluations struct {
 
 // newNetworkPolicyEvaluations returns a NetworkPolicyEvaluations
 func newNetworkPolicyEvaluations(c *ControlplaneV1beta2Client) *networkPolicyEvaluations {
-	return &networkPolicyEvaluations{
-		gentype.NewClient[*controlplanev1beta2.NetworkPolicyEvaluation](
-			"networkpolicyevaluations",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *controlplanev1beta2.NetworkPolicyEvaluation {
-				return &controlplanev1beta2.NetworkPolicyEvaluation{}
-			},
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

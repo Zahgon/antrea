@@ -15,18 +15,13 @@
 package connections
 
 import (
-	"fmt"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/flowexporter/connection"
 	"antrea.io/antrea/v2/pkg/agent/flowexporter/filter"
 	"antrea.io/antrea/v2/pkg/agent/flowexporter/priorityqueue"
-	"antrea.io/antrea/v2/pkg/agent/flowexporter/utils"
-	"antrea.io/antrea/v2/pkg/agent/metrics"
-	"antrea.io/antrea/v2/pkg/agent/openflow"
 	"antrea.io/antrea/v2/pkg/agent/proxy"
 	"antrea.io/antrea/v2/pkg/querier"
 	"antrea.io/antrea/v2/pkg/util/objectstore"
@@ -50,185 +45,74 @@ func NewConntrackConnectionStore(
 	proxier proxy.ProxyQuerier,
 	cfg ConnectionStoreConfig,
 ) *ConntrackConnectionStore {
-	return &ConntrackConnectionStore{
-		connectionStore:        NewConnectionStore(npQuerier, podStore, proxier, cfg),
-		protocolFilter:         filter.NewProtocolFilter(cfg.AllowedProtocols),
-		networkPolicyReadyTime: cfg.NetworkPolicyReadyTime,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (cs *ConntrackConnectionStore) AddOrUpdateConns(conns []*connection.Connection) error {
-	klog.V(2).InfoS("Updating connection store")
-	// Reset IsPresent flag for all connections in connection map before updating
-	// the dumped flows information in connection map. If the connection does not
-	// exist in conntrack table and has been exported, then we will delete it from
-	// connection map. In addition, if the connection was not exported for a specific
-	// time period, then we consider it to be stale and delete it.
-	deleteIfStaleOrResetConn := func(key connection.ConnectionKey, conn *connection.Connection) error {
-		if !conn.IsPresent {
-			// Delete the connection if it is ready to delete or it was not exported
-			// in the time period as specified by the stale connection timeout.
-			if conn.ReadyToDelete || time.Since(conn.LastExportTime) >= cs.staleConnectionTimeout {
-				if removedItem := cs.expirePriorityQueue.Remove(key); removedItem != nil {
-					// In case ReadyToDelete is true, item should already have been removed from pq
-					klog.V(4).InfoS("Conn removed from cs pq due to stale timeout",
-						"key", key, "conn", removedItem.Conn)
-				}
-				if err := cs.deleteConnWithoutLock(key); err != nil {
-					return err
-				}
-			}
-		} else {
-			conn.IsPresent = false
-		}
-		return nil
-	}
-
-	// Hold the lock until we verify whether the connection exist in conntrack table,
-	// and finish updating the connection store.
-	cs.AcquireConnStoreLock()
-
-	if err := cs.ForAllConnectionsDoWithoutLock(deleteIfStaleOrResetConn); err != nil {
-		cs.ReleaseConnStoreLock()
-		return err
-	}
-
-	// Update only the Connection store. IPFIX records are generated based on Connection store.
-	for _, conn := range conns {
-		cs.AddOrUpdateConn(conn)
-	}
-
-	cs.ReleaseConnStoreLock()
-
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// Reset IsPresent flag for all connections in connection map before updating
+// the dumped flows information in connection map. If the connection does not
+// exist in conntrack table and has been exported, then we will delete it from
+// connection map. In addition, if the connection was not exported for a specific
+// time period, then we consider it to be stale and delete it.
+
+// Delete the connection if it is ready to delete or it was not exported
+// in the time period as specified by the stale connection timeout.
+
+// In case ReadyToDelete is true, item should already have been removed from pq
+
+// Hold the lock until we verify whether the connection exist in conntrack table,
+// and finish updating the connection store.
+
+// Update only the Connection store. IPFIX records are generated based on Connection store.
 
 // AddOrUpdateConn updates the connection if it is already present, i.e., update timestamp, counters etc.,
 // or adds a new connection with the resolved K8s metadata.
 func (cs *ConntrackConnectionStore) AddOrUpdateConn(conn *connection.Connection) {
-	if !cs.protocolFilter.Allow(conn.FlowKey.Protocol) {
-		return
-	}
-
-	conn.IsPresent = true
-	connKey := connection.NewConnectionKey(conn)
-
-	existingConn, exists := cs.connections[connKey]
-	if exists {
-		existingConn.IsPresent = conn.IsPresent
-		if utils.IsConnectionDying(existingConn) {
-			return
-		}
-		// Update the necessary fields that are used in generating flow records.
-		// Can same 5-tuple flow get deleted and added to conntrack table? If so use ID.
-		existingConn.StopTime = conn.StopTime
-		existingConn.OriginalBytes = conn.OriginalBytes
-		existingConn.OriginalPackets = conn.OriginalPackets
-		existingConn.ReverseBytes = conn.ReverseBytes
-		existingConn.ReversePackets = conn.ReversePackets
-		existingConn.TCPState = conn.TCPState
-		existingConn.IsActive = utils.CheckConntrackConnActive(existingConn)
-		if existingConn.IsActive {
-			existingItem, exists := cs.expirePriorityQueue.KeyToItem[connKey]
-			if !exists {
-				// If the connKey:pqItem pair does not exist in the map, it shows the
-				// conn was inactive, and was removed from PQ and map. Since it becomes
-				// active again now, we create a new pqItem and add it to PQ and map.
-				cs.expirePriorityQueue.WriteItemToQueue(connKey, existingConn)
-			} else {
-				cs.connectionStore.expirePriorityQueue.Update(existingItem, existingItem.ActiveExpireTime,
-					time.Now().Add(cs.connectionStore.expirePriorityQueue.IdleFlowTimeout))
-			}
-		}
-		klog.V(4).InfoS("Antrea flow updated", "connection", existingConn)
-	} else {
-		connCopy := *conn
-		conn := &connCopy
-		cs.fillPodInfo(conn)
-		if conn.SourcePodName == "" && conn.DestinationPodName == "" {
-			// We don't add connections to connection map or expirePriorityQueue if we can't find the pod
-			// information for both srcPod and dstPod
-			klog.V(5).InfoS("Skip this connection as we cannot map any of the connection IPs to a local Pod", "srcIP", conn.FlowKey.SourceAddress.String(), "dstIP", conn.FlowKey.DestinationAddress.String())
-			return
-		}
-		if conn.Mark&openflow.ServiceCTMark.GetRange().ToNXRange().ToUint32Mask() == openflow.ServiceCTMark.GetValue() {
-			clusterIP := conn.OriginalDestinationAddress.String()
-			svcPort := conn.OriginalDestinationPort
-			protocol, err := lookupServiceProtocol(conn.FlowKey.Protocol)
-			if err != nil {
-				klog.InfoS("Could not retrieve Service protocol", "error", err)
-			} else {
-				serviceStr := fmt.Sprintf("%s:%d/%s", clusterIP, svcPort, protocol)
-				cs.fillServiceInfo(conn, serviceStr)
-			}
-		}
-		// This should only happen if we failed to set net.netfilter.nf_conntrack_timestamp
-		if conn.StartTime.IsZero() {
-			conn.StartTime = time.Now()
-			conn.StopTime = time.Now()
-		}
-		if conn.StartTime.Before(cs.networkPolicyReadyTime) {
-			klog.V(1).InfoS("Skip adding NetworkPolicy metadata to connection to avoid reporting invalid information")
-		} else {
-			cs.addNetworkPolicyMetadata(conn)
-		}
-		conn.LastExportTime = conn.StartTime
-		metrics.TotalAntreaConnectionsInConnTrackTable.Inc()
-		conn.IsActive = true
-		// Add new antrea connection to connection store and PQ.
-		cs.connections[connKey] = conn
-		cs.expirePriorityQueue.WriteItemToQueue(connKey, conn)
-		klog.V(4).InfoS("New Antrea flow added", "connection", conn)
-	}
+	_ = "STUB: not implemented"
+	return
 }
+
+// Update the necessary fields that are used in generating flow records.
+// Can same 5-tuple flow get deleted and added to conntrack table? If so use ID.
+
+// If the connKey:pqItem pair does not exist in the map, it shows the
+// conn was inactive, and was removed from PQ and map. Since it becomes
+// active again now, we create a new pqItem and add it to PQ and map.
+
+// We don't add connections to connection map or expirePriorityQueue if we can't find the pod
+// information for both srcPod and dstPod
+
+// This should only happen if we failed to set net.netfilter.nf_conntrack_timestamp
+
+// Add new antrea connection to connection store and PQ.
 
 func (cs *ConntrackConnectionStore) GetExpiredConns(expiredConns []connection.Connection, currTime time.Time, maxSize int) ([]connection.Connection, time.Duration) {
-	cs.AcquireConnStoreLock()
-	defer cs.ReleaseConnStoreLock()
-	for i := 0; i < maxSize; i++ {
-		pqItem := cs.connectionStore.expirePriorityQueue.GetTopExpiredItem(currTime)
-		if pqItem == nil {
-			break
-		}
-		expiredConns = append(expiredConns, *pqItem.Conn)
-		if utils.IsConnectionDying(pqItem.Conn) {
-			// If a conntrack connection is in dying state or connection is not
-			// in the conntrack table, we set the ReadyToDelete flag to true to
-			// do the deletion later.
-			pqItem.Conn.ReadyToDelete = true
-		}
-		if pqItem.IdleExpireTime.Before(currTime) {
-			// No packets have been received during the idle timeout interval,
-			// the connection is therefore considered inactive.
-			pqItem.Conn.IsActive = false
-		}
-		cs.UpdateConnAndQueue(pqItem, currTime)
-	}
-	return expiredConns, cs.connectionStore.expirePriorityQueue.GetExpiryFromExpirePriorityQueue()
+	_ = "STUB: not implemented"
+	return nil, *new(time.Duration)
 }
+
+// If a conntrack connection is in dying state or connection is not
+// in the conntrack table, we set the ReadyToDelete flag to true to
+// do the deletion later.
+
+// No packets have been received during the idle timeout interval,
+// the connection is therefore considered inactive.
 
 // deleteConnWithoutLock deletes the connection from the connection map given
 // the connection key without grabbing the lock. Caller is expected to grab lock.
 func (cs *ConntrackConnectionStore) deleteConnWithoutLock(connKey connection.ConnectionKey) error {
-	_, exists := cs.connections[connKey]
-	if !exists {
-		return fmt.Errorf("connection with key %v doesn't exist in map", connKey)
-	}
-	delete(cs.connections, connKey)
-	metrics.TotalAntreaConnectionsInConnTrackTable.Dec()
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (cs *ConntrackConnectionStore) DeleteAllConnections() int {
-	cs.AcquireConnStoreLock()
-	defer cs.ReleaseConnStoreLock()
-	num := len(cs.connections)
-	clear(cs.connections)
-	metrics.TotalAntreaConnectionsInConnTrackTable.Set(0)
-	cs.expirePriorityQueue.Clear()
-	return num
-}
+func (cs *ConntrackConnectionStore) DeleteAllConnections() int { _ = "STUB: not implemented"; return 0 }
 
 func (cs *ConntrackConnectionStore) GetPriorityQueue() *priorityqueue.ExpirePriorityQueue {
-	return cs.connectionStore.expirePriorityQueue
+	_ = "STUB: not implemented"
+	return nil
 }

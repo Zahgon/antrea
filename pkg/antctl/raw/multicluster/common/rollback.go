@@ -15,23 +15,11 @@
 package common
 
 import (
-	"context"
-	"fmt"
-
 	"github.com/spf13/cobra"
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func Rollback(cmd *cobra.Command, k8sClient client.Client, res []map[string]interface{}) error {
-	for _, obj := range res {
-		u := &unstructured.Unstructured{Object: obj}
-		if err := k8sClient.Delete(context.TODO(), u); err != nil && !apierrors.IsNotFound(err) {
-			fmt.Fprintf(cmd.OutOrStdout(), "Failed to delete %s %s/%s: %v\n", u.GetKind(), u.GetNamespace(), u.GetName(), err)
-			return err
-		}
-		fmt.Fprintf(cmd.OutOrStdout(), "%s \"%s/%s\" deleted\n", u.GetKind(), u.GetNamespace(), u.GetName())
-	}
+	_ = "STUB: not implemented"
 	return nil
 }

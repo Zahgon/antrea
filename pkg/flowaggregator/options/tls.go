@@ -16,27 +16,10 @@ package options
 
 import (
 	"crypto/tls"
-	"fmt"
 )
 
 const DefaultTLSVersion = tls.VersionTLS12
 
-func TLSVersion(version string) (uint16, error) {
-	switch version {
-	case "":
-		return DefaultTLSVersion, nil
-	case "VersionTLS12":
-		return tls.VersionTLS12, nil
-	case "VersionTLS13":
-		return tls.VersionTLS13, nil
-	}
-	return 0, fmt.Errorf("unsupported TLS version: %s", version)
-}
+func TLSVersion(version string) (uint16, error) { _ = "STUB: not implemented"; return 0, nil }
 
-func TLSVersionOrDie(version string) uint16 {
-	v, err := TLSVersion(version)
-	if err != nil {
-		panic(err)
-	}
-	return v
-}
+func TLSVersionOrDie(version string) uint16 { _ = "STUB: not implemented"; return 0 }

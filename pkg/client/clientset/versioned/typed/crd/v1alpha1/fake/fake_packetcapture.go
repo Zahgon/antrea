@@ -29,22 +29,6 @@ type fakePacketCaptures struct {
 }
 
 func newFakePacketCaptures(fake *FakeCrdV1alpha1) crdv1alpha1.PacketCaptureInterface {
-	return &fakePacketCaptures{
-		gentype.NewFakeClientWithList[*v1alpha1.PacketCapture, *v1alpha1.PacketCaptureList](
-			fake.Fake,
-			"",
-			v1alpha1.SchemeGroupVersion.WithResource("packetcaptures"),
-			v1alpha1.SchemeGroupVersion.WithKind("PacketCapture"),
-			func() *v1alpha1.PacketCapture { return &v1alpha1.PacketCapture{} },
-			func() *v1alpha1.PacketCaptureList { return &v1alpha1.PacketCaptureList{} },
-			func(dst, src *v1alpha1.PacketCaptureList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.PacketCaptureList) []*v1alpha1.PacketCapture {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha1.PacketCaptureList, items []*v1alpha1.PacketCapture) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1alpha1.PacketCaptureInterface)
 }

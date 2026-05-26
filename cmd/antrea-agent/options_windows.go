@@ -17,60 +17,16 @@
 
 package main
 
-import (
-	"fmt"
-	"strings"
-
-	"k8s.io/component-base/featuregate"
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/agent/config"
-	"antrea.io/antrea/v2/pkg/features"
-	"antrea.io/antrea/v2/pkg/ovs/ovsconfig"
-)
-
 const (
 	defaultNPLPortRange = "40000-41000"
 )
 
-func (o *Options) checkUnsupportedFeatures() error {
-	var unsupported []string
+func (o *Options) checkUnsupportedFeatures() error { _ = "STUB: not implemented"; return nil }
 
-	// First check feature gates.
-	for f, enabled := range o.config.FeatureGates {
-		if enabled && !features.SupportedOnWindows(featuregate.Feature(f)) {
-			unsupported = append(unsupported, f)
-		}
-	}
-
-	if o.config.OVSDatapathType != string(ovsconfig.OVSDatapathSystem) {
-		unsupported = append(unsupported, "OVSDatapathType: "+o.config.OVSDatapathType)
-	}
-	_, encapMode := config.GetTrafficEncapModeFromStr(o.config.TrafficEncapMode)
-	if encapMode == config.TrafficEncapModeNetworkPolicyOnly {
-		unsupported = append(unsupported, "TrafficEncapMode: "+encapMode.String())
-	}
-	if o.config.TunnelType == ovsconfig.GRETunnel {
-		unsupported = append(unsupported, "TunnelType: "+o.config.TunnelType)
-	}
-	_, encryptionMode := config.GetTrafficEncryptionModeFromStr(o.config.TrafficEncryptionMode)
-	if encryptionMode != config.TrafficEncryptionModeNone {
-		unsupported = append(unsupported, "TrafficEncryptionMode: "+encryptionMode.String())
-	}
-	if o.config.EnableBridgingMode {
-		unsupported = append(unsupported, "EnableBridgingMode")
-	}
-	if o.config.SNATFullyRandomPorts {
-		unsupported = append(unsupported, "SNATFullyRandomPorts")
-	}
-	if unsupported != nil {
-		return fmt.Errorf("unsupported features on Windows: {%s}", strings.Join(unsupported, ", "))
-	}
-
-	return nil
-}
+// First check feature gates.
 
 func (o *Options) validateConfigForPlatform() error {
+	_ = "STUB: not implemented"
 	// AntreaProxy with proxyAll is required on Windows.
 	// The userspace kube-proxy mode (only mode compatible with the Antrea Agent on Windows) was
 	// removed in K8s v1.26, hence the requirement for proxyAll.
@@ -78,13 +34,5 @@ func (o *Options) validateConfigForPlatform() error {
 	// Service traffic.
 	// While we do not fail initialization at the moment, there should be no valid use case for
 	// Antrea on Windows without AntreaProxy + proxyAll.
-	if !o.enableAntreaProxy {
-		klog.ErrorS(nil, "AntreaProxy is disabled, Service traffic is unlikely to work as expected")
-		return nil
-	}
-	if !o.config.AntreaProxy.ProxyAll {
-		klog.ErrorS(nil, "AntreaProxy proxyAll is disabled, Service traffic is unlikely to work as expected")
-		return nil
-	}
 	return nil
 }

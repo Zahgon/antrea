@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	controlplanev1beta2 "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	watch "k8s.io/apimachinery/pkg/watch"
 	gentype "k8s.io/client-go/gentype"
@@ -47,14 +46,6 @@ type egressGroups struct {
 
 // newEgressGroups returns a EgressGroups
 func newEgressGroups(c *ControlplaneV1beta2Client) *egressGroups {
-	return &egressGroups{
-		gentype.NewClientWithList[*controlplanev1beta2.EgressGroup, *controlplanev1beta2.EgressGroupList](
-			"egressgroups",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *controlplanev1beta2.EgressGroup { return &controlplanev1beta2.EgressGroup{} },
-			func() *controlplanev1beta2.EgressGroupList { return &controlplanev1beta2.EgressGroupList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

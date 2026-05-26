@@ -16,7 +16,6 @@ package querier
 
 import (
 	v1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
 	"antrea.io/antrea/v2/pkg/querier"
@@ -39,53 +38,36 @@ type controllerQuerier struct {
 
 func NewControllerQuerier(networkPolicyInfoQuerier querier.ControllerNetworkPolicyInfoQuerier,
 	apiPort int) *controllerQuerier {
-	return &controllerQuerier{
-		networkPolicyInfoQuerier: networkPolicyInfoQuerier,
-		apiPort:                  apiPort,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // getNetworkPolicyInfoQuerier gets current network policy info querier.
 func (cq controllerQuerier) getNetworkPolicyInfoQuerier() querier.ControllerNetworkPolicyInfoQuerier {
-	return cq.networkPolicyInfoQuerier
+	_ = "STUB: not implemented"
+	return *new(querier.ControllerNetworkPolicyInfoQuerier)
 }
 
 // getService gets current service.
 func (cq controllerQuerier) getService() v1.ObjectReference {
-	return v1.ObjectReference{Kind: "Service", Name: serviceName}
+	_ = "STUB: not implemented"
+	return *new(v1.ObjectReference)
 }
 
 // getNetworkPolicyControllerInfo gets current network policy controller info
 // including: number of network policies, address groups and applied to groups.
 func (cq controllerQuerier) getNetworkPolicyControllerInfo() v1beta1.NetworkPolicyControllerInfo {
-	return v1beta1.NetworkPolicyControllerInfo{
-		NetworkPolicyNum:  int32(cq.networkPolicyInfoQuerier.GetNetworkPolicyNum()),
-		AddressGroupNum:   int32(cq.networkPolicyInfoQuerier.GetAddressGroupNum()),
-		AppliedToGroupNum: int32(cq.networkPolicyInfoQuerier.GetAppliedToGroupNum()),
-	}
+	_ = "STUB: not implemented"
+	return *new(v1beta1.NetworkPolicyControllerInfo)
 }
 
 func (cq controllerQuerier) getControllerConditions() []v1beta1.ControllerCondition {
-	return []v1beta1.ControllerCondition{
-		{
-			Type:              v1beta1.ControllerHealthy,
-			Status:            v1.ConditionTrue,
-			LastHeartbeatTime: metav1.Now(),
-		},
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetControllerInfo gets current info of controller.
 func (cq controllerQuerier) GetControllerInfo(controllerInfo *v1beta1.AntreaControllerInfo, partial bool) {
-	controllerInfo.NetworkPolicyControllerInfo = cq.getNetworkPolicyControllerInfo()
-	controllerInfo.ConnectedAgentNum = int32(cq.getNetworkPolicyInfoQuerier().GetConnectedAgentNum())
-	controllerInfo.ControllerConditions = cq.getControllerConditions()
-
-	if !partial {
-		controllerInfo.Version = querier.GetVersion()
-		controllerInfo.PodRef = querier.GetSelfPod()
-		controllerInfo.NodeRef = querier.GetSelfNode(false, "")
-		controllerInfo.ServiceRef = cq.getService()
-		controllerInfo.APIPort = cq.apiPort
-	}
+	_ = "STUB: not implemented"
+	return
 }

@@ -14,10 +14,6 @@
 
 package config
 
-import (
-	"strings"
-)
-
 type TrafficEncryptionModeType int
 
 const (
@@ -38,26 +34,11 @@ var (
 // GetTrafficEncryptionModeFromStr returns true and TrafficEncryptionModeType corresponding to input string.
 // Otherwise, false and undefined value is returned
 func GetTrafficEncryptionModeFromStr(str string) (bool, TrafficEncryptionModeType) {
-	for idx, ms := range encryptionModeStrs {
-		if strings.EqualFold(ms, str) {
-			return true, TrafficEncryptionModeType(idx)
-		}
-	}
-	return false, TrafficEncryptionModeInvalid
+	_ = "STUB: not implemented"
+	return false, *new(TrafficEncryptionModeType)
 }
 
-func GetTrafficEncryptionModes() []TrafficEncryptionModeType {
-	return []TrafficEncryptionModeType{
-		TrafficEncryptionModeNone,
-		TrafficEncryptionModeIPSec,
-		TrafficEncryptionModeWireGuard,
-	}
-}
+func GetTrafficEncryptionModes() []TrafficEncryptionModeType { _ = "STUB: not implemented"; return nil }
 
 // String returns value in string.
-func (m TrafficEncryptionModeType) String() string {
-	if m == TrafficEncryptionModeInvalid {
-		return "invalid"
-	}
-	return encryptionModeStrs[m]
-}
+func (m TrafficEncryptionModeType) String() string { _ = "STUB: not implemented"; return "" }

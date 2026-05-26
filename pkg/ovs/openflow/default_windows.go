@@ -14,16 +14,6 @@
 
 package openflow
 
-import (
-	"path/filepath"
-	"strings"
-)
-
 const namedPipePrefix = `\\.\pipe\`
 
-func GetMgmtAddress(ovsRunDir, brName string) string {
-	sockFile := brName + ".mgmt"
-	addr := filepath.Join(filepath.FromSlash(ovsRunDir), sockFile)
-	addr = strings.ReplaceAll(addr, string(filepath.Separator), "")
-	return namedPipePrefix + addr
-}
+func GetMgmtAddress(ovsRunDir, brName string) string { _ = "STUB: not implemented"; return "" }

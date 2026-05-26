@@ -14,24 +14,9 @@
 
 package logdir
 
-import (
-	"flag"
-	"os"
-)
-
 // GetLogDir returns the path to the directory where Antrea logs are written.
 // It will look for the value of the log_dir command-line flag, or default to a
 // well-known OS-dependent location.
-func GetLogDir() string {
-	logDirFlag := flag.CommandLine.Lookup("log_dir")
-	var logDir string
-	if logDirFlag == nil {
-		logDir = antreaWellKnownLogDir
-	} else if len(logDirFlag.Value.String()) == 0 {
-		// default log directory used by klog
-		logDir = os.TempDir()
-	} else {
-		logDir = logDirFlag.Value.String()
-	}
-	return logDir
-}
+func GetLogDir() string { _ = "STUB: not implemented"; return "" }
+
+// default log directory used by klog

@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	crdv1beta1 "antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -54,15 +53,4 @@ type clusterGroups struct {
 }
 
 // newClusterGroups returns a ClusterGroups
-func newClusterGroups(c *CrdV1beta1Client) *clusterGroups {
-	return &clusterGroups{
-		gentype.NewClientWithList[*crdv1beta1.ClusterGroup, *crdv1beta1.ClusterGroupList](
-			"clustergroups",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *crdv1beta1.ClusterGroup { return &crdv1beta1.ClusterGroup{} },
-			func() *crdv1beta1.ClusterGroupList { return &crdv1beta1.ClusterGroupList{} },
-		),
-	}
-}
+func newClusterGroups(c *CrdV1beta1Client) *clusterGroups { _ = "STUB: not implemented"; return nil }

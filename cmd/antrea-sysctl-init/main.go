@@ -20,11 +20,7 @@ package main
 import (
 	"os"
 
-	"antrea.io/antrea/v2/pkg/log"
-	"antrea.io/antrea/v2/pkg/version"
-
 	"github.com/spf13/cobra"
-	"k8s.io/klog/v2"
 )
 
 func main() {
@@ -34,28 +30,4 @@ func main() {
 	}
 }
 
-func newAntreaSysctlInitCommand() *cobra.Command {
-	opts := newOptions()
-
-	cmd := &cobra.Command{
-		Use:  "antrea-sysctl-init",
-		Long: "Initialize Antrea-required sysctl config.",
-		Run: func(cmd *cobra.Command, args []string) {
-			log.InitLogs(cmd.Flags())
-			defer log.FlushLogs()
-
-			if err := opts.validate(); err != nil {
-				klog.Fatalf("Failed to validate: %v", err)
-			}
-			if err := run(opts); err != nil {
-				klog.Fatalf("Error running sysctl init: %v", err)
-			}
-		},
-		Version: version.GetFullVersionWithRuntimeInfo(),
-	}
-
-	flags := cmd.Flags()
-	opts.addFlags(flags)
-	log.AddFlags(flags)
-	return cmd
-}
+func newAntreaSysctlInitCommand() *cobra.Command { _ = "STUB: not implemented"; return nil }

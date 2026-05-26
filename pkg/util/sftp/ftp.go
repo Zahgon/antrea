@@ -15,15 +15,11 @@
 package sftp
 
 import (
-	"fmt"
 	"io"
 	"net/url"
-	"path"
 	"time"
 
-	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
-	"k8s.io/klog/v2"
 )
 
 const (
@@ -32,17 +28,8 @@ const (
 )
 
 func ParseSFTPUploadUrl(uploadUrl string) (*url.URL, error) {
-	parsedURL, err := url.Parse(uploadUrl)
-	if err != nil {
-		parsedURL, err = url.Parse("sftp://" + uploadUrl)
-		if err != nil {
-			return nil, err
-		}
-	}
-	if parsedURL.Scheme != "sftp" {
-		return nil, fmt.Errorf("not sftp protocol")
-	}
-	return parsedURL, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 type Uploader interface {
@@ -53,59 +40,15 @@ type Uploader interface {
 type sftpUploader struct {
 }
 
-func NewUploader() Uploader {
-	return &sftpUploader{}
-}
+func NewUploader() Uploader { _ = "STUB: not implemented"; return *new(Uploader) }
 
 func (uploader *sftpUploader) Upload(url string, fileName string, config *ssh.ClientConfig, outputFile io.Reader) error {
+	_ = "STUB: not implemented"
 	// url should be like: 10.92.23.154:22/path or sftp://10.92.23.154:22/path
-	parsedURL, err := ParseSFTPUploadUrl(url)
-	if err != nil {
-		return err
-	}
-	joinedPath := path.Join(parsedURL.Path, fileName)
-
-	retries := 0
-	var uploadErr error
-	for {
-		if uploadErr = upload(parsedURL.Host, joinedPath, config, outputFile); uploadErr == nil {
-			return nil
-		}
-		retries++
-		if retries >= uploadToFileServerMaxRetries {
-			return fmt.Errorf("failed to upload file after %d attempts", uploadToFileServerMaxRetries)
-		}
-		klog.ErrorS(uploadErr, "Failed to upload file after retries", "retries", retries)
-		time.Sleep(uploadToFileServerRetryDelay)
-	}
+	return nil
 }
 
 func upload(address string, path string, config *ssh.ClientConfig, file io.Reader) error {
-	conn, err := ssh.Dial("tcp", address, config)
-	if err != nil {
-		return fmt.Errorf("error when connecting to the file server: %w", err)
-	}
-	sftpClient, err := sftp.NewClient(conn)
-	if err != nil {
-		return fmt.Errorf("error when setting up sftp client: %w", err)
-	}
-	defer func() {
-		if err := sftpClient.Close(); err != nil {
-			klog.ErrorS(err, "Error when closing sftp client")
-		}
-	}()
-	targetFile, err := sftpClient.Create(path)
-	if err != nil {
-		return fmt.Errorf("error when creating target file on the remote server: %w", err)
-	}
-	defer func() {
-		if err := targetFile.Close(); err != nil {
-			klog.ErrorS(err, "Error when closing target file on the remote server")
-		}
-	}()
-	if written, err := io.Copy(targetFile, file); err != nil {
-		return fmt.Errorf("error encountered after copying %d bytes to target file: %w", written, err)
-	}
-	klog.InfoS("Successfully uploaded file to path", "filePath", path)
+	_ = "STUB: not implemented"
 	return nil
 }

@@ -16,10 +16,8 @@ package auth
 
 import (
 	"context"
-	"fmt"
 
 	v1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clientset "k8s.io/client-go/kubernetes"
 )
 
@@ -54,55 +52,6 @@ type AuthConfiguration struct {
 // GetAuthConfigurationFromSecret returns the authentication from a Secret.
 // The authentication is stored in the Secret Data with a key decided by the authType, and encoded using base64.
 func GetAuthConfigurationFromSecret(ctx context.Context, authType AuthType, secretRef *v1.SecretReference, kubeClient clientset.Interface) (*AuthConfiguration, error) {
-	if secretRef == nil {
-		return nil, fmt.Errorf("authentication is not specified")
-	}
-	secret, err := kubeClient.CoreV1().Secrets(secretRef.Namespace).Get(ctx, secretRef.Name, metav1.GetOptions{})
-	if err != nil {
-		return nil, fmt.Errorf("unable to get Secret with name %s in Namespace %s: %w", secretRef.Name, secretRef.Namespace, err)
-	}
-	parseAuthValue := func(secretData map[string][]byte, key string) (string, error) {
-		authValue, found := secret.Data[key]
-		if !found {
-			return "", fmt.Errorf("missing key %q in authentication Secret %s/%s", key, secretRef.Namespace, secretRef.Name)
-		}
-		return string(authValue), nil
-	}
-	switch authType {
-	case APIKeyType:
-		value, err := parseAuthValue(secret.Data, SecretKeyWithAPIKey)
-		if err != nil {
-			return nil, err
-		}
-		return &AuthConfiguration{
-			AuthType: APIKeyType,
-			APIKey:   value,
-		}, nil
-	case BearerTokenType:
-		value, err := parseAuthValue(secret.Data, SecretKeyWithBearerToken)
-		if err != nil {
-			return nil, err
-		}
-		return &AuthConfiguration{
-			AuthType:    BearerTokenType,
-			BearerToken: value,
-		}, nil
-	case BasicAuthenticationType:
-		username, err := parseAuthValue(secret.Data, SecretKeyWithUsername)
-		if err != nil {
-			return nil, err
-		}
-		password, err := parseAuthValue(secret.Data, SecretKeyWithPassword)
-		if err != nil {
-			return nil, err
-		}
-		return &AuthConfiguration{
-			AuthType: BasicAuthenticationType,
-			BasicAuthentication: &BasicAuthentication{
-				Username: username,
-				Password: password,
-			},
-		}, nil
-	}
-	return nil, fmt.Errorf("unsupported authentication type %s", authType)
+	_ = "STUB: not implemented"
+	return nil, nil
 }

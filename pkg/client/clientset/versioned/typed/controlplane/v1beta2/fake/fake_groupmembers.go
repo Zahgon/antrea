@@ -29,14 +29,6 @@ type fakeGroupMembers struct {
 }
 
 func newFakeGroupMembers(fake *FakeControlplaneV1beta2, namespace string) controlplanev1beta2.GroupMembersInterface {
-	return &fakeGroupMembers{
-		gentype.NewFakeClient[*v1beta2.GroupMembers](
-			fake.Fake,
-			namespace,
-			v1beta2.SchemeGroupVersion.WithResource("groupmembers"),
-			v1beta2.SchemeGroupVersion.WithKind("GroupMembers"),
-			func() *v1beta2.GroupMembers { return &v1beta2.GroupMembers{} },
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(controlplanev1beta2.GroupMembersInterface)
 }

@@ -18,13 +18,8 @@
 package secondarynetwork
 
 import (
-	"fmt"
 	"net"
 
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/agent/interfacestore"
-	"antrea.io/antrea/v2/pkg/agent/util"
 	"antrea.io/antrea/v2/pkg/ovs/ovsconfig"
 )
 
@@ -35,59 +30,17 @@ var (
 
 // Initialize sets up OVS bridges.
 func (c *Controller) Initialize() error {
+	_ = "STUB: not implemented"
 	// We only support moving and restoring of interface configuration to OVS Bridge for the single physical interface case.
-	if len(c.secNetConfig.OVSBridges) != 0 {
-		phyInterfaces := make([]string, len(c.secNetConfig.OVSBridges[0].PhysicalInterfaces))
-		copy(phyInterfaces, c.secNetConfig.OVSBridges[0].PhysicalInterfaces)
-		if len(phyInterfaces) == 1 {
-			bridgedName, _, err := util.PrepareHostInterfaceConnection(
-				c.ovsBridgeClient,
-				phyInterfaces[0],
-				0,
-				map[string]interface{}{
-					interfacestore.AntreaInterfaceTypeKey: interfacestore.AntreaHost,
-				},
-				0, // do not request a specific MTU
-			)
-			if err != nil {
-				return err
-			}
-			phyInterfaces[0] = bridgedName
-		}
-		if err := connectPhyInterfacesToOVSBridge(c.ovsBridgeClient, phyInterfaces); err != nil {
-			return err
-		}
-	}
 	return nil
 }
 
+// do not request a specific MTU
+
 // Restore restores interface configuration from secondary-bridge back to host-interface.
-func (c *Controller) Restore() {
-	if len(c.secNetConfig.OVSBridges) != 0 && len(c.secNetConfig.OVSBridges[0].PhysicalInterfaces) == 1 {
-		util.RestoreHostInterfaceConfiguration(c.secNetConfig.OVSBridges[0].BridgeName, c.secNetConfig.OVSBridges[0].PhysicalInterfaces[0])
-	}
-}
+func (c *Controller) Restore() { _ = "STUB: not implemented"; return }
 
 func connectPhyInterfacesToOVSBridge(ovsBridgeClient ovsconfig.OVSBridgeClient, phyInterfaces []string) error {
-	for _, phyInterface := range phyInterfaces {
-		if _, err := interfaceByNameFn(phyInterface); err != nil {
-			return fmt.Errorf("failed to get interface %s: %v", phyInterface, err)
-		}
-	}
-
-	externalIDs := map[string]interface{}{
-		interfacestore.AntreaInterfaceTypeKey: interfacestore.AntreaUplink,
-	}
-	for i, phyInterface := range phyInterfaces {
-		if _, err := ovsBridgeClient.GetOFPort(phyInterface, false); err == nil {
-			klog.V(2).InfoS("Physical interface already connected to secondary OVS bridge, skip the configuration", "device", phyInterface)
-			continue
-		}
-
-		if _, err := ovsBridgeClient.CreateUplinkPort(phyInterface, ovsconfig.FirstControllerOFPort+int32(i), externalIDs); err != nil {
-			return fmt.Errorf("failed to create OVS uplink port %s: %v", phyInterface, err)
-		}
-		klog.InfoS("Physical interface added to secondary OVS bridge", "device", phyInterface)
-	}
+	_ = "STUB: not implemented"
 	return nil
 }

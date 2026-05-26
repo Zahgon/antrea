@@ -18,16 +18,7 @@
 package multicast
 
 import (
-	"fmt"
-	"net"
-	"syscall"
 	"time"
-
-	"golang.org/x/mod/semver"
-	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/klog/v2"
-
-	"antrea.io/antrea/v2/pkg/util/runtime"
 )
 
 const (
@@ -38,128 +29,38 @@ const (
 // after linux 5.9 in the igmpmsg struct when parsing vif. Please check
 // https://github.com/torvalds/linux/commit/c8715a8e9f38906e73d6d78764216742db13ba0e.
 func (c *MRouteClient) parseIGMPMsg(msg []byte) (*parsedIGMPMsg, error) {
-	if len(msg) < SizeofIgmpmsg {
-		return nil, fmt.Errorf("failed to parse IGMPMSG: message length should be greater than 19")
-	}
-	if msg[8] != IGMPMsgNocache {
-		return nil, fmt.Errorf("not a IGMPMSG_NOCACHE message: %v", msg)
-	}
-	// im_mbz in igmpmsg must be zero, as document by
-	// https://github.com/torvalds/linux/blob/4634129ad9fdc89d10b597fc6f8f4336fb61e105/include/uapi/linux/mroute.h#L115.
-	if msg[9] != 0 {
-		return nil, fmt.Errorf("invalid igmpmsg message: im_mbz must be zero")
-	}
-	var vif uint16
-	// Kernels >= 5.10 use a 16-bit VIF field (two bytes), whereas older kernels use 8 bits.
-	if c.vif16bit {
-		vif = uint16(msg[10]) + (uint16(msg[11]) << uint16(8))
-	} else {
-		vif = uint16(msg[10])
-	}
-	return &parsedIGMPMsg{
-		VIF: vif,
-		Src: net.IPv4(msg[12], msg[13], msg[14], msg[15]),
-		Dst: net.IPv4(msg[16], msg[17], msg[18], msg[19]),
-	}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// im_mbz in igmpmsg must be zero, as document by
+// https://github.com/torvalds/linux/blob/4634129ad9fdc89d10b597fc6f8f4336fb61e105/include/uapi/linux/mroute.h#L115.
+
+// Kernels >= 5.10 use a 16-bit VIF field (two bytes), whereas older kernels use 8 bits.
 
 // detectVIFMode detects once whether the running kernel uses a 16-bit VIF
 // field in igmpmsg (kernels >= 5.10) or the legacy 8-bit field, and caches
 // the result in c.vif16bit for use in parseIGMPMsg.
-func (c *MRouteClient) detectVIFMode() error {
-	kernelVersion, err := runtime.GetKernelVersion()
-	if err != nil {
-		return err
-	}
-	c.vif16bit = semver.Compare(kernelVersion, "v5.10.0") >= 0
-	return nil
-}
+func (c *MRouteClient) detectVIFMode() error { _ = "STUB: not implemented"; return nil }
 
-func (c *MRouteClient) run(stopCh <-chan struct{}) {
-	klog.InfoS("Start running multicast routing daemon")
-	go func() {
-		for {
-			buf := make([]byte, MulticastRecvBufferSize)
-			n, _ := syscall.Read(c.socket.GetFD(), buf)
-			// When Antrea FlexibleIPAM is enabled, messages received by the socket
-			// will be dropped directly because we won't create any route from the upcall igmpmsg messages.
-			// In addition, by reading the socket, we can avoid potential errors such as memory bloat.
-			if c.flexibleIPAMEnabled {
-				klog.V(4).InfoS("Message was received from the multicast routing socket", "message", buf[:n])
-				continue
-			}
-			if n > 0 {
-				c.igmpMsgChan <- buf[:n]
-			}
-		}
-	}()
+func (c *MRouteClient) run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	// Check packet count difference every minute for each multicast route and
-	// remove ones that do not route any packets in past mRouteTimeout.
-	// The remaining multicast routes' statistics are getting updated by
-	// this process as well.
-	go wait.NonSlidingUntil(c.updateMrouteStats, time.Minute, stopCh)
+// When Antrea FlexibleIPAM is enabled, messages received by the socket
+// will be dropped directly because we won't create any route from the upcall igmpmsg messages.
+// In addition, by reading the socket, we can avoid potential errors such as memory bloat.
 
-	for i := 0; i < int(workerCount); i++ {
-		go c.worker(stopCh)
-	}
-	<-stopCh
-	c.socket.FlushMRoute()
-	syscall.Close(c.socket.GetFD())
-}
+// Check packet count difference every minute for each multicast route and
+// remove ones that do not route any packets in past mRouteTimeout.
+// The remaining multicast routes' statistics are getting updated by
+// this process as well.
 
 func (c *MRouteClient) updateMulticastRouteStatsEntry(entry multicastRouteEntry) (isStale bool, newEntry *multicastRouteEntry) {
-	packetCount, err := c.socket.GetMroutePacketCount(net.ParseIP(entry.src), net.ParseIP(entry.group))
-	if err != nil {
-		klog.ErrorS(err, "Failed to get packet count for multicast route", "route", entry)
-		return false, nil
-	}
-	packetCountDiff := packetCount - entry.pktCount
-	klog.V(4).Infof("Multicast route %v routes %d packets in last %s", entry, packetCountDiff, time.Minute)
-	now := time.Now()
-	if packetCountDiff == uint32(0) {
-		return now.Sub(entry.updatedTime) > mRouteTimeout, nil
-	}
-	newEntry = &multicastRouteEntry{group: entry.group, src: entry.src, pktCount: packetCount, updatedTime: now}
-	return false, newEntry
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
-func (c *MRouteClient) updateInboundMrouteStats() {
-	for _, obj := range c.inboundRouteCache.List() {
-		entry := obj.(*inboundMulticastRouteEntry)
-		isStale, newEntry := c.updateMulticastRouteStatsEntry(entry.multicastRouteEntry)
-		if isStale {
-			klog.V(2).InfoS("Deleting stale inbound multicast route", "group", entry.group, "source", entry.src, "VIF", entry.vif)
-			err := c.deleteInboundMRoute(entry)
-			if err != nil {
-				klog.ErrorS(err, "Failed to delete inbound multicast route", "group", entry.group, "source", entry.src, "VIF", entry.vif)
-			}
-		} else if newEntry != nil {
-			newInboundEntry := inboundMulticastRouteEntry{*newEntry, entry.vif}
-			c.inboundRouteCache.Update(&newInboundEntry)
-		}
-	}
-}
+func (c *MRouteClient) updateInboundMrouteStats() { _ = "STUB: not implemented"; return }
 
-func (c *MRouteClient) updateOutboundMrouteStats() {
-	for _, obj := range c.outboundRouteCache.List() {
-		entry := obj.(*outboundMulticastRouteEntry)
-		isStale, newEntry := c.updateMulticastRouteStatsEntry(entry.multicastRouteEntry)
-		if isStale {
-			klog.V(2).InfoS("Deleting stale outbound multicast route", "group", entry.group, "source", entry.src)
-			err := c.deleteOutboundMRoute(entry)
-			if err != nil {
-				klog.ErrorS(err, "Failed to delete outbound multicast route", "group", entry.group, "source", entry.src)
-			}
-		} else if newEntry != nil {
-			newOutboundEntry := outboundMulticastRouteEntry{*newEntry}
-			c.outboundRouteCache.Update(&newOutboundEntry)
-		}
-	}
-}
+func (c *MRouteClient) updateOutboundMrouteStats() { _ = "STUB: not implemented"; return }
 
-func (c *MRouteClient) updateMrouteStats() {
-	klog.V(2).InfoS("Updating multicast route statistics and removing stale multicast routes")
-	c.updateInboundMrouteStats()
-	c.updateOutboundMrouteStats()
-}
+func (c *MRouteClient) updateMrouteStats() { _ = "STUB: not implemented"; return }

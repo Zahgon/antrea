@@ -16,9 +16,7 @@ package interfacestore
 
 import (
 	"net"
-	"strconv"
 
-	"antrea.io/antrea/v2/pkg/agent/util"
 	"antrea.io/antrea/v2/pkg/ovs/ovsconfig"
 )
 
@@ -51,9 +49,7 @@ const (
 
 type InterfaceType uint8
 
-func (t InterfaceType) String() string {
-	return strconv.Itoa(int(t))
-}
+func (t InterfaceType) String() string { _ = "STUB: not implemented"; return "" }
 
 // +k8s:deepcopy-gen=true
 type OVSPortConfig struct {
@@ -147,58 +143,39 @@ func NewContainerInterface(
 	mac net.HardwareAddr,
 	ips []net.IP,
 	vlanID uint16) *InterfaceConfig {
-	containerConfig := &ContainerInterfaceConfig{
-		ContainerID:  containerID,
-		PodName:      podName,
-		PodNamespace: podNamespace,
-		IFDev:        ifDev,
-		NetNS:        netNS}
-	return &InterfaceConfig{
-		InterfaceName:            interfaceName,
-		Type:                     ContainerInterface,
-		IPs:                      ips,
-		MAC:                      mac,
-		VLANID:                   vlanID,
-		ContainerInterfaceConfig: containerConfig}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewGatewayInterface creates InterfaceConfig for the host gateway interface.
 func NewGatewayInterface(gatewayName string, gatewayMAC net.HardwareAddr) *InterfaceConfig {
-	gatewayConfig := &InterfaceConfig{InterfaceName: gatewayName, Type: GatewayInterface, MAC: gatewayMAC}
-	return gatewayConfig
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewTunnelInterface creates InterfaceConfig for the default tunnel port
 // interface.
 func NewTunnelInterface(tunnelName string, tunnelType ovsconfig.TunnelType, destinationPort int32, localIP net.IP, csum bool, ovsPortConfig *OVSPortConfig) *InterfaceConfig {
-	tunnelConfig := &TunnelInterfaceConfig{Type: tunnelType, DestinationPort: destinationPort, LocalIP: localIP, Csum: csum}
-	return &InterfaceConfig{InterfaceName: tunnelName, Type: TunnelInterface, TunnelInterfaceConfig: tunnelConfig, OVSPortConfig: ovsPortConfig}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewIPSecTunnelInterface creates InterfaceConfig for the IPsec tunnel to the
 // Node.
 func NewIPSecTunnelInterface(interfaceName string, tunnelType ovsconfig.TunnelType, nodeName string, nodeIP net.IP, psk, remoteName string, ovsPortConfig *OVSPortConfig) *InterfaceConfig {
-	tunnelConfig := &TunnelInterfaceConfig{Type: tunnelType, NodeName: nodeName, RemoteIP: nodeIP, PSK: psk, RemoteName: remoteName}
-	return &InterfaceConfig{InterfaceName: interfaceName, Type: IPSecTunnelInterface, TunnelInterfaceConfig: tunnelConfig, OVSPortConfig: ovsPortConfig}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewUplinkInterface creates InterfaceConfig for the uplink interface.
-func NewUplinkInterface(uplinkName string) *InterfaceConfig {
-	uplinkConfig := &InterfaceConfig{InterfaceName: uplinkName, Type: UplinkInterface}
-	return uplinkConfig
-}
+func NewUplinkInterface(uplinkName string) *InterfaceConfig { _ = "STUB: not implemented"; return nil }
 
 func NewTrafficControlInterface(interfaceName string, ovsPortConfig *OVSPortConfig) *InterfaceConfig {
-	trafficControlConfig := &InterfaceConfig{InterfaceName: interfaceName, Type: TrafficControlInterface, OVSPortConfig: ovsPortConfig}
-	return trafficControlConfig
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // TODO: remove this method after IPv4/IPv6 dual-stack is supported completely.
-func (c *InterfaceConfig) GetIPv4Addr() net.IP {
-	return util.GetIPv4Addr(c.IPs)
-}
+func (c *InterfaceConfig) GetIPv4Addr() net.IP { _ = "STUB: not implemented"; return *new(net.IP) }
 
-func (c *InterfaceConfig) GetIPv6Addr() net.IP {
-	ipv6, _ := util.GetIPWithFamily(c.IPs, util.FamilyIPv6)
-	return ipv6
-}
+func (c *InterfaceConfig) GetIPv6Addr() net.IP { _ = "STUB: not implemented"; return *new(net.IP) }

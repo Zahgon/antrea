@@ -15,23 +15,16 @@
 package poolallocator
 
 import (
-	"context"
 	"errors"
-	"fmt"
 	"net"
-	"reflect"
 	"time"
 
 	"antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
 	crdclientset "antrea.io/antrea/v2/pkg/client/clientset/versioned"
 	informers "antrea.io/antrea/v2/pkg/client/listers/crd/v1beta1"
 	"antrea.io/antrea/v2/pkg/ipam/ipallocator"
-	iputil "antrea.io/antrea/v2/pkg/util/ip"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/client-go/util/retry"
-	"k8s.io/klog/v2"
 	utilnet "k8s.io/utils/net"
 )
 
@@ -71,230 +64,66 @@ type IPPoolAllocator struct {
 
 // NewIPPoolAllocator creates an IPPoolAllocator based on the provided IP pool.
 func NewIPPoolAllocator(poolName string, client crdclientset.Interface, poolLister informers.IPPoolLister) (*IPPoolAllocator, error) {
+	_ = "STUB: not implemented"
 	// Validate the pool exists.
-	pool, err := poolLister.Get(poolName)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get IPPool %s: %v", poolName, err)
-
-	}
-
-	allocator := &IPPoolAllocator{
-		IPVersion:    utilnet.IPFamilyOfString(pool.Spec.SubnetInfo.Gateway),
-		ipPoolName:   poolName,
-		crdClient:    client,
-		ipPoolLister: poolLister,
-	}
-
-	return allocator, nil
+	return nil, nil
 }
 
 func (a *IPPoolAllocator) getPool() (*v1beta1.IPPool, error) {
-	pool, err := a.ipPoolLister.Get(a.ipPoolName)
-	return pool, err
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // initAllocatorList reads IP Pool status and initializes a list of allocators based on
 // IP Pool spec and state of allocation recorded in the status
 func (a *IPPoolAllocator) initIPAllocators(ipPool *v1beta1.IPPool) (ipallocator.MultiIPAllocator, error) {
-
-	var allocators ipallocator.MultiIPAllocator
-
-	// Initialize a list of IP allocators based on pool spec
-	for _, ipRange := range ipPool.Spec.IPRanges {
-		if len(ipRange.CIDR) > 0 {
-			// Reserve gateway address and broadcast address
-			reservedIPs := []net.IP{net.ParseIP(ipPool.Spec.SubnetInfo.Gateway)}
-			_, ipNet, err := net.ParseCIDR(ipRange.CIDR)
-			if err != nil {
-				return nil, err
-			}
-
-			size, bits := ipNet.Mask.Size()
-			if size == int(ipPool.Spec.SubnetInfo.PrefixLength) && bits == 32 {
-				// Allocation CIDR covers entire subnet, thus we need
-				// to reserve broadcast IP as well for IPv4
-				reservedIPs = append(reservedIPs, iputil.GetLocalBroadcastIP(ipNet))
-			}
-
-			allocator, err := ipallocator.NewCIDRAllocator(ipNet, reservedIPs)
-			if err != nil {
-				return nil, err
-			}
-			allocators = append(allocators, allocator)
-		} else {
-			allocator, err := ipallocator.NewIPRangeAllocator(net.ParseIP(ipRange.Start), net.ParseIP(ipRange.End))
-			if err != nil {
-				return allocators, err
-			}
-			allocators = append(allocators, allocator)
-		}
-	}
-
-	// Mark allocated IPs from pool status as unavailable
-	for _, ip := range ipPool.Status.IPAddresses {
-		err := allocators.AllocateIP(net.ParseIP(ip.IPAddress))
-		if err != nil {
-			// TODO - fix state if possible
-			return allocators, fmt.Errorf("inconsistent state for IP Pool %s with IP %s", ipPool.Name, ip.IPAddress)
-		}
-	}
-
-	return allocators, nil
+	_ = "STUB: not implemented"
+	return *new(ipallocator.MultiIPAllocator), nil
 }
 
+// Initialize a list of IP allocators based on pool spec
+
+// Reserve gateway address and broadcast address
+
+// Allocation CIDR covers entire subnet, thus we need
+// to reserve broadcast IP as well for IPv4
+
+// Mark allocated IPs from pool status as unavailable
+
+// TODO - fix state if possible
+
 func (a *IPPoolAllocator) getPoolAndInitIPAllocators() (*v1beta1.IPPool, ipallocator.MultiIPAllocator, error) {
-	ipPool, err := a.getPool()
-
-	if err != nil {
-		return nil, ipallocator.MultiIPAllocator{}, err
-	}
-
-	allocators, err := a.initIPAllocators(ipPool)
-	if err != nil {
-		return nil, ipallocator.MultiIPAllocator{}, err
-	}
-	return ipPool, allocators, nil
+	_ = "STUB: not implemented"
+	return nil, *new(ipallocator.MultiIPAllocator), nil
 }
 
 func (a *IPPoolAllocator) appendPoolUsage(ipPool *v1beta1.IPPool, ip net.IP, state v1beta1.IPAddressPhase, owner v1beta1.IPAddressOwner) error {
-	newPool := ipPool.DeepCopy()
-	usageEntry := v1beta1.IPAddressState{
-		IPAddress: ip.String(),
-		Phase:     state,
-		Owner:     owner,
-	}
-
-	newPool.Status.IPAddresses = append(newPool.Status.IPAddresses, usageEntry)
-	a.updateUsage(newPool)
-	klog.V(2).InfoS("Updating IP Pool allocation status", "pool", newPool.Name, "allocation", newPool.Status)
-	_, err := a.crdClient.CrdV1beta1().IPPools().UpdateStatus(context.TODO(), newPool, metav1.UpdateOptions{})
-	if err != nil {
-		return fmt.Errorf("IP Pool %s update failed: %w", newPool.Name, err)
-	}
+	_ = "STUB: not implemented"
 	return nil
-
 }
 
 // updateIPAddressState updates the status of the specified IP in the provided IPPool. It requires the IP is already in the IPAddresses list of the IPPool's status.
 func (a *IPPoolAllocator) updateIPAddressState(ipPool *v1beta1.IPPool, ip net.IP, state v1beta1.IPAddressPhase, owner v1beta1.IPAddressOwner) error {
-	newPool := ipPool.DeepCopy()
-	ipString := ip.String()
-	found := false
-
-	for i, ipAddress := range newPool.Status.IPAddresses {
-		if ipAddress.IPAddress == ipString {
-			newPool.Status.IPAddresses[i].Phase = state
-			newPool.Status.IPAddresses[i].Owner = owner
-			found = true
-			break
-		}
-	}
-	if !found {
-		return fmt.Errorf("ip %s usage not found in pool %s", ipString, newPool.Name)
-	}
-
-	klog.V(2).InfoS("Updating IP Pool allocation status", "pool", newPool.Name, "allocation", newPool.Status)
-	_, err := a.crdClient.CrdV1beta1().IPPools().UpdateStatus(context.TODO(), newPool, metav1.UpdateOptions{})
-	if err != nil {
-		return fmt.Errorf("IP Pool %s update failed: %w", newPool.Name, err)
-	}
+	_ = "STUB: not implemented"
 	return nil
-
 }
 
 func (a *IPPoolAllocator) appendPoolUsageForStatefulSet(ipPool *v1beta1.IPPool, ips []net.IP, namespace, name string) error {
-	newPool := ipPool.DeepCopy()
-
-	for i, ip := range ips {
-		owner := v1beta1.IPAddressOwner{
-			StatefulSet: &v1beta1.StatefulSetOwner{
-				Namespace: namespace,
-				Name:      name,
-				Index:     i,
-			},
-		}
-		usageEntry := v1beta1.IPAddressState{
-			IPAddress: ip.String(),
-			Phase:     v1beta1.IPAddressPhaseReserved,
-			Owner:     owner,
-		}
-
-		newPool.Status.IPAddresses = append(newPool.Status.IPAddresses, usageEntry)
-	}
-	klog.V(2).InfoS("Updating IP Pool allocation status", "pool", newPool.Name, "allocation", newPool.Status)
-	_, err := a.crdClient.CrdV1beta1().IPPools().UpdateStatus(context.TODO(), newPool, metav1.UpdateOptions{})
-	if err != nil {
-		return fmt.Errorf("IP Pool %s update failed: %w", newPool.Name, err)
-	}
+	_ = "STUB: not implemented"
 	return nil
-
 }
 
 // removeIPAddressState updates ipPool status to delete released IP allocation, and keeps preallocation information
 func (a *IPPoolAllocator) removeIPAddressState(ipPool *v1beta1.IPPool, ip net.IP) error {
-
-	ipString := ip.String()
-	newPool := ipPool.DeepCopy()
-	var newList []v1beta1.IPAddressState
-	allocated := false
-	for i := range ipPool.Status.IPAddresses {
-		entry := ipPool.Status.IPAddresses[i]
-		if entry.IPAddress != ipString {
-			newList = append(newList, entry)
-		} else {
-			allocated = true
-			if entry.Owner.StatefulSet != nil {
-				entry = *entry.DeepCopy()
-				entry.Owner.Pod = nil
-				entry.Phase = v1beta1.IPAddressPhaseReserved
-				newList = append(newList, entry)
-			}
-		}
-	}
-
-	if !allocated {
-		return fmt.Errorf("IP address %s was not allocated from IP pool %s", ip, ipPool.Name)
-	}
-
-	newPool.Status.IPAddresses = newList
-	a.updateUsage(newPool)
-
-	klog.V(2).InfoS("Updating IP Pool allocation status", "pool", newPool.Name, "allocation", newPool.Status)
-	_, err := a.crdClient.CrdV1beta1().IPPools().UpdateStatus(context.TODO(), newPool, metav1.UpdateOptions{})
-	if err != nil {
-		return fmt.Errorf("IP Pool %s update failed: %w", newPool.Name, err)
-	}
+	_ = "STUB: not implemented"
 	return nil
-
 }
 
 // getExistingAllocation looks up the existing IP allocation for a Pod network interface, and
 // returns the IP address and SubnetInfo if found.
 func (a *IPPoolAllocator) getExistingAllocation(podOwner *v1beta1.PodOwner) (net.IP, *v1beta1.SubnetInfo, error) {
-	ip, err := a.GetContainerIP(podOwner.ContainerID, podOwner.IFName)
-	if err != nil {
-		return nil, nil, err
-	}
-	if ip == nil {
-		return nil, nil, nil
-	}
-
-	ipPool, allocators, err := a.getPoolAndInitIPAllocators()
-	if err != nil {
-		return nil, nil, err
-	}
-
-	index := -1
-	for i, allocator := range allocators {
-		if allocator.Has(ip) {
-			index = i
-			break
-		}
-	}
-	if index == -1 {
-		return nil, nil, fmt.Errorf("IP %v does not belong to IPPool %s", ip, a.ipPoolName)
-	}
-	return ip, &ipPool.Spec.SubnetInfo, nil
+	_ = "STUB: not implemented"
+	return *new(net.IP), nil, nil
 }
 
 // AllocateIP allocates the specified IP. It returns error if the IP is not in the range or already
@@ -302,355 +131,120 @@ func (a *IPPoolAllocator) getExistingAllocation(podOwner *v1beta1.PodOwner) (net
 // In case of success, IP pool CRD status is updated with allocated IP/state/resource/container.
 // AllocateIP returns subnet details for the requested IP, as defined in IP pool spec.
 func (a *IPPoolAllocator) AllocateIP(ip net.IP, state v1beta1.IPAddressPhase, owner v1beta1.IPAddressOwner) (*v1beta1.SubnetInfo, error) {
-	var subnetInfo *v1beta1.SubnetInfo
-	// Retry on CRD update conflict which is caused by multiple agents updating a pool at same time.
-	err := retry.RetryOnConflict(ipPoolStatusRetry, func() error {
-		ipPool, allocators, err := a.getPoolAndInitIPAllocators()
-		if err != nil {
-			return err
-		}
-
-		index := len(allocators)
-		for i, allocator := range allocators {
-			if allocator.Has(ip) {
-				err := allocator.AllocateIP(ip)
-				if err != nil {
-					return err
-				}
-				index = i
-				break
-			}
-		}
-
-		if index == len(allocators) {
-			// Failed to find matching range
-			return fmt.Errorf("IP %v does not belong to IP pool %s", ip, a.ipPoolName)
-		}
-
-		subnetInfo = &ipPool.Spec.SubnetInfo
-		err = a.appendPoolUsage(ipPool, ip, state, owner)
-
-		return err
-	})
-
-	if err != nil {
-		klog.Errorf("Failed to allocate IP address %s from pool %s: %+v", ip, a.ipPoolName, err)
-	}
-	return subnetInfo, err
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// Retry on CRD update conflict which is caused by multiple agents updating a pool at same time.
+
+// Failed to find matching range
 
 // AllocateNext allocates the next available IP. It returns error if pool is exhausted,
 // or in case CRD failed to update its state.
 // In case of success, IPPool CRD status is updated with allocated IP/state/resource/container.
 // AllocateIP returns subnet details for the requested IP, as defined in IP pool spec.
 func (a *IPPoolAllocator) AllocateNext(state v1beta1.IPAddressPhase, owner v1beta1.IPAddressOwner) (net.IP, *v1beta1.SubnetInfo, error) {
-	podOwner := owner.Pod
+	_ = "STUB: not implemented"
+	return *
+
 	// Same resource can not ask for allocation twice without release.
 	// This needs to be verified even at the expense of another API call.
-	ip, subnetInfo, err := a.getExistingAllocation(podOwner)
-	if err != nil {
-		return nil, nil, err
-	}
-	if ip != nil {
-		// This can happen when the container requests IPs from multiple pools, and after an
-		// allocation failure, not all allocated IPs were successfully released, and then
-		// CNI ADD is retried.
-		klog.InfoS("Container already has an IP allocated", "container", podOwner.ContainerID, "interface", podOwner.IFName, "IPPool", a.ipPoolName)
-		return ip, subnetInfo, err
-	}
-
-	// Retry on CRD update conflict which is caused by multiple agents updating a pool at same time.
-	err = retry.RetryOnConflict(ipPoolStatusRetry, func() error {
-		ipPool, allocators, err := a.getPoolAndInitIPAllocators()
-		if err != nil {
-			return err
-		}
-
-		index := len(allocators)
-		for i, allocator := range allocators {
-			ip, err = allocator.AllocateNext()
-			if err == nil {
-				// successful allocation
-				index = i
-				break
-			}
-		}
-
-		if index == len(allocators) {
-			return fmt.Errorf("failed to allocate IP: Pool %s is exhausted: %w", a.ipPoolName, ErrPoolExhausted)
-		}
-
-		subnetInfo = &ipPool.Spec.SubnetInfo
-		return a.appendPoolUsage(ipPool, ip, state, owner)
-	})
-
-	if err != nil {
-		klog.ErrorS(err, "Failed to allocate from IPPool", "IPPool", a.ipPoolName)
-	}
-	return ip, subnetInfo, err
+	new(net.IP), nil, nil
 }
+
+// This can happen when the container requests IPs from multiple pools, and after an
+// allocation failure, not all allocated IPs were successfully released, and then
+// CNI ADD is retried.
+
+// Retry on CRD update conflict which is caused by multiple agents updating a pool at same time.
+
+// successful allocation
 
 // AllocateReservedOrNext allocates the reserved IP if it exists, else allocates next available IP.
 // It returns error if pool is exhausted, or in case it fails to update IPPool's state. In case of
 // success, IP pool status is updated with allocated IP/state/resource/container.
 // AllocateReservedOrNext returns subnet details for the requested IP, as defined in IP pool spec.
 func (a *IPPoolAllocator) AllocateReservedOrNext(state v1beta1.IPAddressPhase, owner v1beta1.IPAddressOwner) (net.IP, *v1beta1.SubnetInfo, error) {
-	ip, err := a.getReservedIP(owner)
-	if err != nil {
-		return nil, nil, err
-	}
-	if ip == nil {
-		// IP is not reserved, allocate next available IP.
-		return a.AllocateNext(state, owner)
-	}
-
-	var prevIP net.IP
-	var subnetInfo *v1beta1.SubnetInfo
-	podOwner := owner.Pod
-	prevIP, subnetInfo, err = a.getExistingAllocation(podOwner)
-	if err != nil {
-		return nil, nil, err
-	}
-	if prevIP != nil {
-		klog.InfoS("Container already has an IP allocated", "container", podOwner.ContainerID, "interface", podOwner.IFName, "IPPool", a.ipPoolName)
-		return prevIP, subnetInfo, err
-	}
-
-	// Retry on CRD update conflict which is caused by multiple agents updating a pool at same time.
-	err = retry.RetryOnConflict(ipPoolStatusRetry, func() error {
-		ipPool, allocators, err := a.getPoolAndInitIPAllocators()
-		if err != nil {
-			return err
-		}
-
-		index := -1
-		for i, allocator := range allocators {
-			if allocator.Has(ip) {
-				index = i
-				break
-			}
-		}
-
-		if index == -1 {
-			// Failed to find matching range
-			return fmt.Errorf("IP %v does not belong to IPPool %s", ip, a.ipPoolName)
-		}
-
-		subnetInfo = &ipPool.Spec.SubnetInfo
-		return a.updateIPAddressState(ipPool, ip, state, owner)
-	})
-
-	if err != nil {
-		klog.ErrorS(err, "Failed to allocate IP address", "ip", ip, "IPPool", a.ipPoolName)
-	}
-	return ip, subnetInfo, err
+	_ = "STUB: not implemented"
+	return *new(net.IP), nil, nil
 }
+
+// IP is not reserved, allocate next available IP.
+
+// Retry on CRD update conflict which is caused by multiple agents updating a pool at same time.
+
+// Failed to find matching range
 
 // AllocateStatefulSet pre-allocates continuous range of IPs for StatefulSet.
 // This functionality is useful when StatefulSet does not have a dedicated IP Pool assigned.
 // It returns error if such range is not available. In this case IPs for the StatefulSet will
 // be allocated on the fly, and there is no guarantee for continuous IPs.
 func (a *IPPoolAllocator) AllocateStatefulSet(namespace, name string, size int, ip net.IP) error {
+	_ = "STUB: not implemented"
 	// Retry on CRD update conflict which is caused by multiple agents updating a pool at same time.
-	err := retry.RetryOnConflict(ipPoolStatusRetry, func() error {
-		ipPool, allocators, err := a.getPoolAndInitIPAllocators()
-		if err != nil {
-			return err
-		}
-
-		// Make sure there is no double allocation for this StatefulSet
-		for _, ip := range ipPool.Status.IPAddresses {
-			if ip.Owner.StatefulSet != nil && ip.Owner.StatefulSet.Namespace == namespace && ip.Owner.StatefulSet.Name == name {
-				return fmt.Errorf("StatefulSet %s/%s is already present in IPPool %s", namespace, name, ipPool.Name)
-			}
-		}
-
-		var ips []net.IP
-		if size == 1 && ip != nil {
-			err = allocators.AllocateIP(ip)
-			ips = []net.IP{ip}
-		} else {
-			ips, err = allocators.AllocateRange(size)
-		}
-		if err != nil {
-			return err
-		}
-
-		return a.appendPoolUsageForStatefulSet(ipPool, ips, namespace, name)
-	})
-
-	if err != nil {
-		klog.ErrorS(err, "Failed to allocate from IPPool", "IPPool", a.ipPoolName)
-	}
-	return err
+	return nil
 }
+
+// Make sure there is no double allocation for this StatefulSet
 
 // Release releases the provided IP. It returns error if the IP is not in the range or not allocated,
 // or in case CRD failed to update its state.
 // In case of success, IP pool CRD status is updated with released IP/state/resource.
 func (a *IPPoolAllocator) Release(ip net.IP) error {
+	_ = "STUB: not implemented"
 
 	// Retry on CRD update conflict which is caused by multiple agents updating a pool at same time.
-	err := retry.RetryOnConflict(ipPoolStatusRetry, func() error {
-		ipPool, allocators, err := a.getPoolAndInitIPAllocators()
-		if err != nil {
-			return err
-		}
-
-		err = allocators.Release(ip)
-
-		if err != nil {
-			// Failed to find matching range
-			return fmt.Errorf("IP %v does not belong to IP pool %s", ip, a.ipPoolName)
-		}
-
-		return a.removeIPAddressState(ipPool, ip)
-	})
-
-	if err != nil {
-		klog.ErrorS(err, "Failed to release IP address", "IPAddress", ip, "IPPool", a.ipPoolName)
-	}
-	return err
+	return nil
 }
+
+// Failed to find matching range
 
 // ReleaseStatefulSet releases all IPs associated with specified StatefulSet. It returns error
 // in case CRD failed to update its state.
 // In case of success, IP pool CRD status is updated with released entries.
 func (a *IPPoolAllocator) ReleaseStatefulSet(namespace, name string) error {
+	_ = "STUB: not implemented"
 
 	// Retry on CRD update conflict which is caused by multiple agents updating a pool at same time.
-	err := retry.RetryOnConflict(ipPoolStatusRetry, func() error {
-		ipPool, err := a.getPool()
-
-		if err != nil {
-			return err
-		}
-
-		var updatedAdresses []v1beta1.IPAddressState
-		for _, ip := range ipPool.Status.IPAddresses {
-			if ip.Owner.StatefulSet == nil || ip.Owner.StatefulSet.Namespace != namespace || ip.Owner.StatefulSet.Name != name {
-				updatedAdresses = append(updatedAdresses, ip)
-			}
-		}
-
-		if len(ipPool.Status.IPAddresses) == len(updatedAdresses) {
-			// no change
-			klog.V(4).InfoS("No reserved IPs found", "pool", ipPool.Name, "Namespace", namespace, "StatefulSet", name)
-			return nil
-		}
-
-		newPool := ipPool.DeepCopy()
-		newPool.Status.IPAddresses = updatedAdresses
-
-		klog.V(2).InfoS("Updating IP Pool allocation status", "pool", newPool.Name, "allocation", newPool.Status)
-		_, err = a.crdClient.CrdV1beta1().IPPools().UpdateStatus(context.TODO(), newPool, metav1.UpdateOptions{})
-		if err != nil {
-			return fmt.Errorf("IP Pool %s update failed: %w", newPool.Name, err)
-		}
-		return nil
-
-	})
-
-	if err != nil {
-		klog.ErrorS(err, "Failed to release IP addresses", "Namespace", namespace, "StatefulSet", name, "IPPool", a.ipPoolName)
-	}
-	return err
+	return nil
 }
+
+// no change
 
 // ReleaseContainer releases the IP associated with the specified container ID and interface name,
 // and updates the IPPool CR status.
 // If no IP is allocated to the Pod according to the IPPool CR status, the func just returns with no
 // change.
 func (a *IPPoolAllocator) ReleaseContainer(containerID, ifName string) error {
+	_ = "STUB: not implemented"
 	// Retry on CRD update conflict which is caused by multiple agents updating a pool at same time.
-	err := retry.RetryOnConflict(ipPoolStatusRetry, func() error {
-		ipPool, err := a.getPool()
-		if err != nil {
-			return err
-		}
-
-		// Mark the released IPs as available in the IPPool status.
-		for _, ip := range ipPool.Status.IPAddresses {
-			savedOwner := ip.Owner.Pod
-			if savedOwner != nil && savedOwner.ContainerID == containerID && savedOwner.IFName == ifName {
-				return a.removeIPAddressState(ipPool, net.ParseIP(ip.IPAddress))
-
-			}
-		}
-
-		klog.V(4).InfoS("Did not find the allocation record in IPPool",
-			"container", containerID, "interface", ifName, "pool", a.ipPoolName, "allocation", ipPool.Status.IPAddresses)
-		return nil
-	})
-
-	if err != nil {
-		klog.ErrorS(err, "Failed to release IP address", "Container", containerID, "interface", ifName, "IPPool", a.ipPoolName)
-	}
-	return err
+	return nil
 }
+
+// Mark the released IPs as available in the IPPool status.
 
 // hasPod checks whether an IP was associated with specified pod. It returns the error if fails to
 // retrieve the IPPool CR.
 func (a *IPPoolAllocator) hasPod(namespace, podName string) (bool, error) {
-	ipPool, err := a.getPool()
-	if err != nil {
-		return false, err
-	}
-
-	for _, ip := range ipPool.Status.IPAddresses {
-		if ip.Owner.Pod != nil && ip.Owner.Pod.Namespace == namespace && ip.Owner.Pod.Name == podName {
-			return true, nil
-		}
-	}
+	_ = "STUB: not implemented"
 	return false, nil
 }
 
 // GetContainerIP returns the IP allocated for the container interface if found.
 func (a *IPPoolAllocator) GetContainerIP(containerID, ifName string) (net.IP, error) {
-	ipPool, err := a.getPool()
-	if err != nil {
-		return nil, err
-	}
-
-	for _, ip := range ipPool.Status.IPAddresses {
-		if ip.Owner.Pod != nil && ip.Owner.Pod.ContainerID == containerID && ip.Owner.Pod.IFName == ifName {
-			return net.ParseIP(ip.IPAddress), nil
-		}
-	}
-	return nil, nil
+	_ = "STUB: not implemented"
+	return *new(net.IP), nil
 }
 
 // getReservedIP checks whether an IP was reserved with specified owner. It returns error if the resource crd fails to be retrieved.
 func (a *IPPoolAllocator) getReservedIP(reservedOwner v1beta1.IPAddressOwner) (net.IP, error) {
-	ipPool, err := a.getPool()
-	if err != nil {
-		return nil, err
-	}
-
-	if reservedOwner.StatefulSet != nil {
-		for _, ip := range ipPool.Status.IPAddresses {
-			if reflect.DeepEqual(ip.Owner.StatefulSet, reservedOwner.StatefulSet) {
-				return net.ParseIP(ip.IPAddress), nil
-			}
-		}
-	}
-	return nil, nil
+	_ = "STUB: not implemented"
+	return *new(net.IP), nil
 }
 
 // Name returns the name of the IPPool managed by this allocator.
-func (a *IPPoolAllocator) Name() string {
-	return a.ipPoolName
-}
+func (a *IPPoolAllocator) Name() string { _ = "STUB: not implemented"; return "" }
 
-func (a *IPPoolAllocator) Total() int {
-	_, allocators, err := a.getPoolAndInitIPAllocators()
-	if err != nil {
-		return 0
-	}
-	return allocators.Total()
-}
+func (a *IPPoolAllocator) Total() int { _ = "STUB: not implemented"; return 0 }
 
-func (a *IPPoolAllocator) updateUsage(ipPool *v1beta1.IPPool) {
-	ipPool.Status.Usage.Total = a.Total()
-	ipPool.Status.Usage.Used = len(ipPool.Status.IPAddresses)
-}
+func (a *IPPoolAllocator) updateUsage(ipPool *v1beta1.IPPool) { _ = "STUB: not implemented"; return }

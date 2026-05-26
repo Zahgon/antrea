@@ -16,14 +16,11 @@ package certificatesigningrequest
 
 import (
 	"crypto/x509"
-	"encoding/pem"
 	"fmt"
-	"sort"
 	"time"
 
 	certificates "k8s.io/api/certificates/v1"
 	sautil "k8s.io/apiserver/pkg/authentication/serviceaccount"
-	certutil "k8s.io/client-go/util/cert"
 
 	antreaapis "antrea.io/antrea/v2/pkg/apis"
 )
@@ -54,17 +51,13 @@ var (
 // isCertificateRequestApproved returns true if a certificate request has the
 // "Approved" condition and no "Denied" conditions; false otherwise.
 func isCertificateRequestApproved(csr *certificates.CertificateSigningRequest) bool {
-	approved, denied := getCertApprovalCondition(&csr.Status)
-	return approved && !denied
+	_ = "STUB: not implemented"
+	return false
 }
 
 func decodeCertificateRequest(pemBytes []byte) (*x509.CertificateRequest, error) {
-	block, _ := pem.Decode(pemBytes)
-	if block == nil || block.Type != certutil.CertificateRequestBlockType {
-		err := fmt.Errorf("PEM block type must be %s", certutil.CertificateRequestBlockType)
-		return nil, err
-	}
-	return x509.ParseCertificateRequest(block.Bytes)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 type transientError struct {
@@ -72,16 +65,8 @@ type transientError struct {
 }
 
 func getCertApprovalCondition(status *certificates.CertificateSigningRequestStatus) (bool, bool) {
-	var approved, denied bool
-	for _, c := range status.Conditions {
-		if c.Type == certificates.CertificateApproved {
-			approved = true
-		}
-		if c.Type == certificates.CertificateDenied {
-			denied = true
-		}
-	}
-	return approved, denied
+	_ = "STUB: not implemented"
+	return false, false
 }
 
 var keyUsageDict = map[certificates.KeyUsage]x509.KeyUsage{
@@ -117,42 +102,14 @@ var extKeyUsageDict = map[certificates.KeyUsage]x509.ExtKeyUsage{
 // certificates API ("pkg/apis/certificates".KeyUsage) to x509.KeyUsage and
 // x509.ExtKeyUsage types.
 func keyUsagesFromStrings(usages []certificates.KeyUsage) (x509.KeyUsage, []x509.ExtKeyUsage, error) {
-	var keyUsage x509.KeyUsage
-	var unrecognized []certificates.KeyUsage
-	extKeyUsages := make(map[x509.ExtKeyUsage]struct{})
-	for _, usage := range usages {
-		if val, ok := keyUsageDict[usage]; ok {
-			keyUsage |= val
-		} else if val, ok := extKeyUsageDict[usage]; ok {
-			extKeyUsages[val] = struct{}{}
-		} else {
-			unrecognized = append(unrecognized, usage)
-		}
-	}
-
-	var sorted sortedExtKeyUsage
-	for eku := range extKeyUsages {
-		sorted = append(sorted, eku)
-	}
-	sort.Sort(sorted)
-
-	if len(unrecognized) > 0 {
-		return 0, nil, fmt.Errorf("unrecognized usage values: %q", unrecognized)
-	}
-
-	return keyUsage, sorted, nil
+	_ = "STUB: not implemented"
+	return *new(x509.KeyUsage), nil, nil
 }
 
 type sortedExtKeyUsage []x509.ExtKeyUsage
 
-func (s sortedExtKeyUsage) Len() int {
-	return len(s)
-}
+func (s sortedExtKeyUsage) Len() int { _ = "STUB: not implemented"; return 0 }
 
-func (s sortedExtKeyUsage) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
+func (s sortedExtKeyUsage) Swap(i, j int) { _ = "STUB: not implemented"; return }
 
-func (s sortedExtKeyUsage) Less(i, j int) bool {
-	return s[i] < s[j]
-}
+func (s sortedExtKeyUsage) Less(i, j int) bool { _ = "STUB: not implemented"; return false }

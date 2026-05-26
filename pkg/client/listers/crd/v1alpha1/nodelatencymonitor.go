@@ -42,5 +42,6 @@ type nodeLatencyMonitorLister struct {
 
 // NewNodeLatencyMonitorLister returns a new NodeLatencyMonitorLister.
 func NewNodeLatencyMonitorLister(indexer cache.Indexer) NodeLatencyMonitorLister {
-	return &nodeLatencyMonitorLister{listers.New[*crdv1alpha1.NodeLatencyMonitor](indexer, crdv1alpha1.Resource("nodelatencymonitor"))}
+	_ = "STUB: not implemented"
+	return *new(NodeLatencyMonitorLister)
 }

@@ -15,72 +15,25 @@
 package k8s
 
 import (
-	"context"
-	"strings"
-
-	"go.yaml.in/yaml/v3"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clientset "k8s.io/client-go/kubernetes"
-	"k8s.io/klog/v2"
 )
 
 func GetPodCIDRsFromKubeProxy(k8sClient clientset.Interface) string {
-	return extractPodCIDRsFromConfigMap(k8sClient,
-		"kube-proxy",
-		"config.conf",
-		"clusterCIDR")
+	_ = "STUB: not implemented"
+	return ""
 }
 
 func GetPodCIDRsFromKubeadm(k8sClient clientset.Interface) string {
-	return extractPodCIDRsFromConfigMap(k8sClient,
-		"kubeadm-config",
-		"ClusterConfiguration",
-		"networking",
-		"podSubnet")
+	_ = "STUB: not implemented"
+	return ""
 }
 
 func extractPodCIDRsFromConfigMap(client clientset.Interface, name, key string, path ...string) string {
-	cm, err := client.CoreV1().ConfigMaps(metav1.NamespaceSystem).Get(context.TODO(), name, metav1.GetOptions{})
-	if err != nil {
-		klog.V(4).InfoS("ConfigMap not found", "configMap", name, "err", err)
-		return ""
-	}
-	data, ok := cm.Data[key]
-	if !ok {
-		klog.V(4).InfoS("Key not found in ConfigMap", "configMap", name, "key", key)
-		return ""
-	}
-
-	var m map[string]interface{}
-	if err := yaml.Unmarshal([]byte(data), &m); err != nil {
-		klog.V(4).InfoS("Failed to unmarshal data", "configMap", name, "err", err)
-		return ""
-	}
-
-	podCIDRStr, ok := getValueAtPath(m, path...)
-	if !ok {
-		klog.V(4).InfoS("Path not found in ConfigMap", "configMap", name, "path", strings.Join(path, "."))
-		return ""
-	}
-
-	return podCIDRStr
+	_ = "STUB: not implemented"
+	return ""
 }
 
 func getValueAtPath(m map[string]any, path ...string) (string, bool) {
-	cur := any(m)
-	for _, k := range path {
-		next, ok := cur.(map[string]interface{})
-		if !ok {
-			return "", false
-		}
-		cur, ok = next[k]
-		if !ok {
-			return "", false
-		}
-	}
-	s, ok := cur.(string)
-	if !ok {
-		return "", false
-	}
-	return s, true
+	_ = "STUB: not implemented"
+	return "", false
 }

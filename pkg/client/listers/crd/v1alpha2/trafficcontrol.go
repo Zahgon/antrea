@@ -42,5 +42,6 @@ type trafficControlLister struct {
 
 // NewTrafficControlLister returns a new TrafficControlLister.
 func NewTrafficControlLister(indexer cache.Indexer) TrafficControlLister {
-	return &trafficControlLister{listers.New[*crdv1alpha2.TrafficControl](indexer, crdv1alpha2.Resource("trafficcontrol"))}
+	_ = "STUB: not implemented"
+	return *new(TrafficControlLister)
 }

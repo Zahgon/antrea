@@ -15,11 +15,6 @@
 package responder
 
 import (
-	"net/netip"
-
-	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/klog/v2"
-
 	"antrea.io/antrea/v2/pkg/agent/ipassigner/linkmonitor"
 )
 
@@ -33,40 +28,13 @@ var (
 // NewARPResponder creates a new ARP responder if it does not exist for the given transportInterfaceName.
 // This function is not thread-safe.
 func NewARPResponder(transportInterfaceName string, linkMonitor linkmonitor.Interface) *arpResponder {
-	if responder, ok := arpResponders[transportInterfaceName]; ok {
-		klog.InfoS("ARP responder already exists", "interface", transportInterfaceName)
-		return responder
-	}
-	a := &arpResponder{
-		linkName:    transportInterfaceName,
-		assignedIPs: sets.New[netip.Addr](),
-		linkEventCh: make(chan struct{}, 1),
-	}
-	if linkMonitor != nil {
-		linkMonitor.AddEventHandler(a.onLinkUpdate, transportInterfaceName)
-	}
-	klog.InfoS("Created new ARP responder", "interface", transportInterfaceName)
-	arpResponders[transportInterfaceName] = a
-	return a
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewNDPResponder creates a new NDP responder if it does not exist for the given transportInterfaceName.
 // This function is not thread-safe.
 func NewNDPResponder(transportInterfaceName string, linkMonitor linkmonitor.Interface) *ndpResponder {
-	if responder, ok := ndpResponders[transportInterfaceName]; ok {
-		klog.InfoS("NDP responder already exists", "interface", transportInterfaceName)
-		return responder
-	}
-	n := &ndpResponder{
-		linkName:        transportInterfaceName,
-		multicastGroups: make(map[netip.Addr]int),
-		assignedIPs:     sets.New[netip.Addr](),
-		linkEventCh:     make(chan struct{}, 1),
-	}
-	if linkMonitor != nil {
-		linkMonitor.AddEventHandler(n.onLinkUpdate, transportInterfaceName)
-	}
-	klog.InfoS("Created new NDP responder", "interface", transportInterfaceName)
-	ndpResponders[transportInterfaceName] = n
-	return n
+	_ = "STUB: not implemented"
+	return nil
 }

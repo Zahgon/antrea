@@ -29,14 +29,6 @@ type fakeNodeStatsSummaries struct {
 }
 
 func newFakeNodeStatsSummaries(fake *FakeControlplaneV1beta2) controlplanev1beta2.NodeStatsSummaryInterface {
-	return &fakeNodeStatsSummaries{
-		gentype.NewFakeClient[*v1beta2.NodeStatsSummary](
-			fake.Fake,
-			"",
-			v1beta2.SchemeGroupVersion.WithResource("nodestatssummaries"),
-			v1beta2.SchemeGroupVersion.WithKind("NodeStatsSummary"),
-			func() *v1beta2.NodeStatsSummary { return &v1beta2.NodeStatsSummary{} },
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(controlplanev1beta2.NodeStatsSummaryInterface)
 }

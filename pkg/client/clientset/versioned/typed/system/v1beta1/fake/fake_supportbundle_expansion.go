@@ -15,21 +15,15 @@
 package fake
 
 import (
-	"bytes"
 	"context"
 	"io"
-
-	"k8s.io/client-go/testing"
 )
 
 func (c *fakeSupportBundles) Download(ctx context.Context, name string) (io.ReadCloser, error) {
+	_ = "STUB: not implemented"
 	// This should record the action correctly.
 	// Reactors are not supported here, since we do not return a runtime.Object.
-	_, err := c.Fake.
-		Invokes(testing.NewRootGetSubresourceAction(c.Resource(), "download", name), nil)
-	if err != nil {
-		return nil, err
-	}
-	// This seems like a good default to return.
-	return io.NopCloser(bytes.NewReader(nil)), nil
+	return *new(io.ReadCloser), nil
 }
+
+// This seems like a good default to return.

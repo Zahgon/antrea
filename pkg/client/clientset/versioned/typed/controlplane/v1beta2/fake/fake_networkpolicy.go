@@ -29,22 +29,6 @@ type fakeNetworkPolicies struct {
 }
 
 func newFakeNetworkPolicies(fake *FakeControlplaneV1beta2) controlplanev1beta2.NetworkPolicyInterface {
-	return &fakeNetworkPolicies{
-		gentype.NewFakeClientWithList[*v1beta2.NetworkPolicy, *v1beta2.NetworkPolicyList](
-			fake.Fake,
-			"",
-			v1beta2.SchemeGroupVersion.WithResource("networkpolicies"),
-			v1beta2.SchemeGroupVersion.WithKind("NetworkPolicy"),
-			func() *v1beta2.NetworkPolicy { return &v1beta2.NetworkPolicy{} },
-			func() *v1beta2.NetworkPolicyList { return &v1beta2.NetworkPolicyList{} },
-			func(dst, src *v1beta2.NetworkPolicyList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta2.NetworkPolicyList) []*v1beta2.NetworkPolicy {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1beta2.NetworkPolicyList, items []*v1beta2.NetworkPolicy) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(controlplanev1beta2.NetworkPolicyInterface)
 }

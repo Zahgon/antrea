@@ -18,6 +18,7 @@
 package openflow
 
 func OVSMetersAreSupported() bool {
+	_ = "STUB: not implemented"
 	// TODO: revisit after Windows OVS supports OpenFlow meters.
 	return false
 }

@@ -95,90 +95,11 @@ var (
 	}
 )
 
-func IANAInfoElements(isIPv6 bool) []string {
-	var ies []string
-	if isIPv6 {
-		ies = append(IANAInfoElementsCommon, "sourceIPv6Address", "destinationIPv6Address")
-	} else {
-		ies = append(IANAInfoElementsCommon, "sourceIPv4Address", "destinationIPv4Address")
-	}
-	return ies
-}
+func IANAInfoElements(isIPv6 bool) []string { _ = "STUB: not implemented"; return nil }
 
 func AntreaInfoElements(includeK8sNames, includeK8sUIDs, isIPv6 bool) []string {
-	ies := make([]string, 0)
-	if includeK8sNames {
-		ies = append(ies, "sourcePodName", "sourcePodNamespace")
-	}
-	if includeK8sUIDs {
-		ies = append(ies, "sourcePodUUID")
-	}
-	if includeK8sNames {
-		ies = append(ies, "sourceNodeName")
-	}
-	if includeK8sUIDs {
-		ies = append(ies, "sourceNodeUUID")
-	}
-	if includeK8sNames {
-		ies = append(ies, "destinationPodName", "destinationPodNamespace")
-	}
-	if includeK8sUIDs {
-		ies = append(ies, "destinationPodUUID")
-	}
-	if includeK8sNames {
-		ies = append(ies, "destinationNodeName")
-	}
-	if includeK8sUIDs {
-		ies = append(ies, "destinationNodeUUID")
-	}
-	ies = append(ies, "destinationServicePort")
-	if includeK8sNames {
-		ies = append(ies, "destinationServicePortName")
-	}
-	if includeK8sUIDs {
-		ies = append(ies, "destinationServiceUUID")
-	}
-	if includeK8sNames {
-		ies = append(ies, "ingressNetworkPolicyName", "ingressNetworkPolicyNamespace")
-	}
-	if includeK8sUIDs {
-		ies = append(ies, "ingressNetworkPolicyUUID")
-	}
-	ies = append(ies, "ingressNetworkPolicyType")
-	// rule name is meaningless unless either the policy name or UID is included.
-	if includeK8sNames || includeK8sUIDs {
-		ies = append(ies, "ingressNetworkPolicyRuleName")
-	}
-	ies = append(ies, "ingressNetworkPolicyRuleAction")
-	if includeK8sNames {
-		ies = append(ies, "egressNetworkPolicyName", "egressNetworkPolicyNamespace")
-	}
-	if includeK8sUIDs {
-		ies = append(ies, "egressNetworkPolicyUUID")
-	}
-	ies = append(ies, "egressNetworkPolicyType")
-	if includeK8sNames || includeK8sUIDs {
-		ies = append(ies, "egressNetworkPolicyRuleName")
-	}
-	ies = append(ies, "egressNetworkPolicyRuleAction")
-	ies = append(ies, "tcpState", "flowType")
-	if includeK8sNames {
-		ies = append(ies, "egressName")
-	}
-	if includeK8sUIDs {
-		ies = append(ies, "egressUUID")
-	}
-	ies = append(ies, "egressIP")
-	if includeK8sNames {
-		ies = append(ies, "egressNodeName")
-	}
-	if includeK8sUIDs {
-		ies = append(ies, "egressNodeUUID")
-	}
-	if isIPv6 {
-		ies = append(ies, "destinationClusterIPv6")
-	} else {
-		ies = append(ies, "destinationClusterIPv4")
-	}
-	return ies
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// rule name is meaningless unless either the policy name or UID is included.

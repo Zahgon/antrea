@@ -15,17 +15,10 @@
 package clusteridentity
 
 import (
-	"context"
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
-	"k8s.io/klog/v2"
 )
 
 const (
@@ -47,57 +40,12 @@ func NewClusterIdentityAllocator(
 	clusterIdentityConfigMapName string,
 	k8sClient clientset.Interface,
 ) *ClusterIdentityAllocator {
-	return &ClusterIdentityAllocator{
-		clusterIdentityConfigMapNamespace: clusterIdentityConfigMapNamespace,
-		clusterIdentityConfigMapName:      clusterIdentityConfigMapName,
-		k8sClient:                         k8sClient,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (a *ClusterIdentityAllocator) updateConfigMapIfNeeded() error {
-	configMap, err := a.k8sClient.CoreV1().ConfigMaps(a.clusterIdentityConfigMapNamespace).Get(context.TODO(), a.clusterIdentityConfigMapName, metav1.GetOptions{})
-	exists := true
-	if err != nil {
-		if !errors.IsNotFound(err) {
-			return fmt.Errorf("error when getting '%s/%s' ConfigMap: %v", a.clusterIdentityConfigMapNamespace, a.clusterIdentityConfigMapName, err)
-		}
-		exists = false
-		configMap = &corev1.ConfigMap{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      a.clusterIdentityConfigMapName,
-				Namespace: a.clusterIdentityConfigMapNamespace,
-				Labels: map[string]string{
-					"app": "antrea",
-				},
-			},
-		}
-	}
-
-	clusterUUIDStr, ok := configMap.Data[uuidConfigMapKey]
-	if ok && clusterUUIDStr != "" {
-		clusterUUID, err := uuid.Parse(clusterUUIDStr)
-		if err != nil {
-			return fmt.Errorf("cluster already has UUID '%s' but it is not valid: %v", clusterUUIDStr, err)
-		}
-		klog.Infof("Existing cluster UUID: %v", clusterUUID)
-		return nil
-	}
-
-	generatedClusterUUID := uuid.New().String()
-	configMap.Data = map[string]string{
-		uuidConfigMapKey: generatedClusterUUID,
-	}
-
-	if exists {
-		if _, err := a.k8sClient.CoreV1().ConfigMaps(a.clusterIdentityConfigMapNamespace).Update(context.TODO(), configMap, metav1.UpdateOptions{}); err != nil {
-			return fmt.Errorf("error when updating '%s/%s' ConfigMap with new cluster identity: %v", a.clusterIdentityConfigMapNamespace, a.clusterIdentityConfigMapName, err)
-		}
-	} else {
-		if _, err := a.k8sClient.CoreV1().ConfigMaps(a.clusterIdentityConfigMapNamespace).Create(context.TODO(), configMap, metav1.CreateOptions{}); err != nil {
-			return fmt.Errorf("error when creating '%s/%s' ConfigMap with new cluster identity: %v", a.clusterIdentityConfigMapNamespace, a.clusterIdentityConfigMapName, err)
-		}
-	}
-	klog.Infof("New cluster UUID: %v", generatedClusterUUID)
+	_ = "STUB: not implemented"
 	return nil
 }
 
@@ -105,30 +53,11 @@ func (a *ClusterIdentityAllocator) updateConfigMapIfNeeded() error {
 // called asynchronously in its own goroutine, and will keep retrying in case of error, using an
 // exponential backoff mechanism.
 func (a *ClusterIdentityAllocator) Run(stopCh <-chan struct{}) {
+	_ = "STUB: not implemented"
 	// Exponential backoff, starting at 100ms with a factor of 2. A "steps" value of 8 means we
 	// will increase the backoff duration at most 8 times, so the max duration is (100ms * //
 	// 2^8), which is about 25s.
-	retry := wait.Backoff{
-		Steps:    8,
-		Duration: 100 * time.Millisecond,
-		Factor:   2.0,
-		Jitter:   0.0,
-	}
-
-	for {
-		err := a.updateConfigMapIfNeeded()
-		if err == nil {
-			return
-		}
-		sleepDuration := retry.Step()
-		klog.Errorf("Cannot validate or update cluster UUID because of the following error, will retry in %v: %v", sleepDuration, err)
-		select {
-		case <-stopCh:
-			return
-		case <-time.After(sleepDuration):
-			continue
-		}
-	}
+	return
 }
 
 type ClusterIdentity struct {
@@ -156,42 +85,13 @@ func NewClusterIdentityProvider(
 	clusterIdentityConfigMapName string,
 	k8sClient clientset.Interface,
 ) *clusterIdentityProvider {
-	return &clusterIdentityProvider{
-		clusterIdentityConfigMapNamespace: clusterIdentityConfigMapNamespace,
-		clusterIdentityConfigMapName:      clusterIdentityConfigMapName,
-		k8sClient:                         k8sClient,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Get will retrieve the cluster identity (UUID) stored in the antrea-cluster-identity ConfigMap. In
 // case of error, clients are invited to retry as the information may not be available yet.
 func (p *clusterIdentityProvider) Get() (ClusterIdentity, time.Time, error) {
-	var identity ClusterIdentity
-	var creationTime time.Time
-
-	configMap, err := p.k8sClient.CoreV1().ConfigMaps(p.clusterIdentityConfigMapNamespace).Get(context.TODO(), p.clusterIdentityConfigMapName, metav1.GetOptions{})
-	if err != nil {
-		return identity, creationTime, fmt.Errorf("error when getting '%s/%s' ConfigMap: %v", p.clusterIdentityConfigMapNamespace, p.clusterIdentityConfigMapName, err)
-	}
-
-	creationTime = configMap.CreationTimestamp.Time
-
-	getUUID := func() error {
-		clusterUUIDStr, ok := configMap.Data[uuidConfigMapKey]
-		if !ok || clusterUUIDStr == "" {
-			return fmt.Errorf("cluster UUID has not been set yet")
-		}
-		clusterUUID, err := uuid.Parse(clusterUUIDStr)
-		if err != nil {
-			return fmt.Errorf("cluster UUID cannot be parsed")
-		}
-		identity.UUID = clusterUUID
-		return nil
-	}
-
-	if err := getUUID(); err != nil {
-		return identity, creationTime, err
-	}
-
-	return identity, creationTime, nil
+	_ = "STUB: not implemented"
+	return *new(ClusterIdentity), *new(time.Time), nil
 }

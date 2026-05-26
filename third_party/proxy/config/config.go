@@ -20,15 +20,11 @@ package config
 
 import (
 	"context"
-	"fmt"
-	"reflect"
 	"sync"
 	"time"
 
 	v1 "k8s.io/api/core/v1"
 	discoveryv1 "k8s.io/api/discovery/v1"
-	networkingv1 "k8s.io/api/networking/v1"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/apimachinery/pkg/util/sets"
 	v1informers "k8s.io/client-go/informers/core/v1"
 	discoveryv1informers "k8s.io/client-go/informers/discovery/v1"
@@ -80,89 +76,32 @@ type EndpointSliceConfig struct {
 
 // NewEndpointSliceConfig creates a new EndpointSliceConfig.
 func NewEndpointSliceConfig(ctx context.Context, endpointSliceInformer discoveryv1informers.EndpointSliceInformer, resyncPeriod time.Duration) *EndpointSliceConfig {
-	result := &EndpointSliceConfig{
-		logger: klog.FromContext(ctx),
-	}
-
-	handlerRegistration, _ := endpointSliceInformer.Informer().AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc:    result.handleAddEndpointSlice,
-			UpdateFunc: result.handleUpdateEndpointSlice,
-			DeleteFunc: result.handleDeleteEndpointSlice,
-		},
-		resyncPeriod,
-	)
-
-	result.listerSynced = handlerRegistration.HasSynced
-
-	return result
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RegisterEventHandler registers a handler which is called on every endpoint slice change.
 func (c *EndpointSliceConfig) RegisterEventHandler(handler EndpointSliceHandler) {
-	c.eventHandlers = append(c.eventHandlers, handler)
+	_ = "STUB: not implemented"
+	return
 }
 
 // Run waits for cache synced and invokes handlers after syncing.
-func (c *EndpointSliceConfig) Run(stopCh <-chan struct{}) {
-	c.logger.Info("Starting endpoint slice config controller")
-
-	if !cache.WaitForNamedCacheSync("endpoint slice config", stopCh, c.listerSynced) {
-		return
-	}
-
-	for _, h := range c.eventHandlers {
-		c.logger.V(3).Info("Calling handler.OnEndpointSlicesSynced()")
-		h.OnEndpointSlicesSynced()
-	}
-}
+func (c *EndpointSliceConfig) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
 func (c *EndpointSliceConfig) handleAddEndpointSlice(obj interface{}) {
-	endpointSlice, ok := obj.(*discoveryv1.EndpointSlice)
-	if !ok {
-		utilruntime.HandleError(fmt.Errorf("unexpected object type: %T", obj))
-		return
-	}
-	for _, h := range c.eventHandlers {
-		c.logger.V(4).Info("Calling handler.OnEndpointSliceAdd", "endpoints", klog.KObj(endpointSlice))
-		h.OnEndpointSliceAdd(endpointSlice)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 func (c *EndpointSliceConfig) handleUpdateEndpointSlice(oldObj, newObj interface{}) {
-	oldEndpointSlice, ok := oldObj.(*discoveryv1.EndpointSlice)
-	if !ok {
-		utilruntime.HandleError(fmt.Errorf("unexpected object type: %T", oldObj))
-		return
-	}
-	newEndpointSlice, ok := newObj.(*discoveryv1.EndpointSlice)
-	if !ok {
-		utilruntime.HandleError(fmt.Errorf("unexpected object type: %T", newObj))
-		return
-	}
-	for _, h := range c.eventHandlers {
-		c.logger.V(4).Info("Calling handler.OnEndpointSliceUpdate")
-		h.OnEndpointSliceUpdate(oldEndpointSlice, newEndpointSlice)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 func (c *EndpointSliceConfig) handleDeleteEndpointSlice(obj interface{}) {
-	endpointSlice, ok := obj.(*discoveryv1.EndpointSlice)
-	if !ok {
-		tombstone, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			utilruntime.HandleError(fmt.Errorf("unexpected object type: %T", obj))
-			return
-		}
-		if endpointSlice, ok = tombstone.Obj.(*discoveryv1.EndpointSlice); !ok {
-			utilruntime.HandleError(fmt.Errorf("unexpected object type: %T", obj))
-			return
-		}
-	}
-	for _, h := range c.eventHandlers {
-		c.logger.V(4).Info("Calling handler.OnEndpointsDelete")
-		h.OnEndpointSliceDelete(endpointSlice)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // ServiceConfig tracks a set of service configurations.
@@ -174,90 +113,27 @@ type ServiceConfig struct {
 
 // NewServiceConfig creates a new ServiceConfig.
 func NewServiceConfig(ctx context.Context, serviceInformer v1informers.ServiceInformer, resyncPeriod time.Duration) *ServiceConfig {
-	result := &ServiceConfig{
-		logger: klog.FromContext(ctx),
-	}
-
-	handlerRegistration, _ := serviceInformer.Informer().AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc:    result.handleAddService,
-			UpdateFunc: result.handleUpdateService,
-			DeleteFunc: result.handleDeleteService,
-		},
-		resyncPeriod,
-	)
-
-	result.listerSynced = handlerRegistration.HasSynced
-
-	return result
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RegisterEventHandler registers a handler which is called on every service change.
 func (c *ServiceConfig) RegisterEventHandler(handler ServiceHandler) {
-	c.eventHandlers = append(c.eventHandlers, handler)
+	_ = "STUB: not implemented"
+	return
 }
 
 // Run waits for cache synced and invokes handlers after syncing.
-func (c *ServiceConfig) Run(stopCh <-chan struct{}) {
-	c.logger.Info("Starting service config controller")
+func (c *ServiceConfig) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	if !cache.WaitForNamedCacheSync("service config", stopCh, c.listerSynced) {
-		return
-	}
-
-	for i := range c.eventHandlers {
-		c.logger.V(3).Info("Calling handler.OnServiceSynced()")
-		c.eventHandlers[i].OnServiceSynced()
-	}
-}
-
-func (c *ServiceConfig) handleAddService(obj interface{}) {
-	service, ok := obj.(*v1.Service)
-	if !ok {
-		utilruntime.HandleError(fmt.Errorf("unexpected object type: %v", obj))
-		return
-	}
-	for i := range c.eventHandlers {
-		c.logger.V(4).Info("Calling handler.OnServiceAdd")
-		c.eventHandlers[i].OnServiceAdd(service)
-	}
-}
+func (c *ServiceConfig) handleAddService(obj interface{}) { _ = "STUB: not implemented"; return }
 
 func (c *ServiceConfig) handleUpdateService(oldObj, newObj interface{}) {
-	oldService, ok := oldObj.(*v1.Service)
-	if !ok {
-		utilruntime.HandleError(fmt.Errorf("unexpected object type: %v", oldObj))
-		return
-	}
-	service, ok := newObj.(*v1.Service)
-	if !ok {
-		utilruntime.HandleError(fmt.Errorf("unexpected object type: %v", newObj))
-		return
-	}
-	for i := range c.eventHandlers {
-		c.logger.V(4).Info("Calling handler.OnServiceUpdate")
-		c.eventHandlers[i].OnServiceUpdate(oldService, service)
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
-func (c *ServiceConfig) handleDeleteService(obj interface{}) {
-	service, ok := obj.(*v1.Service)
-	if !ok {
-		tombstone, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			utilruntime.HandleError(fmt.Errorf("unexpected object type: %v", obj))
-			return
-		}
-		if service, ok = tombstone.Obj.(*v1.Service); !ok {
-			utilruntime.HandleError(fmt.Errorf("unexpected object type: %v", obj))
-			return
-		}
-	}
-	for i := range c.eventHandlers {
-		c.logger.V(4).Info("Calling handler.OnServiceDelete")
-		c.eventHandlers[i].OnServiceDelete(service)
-	}
-}
+func (c *ServiceConfig) handleDeleteService(obj interface{}) { _ = "STUB: not implemented"; return }
 
 // NodeHandler is an abstract interface of objects which receive
 // notifications about node object changes.
@@ -283,73 +159,19 @@ type NodeConfig struct {
 
 // NewNodeConfig creates a new NodeConfig.
 func NewNodeConfig(ctx context.Context, nodeInformer v1informers.NodeInformer, resyncPeriod time.Duration) *NodeConfig {
-	result := &NodeConfig{
-		logger: klog.FromContext(ctx),
-	}
-
-	handlerRegistration, _ := nodeInformer.Informer().AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc:    func(obj interface{}) { result.handleChangeNode(obj) },
-			UpdateFunc: func(_, newObj interface{}) { result.handleChangeNode(newObj) },
-			DeleteFunc: result.handleDeleteNode,
-		},
-		resyncPeriod,
-	)
-
-	result.listerSynced = handlerRegistration.HasSynced
-
-	return result
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RegisterEventHandler registers a handler which is called on every node change.
-func (c *NodeConfig) RegisterEventHandler(handler NodeHandler) {
-	c.eventHandlers = append(c.eventHandlers, handler)
-}
+func (c *NodeConfig) RegisterEventHandler(handler NodeHandler) { _ = "STUB: not implemented"; return }
 
 // Run starts the goroutine responsible for calling registered handlers.
-func (c *NodeConfig) Run(stopCh <-chan struct{}) {
-	c.logger.Info("Starting node config controller")
+func (c *NodeConfig) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	if !cache.WaitForNamedCacheSync("node config", stopCh, c.listerSynced) {
-		return
-	}
+func (c *NodeConfig) handleChangeNode(obj interface{}) { _ = "STUB: not implemented"; return }
 
-	for i := range c.eventHandlers {
-		c.logger.V(3).Info("Calling handler.OnNodeSynced()")
-		c.eventHandlers[i].OnNodeSynced()
-	}
-}
-
-func (c *NodeConfig) handleChangeNode(obj interface{}) {
-	node, ok := obj.(*v1.Node)
-	if !ok {
-		utilruntime.HandleError(fmt.Errorf("unexpected object type: %v", obj))
-		return
-	}
-	for i := range c.eventHandlers {
-		c.logger.V(4).Info("Calling handler.OnNodeChange")
-		c.eventHandlers[i].OnNodeChange(node)
-	}
-}
-
-func (c *NodeConfig) handleDeleteNode(obj interface{}) {
-	node, ok := obj.(*v1.Node)
-	if !ok {
-		tombstone, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			utilruntime.HandleError(fmt.Errorf("unexpected object type: %v", obj))
-			return
-		}
-		if node, ok = tombstone.Obj.(*v1.Node); !ok {
-			utilruntime.HandleError(fmt.Errorf("unexpected object type: %v", obj))
-			return
-		}
-	}
-	for i := range c.eventHandlers {
-		c.logger.V(4).Info("Calling handler.OnNodeDelete")
-		c.eventHandlers[i].OnNodeDelete(node)
-	}
-}
+func (c *NodeConfig) handleDeleteNode(obj interface{}) { _ = "STUB: not implemented"; return }
 
 // ServiceCIDRHandler is an abstract interface of objects which receive
 // notifications about ServiceCIDR object changes.
@@ -370,83 +192,24 @@ type ServiceCIDRConfig struct {
 
 // NewServiceCIDRConfig creates a new ServiceCIDRConfig.
 func NewServiceCIDRConfig(ctx context.Context, serviceCIDRInformer networkingv1informers.ServiceCIDRInformer, resyncPeriod time.Duration) *ServiceCIDRConfig {
-	result := &ServiceCIDRConfig{
-		cidrs:  sets.New[string](),
-		logger: klog.FromContext(ctx),
-	}
-
-	handlerRegistration, _ := serviceCIDRInformer.Informer().AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc: func(obj interface{}) {
-				result.handleServiceCIDREvent(nil, obj)
-			},
-			UpdateFunc: func(oldObj, newObj interface{}) {
-				result.handleServiceCIDREvent(oldObj, newObj)
-			},
-			DeleteFunc: func(obj interface{}) {
-				result.handleServiceCIDREvent(obj, nil)
-			},
-		},
-		resyncPeriod,
-	)
-
-	result.listerSynced = handlerRegistration.HasSynced
-
-	return result
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RegisterEventHandler registers a handler which is called on every ServiceCIDR change.
 func (c *ServiceCIDRConfig) RegisterEventHandler(handler ServiceCIDRHandler) {
-	c.eventHandlers = append(c.eventHandlers, handler)
+	_ = "STUB: not implemented"
+	return
 }
 
 // Run waits for cache synced and invokes handlers after syncing.
-func (c *ServiceCIDRConfig) Run(stopCh <-chan struct{}) {
-	c.logger.Info("Starting serviceCIDR config controller")
-
-	if !cache.WaitForNamedCacheSync("serviceCIDR config", stopCh, c.listerSynced) {
-		return
-	}
-	c.handleServiceCIDREvent(nil, nil)
-}
+func (c *ServiceCIDRConfig) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
 // handleServiceCIDREvent is a helper function to handle Add, Update and Delete
 // events on ServiceCIDR objects and call downstream event handlers.
 func (c *ServiceCIDRConfig) handleServiceCIDREvent(oldObj, newObj interface{}) {
-	var oldServiceCIDR, newServiceCIDR *networkingv1.ServiceCIDR
-	var ok bool
-
-	if oldObj != nil {
-		oldServiceCIDR, ok = oldObj.(*networkingv1.ServiceCIDR)
-		if !ok {
-			utilruntime.HandleError(fmt.Errorf("unexpected object type: %v", oldObj))
-			return
-		}
-	}
-
-	if newObj != nil {
-		newServiceCIDR, ok = newObj.(*networkingv1.ServiceCIDR)
-		if !ok {
-			utilruntime.HandleError(fmt.Errorf("unexpected object type: %v", newObj))
-			return
-		}
-	}
-
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	if oldServiceCIDR != nil {
-		c.cidrs.Delete(oldServiceCIDR.Spec.CIDRs...)
-	}
-
-	if newServiceCIDR != nil {
-		c.cidrs.Insert(newServiceCIDR.Spec.CIDRs...)
-	}
-
-	for i := range c.eventHandlers {
-		c.logger.V(4).Info("Calling handler.OnServiceCIDRsChanged")
-		c.eventHandlers[i].OnServiceCIDRsChanged(c.cidrs.UnsortedList())
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // NodeTopologyHandler is an abstract interface for objects which receive
@@ -467,67 +230,25 @@ type NodeTopologyConfig struct {
 
 // NewNodeTopologyConfig creates a new NodeTopologyConfig.
 func NewNodeTopologyConfig(ctx context.Context, nodeInformer v1informers.NodeInformer, resyncPeriod time.Duration) *NodeTopologyConfig {
-	return newNodeTopologyConfig(ctx, nodeInformer, resyncPeriod, nil)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // newNodeTopologyConfig implements NewNodeTopologyConfig by additionally consuming a callback function which is invoked when
 // event handler completes processing and is only used for testing.
 func newNodeTopologyConfig(ctx context.Context, nodeInformer v1informers.NodeInformer, resyncPeriod time.Duration, callback func()) *NodeTopologyConfig {
-	result := &NodeTopologyConfig{
-		logger:         klog.FromContext(ctx),
-		topologyLabels: make(map[string]string),
-	}
-
-	handlerRegistration, _ := nodeInformer.Informer().AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc: func(obj interface{}) {
-				result.handleNodeEvent(obj)
-				if callback != nil {
-					callback()
-				}
-			},
-			UpdateFunc: func(_, newObj interface{}) {
-				result.handleNodeEvent(newObj)
-				if callback != nil {
-					callback()
-				}
-			},
-			DeleteFunc: func(_ interface{}) {},
-		},
-		resyncPeriod,
-	)
-	result.listerSynced = handlerRegistration.HasSynced
-
-	return result
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RegisterEventHandler registers a handler which is called on Node object change.
 func (n *NodeTopologyConfig) RegisterEventHandler(handler NodeTopologyHandler) {
-	n.eventHandlers = append(n.eventHandlers, handler)
+	_ = "STUB: not implemented"
+	return
 }
 
 // handleNodeEvent is a helper function to handle Add, Update and Delete
 // events on Node objects and call downstream event handlers.
-func (n *NodeTopologyConfig) handleNodeEvent(obj interface{}) {
-	node, ok := obj.(*v1.Node)
-	if !ok {
-		utilruntime.HandleError(fmt.Errorf("unexpected object type: %v", obj))
-		return
-	}
+func (n *NodeTopologyConfig) handleNodeEvent(obj interface{}) { _ = "STUB: not implemented"; return }
 
-	topologyLabels := make(map[string]string)
-	if _, ok = node.Labels[v1.LabelTopologyZone]; ok {
-		topologyLabels[v1.LabelTopologyZone] = node.Labels[v1.LabelTopologyZone]
-	}
-
-	// skip calling event handlers when no change in topology labels
-	if reflect.DeepEqual(n.topologyLabels, topologyLabels) {
-		return
-	}
-
-	n.topologyLabels = topologyLabels
-	for i := range n.eventHandlers {
-		n.logger.V(4).Info("Calling handler.OnTopologyChange")
-		n.eventHandlers[i].OnTopologyChange(n.topologyLabels)
-	}
-}
+// skip calling event handlers when no change in topology labels

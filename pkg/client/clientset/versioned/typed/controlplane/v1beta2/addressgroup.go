@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	controlplanev1beta2 "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	watch "k8s.io/apimachinery/pkg/watch"
 	gentype "k8s.io/client-go/gentype"
@@ -47,14 +46,6 @@ type addressGroups struct {
 
 // newAddressGroups returns a AddressGroups
 func newAddressGroups(c *ControlplaneV1beta2Client) *addressGroups {
-	return &addressGroups{
-		gentype.NewClientWithList[*controlplanev1beta2.AddressGroup, *controlplanev1beta2.AddressGroupList](
-			"addressgroups",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *controlplanev1beta2.AddressGroup { return &controlplanev1beta2.AddressGroup{} },
-			func() *controlplanev1beta2.AddressGroupList { return &controlplanev1beta2.AddressGroupList{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -22,8 +22,6 @@ import (
 	"context"
 	"net"
 	"net/http"
-
-	netutils "k8s.io/utils/net"
 )
 
 // listener allows for testing of ServiceHealthServer and ProxyHealthServer.
@@ -51,7 +49,8 @@ type httpServer interface {
 type stdNetListener struct{}
 
 func (stdNetListener) Listen(ctx context.Context, addrs ...string) (net.Listener, error) {
-	return netutils.MultiListen(ctx, "tcp", addrs...)
+	_ = "STUB: not implemented"
+	return *new(net.Listener), nil
 }
 
 var _ listener = stdNetListener{}
@@ -60,9 +59,8 @@ var _ listener = stdNetListener{}
 type stdHTTPServerFactory struct{}
 
 func (stdHTTPServerFactory) New(handler http.Handler) httpServer {
-	return &http.Server{
-		Handler: handler,
-	}
+	_ = "STUB: not implemented"
+	return *new(httpServer)
 }
 
 var _ httpServerFactory = stdHTTPServerFactory{}

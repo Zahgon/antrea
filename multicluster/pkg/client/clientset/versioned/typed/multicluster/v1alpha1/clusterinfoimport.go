@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	multiclusterv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
-	scheme "antrea.io/antrea/v2/multicluster/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -55,16 +54,6 @@ type clusterInfoImports struct {
 
 // newClusterInfoImports returns a ClusterInfoImports
 func newClusterInfoImports(c *MulticlusterV1alpha1Client, namespace string) *clusterInfoImports {
-	return &clusterInfoImports{
-		gentype.NewClientWithList[*multiclusterv1alpha1.ClusterInfoImport, *multiclusterv1alpha1.ClusterInfoImportList](
-			"clusterinfoimports",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			namespace,
-			func() *multiclusterv1alpha1.ClusterInfoImport { return &multiclusterv1alpha1.ClusterInfoImport{} },
-			func() *multiclusterv1alpha1.ClusterInfoImportList {
-				return &multiclusterv1alpha1.ClusterInfoImportList{}
-			},
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

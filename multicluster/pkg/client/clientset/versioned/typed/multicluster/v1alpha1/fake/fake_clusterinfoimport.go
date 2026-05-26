@@ -29,22 +29,6 @@ type fakeClusterInfoImports struct {
 }
 
 func newFakeClusterInfoImports(fake *FakeMulticlusterV1alpha1, namespace string) multiclusterv1alpha1.ClusterInfoImportInterface {
-	return &fakeClusterInfoImports{
-		gentype.NewFakeClientWithList[*v1alpha1.ClusterInfoImport, *v1alpha1.ClusterInfoImportList](
-			fake.Fake,
-			namespace,
-			v1alpha1.SchemeGroupVersion.WithResource("clusterinfoimports"),
-			v1alpha1.SchemeGroupVersion.WithKind("ClusterInfoImport"),
-			func() *v1alpha1.ClusterInfoImport { return &v1alpha1.ClusterInfoImport{} },
-			func() *v1alpha1.ClusterInfoImportList { return &v1alpha1.ClusterInfoImportList{} },
-			func(dst, src *v1alpha1.ClusterInfoImportList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.ClusterInfoImportList) []*v1alpha1.ClusterInfoImport {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha1.ClusterInfoImportList, items []*v1alpha1.ClusterInfoImport) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(multiclusterv1alpha1.ClusterInfoImportInterface)
 }

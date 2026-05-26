@@ -17,19 +17,13 @@ package addressgroup
 import (
 	"context"
 
-	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/apis/meta/internalversion"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/apiserver/pkg/registry/rest"
 
-	"antrea.io/antrea/v2/pkg/apis/controlplane"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/networkpolicy"
 	"antrea.io/antrea/v2/pkg/apiserver/storage"
-	"antrea.io/antrea/v2/pkg/controller/networkpolicy/store"
-	"antrea.io/antrea/v2/pkg/controller/types"
 )
 
 // REST implements rest.Storage for AddressGroups.
@@ -47,65 +41,34 @@ var (
 )
 
 // NewREST returns a REST object that will work against API services.
-func NewREST(addressGroupStore storage.Interface) *REST {
-	return &REST{addressGroupStore}
-}
+func NewREST(addressGroupStore storage.Interface) *REST { _ = "STUB: not implemented"; return nil }
 
-func (r *REST) New() runtime.Object {
-	return &controlplane.AddressGroup{}
-}
+func (r *REST) New() runtime.Object { _ = "STUB: not implemented"; return *new(runtime.Object) }
 
-func (r *REST) Destroy() {
-}
+func (r *REST) Destroy() { _ = "STUB: not implemented"; return }
 
-func (r *REST) NewList() runtime.Object {
-	return &controlplane.AddressGroupList{}
-}
+func (r *REST) NewList() runtime.Object { _ = "STUB: not implemented"; return *new(runtime.Object) }
 
 func (r *REST) Get(ctx context.Context, name string, options *metav1.GetOptions) (runtime.Object, error) {
-	addressGroup, exists, err := r.addressGroupStore.Get(name)
-	if err != nil {
-		return nil, errors.NewInternalError(err)
-	}
-	if !exists {
-		return nil, errors.NewNotFound(controlplane.Resource("addressgroup"), name)
-	}
-	obj := new(controlplane.AddressGroup)
-	store.ToAddressGroupMsg(addressGroup.(*types.AddressGroup), obj, true)
-	return obj, nil
+	_ = "STUB: not implemented"
+	return *new(runtime.Object), nil
 }
 
 func (r *REST) List(ctx context.Context, options *internalversion.ListOptions) (runtime.Object, error) {
-	labelSelector := labels.Everything()
-	if options != nil && options.LabelSelector != nil {
-		labelSelector = options.LabelSelector
-	}
-	addressGroups := r.addressGroupStore.List()
-	items := make([]controlplane.AddressGroup, 0, len(addressGroups))
-	for i := range addressGroups {
-		var item controlplane.AddressGroup
-		store.ToAddressGroupMsg(addressGroups[i].(*types.AddressGroup), &item, true)
-		if labelSelector.Matches(labels.Set(item.Labels)) {
-			items = append(items, item)
-		}
-	}
-	list := &controlplane.AddressGroupList{Items: items}
-	return list, nil
+	_ = "STUB: not implemented"
+	return *new(runtime.Object), nil
 }
 
-func (r *REST) NamespaceScoped() bool {
-	return false
-}
+func (r *REST) NamespaceScoped() bool { _ = "STUB: not implemented"; return false }
 
 func (r *REST) Watch(ctx context.Context, options *internalversion.ListOptions) (watch.Interface, error) {
-	key, label, field := networkpolicy.GetSelectors(options)
-	return r.addressGroupStore.Watch(ctx, key, label, field)
+	_ = "STUB: not implemented"
+	return *new(watch.Interface), nil
 }
 
 func (r *REST) ConvertToTable(ctx context.Context, obj runtime.Object, tableOptions runtime.Object) (*metav1.Table, error) {
-	return rest.NewDefaultTableConvertor(controlplane.Resource("addressgroup")).ConvertToTable(ctx, obj, tableOptions)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func (r *REST) GetSingularName() string {
-	return "addressgroup"
-}
+func (r *REST) GetSingularName() string { _ = "STUB: not implemented"; return "" }

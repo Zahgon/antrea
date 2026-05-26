@@ -15,21 +15,14 @@
 package ovsflows
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
-	"sort"
-	"strconv"
-	"strings"
-
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/apis"
 	"antrea.io/antrea/v2/pkg/agent/openflow"
 	agentquerier "antrea.io/antrea/v2/pkg/agent/querier"
 	cpv1beta "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
 	binding "antrea.io/antrea/v2/pkg/ovs/openflow"
-	"antrea.io/antrea/v2/pkg/querier"
 )
 
 var (
@@ -42,265 +35,62 @@ var (
 )
 
 func dumpMatchedFlows(aq agentquerier.AgentQuerier, flowKeys []string) ([]apis.OVSFlowResponse, error) {
-	var resps []apis.OVSFlowResponse
-	for _, f := range flowKeys {
-		flowStr, err := aq.GetOVSCtlClient().DumpMatchedFlow(f)
-		if err != nil {
-			klog.Errorf("Failed to dump flows %s: %v", f, err)
-			return nil, err
-		}
-		if flowStr != "" {
-			resps = append(resps, apis.OVSFlowResponse{Flow: flowStr})
-		}
-	}
-	return resps, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func dumpFlows(aq agentquerier.AgentQuerier, table uint8) ([]apis.OVSFlowResponse, error) {
-	var resps []apis.OVSFlowResponse
-	var flowStrs []string
-	var err error
-	if table != binding.TableIDAll {
-		flowStrs, err = aq.GetOVSCtlClient().DumpTableFlows(table)
-	} else {
-		flowStrs, err = aq.GetOVSCtlClient().DumpFlows()
-	}
-	if err != nil {
-		return nil, err
-	}
-	for _, s := range flowStrs {
-		resps = append(resps, apis.OVSFlowResponse{Flow: s})
-	}
-	return resps, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func dumpMatchedGroups(aq agentquerier.AgentQuerier, groupIDs []binding.GroupIDType) ([]apis.OVSFlowResponse, error) {
-	resps := []apis.OVSFlowResponse{}
-	for _, g := range groupIDs {
-		groupStr, err := aq.GetOVSCtlClient().DumpGroup(uint32(g))
-		if err != nil {
-			klog.Errorf("Failed to dump group %d: %v", g, err)
-			return nil, err
-		}
-		if groupStr != "" {
-			resps = append(resps, apis.OVSFlowResponse{Flow: groupStr})
-		}
-	}
-	return resps, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // nil is returned if the flow table can not be found (the passed table name or
 // number is invalid).
 func getTableFlows(aq agentquerier.AgentQuerier, tables string) ([]apis.OVSFlowResponse, error) {
-	var resps []apis.OVSFlowResponse
-	for _, tableSeg := range strings.Split(tables, ",") {
-		tableSeg = strings.TrimSpace(tableSeg)
-		var tableNumber uint8
-		// Table nubmer is a 8-bit unsigned integer.
-		n, err := strconv.ParseUint(tableSeg, 10, 8)
-		if err == nil {
-			tableNumber = uint8(n)
-			if getFlowTableName(tableNumber) == "" {
-				return nil, nil
-			}
-		} else {
-			tableNumber = getFlowTableID(tableSeg)
-			if tableNumber == binding.TableIDAll {
-				return nil, nil
-			}
-		}
-		resp, err := dumpFlows(aq, tableNumber)
-		if err != nil {
-			return nil, err
-		}
-		resps = append(resps, resp...)
-	}
-	return resps, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// Table nubmer is a 8-bit unsigned integer.
 
 // nil is returned if the passed group IDs are invalid.
 func getGroups(aq agentquerier.AgentQuerier, groups string) ([]apis.OVSFlowResponse, error) {
-	if strings.EqualFold(groups, "all") {
-		groupStrs, err := aq.GetOVSCtlClient().DumpGroups()
-		if err != nil {
-			return nil, err
-		}
-		resps := make([]apis.OVSFlowResponse, 0, len(groupStrs))
-		for _, s := range groupStrs {
-			resps = append(resps, apis.OVSFlowResponse{Flow: s})
-		}
-		return resps, nil
-	}
-
-	var groupIDs []binding.GroupIDType
-	for _, id := range strings.Split(groups, ",") {
-		id = strings.TrimSpace(id)
-		// Group ID is a 32-bit unsigned integer.
-		n, err := strconv.ParseUint(id, 10, 32)
-		if err != nil {
-			return nil, nil
-		}
-		groupIDs = append(groupIDs, binding.GroupIDType(n))
-	}
-	if groupIDs == nil {
-		return nil, nil
-	}
-	return dumpMatchedGroups(aq, groupIDs)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func getPodFlows(aq agentquerier.AgentQuerier, podName, namespace string) ([]apis.OVSFlowResponse, error) {
-	interfaces := aq.GetInterfaceStore().GetContainerInterfacesByPod(podName, namespace)
-	if len(interfaces) == 0 {
-		return nil, nil
-	}
+// Group ID is a 32-bit unsigned integer.
 
-	flowKeys := aq.GetOpenflowClient().GetPodFlowKeys(interfaces[0].InterfaceName)
-	return dumpMatchedFlows(aq, flowKeys)
+func getPodFlows(aq agentquerier.AgentQuerier, podName, namespace string) ([]apis.OVSFlowResponse, error) {
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func getServiceFlows(aq agentquerier.AgentQuerier, serviceName, namespace string) ([]apis.OVSFlowResponse, error) {
-	flowKeys, groupIDs, found := aq.GetProxier().GetServiceFlowKeys(serviceName, namespace)
-	if !found {
-		return nil, nil
-	}
-	resps, err := dumpMatchedFlows(aq, flowKeys)
-	if err != nil {
-		return nil, err
-	}
-	groupResps, err := dumpMatchedGroups(aq, groupIDs)
-	if err != nil {
-		return nil, err
-	}
-	return append(resps, groupResps...), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func getNetworkPolicyFlows(aq agentquerier.AgentQuerier, npName, namespace string, policyType cpv1beta.NetworkPolicyType) ([]apis.OVSFlowResponse, error) {
-	npFilter := &querier.NetworkPolicyQueryFilter{
-		SourceName: npName,
-		Namespace:  namespace,
-		SourceType: policyType,
-	}
-	nps := aq.GetNetworkPolicyInfoQuerier().GetNetworkPolicies(npFilter)
-	if len(nps) == 0 {
-		// NetworkPolicy not found.
-		return nil, nil
-	} else if len(nps) > 1 {
-		return nil, errAmbiguousQuery
-	}
-	namespace, policyType = nps[0].SourceRef.Namespace, nps[0].SourceRef.Type
-	flowKeys := aq.GetOpenflowClient().GetNetworkPolicyFlowKeys(npName, namespace, policyType)
-	return dumpMatchedFlows(aq, flowKeys)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func getTableNames() []apis.OVSFlowResponse {
-	var resps []apis.OVSFlowResponse
-	var names []string
-	for _, t := range getFlowTableList() {
-		names = append(names, t.GetName())
-	}
-	sort.Strings(names)
-	for _, name := range names {
-		resps = append(resps, apis.OVSFlowResponse{Flow: name})
-	}
-	return resps
-}
+// NetworkPolicy not found.
+
+func getTableNames() []apis.OVSFlowResponse { _ = "STUB: not implemented"; return nil }
 
 // HandleFunc returns the function which can handle API requests to "/ovsflows".
 func HandleFunc(aq agentquerier.AgentQuerier) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var err error
-		var resps []apis.OVSFlowResponse
-		pod := r.URL.Query().Get("pod")
-		service := r.URL.Query().Get("service")
-		networkPolicy := r.URL.Query().Get("networkpolicy")
-		policyType := strings.ToUpper(r.URL.Query().Get("type"))
-		namespace := r.URL.Query().Get("namespace")
-		table := r.URL.Query().Get("table")
-		groups := r.URL.Query().Get("groups")
-		tableNamesOnly := r.URL.Query().Has("table-names-only")
-
-		encodeResp := func() {
-			err = json.NewEncoder(w).Encode(resps)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-			}
-		}
-
-		if tableNamesOnly {
-			resps = getTableNames()
-			encodeResp()
-			return
-		}
-
-		if (pod != "" || service != "") && namespace == "" {
-			http.Error(w, "namespace must be provided", http.StatusBadRequest)
-			return
-		}
-		if networkPolicy != "" && policyType != "" {
-			_, ok := querier.NetworkPolicyTypeMap[policyType]
-			if !ok {
-				errorMsg := fmt.Sprintf("unknown policy type. Valid types are %v", querier.GetNetworkPolicyTypeShorthands())
-				http.Error(w, errorMsg, http.StatusBadRequest)
-				return
-			}
-			if querier.NamespaceScopedPolicyTypes.Has(policyType) && namespace == "" {
-				http.Error(w, "policy Namespace must be provided for policy type "+policyType, http.StatusBadRequest)
-				return
-			}
-			if !querier.NamespaceScopedPolicyTypes.Has(policyType) && namespace != "" {
-				http.Error(w, "policy Namespace should not be provided for cluster-scoped policy type "+policyType, http.StatusBadRequest)
-				return
-			}
-		}
-		if pod == "" && service == "" && networkPolicy == "" && namespace == "" && table == "" && groups == "" {
-			resps, err = dumpFlows(aq, binding.TableIDAll)
-		} else if pod != "" {
-			// Pod Namespace must be provided to dump flows of a Pod.
-			resps, err = getPodFlows(aq, pod, namespace)
-		} else if service != "" {
-			if aq.GetProxier() == nil {
-				http.Error(w, "AntreaProxy is not enabled", http.StatusServiceUnavailable)
-				return
-			}
-			resps, err = getServiceFlows(aq, service, namespace)
-		} else if networkPolicy != "" {
-			var cpPolicyType cpv1beta.NetworkPolicyType
-			if policyType != "" {
-				// policyType string has already been validated above
-				cpPolicyType = querier.NetworkPolicyTypeMap[policyType]
-			}
-			resps, err = getNetworkPolicyFlows(aq, networkPolicy, namespace, cpPolicyType)
-			if err == errAmbiguousQuery {
-				http.Error(w, errAmbiguousQuery.Error(), http.StatusBadRequest)
-				return
-			}
-		} else if table != "" {
-			resps, err = getTableFlows(aq, table)
-			if err == nil && resps == nil {
-				http.Error(w, "invalid table name or number", http.StatusBadRequest)
-				return
-			}
-		} else if groups != "" {
-			resps, err = getGroups(aq, groups)
-			if err == nil && resps == nil {
-				http.Error(w, "invalid group ID", http.StatusBadRequest)
-				return
-			}
-		} else {
-			http.Error(w, "unsupported parameter combination", http.StatusBadRequest)
-			return
-		}
-
-		if err != nil {
-			klog.Errorf("Failed to dump flows: %v", err)
-			http.Error(w, "OVS flow dumping failed", http.StatusInternalServerError)
-			return
-		}
-		if resps == nil {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-
-		encodeResp()
-	}
+	_ = "STUB: not implemented"
+	return *new(http.HandlerFunc)
 }
+
+// Pod Namespace must be provided to dump flows of a Pod.
+
+// policyType string has already been validated above

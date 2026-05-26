@@ -29,22 +29,6 @@ type fakeNodeLatencyMonitors struct {
 }
 
 func newFakeNodeLatencyMonitors(fake *FakeCrdV1alpha1) crdv1alpha1.NodeLatencyMonitorInterface {
-	return &fakeNodeLatencyMonitors{
-		gentype.NewFakeClientWithList[*v1alpha1.NodeLatencyMonitor, *v1alpha1.NodeLatencyMonitorList](
-			fake.Fake,
-			"",
-			v1alpha1.SchemeGroupVersion.WithResource("nodelatencymonitors"),
-			v1alpha1.SchemeGroupVersion.WithKind("NodeLatencyMonitor"),
-			func() *v1alpha1.NodeLatencyMonitor { return &v1alpha1.NodeLatencyMonitor{} },
-			func() *v1alpha1.NodeLatencyMonitorList { return &v1alpha1.NodeLatencyMonitorList{} },
-			func(dst, src *v1alpha1.NodeLatencyMonitorList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.NodeLatencyMonitorList) []*v1alpha1.NodeLatencyMonitor {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha1.NodeLatencyMonitorList, items []*v1alpha1.NodeLatencyMonitor) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1alpha1.NodeLatencyMonitorInterface)
 }

@@ -16,9 +16,9 @@ package version
 
 import (
 	"io"
-	"strings"
 )
 
 func RequestErrorFallback() (io.Reader, error) {
-	return strings.NewReader("{}"), nil
+	_ = "STUB: not implemented"
+	return *new(io.Reader), nil
 }

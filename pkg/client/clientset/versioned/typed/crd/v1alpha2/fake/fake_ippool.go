@@ -29,20 +29,6 @@ type fakeIPPools struct {
 }
 
 func newFakeIPPools(fake *FakeCrdV1alpha2) crdv1alpha2.IPPoolInterface {
-	return &fakeIPPools{
-		gentype.NewFakeClientWithList[*v1alpha2.IPPool, *v1alpha2.IPPoolList](
-			fake.Fake,
-			"",
-			v1alpha2.SchemeGroupVersion.WithResource("ippools"),
-			v1alpha2.SchemeGroupVersion.WithKind("IPPool"),
-			func() *v1alpha2.IPPool { return &v1alpha2.IPPool{} },
-			func() *v1alpha2.IPPoolList { return &v1alpha2.IPPoolList{} },
-			func(dst, src *v1alpha2.IPPoolList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha2.IPPoolList) []*v1alpha2.IPPool { return gentype.ToPointerSlice(list.Items) },
-			func(list *v1alpha2.IPPoolList, items []*v1alpha2.IPPool) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1alpha2.IPPoolInterface)
 }

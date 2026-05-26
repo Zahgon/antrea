@@ -36,19 +36,12 @@ Modifies:
 package ipam
 
 import (
-	"context"
-	"fmt"
 	"net"
 	"time"
 
 	v1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/fields"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/util/wait"
 	informers "k8s.io/client-go/informers/core/v1"
 	clientset "k8s.io/client-go/kubernetes"
-	"k8s.io/klog/v2"
 )
 
 // CIDRAllocatorType is the type of the allocator to use.
@@ -113,40 +106,18 @@ type CIDRAllocatorParams struct {
 
 // New creates a new CIDR range allocator.
 func New(kubeClient clientset.Interface /*, cloud cloudprovider.Interface*/, nodeInformer informers.NodeInformer, allocatorType CIDRAllocatorType, allocatorParams CIDRAllocatorParams) (CIDRAllocator, error) {
-	nodeList, err := listNodes(kubeClient)
-	if err != nil {
-		return nil, err
-	}
-
-	switch allocatorType {
-	case RangeAllocatorType:
-		return NewCIDRRangeAllocator(kubeClient, nodeInformer, allocatorParams, nodeList)
-	//case CloudAllocatorType:
-	//	return NewCloudCIDRAllocator(kubeClient, cloud, nodeInformer)
-	default:
-		return nil, fmt.Errorf("invalid CIDR allocator type: %v", allocatorType)
-	}
+	_ = "STUB: not implemented"
+	return *new(CIDRAllocator), nil
 }
 
+//case CloudAllocatorType:
+//	return NewCloudCIDRAllocator(kubeClient, cloud, nodeInformer)
+
 func listNodes(kubeClient clientset.Interface) (*v1.NodeList, error) {
-	var nodeList *v1.NodeList
-	// We must poll because apiserver might not be up. This error causes
-	// controller manager to restart.
-	if pollErr := wait.PollUntilContextTimeout(context.TODO(), nodePollInterval, apiserverStartupGracePeriod, false,
-		func(ctx context.Context) (bool, error) {
-			var err error
-			nodeList, err = kubeClient.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{
-				FieldSelector: fields.Everything().String(),
-				LabelSelector: labels.Everything().String(),
-			})
-			if err != nil {
-				klog.ErrorS(err, "Failed to list all nodes")
-				return false, nil
-			}
-			return true, nil
-		}); pollErr != nil {
-		return nil, fmt.Errorf("failed to list all nodes in %v, cannot proceed without updating CIDR map",
-			apiserverStartupGracePeriod)
-	}
-	return nodeList, nil
+	_ = "STUB: not implemented"
+	return nil,
+
+		// We must poll because apiserver might not be up. This error causes
+		// controller manager to restart.
+		nil
 }

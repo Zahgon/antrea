@@ -15,21 +15,12 @@
 package grouping
 
 import (
-	"context"
-	"fmt"
-	"sync/atomic"
 	"time"
 
-	v1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/util/wait"
 	coreinformers "k8s.io/client-go/informers/core/v1"
 	"k8s.io/client-go/tools/cache"
-	"k8s.io/klog/v2"
 
-	"antrea.io/antrea/v2/pkg/apis/crd/v1alpha2"
 	crdv1a2informers "antrea.io/antrea/v2/pkg/client/informers/externalversions/crd/v1alpha2"
-	"antrea.io/antrea/v2/pkg/features"
-	"antrea.io/antrea/v2/pkg/util/k8s"
 )
 
 const (
@@ -44,56 +35,21 @@ const (
 	NodeIPsIndex = "nodeIPs"
 )
 
-func PodIPsIndexFunc(obj interface{}) ([]string, error) {
-	pod, ok := obj.(*v1.Pod)
-	if !ok {
-		return nil, fmt.Errorf("obj is not pod: %+v", obj)
-	}
-	if len(pod.Status.PodIPs) > 0 && pod.Status.Phase != v1.PodSucceeded && pod.Status.Phase != v1.PodFailed {
-		indexes := make([]string, len(pod.Status.PodIPs))
-		for i := range pod.Status.PodIPs {
-			indexes[i] = pod.Status.PodIPs[i].IP
-		}
-		return indexes, nil
-	}
-	return nil, nil
-}
+func PodIPsIndexFunc(obj interface{}) ([]string, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // NodeIPsIndexFunc returns the external and internal IP addresses of the given object if it is a Node
 func NodeIPsIndexFunc(obj interface{}) ([]string, error) {
-	node, ok := obj.(*v1.Node)
-	if !ok {
-		return nil, fmt.Errorf("obj is not node: %+v", obj)
-	}
-	if node.Spec.PodCIDR == "" {
-		return nil, nil
-	}
-
-	// We should not return an error if no IP is found as it can be a transient condition, and
-	// it would cause a panic.
-	// In practice, the only reason for k8s.GetNodeAllAddrs to return an error is if no matching
-	// IP address is found for the Node.
-	ips, err := k8s.GetNodeAllAddrs(node)
-	if err != nil {
-		klog.V(3).InfoS("Failed to get addresses for Node", "node", klog.KObj(node), "err", err)
-		return nil, nil
-	}
-	return ips.UnsortedList(), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
+// We should not return an error if no IP is found as it can be a transient condition, and
+// it would cause a panic.
+// In practice, the only reason for k8s.GetNodeAllAddrs to return an error is if no matching
+// IP address is found for the Node.
+
 func ExternalEntityIPsIndexFunc(obj interface{}) ([]string, error) {
-	ee, ok := obj.(*v1alpha2.ExternalEntity)
-	if !ok {
-		return nil, fmt.Errorf("obj is not ExternalEntity: %+v", obj)
-	}
-	ipLen := len(ee.Spec.Endpoints)
-	if ipLen > 0 {
-		indexes := make([]string, ipLen)
-		for i := 0; i < ipLen; i++ {
-			indexes[i] = ee.Spec.Endpoints[i].IP
-		}
-		return indexes, nil
-	}
+	_ = "STUB: not implemented"
 	return nil, nil
 }
 
@@ -110,13 +66,9 @@ type eventsCounter struct {
 	count uint64
 }
 
-func (c *eventsCounter) Increment() {
-	atomic.AddUint64(&c.count, 1)
-}
+func (c *eventsCounter) Increment() { _ = "STUB: not implemented"; return }
 
-func (c *eventsCounter) Load() uint64 {
-	return atomic.LoadUint64(&c.count)
-}
+func (c *eventsCounter) Load() uint64 { _ = "STUB: not implemented"; return 0 }
 
 type GroupEntityController struct {
 	podInformer coreinformers.PodInformer
@@ -144,181 +96,51 @@ func NewGroupEntityController(groupEntityIndex *GroupEntityIndex,
 	podInformer coreinformers.PodInformer,
 	namespaceInformer coreinformers.NamespaceInformer,
 	externalEntityInformer crdv1a2informers.ExternalEntityInformer) *GroupEntityController {
-	c := &GroupEntityController{
-		groupEntityIndex:           groupEntityIndex,
-		podInformer:                podInformer,
-		podListerSynced:            podInformer.Informer().HasSynced,
-		podAddEvents:               new(eventsCounter),
-		namespaceInformer:          namespaceInformer,
-		namespaceListerSynced:      namespaceInformer.Informer().HasSynced,
-		namespaceAddEvents:         new(eventsCounter),
-		externalEntityInformer:     externalEntityInformer,
-		externalEntityListerSynced: externalEntityInformer.Informer().HasSynced,
-		externalEntityAddEvents:    new(eventsCounter),
-	}
-	// Add handlers for Pod events.
-	podInformer.Informer().AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc:    c.addPod,
-			UpdateFunc: c.updatePod,
-			DeleteFunc: c.deletePod,
-		},
-		resyncPeriod,
-	)
-	// Add handlers for Namespace events.
-	namespaceInformer.Informer().AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc:    c.addNamespace,
-			UpdateFunc: c.updateNamespace,
-			DeleteFunc: c.deleteNamespace,
-		},
-		resyncPeriod,
-	)
-	if features.DefaultFeatureGate.Enabled(features.AntreaPolicy) {
-		// Add handlers for ExternalEntity events.
-		externalEntityInformer.Informer().AddEventHandlerWithResyncPeriod(
-			cache.ResourceEventHandlerFuncs{
-				AddFunc:    c.addExternalEntity,
-				UpdateFunc: c.updateExternalEntity,
-				DeleteFunc: c.deleteExternalEntity,
-			},
-			resyncPeriod,
-		)
-	}
-	return c
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (c *GroupEntityController) Run(stopCh <-chan struct{}) {
-	klog.Infof("Starting %s", controllerName)
-	defer klog.Infof("Shutting down %s", controllerName)
+// Add handlers for Pod events.
 
-	cacheSyncs := []cache.InformerSynced{c.podListerSynced, c.namespaceListerSynced}
-	// Wait for externalEntityListerSynced when AntreaPolicy feature gate is enabled.
-	if features.DefaultFeatureGate.Enabled(features.AntreaPolicy) {
-		cacheSyncs = append(cacheSyncs, c.externalEntityListerSynced)
-	}
-	if !cache.WaitForNamedCacheSync(controllerName, stopCh, cacheSyncs...) {
-		return
-	}
-	// Get the number of initial resources after all cache are synced. The numbers will be used to determine whether
-	// the groupEntityIndex has been initialized with the full list of each kind.
-	initialPodCount := len(c.podInformer.Informer().GetStore().List())
-	initialNamespaceCount := len(c.namespaceInformer.Informer().GetStore().List())
-	initialExternalEntityCount := 0
-	if features.DefaultFeatureGate.Enabled(features.AntreaPolicy) {
-		initialExternalEntityCount = len(c.externalEntityInformer.Informer().GetStore().List())
-	}
+// Add handlers for Namespace events.
 
-	// Wait until all event handlers process the initial resources before setting groupEntityIndex as synced.
-	if err := wait.PollUntilContextCancel(wait.ContextForChannel(stopCh), 100*time.Millisecond, true, func(ctx context.Context) (done bool, err error) {
-		if uint64(initialPodCount) > c.podAddEvents.Load() {
-			return false, nil
-		}
-		if uint64(initialNamespaceCount) > c.namespaceAddEvents.Load() {
-			return false, nil
-		}
-		if features.DefaultFeatureGate.Enabled(features.AntreaPolicy) {
-			if uint64(initialExternalEntityCount) > c.externalEntityAddEvents.Load() {
-				return false, nil
-			}
-		}
-		return true, nil
-	}); err == nil {
-		c.groupEntityIndex.setSynced(true)
-	}
+// Add handlers for ExternalEntity events.
 
-	<-stopCh
-}
+func (c *GroupEntityController) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-func (c *GroupEntityController) addPod(obj interface{}) {
-	pod := obj.(*v1.Pod)
-	klog.V(2).InfoS("Processing Pod ADD event", "pod", klog.KObj(pod), "labels", pod.Labels)
-	c.groupEntityIndex.AddPod(pod)
-	c.podAddEvents.Increment()
-}
+// Wait for externalEntityListerSynced when AntreaPolicy feature gate is enabled.
 
-func (c *GroupEntityController) updatePod(_, curObj interface{}) {
-	curPod := curObj.(*v1.Pod)
-	klog.V(2).InfoS("Processing Pod UPDATE event", "pod", klog.KObj(curPod), "labels", curPod.Labels, "phase", curPod.Status.Phase)
-	c.groupEntityIndex.AddPod(curPod)
-}
+// Get the number of initial resources after all cache are synced. The numbers will be used to determine whether
+// the groupEntityIndex has been initialized with the full list of each kind.
 
-func (c *GroupEntityController) deletePod(old interface{}) {
-	pod, ok := old.(*v1.Pod)
-	if !ok {
-		tombstone, ok := old.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			klog.Errorf("Error decoding object when deleting Pod, invalid type: %v", old)
-			return
-		}
-		pod, ok = tombstone.Obj.(*v1.Pod)
-		if !ok {
-			klog.Errorf("Error decoding object tombstone when deleting Pod, invalid type: %v", tombstone.Obj)
-			return
-		}
-	}
-	c.groupEntityIndex.DeletePod(pod)
-}
+// Wait until all event handlers process the initial resources before setting groupEntityIndex as synced.
 
-func (c *GroupEntityController) addNamespace(obj interface{}) {
-	namespace := obj.(*v1.Namespace)
-	klog.V(2).InfoS("Processing Namespace ADD event", "namespace", namespace.Name, "labels", namespace.Labels)
-	c.groupEntityIndex.AddNamespace(namespace)
-	c.namespaceAddEvents.Increment()
-}
+func (c *GroupEntityController) addPod(obj interface{}) { _ = "STUB: not implemented"; return }
+
+func (c *GroupEntityController) updatePod(_, curObj interface{}) { _ = "STUB: not implemented"; return }
+
+func (c *GroupEntityController) deletePod(old interface{}) { _ = "STUB: not implemented"; return }
+
+func (c *GroupEntityController) addNamespace(obj interface{}) { _ = "STUB: not implemented"; return }
 
 func (c *GroupEntityController) updateNamespace(_, curObj interface{}) {
-	curNamespace := curObj.(*v1.Namespace)
-	klog.V(2).InfoS("Processing Namespace UPDATE event", "namespace", curNamespace.Name, "labels", curNamespace.Labels)
-	c.groupEntityIndex.AddNamespace(curNamespace)
+	_ = "STUB: not implemented"
+	return
 }
 
-func (c *GroupEntityController) deleteNamespace(old interface{}) {
-	namespace, ok := old.(*v1.Namespace)
-	if !ok {
-		tombstone, ok := old.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			klog.Errorf("Error decoding object when deleting Namespace, invalid type: %v", old)
-			return
-		}
-		namespace, ok = tombstone.Obj.(*v1.Namespace)
-		if !ok {
-			klog.Errorf("Error decoding object tombstone when deleting Namespace, invalid type: %v", tombstone.Obj)
-			return
-		}
-	}
-	klog.V(2).Infof("Processing Namespace %s DELETE event, labels: %v", namespace.Name, namespace.Labels)
-	c.groupEntityIndex.DeleteNamespace(namespace)
-}
+func (c *GroupEntityController) deleteNamespace(old interface{}) { _ = "STUB: not implemented"; return }
 
 func (c *GroupEntityController) addExternalEntity(obj interface{}) {
-	ee := obj.(*v1alpha2.ExternalEntity)
-	klog.V(2).Infof("Processing ExternalEntity %s/%s ADD event, labels: %v", ee.GetNamespace(), ee.GetName(), ee.GetLabels())
-	c.groupEntityIndex.AddExternalEntity(ee)
-	c.externalEntityAddEvents.Increment()
+	_ = "STUB: not implemented"
+	return
 }
 
 func (c *GroupEntityController) updateExternalEntity(_, curObj interface{}) {
-	curEE := curObj.(*v1alpha2.ExternalEntity)
-	klog.V(2).Infof("Processing ExternalEntity %s/%s UPDATE event, labels: %v", curEE.GetNamespace(), curEE.GetName(), curEE.GetLabels())
-	c.groupEntityIndex.AddExternalEntity(curEE)
+	_ = "STUB: not implemented"
+	return
 }
 
 func (c *GroupEntityController) deleteExternalEntity(old interface{}) {
-	ee, ok := old.(*v1alpha2.ExternalEntity)
-	if !ok {
-		tombstone, ok := old.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			klog.Errorf("Error decoding object when deleting ExternalEntity, invalid type: %v", old)
-			return
-		}
-		ee, ok = tombstone.Obj.(*v1alpha2.ExternalEntity)
-		if !ok {
-			klog.Errorf("Error decoding object tombstone when deleting ExternalEntity, invalid type: %v", tombstone.Obj)
-			return
-		}
-	}
-
-	klog.V(2).Infof("Processing ExternalEntity %s/%s DELETE event, labels: %v", ee.GetNamespace(), ee.GetName(), ee.GetLabels())
-	c.groupEntityIndex.DeleteExternalEntity(ee)
+	_ = "STUB: not implemented"
+	return
 }

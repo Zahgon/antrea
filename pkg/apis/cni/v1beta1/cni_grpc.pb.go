@@ -22,9 +22,8 @@ package v1beta1
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -52,37 +51,23 @@ type cniClient struct {
 }
 
 func NewCniClient(cc grpc.ClientConnInterface) CniClient {
-	return &cniClient{cc}
+	_ = "STUB: not implemented"
+	return *new(CniClient)
 }
 
 func (c *cniClient) CmdAdd(ctx context.Context, in *CniCmdRequest, opts ...grpc.CallOption) (*CniCmdResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CniCmdResponse)
-	err := c.cc.Invoke(ctx, Cni_CmdAdd_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (c *cniClient) CmdCheck(ctx context.Context, in *CniCmdRequest, opts ...grpc.CallOption) (*CniCmdResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CniCmdResponse)
-	err := c.cc.Invoke(ctx, Cni_CmdCheck_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func (c *cniClient) CmdDel(ctx context.Context, in *CniCmdRequest, opts ...grpc.CallOption) (*CniCmdResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CniCmdResponse)
-	err := c.cc.Invoke(ctx, Cni_CmdDel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // CniServer is the server API for Cni service.
@@ -103,87 +88,56 @@ type CniServer interface {
 type UnimplementedCniServer struct{}
 
 func (UnimplementedCniServer) CmdAdd(context.Context, *CniCmdRequest) (*CniCmdResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method CmdAdd not implemented")
+	_ = "STUB: not implemented"
+	return nil, nil
 }
-func (UnimplementedCniServer) CmdCheck(context.Context, *CniCmdRequest) (*CniCmdResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method CmdCheck not implemented")
-}
-func (UnimplementedCniServer) CmdDel(context.Context, *CniCmdRequest) (*CniCmdResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method CmdDel not implemented")
-}
-func (UnimplementedCniServer) mustEmbedUnimplementedCniServer() {}
-func (UnimplementedCniServer) testEmbeddedByValue()             {}
 
-// UnsafeCniServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to CniServer will
-// result in compilation errors.
+func (UnimplementedCniServer) CmdCheck(context.Context, *CniCmdRequest) (*CniCmdResponse, error) {
+	_ = "STUB: not implemented"
+	return nil, nil
+}
+
+func (UnimplementedCniServer) CmdDel(context.Context, *CniCmdRequest) (*CniCmdResponse, error) {
+	_ = "STUB: not implemented"
+	return nil, nil
+}
+
+func (UnimplementedCniServer) mustEmbedUnimplementedCniServer() { _ = "STUB: not implemented"; return }
+func (UnimplementedCniServer) testEmbeddedByValue() {
+	_ = "STUB: not implemented"
+
+	// UnsafeCniServer may be embedded to opt out of forward compatibility for this service.
+	// Use of this interface is not recommended, as added methods to CniServer will
+	// result in compilation errors.
+	return
+}
+
 type UnsafeCniServer interface {
 	mustEmbedUnimplementedCniServer()
 }
 
 func RegisterCniServer(s grpc.ServiceRegistrar, srv CniServer) {
+	_ = "STUB: not implemented"
 	// If the following call panics, it indicates UnimplementedCniServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
-	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
-		t.testEmbeddedByValue()
-	}
-	s.RegisterService(&Cni_ServiceDesc, srv)
+	return
 }
 
 func _Cni_CmdAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CniCmdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CniServer).CmdAdd(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Cni_CmdAdd_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CniServer).CmdAdd(ctx, req.(*CniCmdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func _Cni_CmdCheck_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CniCmdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CniServer).CmdCheck(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Cni_CmdCheck_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CniServer).CmdCheck(ctx, req.(*CniCmdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func _Cni_CmdDel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CniCmdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CniServer).CmdDel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Cni_CmdDel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CniServer).CmdDel(ctx, req.(*CniCmdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Cni_ServiceDesc is the grpc.ServiceDesc for Cni service.

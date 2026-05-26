@@ -26,7 +26,6 @@ package testing
 
 import (
 	net "net"
-	reflect "reflect"
 
 	config "antrea.io/antrea/v2/pkg/agent/config"
 	openflow "antrea.io/antrea/v2/pkg/agent/openflow"
@@ -56,1075 +55,899 @@ type MockClientMockRecorder struct {
 }
 
 // NewMockClient creates a new mock instance.
-func NewMockClient(ctrl *gomock.Controller) *MockClient {
-	mock := &MockClient{ctrl: ctrl}
-	mock.recorder = &MockClientMockRecorder{mock}
-	return mock
-}
+func NewMockClient(ctrl *gomock.Controller) *MockClient { _ = "STUB: not implemented"; return nil }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockClient) EXPECT() *MockClientMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddAddressToDNSConjunction mocks base method.
+	return nil
 }
 
-// AddAddressToDNSConjunction mocks base method.
 func (m *MockClient) AddAddressToDNSConjunction(id uint32, addrs []types.Address) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddAddressToDNSConjunction", id, addrs)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddAddressToDNSConjunction indicates an expected call of AddAddressToDNSConjunction.
 func (mr *MockClientMockRecorder) AddAddressToDNSConjunction(id, addrs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddAddressToDNSConjunction", reflect.TypeOf((*MockClient)(nil).AddAddressToDNSConjunction), id, addrs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddPolicyRuleAddress mocks base method.
 func (m *MockClient) AddPolicyRuleAddress(ruleID uint32, addrType types.AddressType, addresses []types.Address, priority *uint16, enableLogging, isMCNPRule bool) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddPolicyRuleAddress", ruleID, addrType, addresses, priority, enableLogging, isMCNPRule)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddPolicyRuleAddress indicates an expected call of AddPolicyRuleAddress.
 func (mr *MockClientMockRecorder) AddPolicyRuleAddress(ruleID, addrType, addresses, priority, enableLogging, isMCNPRule any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddPolicyRuleAddress", reflect.TypeOf((*MockClient)(nil).AddPolicyRuleAddress), ruleID, addrType, addresses, priority, enableLogging, isMCNPRule)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // BatchInstallPolicyRuleFlows mocks base method.
 func (m *MockClient) BatchInstallPolicyRuleFlows(ofPolicyRules []*types.PolicyRule) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BatchInstallPolicyRuleFlows", ofPolicyRules)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // BatchInstallPolicyRuleFlows indicates an expected call of BatchInstallPolicyRuleFlows.
 func (mr *MockClientMockRecorder) BatchInstallPolicyRuleFlows(ofPolicyRules any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BatchInstallPolicyRuleFlows", reflect.TypeOf((*MockClient)(nil).BatchInstallPolicyRuleFlows), ofPolicyRules)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteAddressFromDNSConjunction mocks base method.
 func (m *MockClient) DeleteAddressFromDNSConjunction(id uint32, addrs []types.Address) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteAddressFromDNSConjunction", id, addrs)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteAddressFromDNSConjunction indicates an expected call of DeleteAddressFromDNSConjunction.
 func (mr *MockClientMockRecorder) DeleteAddressFromDNSConjunction(id, addrs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAddressFromDNSConjunction", reflect.TypeOf((*MockClient)(nil).DeleteAddressFromDNSConjunction), id, addrs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeletePolicyRuleAddress mocks base method.
 func (m *MockClient) DeletePolicyRuleAddress(ruleID uint32, addrType types.AddressType, addresses []types.Address, priority *uint16) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeletePolicyRuleAddress", ruleID, addrType, addresses, priority)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeletePolicyRuleAddress indicates an expected call of DeletePolicyRuleAddress.
 func (mr *MockClientMockRecorder) DeletePolicyRuleAddress(ruleID, addrType, addresses, priority any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePolicyRuleAddress", reflect.TypeOf((*MockClient)(nil).DeletePolicyRuleAddress), ruleID, addrType, addresses, priority)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DeleteStaleFlows mocks base method.
-func (m *MockClient) DeleteStaleFlows() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteStaleFlows")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockClient) DeleteStaleFlows() error { _ = "STUB: not implemented"; return nil }
 
 // DeleteStaleFlows indicates an expected call of DeleteStaleFlows.
 func (mr *MockClientMockRecorder) DeleteStaleFlows() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteStaleFlows", reflect.TypeOf((*MockClient)(nil).DeleteStaleFlows))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Disconnect mocks base method.
-func (m *MockClient) Disconnect() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Disconnect")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockClient) Disconnect() error { _ = "STUB: not implemented"; return nil }
 
 // Disconnect indicates an expected call of Disconnect.
-func (mr *MockClientMockRecorder) Disconnect() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Disconnect", reflect.TypeOf((*MockClient)(nil).Disconnect))
-}
+func (mr *MockClientMockRecorder) Disconnect() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // GetFlowTableStatus mocks base method.
 func (m *MockClient) GetFlowTableStatus() []openflow0.TableStatus {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetFlowTableStatus")
-	ret0, _ := ret[0].([]openflow0.TableStatus)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetFlowTableStatus indicates an expected call of GetFlowTableStatus.
 func (mr *MockClientMockRecorder) GetFlowTableStatus() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlowTableStatus", reflect.TypeOf((*MockClient)(nil).GetFlowTableStatus))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNetworkPolicyFlowKeys mocks base method.
 func (m *MockClient) GetNetworkPolicyFlowKeys(npName, npNamespace string, npType v1beta2.NetworkPolicyType) []string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNetworkPolicyFlowKeys", npName, npNamespace, npType)
-	ret0, _ := ret[0].([]string)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetNetworkPolicyFlowKeys indicates an expected call of GetNetworkPolicyFlowKeys.
 func (mr *MockClientMockRecorder) GetNetworkPolicyFlowKeys(npName, npNamespace, npType any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNetworkPolicyFlowKeys", reflect.TypeOf((*MockClient)(nil).GetNetworkPolicyFlowKeys), npName, npNamespace, npType)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetPodFlowKeys mocks base method.
 func (m *MockClient) GetPodFlowKeys(interfaceName string) []string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPodFlowKeys", interfaceName)
-	ret0, _ := ret[0].([]string)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetPodFlowKeys indicates an expected call of GetPodFlowKeys.
 func (mr *MockClientMockRecorder) GetPodFlowKeys(interfaceName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPodFlowKeys", reflect.TypeOf((*MockClient)(nil).GetPodFlowKeys), interfaceName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetPolicyInfoFromConjunction mocks base method.
 func (m *MockClient) GetPolicyInfoFromConjunction(ruleID uint32) (bool, *v1beta2.NetworkPolicyReference, string, string, string) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPolicyInfoFromConjunction", ruleID)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(*v1beta2.NetworkPolicyReference)
-	ret2, _ := ret[2].(string)
-	ret3, _ := ret[3].(string)
-	ret4, _ := ret[4].(string)
-	return ret0, ret1, ret2, ret3, ret4
+	_ = "STUB: not implemented"
+	return false, nil, "", "", ""
 }
 
 // GetPolicyInfoFromConjunction indicates an expected call of GetPolicyInfoFromConjunction.
 func (mr *MockClientMockRecorder) GetPolicyInfoFromConjunction(ruleID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPolicyInfoFromConjunction", reflect.TypeOf((*MockClient)(nil).GetPolicyInfoFromConjunction), ruleID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetServiceFlowKeys mocks base method.
 func (m *MockClient) GetServiceFlowKeys(svcIP net.IP, svcPort uint16, arg2 openflow0.Protocol, endpoints []proxy.Endpoint) []string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetServiceFlowKeys", svcIP, svcPort, arg2, endpoints)
-	ret0, _ := ret[0].([]string)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetServiceFlowKeys indicates an expected call of GetServiceFlowKeys.
 func (mr *MockClientMockRecorder) GetServiceFlowKeys(svcIP, svcPort, arg2, endpoints any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServiceFlowKeys", reflect.TypeOf((*MockClient)(nil).GetServiceFlowKeys), svcIP, svcPort, arg2, endpoints)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetTunnelVirtualMAC mocks base method.
 func (m *MockClient) GetTunnelVirtualMAC() net.HardwareAddr {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTunnelVirtualMAC")
-	ret0, _ := ret[0].(net.HardwareAddr)
-	return ret0
+	_ = "STUB: not implemented"
+	return *new(net.HardwareAddr)
 }
 
 // GetTunnelVirtualMAC indicates an expected call of GetTunnelVirtualMAC.
 func (mr *MockClientMockRecorder) GetTunnelVirtualMAC() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTunnelVirtualMAC", reflect.TypeOf((*MockClient)(nil).GetTunnelVirtualMAC))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // Initialize mocks base method.
 func (m *MockClient) Initialize(roundInfo types.RoundInfo, arg1 *config.NodeConfig, networkConfig *config.NetworkConfig, egressConfig *config.EgressConfig, serviceConfig *config.ServiceConfig, l7NetworkPolicyConfig *config.L7NetworkPolicyConfig) (<-chan struct{}, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Initialize", roundInfo, arg1, networkConfig, egressConfig, serviceConfig, l7NetworkPolicyConfig)
-	ret0, _ := ret[0].(<-chan struct{})
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Initialize indicates an expected call of Initialize.
 func (mr *MockClientMockRecorder) Initialize(roundInfo, arg1, networkConfig, egressConfig, serviceConfig, l7NetworkPolicyConfig any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Initialize", reflect.TypeOf((*MockClient)(nil).Initialize), roundInfo, arg1, networkConfig, egressConfig, serviceConfig, l7NetworkPolicyConfig)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallEgressQoS mocks base method.
 func (m *MockClient) InstallEgressQoS(meterID, rate, burst uint32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallEgressQoS", meterID, rate, burst)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallEgressQoS indicates an expected call of InstallEgressQoS.
 func (mr *MockClientMockRecorder) InstallEgressQoS(meterID, rate, burst any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallEgressQoS", reflect.TypeOf((*MockClient)(nil).InstallEgressQoS), meterID, rate, burst)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallEndpointFlows mocks base method.
 func (m *MockClient) InstallEndpointFlows(arg0 openflow0.Protocol, endpoints []proxy.Endpoint) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallEndpointFlows", arg0, endpoints)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallEndpointFlows indicates an expected call of InstallEndpointFlows.
 func (mr *MockClientMockRecorder) InstallEndpointFlows(arg0, endpoints any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallEndpointFlows", reflect.TypeOf((*MockClient)(nil).InstallEndpointFlows), arg0, endpoints)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallL7NetworkPolicyFlows mocks base method.
-func (m *MockClient) InstallL7NetworkPolicyFlows() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallL7NetworkPolicyFlows")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+func (m *MockClient) InstallL7NetworkPolicyFlows() error { _ = "STUB: not implemented"; return nil }
 
 // InstallL7NetworkPolicyFlows indicates an expected call of InstallL7NetworkPolicyFlows.
 func (mr *MockClientMockRecorder) InstallL7NetworkPolicyFlows() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallL7NetworkPolicyFlows", reflect.TypeOf((*MockClient)(nil).InstallL7NetworkPolicyFlows))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticastFlexibleIPAMFlows mocks base method.
 func (m *MockClient) InstallMulticastFlexibleIPAMFlows() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallMulticastFlexibleIPAMFlows")
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticastFlexibleIPAMFlows indicates an expected call of InstallMulticastFlexibleIPAMFlows.
 func (mr *MockClientMockRecorder) InstallMulticastFlexibleIPAMFlows() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallMulticastFlexibleIPAMFlows", reflect.TypeOf((*MockClient)(nil).InstallMulticastFlexibleIPAMFlows))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticastFlows mocks base method.
 func (m *MockClient) InstallMulticastFlows(multicastIP net.IP, groupID openflow0.GroupIDType) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallMulticastFlows", multicastIP, groupID)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticastFlows indicates an expected call of InstallMulticastFlows.
 func (mr *MockClientMockRecorder) InstallMulticastFlows(multicastIP, groupID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallMulticastFlows", reflect.TypeOf((*MockClient)(nil).InstallMulticastFlows), multicastIP, groupID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticastGroup mocks base method.
 func (m *MockClient) InstallMulticastGroup(ofGroupID openflow0.GroupIDType, localReceivers []uint32, remoteNodeReceivers []net.IP) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallMulticastGroup", ofGroupID, localReceivers, remoteNodeReceivers)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticastGroup indicates an expected call of InstallMulticastGroup.
 func (mr *MockClientMockRecorder) InstallMulticastGroup(ofGroupID, localReceivers, remoteNodeReceivers any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallMulticastGroup", reflect.TypeOf((*MockClient)(nil).InstallMulticastGroup), ofGroupID, localReceivers, remoteNodeReceivers)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticastRemoteReportFlows mocks base method.
 func (m *MockClient) InstallMulticastRemoteReportFlows(groupID openflow0.GroupIDType) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallMulticastRemoteReportFlows", groupID)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticastRemoteReportFlows indicates an expected call of InstallMulticastRemoteReportFlows.
 func (mr *MockClientMockRecorder) InstallMulticastRemoteReportFlows(groupID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallMulticastRemoteReportFlows", reflect.TypeOf((*MockClient)(nil).InstallMulticastRemoteReportFlows), groupID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticlusterClassifierFlows mocks base method.
 func (m *MockClient) InstallMulticlusterClassifierFlows(tunnelOFPort uint32, isGateway bool) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallMulticlusterClassifierFlows", tunnelOFPort, isGateway)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticlusterClassifierFlows indicates an expected call of InstallMulticlusterClassifierFlows.
 func (mr *MockClientMockRecorder) InstallMulticlusterClassifierFlows(tunnelOFPort, isGateway any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallMulticlusterClassifierFlows", reflect.TypeOf((*MockClient)(nil).InstallMulticlusterClassifierFlows), tunnelOFPort, isGateway)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticlusterGatewayFlows mocks base method.
 func (m *MockClient) InstallMulticlusterGatewayFlows(clusterID string, peerConfigs map[*net.IPNet]net.IP, tunnelPeerIP, localGatewayIP net.IP, enableStretchedNetworkPolicy bool) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallMulticlusterGatewayFlows", clusterID, peerConfigs, tunnelPeerIP, localGatewayIP, enableStretchedNetworkPolicy)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticlusterGatewayFlows indicates an expected call of InstallMulticlusterGatewayFlows.
 func (mr *MockClientMockRecorder) InstallMulticlusterGatewayFlows(clusterID, peerConfigs, tunnelPeerIP, localGatewayIP, enableStretchedNetworkPolicy any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallMulticlusterGatewayFlows", reflect.TypeOf((*MockClient)(nil).InstallMulticlusterGatewayFlows), clusterID, peerConfigs, tunnelPeerIP, localGatewayIP, enableStretchedNetworkPolicy)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticlusterNodeFlows mocks base method.
 func (m *MockClient) InstallMulticlusterNodeFlows(clusterID string, peerConfigs map[*net.IPNet]net.IP, tunnelPeerIP net.IP, enableStretchedNetworkPolicy bool) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallMulticlusterNodeFlows", clusterID, peerConfigs, tunnelPeerIP, enableStretchedNetworkPolicy)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticlusterNodeFlows indicates an expected call of InstallMulticlusterNodeFlows.
 func (mr *MockClientMockRecorder) InstallMulticlusterNodeFlows(clusterID, peerConfigs, tunnelPeerIP, enableStretchedNetworkPolicy any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallMulticlusterNodeFlows", reflect.TypeOf((*MockClient)(nil).InstallMulticlusterNodeFlows), clusterID, peerConfigs, tunnelPeerIP, enableStretchedNetworkPolicy)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticlusterPodFlows mocks base method.
 func (m *MockClient) InstallMulticlusterPodFlows(podIP, tunnelPeerIP net.IP) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallMulticlusterPodFlows", podIP, tunnelPeerIP)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallMulticlusterPodFlows indicates an expected call of InstallMulticlusterPodFlows.
 func (mr *MockClientMockRecorder) InstallMulticlusterPodFlows(podIP, tunnelPeerIP any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallMulticlusterPodFlows", reflect.TypeOf((*MockClient)(nil).InstallMulticlusterPodFlows), podIP, tunnelPeerIP)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallNodeFlows mocks base method.
 func (m *MockClient) InstallNodeFlows(hostname string, peerConfigs map[*net.IPNet]net.IP, peerNodeIPs *ip.DualStackIPs, ipsecTunOFPort uint32, peerNodeMAC net.HardwareAddr) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallNodeFlows", hostname, peerConfigs, peerNodeIPs, ipsecTunOFPort, peerNodeMAC)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallNodeFlows indicates an expected call of InstallNodeFlows.
 func (mr *MockClientMockRecorder) InstallNodeFlows(hostname, peerConfigs, peerNodeIPs, ipsecTunOFPort, peerNodeMAC any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallNodeFlows", reflect.TypeOf((*MockClient)(nil).InstallNodeFlows), hostname, peerConfigs, peerNodeIPs, ipsecTunOFPort, peerNodeMAC)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallPodFlows mocks base method.
 func (m *MockClient) InstallPodFlows(interfaceName string, podInterfaceIPs []net.IP, podInterfaceMAC net.HardwareAddr, ofPort uint32, vlanID uint16, labelID *uint32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallPodFlows", interfaceName, podInterfaceIPs, podInterfaceMAC, ofPort, vlanID, labelID)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallPodFlows indicates an expected call of InstallPodFlows.
 func (mr *MockClientMockRecorder) InstallPodFlows(interfaceName, podInterfaceIPs, podInterfaceMAC, ofPort, vlanID, labelID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallPodFlows", reflect.TypeOf((*MockClient)(nil).InstallPodFlows), interfaceName, podInterfaceIPs, podInterfaceMAC, ofPort, vlanID, labelID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallPodSNATFlows mocks base method.
 func (m *MockClient) InstallPodSNATFlows(ofPort uint32, snatIP net.IP, snatMark uint32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallPodSNATFlows", ofPort, snatIP, snatMark)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallPodSNATFlows indicates an expected call of InstallPodSNATFlows.
 func (mr *MockClientMockRecorder) InstallPodSNATFlows(ofPort, snatIP, snatMark any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallPodSNATFlows", reflect.TypeOf((*MockClient)(nil).InstallPodSNATFlows), ofPort, snatIP, snatMark)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallPolicyBypassFlows mocks base method.
 func (m *MockClient) InstallPolicyBypassFlows(arg0 openflow0.Protocol, ipNet *net.IPNet, port uint16, isIngress bool) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallPolicyBypassFlows", arg0, ipNet, port, isIngress)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallPolicyBypassFlows indicates an expected call of InstallPolicyBypassFlows.
 func (mr *MockClientMockRecorder) InstallPolicyBypassFlows(arg0, ipNet, port, isIngress any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallPolicyBypassFlows", reflect.TypeOf((*MockClient)(nil).InstallPolicyBypassFlows), arg0, ipNet, port, isIngress)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallPolicyRuleFlows mocks base method.
 func (m *MockClient) InstallPolicyRuleFlows(ofPolicyRule *types.PolicyRule) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallPolicyRuleFlows", ofPolicyRule)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallPolicyRuleFlows indicates an expected call of InstallPolicyRuleFlows.
 func (mr *MockClientMockRecorder) InstallPolicyRuleFlows(ofPolicyRule any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallPolicyRuleFlows", reflect.TypeOf((*MockClient)(nil).InstallPolicyRuleFlows), ofPolicyRule)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallSNATBypassServiceFlows mocks base method.
 func (m *MockClient) InstallSNATBypassServiceFlows(serviceCIDRs []*net.IPNet) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallSNATBypassServiceFlows", serviceCIDRs)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallSNATBypassServiceFlows indicates an expected call of InstallSNATBypassServiceFlows.
 func (mr *MockClientMockRecorder) InstallSNATBypassServiceFlows(serviceCIDRs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallSNATBypassServiceFlows", reflect.TypeOf((*MockClient)(nil).InstallSNATBypassServiceFlows), serviceCIDRs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallSNATMarkFlows mocks base method.
 func (m *MockClient) InstallSNATMarkFlows(snatIP net.IP, mark uint32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallSNATMarkFlows", snatIP, mark)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallSNATMarkFlows indicates an expected call of InstallSNATMarkFlows.
 func (mr *MockClientMockRecorder) InstallSNATMarkFlows(snatIP, mark any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallSNATMarkFlows", reflect.TypeOf((*MockClient)(nil).InstallSNATMarkFlows), snatIP, mark)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallServiceFlows mocks base method.
 func (m *MockClient) InstallServiceFlows(arg0 *types.ServiceConfig) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallServiceFlows", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallServiceFlows indicates an expected call of InstallServiceFlows.
 func (mr *MockClientMockRecorder) InstallServiceFlows(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallServiceFlows", reflect.TypeOf((*MockClient)(nil).InstallServiceFlows), arg0)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallServiceGroup mocks base method.
 func (m *MockClient) InstallServiceGroup(groupID openflow0.GroupIDType, withSessionAffinity bool, endpoints []proxy.Endpoint) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallServiceGroup", groupID, withSessionAffinity, endpoints)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallServiceGroup indicates an expected call of InstallServiceGroup.
 func (mr *MockClientMockRecorder) InstallServiceGroup(groupID, withSessionAffinity, endpoints any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallServiceGroup", reflect.TypeOf((*MockClient)(nil).InstallServiceGroup), groupID, withSessionAffinity, endpoints)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallTraceflowFlows mocks base method.
 func (m *MockClient) InstallTraceflowFlows(dataplaneTag uint8, liveTraffic, droppedOnly, receiverOnly bool, packet *openflow0.Packet, ofPort uint32, timeoutSeconds uint16) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallTraceflowFlows", dataplaneTag, liveTraffic, droppedOnly, receiverOnly, packet, ofPort, timeoutSeconds)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallTraceflowFlows indicates an expected call of InstallTraceflowFlows.
 func (mr *MockClientMockRecorder) InstallTraceflowFlows(dataplaneTag, liveTraffic, droppedOnly, receiverOnly, packet, ofPort, timeoutSeconds any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallTraceflowFlows", reflect.TypeOf((*MockClient)(nil).InstallTraceflowFlows), dataplaneTag, liveTraffic, droppedOnly, receiverOnly, packet, ofPort, timeoutSeconds)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallTrafficControlMarkFlows mocks base method.
 func (m *MockClient) InstallTrafficControlMarkFlows(name string, sourceOFPorts []uint32, targetOFPort uint32, direction v1alpha2.Direction, action v1alpha2.TrafficControlAction, priority types.TrafficControlFlowPriority) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallTrafficControlMarkFlows", name, sourceOFPorts, targetOFPort, direction, action, priority)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallTrafficControlMarkFlows indicates an expected call of InstallTrafficControlMarkFlows.
 func (mr *MockClientMockRecorder) InstallTrafficControlMarkFlows(name, sourceOFPorts, targetOFPort, direction, action, priority any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallTrafficControlMarkFlows", reflect.TypeOf((*MockClient)(nil).InstallTrafficControlMarkFlows), name, sourceOFPorts, targetOFPort, direction, action, priority)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallTrafficControlReturnPortFlow mocks base method.
 func (m *MockClient) InstallTrafficControlReturnPortFlow(returnOFPort uint32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallTrafficControlReturnPortFlow", returnOFPort)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallTrafficControlReturnPortFlow indicates an expected call of InstallTrafficControlReturnPortFlow.
 func (mr *MockClientMockRecorder) InstallTrafficControlReturnPortFlow(returnOFPort any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallTrafficControlReturnPortFlow", reflect.TypeOf((*MockClient)(nil).InstallTrafficControlReturnPortFlow), returnOFPort)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallVMUplinkFlows mocks base method.
 func (m *MockClient) InstallVMUplinkFlows(hostInterfaceName string, hostPort, uplinkPort int32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InstallVMUplinkFlows", hostInterfaceName, hostPort, uplinkPort)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // InstallVMUplinkFlows indicates an expected call of InstallVMUplinkFlows.
 func (mr *MockClientMockRecorder) InstallVMUplinkFlows(hostInterfaceName, hostPort, uplinkPort any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallVMUplinkFlows", reflect.TypeOf((*MockClient)(nil).InstallVMUplinkFlows), hostInterfaceName, hostPort, uplinkPort)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // IsConnected mocks base method.
-func (m *MockClient) IsConnected() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsConnected")
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
+func (m *MockClient) IsConnected() bool { _ = "STUB: not implemented"; return false }
 
 // IsConnected indicates an expected call of IsConnected.
-func (mr *MockClientMockRecorder) IsConnected() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsConnected", reflect.TypeOf((*MockClient)(nil).IsConnected))
-}
+func (mr *MockClientMockRecorder) IsConnected() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // MulticastEgressPodMetrics mocks base method.
 func (m *MockClient) MulticastEgressPodMetrics() map[string]*types.RuleMetric {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MulticastEgressPodMetrics")
-	ret0, _ := ret[0].(map[string]*types.RuleMetric)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MulticastEgressPodMetrics indicates an expected call of MulticastEgressPodMetrics.
 func (mr *MockClientMockRecorder) MulticastEgressPodMetrics() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MulticastEgressPodMetrics", reflect.TypeOf((*MockClient)(nil).MulticastEgressPodMetrics))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MulticastEgressPodMetricsByIP mocks base method.
 func (m *MockClient) MulticastEgressPodMetricsByIP(arg0 net.IP) *types.RuleMetric {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MulticastEgressPodMetricsByIP", arg0)
-	ret0, _ := ret[0].(*types.RuleMetric)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MulticastEgressPodMetricsByIP indicates an expected call of MulticastEgressPodMetricsByIP.
 func (mr *MockClientMockRecorder) MulticastEgressPodMetricsByIP(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MulticastEgressPodMetricsByIP", reflect.TypeOf((*MockClient)(nil).MulticastEgressPodMetricsByIP), arg0)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MulticastIngressPodMetrics mocks base method.
 func (m *MockClient) MulticastIngressPodMetrics() map[uint32]*types.RuleMetric {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MulticastIngressPodMetrics")
-	ret0, _ := ret[0].(map[uint32]*types.RuleMetric)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MulticastIngressPodMetrics indicates an expected call of MulticastIngressPodMetrics.
 func (mr *MockClientMockRecorder) MulticastIngressPodMetrics() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MulticastIngressPodMetrics", reflect.TypeOf((*MockClient)(nil).MulticastIngressPodMetrics))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MulticastIngressPodMetricsByOFPort mocks base method.
 func (m *MockClient) MulticastIngressPodMetricsByOFPort(ofPort int32) *types.RuleMetric {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MulticastIngressPodMetricsByOFPort", ofPort)
-	ret0, _ := ret[0].(*types.RuleMetric)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MulticastIngressPodMetricsByOFPort indicates an expected call of MulticastIngressPodMetricsByOFPort.
 func (mr *MockClientMockRecorder) MulticastIngressPodMetricsByOFPort(ofPort any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MulticastIngressPodMetricsByOFPort", reflect.TypeOf((*MockClient)(nil).MulticastIngressPodMetricsByOFPort), ofPort)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NetworkPolicyMetrics mocks base method.
 func (m *MockClient) NetworkPolicyMetrics() map[uint32]*types.RuleMetric {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "NetworkPolicyMetrics")
-	ret0, _ := ret[0].(map[uint32]*types.RuleMetric)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NetworkPolicyMetrics indicates an expected call of NetworkPolicyMetrics.
 func (mr *MockClientMockRecorder) NetworkPolicyMetrics() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NetworkPolicyMetrics", reflect.TypeOf((*MockClient)(nil).NetworkPolicyMetrics))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewDNSPacketInConjunction mocks base method.
 func (m *MockClient) NewDNSPacketInConjunction(id uint32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "NewDNSPacketInConjunction", id)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewDNSPacketInConjunction indicates an expected call of NewDNSPacketInConjunction.
 func (mr *MockClientMockRecorder) NewDNSPacketInConjunction(id any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NewDNSPacketInConjunction", reflect.TypeOf((*MockClient)(nil).NewDNSPacketInConjunction), id)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ReassignFlowPriorities mocks base method.
 func (m *MockClient) ReassignFlowPriorities(updates map[uint16]uint16, table uint8) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ReassignFlowPriorities", updates, table)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ReassignFlowPriorities indicates an expected call of ReassignFlowPriorities.
 func (mr *MockClientMockRecorder) ReassignFlowPriorities(updates, table any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReassignFlowPriorities", reflect.TypeOf((*MockClient)(nil).ReassignFlowPriorities), updates, table)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // RegisterPacketInHandler mocks base method.
 func (m *MockClient) RegisterPacketInHandler(packetHandlerReason uint8, packetInHandler openflow.PacketInHandler) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "RegisterPacketInHandler", packetHandlerReason, packetInHandler)
+	_ = "STUB: not implemented"
+	return
 }
 
 // RegisterPacketInHandler indicates an expected call of RegisterPacketInHandler.
 func (mr *MockClientMockRecorder) RegisterPacketInHandler(packetHandlerReason, packetInHandler any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterPacketInHandler", reflect.TypeOf((*MockClient)(nil).RegisterPacketInHandler), packetHandlerReason, packetInHandler)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ReplayFlows mocks base method.
-func (m *MockClient) ReplayFlows() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "ReplayFlows")
-}
+func (m *MockClient) ReplayFlows() { _ = "STUB: not implemented"; return }
 
 // ReplayFlows indicates an expected call of ReplayFlows.
-func (mr *MockClientMockRecorder) ReplayFlows() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReplayFlows", reflect.TypeOf((*MockClient)(nil).ReplayFlows))
-}
+func (mr *MockClientMockRecorder) ReplayFlows() *gomock.Call { _ = "STUB: not implemented"; return nil }
 
 // ResumePausePacket mocks base method.
 func (m *MockClient) ResumePausePacket(packetIn *ofctrl.PacketIn) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ResumePausePacket", packetIn)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // ResumePausePacket indicates an expected call of ResumePausePacket.
 func (mr *MockClientMockRecorder) ResumePausePacket(packetIn any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResumePausePacket", reflect.TypeOf((*MockClient)(nil).ResumePausePacket), packetIn)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendEthPacketOut mocks base method.
 func (m *MockClient) SendEthPacketOut(inPort, outPort uint32, ethPkt *protocol.Ethernet, mutatePacketOut func(openflow0.PacketOutBuilder) openflow0.PacketOutBuilder) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendEthPacketOut", inPort, outPort, ethPkt, mutatePacketOut)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendEthPacketOut indicates an expected call of SendEthPacketOut.
 func (mr *MockClientMockRecorder) SendEthPacketOut(inPort, outPort, ethPkt, mutatePacketOut any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendEthPacketOut", reflect.TypeOf((*MockClient)(nil).SendEthPacketOut), inPort, outPort, ethPkt, mutatePacketOut)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendICMPPacketOut mocks base method.
 func (m *MockClient) SendICMPPacketOut(srcMAC, dstMAC, srcIP, dstIP string, inPort, outPort uint32, isIPv6 bool, icmpType, icmpCode uint8, icmpData []byte, mutatePacketOut func(openflow0.PacketOutBuilder) openflow0.PacketOutBuilder) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendICMPPacketOut", srcMAC, dstMAC, srcIP, dstIP, inPort, outPort, isIPv6, icmpType, icmpCode, icmpData, mutatePacketOut)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendICMPPacketOut indicates an expected call of SendICMPPacketOut.
 func (mr *MockClientMockRecorder) SendICMPPacketOut(srcMAC, dstMAC, srcIP, dstIP, inPort, outPort, isIPv6, icmpType, icmpCode, icmpData, mutatePacketOut any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendICMPPacketOut", reflect.TypeOf((*MockClient)(nil).SendICMPPacketOut), srcMAC, dstMAC, srcIP, dstIP, inPort, outPort, isIPv6, icmpType, icmpCode, icmpData, mutatePacketOut)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendIGMPQueryPacketOut mocks base method.
 func (m *MockClient) SendIGMPQueryPacketOut(dstMAC net.HardwareAddr, dstIP net.IP, outPort uint32, igmp util.Message) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendIGMPQueryPacketOut", dstMAC, dstIP, outPort, igmp)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendIGMPQueryPacketOut indicates an expected call of SendIGMPQueryPacketOut.
 func (mr *MockClientMockRecorder) SendIGMPQueryPacketOut(dstMAC, dstIP, outPort, igmp any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendIGMPQueryPacketOut", reflect.TypeOf((*MockClient)(nil).SendIGMPQueryPacketOut), dstMAC, dstIP, outPort, igmp)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendIGMPRemoteReportPacketOut mocks base method.
 func (m *MockClient) SendIGMPRemoteReportPacketOut(dstMAC net.HardwareAddr, dstIP net.IP, igmp util.Message) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendIGMPRemoteReportPacketOut", dstMAC, dstIP, igmp)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendIGMPRemoteReportPacketOut indicates an expected call of SendIGMPRemoteReportPacketOut.
 func (mr *MockClientMockRecorder) SendIGMPRemoteReportPacketOut(dstMAC, dstIP, igmp any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendIGMPRemoteReportPacketOut", reflect.TypeOf((*MockClient)(nil).SendIGMPRemoteReportPacketOut), dstMAC, dstIP, igmp)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendTCPPacketOut mocks base method.
 func (m *MockClient) SendTCPPacketOut(srcMAC, dstMAC, srcIP, dstIP string, inPort, outPort uint32, isIPv6 bool, tcpSrcPort, tcpDstPort uint16, tcpSeqNum, tcpAckNum uint32, tcpHdrLen, tcpFlag uint8, tcpWinSize uint16, tcpData []byte, mutatePacketOut func(openflow0.PacketOutBuilder) openflow0.PacketOutBuilder) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendTCPPacketOut", srcMAC, dstMAC, srcIP, dstIP, inPort, outPort, isIPv6, tcpSrcPort, tcpDstPort, tcpSeqNum, tcpAckNum, tcpHdrLen, tcpFlag, tcpWinSize, tcpData, mutatePacketOut)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendTCPPacketOut indicates an expected call of SendTCPPacketOut.
 func (mr *MockClientMockRecorder) SendTCPPacketOut(srcMAC, dstMAC, srcIP, dstIP, inPort, outPort, isIPv6, tcpSrcPort, tcpDstPort, tcpSeqNum, tcpAckNum, tcpHdrLen, tcpFlag, tcpWinSize, tcpData, mutatePacketOut any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendTCPPacketOut", reflect.TypeOf((*MockClient)(nil).SendTCPPacketOut), srcMAC, dstMAC, srcIP, dstIP, inPort, outPort, isIPv6, tcpSrcPort, tcpDstPort, tcpSeqNum, tcpAckNum, tcpHdrLen, tcpFlag, tcpWinSize, tcpData, mutatePacketOut)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendTraceflowPacket mocks base method.
 func (m *MockClient) SendTraceflowPacket(dataplaneTag uint8, packet *openflow0.Packet, inPort uint32, outPort int32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendTraceflowPacket", dataplaneTag, packet, inPort, outPort)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendTraceflowPacket indicates an expected call of SendTraceflowPacket.
 func (mr *MockClientMockRecorder) SendTraceflowPacket(dataplaneTag, packet, inPort, outPort any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendTraceflowPacket", reflect.TypeOf((*MockClient)(nil).SendTraceflowPacket), dataplaneTag, packet, inPort, outPort)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendUDPPacketOut mocks base method.
 func (m *MockClient) SendUDPPacketOut(srcMAC, dstMAC, srcIP, dstIP string, inPort, outPort uint32, isIPv6 bool, udpSrcPort, udpDstPort uint16, udpData []byte, mutatePacketOut func(openflow0.PacketOutBuilder) openflow0.PacketOutBuilder) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendUDPPacketOut", srcMAC, dstMAC, srcIP, dstIP, inPort, outPort, isIPv6, udpSrcPort, udpDstPort, udpData, mutatePacketOut)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SendUDPPacketOut indicates an expected call of SendUDPPacketOut.
 func (mr *MockClientMockRecorder) SendUDPPacketOut(srcMAC, dstMAC, srcIP, dstIP, inPort, outPort, isIPv6, udpSrcPort, udpDstPort, udpData, mutatePacketOut any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendUDPPacketOut", reflect.TypeOf((*MockClient)(nil).SendUDPPacketOut), srcMAC, dstMAC, srcIP, dstIP, inPort, outPort, isIPv6, udpSrcPort, udpDstPort, udpData, mutatePacketOut)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // StartPacketInHandler mocks base method.
 func (m *MockClient) StartPacketInHandler(stopCh <-chan struct{}) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "StartPacketInHandler", stopCh)
+	_ = "STUB: not implemented"
+	return
 }
 
 // StartPacketInHandler indicates an expected call of StartPacketInHandler.
 func (mr *MockClientMockRecorder) StartPacketInHandler(stopCh any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartPacketInHandler", reflect.TypeOf((*MockClient)(nil).StartPacketInHandler), stopCh)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SubscribeOFPortStatusMessage mocks base method.
 func (m *MockClient) SubscribeOFPortStatusMessage(statusCh chan *openflow15.PortStatus) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SubscribeOFPortStatusMessage", statusCh)
+	_ = "STUB: not implemented"
+	return
 }
 
 // SubscribeOFPortStatusMessage indicates an expected call of SubscribeOFPortStatusMessage.
 func (mr *MockClientMockRecorder) SubscribeOFPortStatusMessage(statusCh any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SubscribeOFPortStatusMessage", reflect.TypeOf((*MockClient)(nil).SubscribeOFPortStatusMessage), statusCh)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SubscribePacketIn mocks base method.
 func (m *MockClient) SubscribePacketIn(reason uint8, pktInQueue *openflow0.PacketInQueue) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SubscribePacketIn", reason, pktInQueue)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // SubscribePacketIn indicates an expected call of SubscribePacketIn.
 func (mr *MockClientMockRecorder) SubscribePacketIn(reason, pktInQueue any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SubscribePacketIn", reflect.TypeOf((*MockClient)(nil).SubscribePacketIn), reason, pktInQueue)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallEgressQoS mocks base method.
 func (m *MockClient) UninstallEgressQoS(meterID uint32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallEgressQoS", meterID)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallEgressQoS indicates an expected call of UninstallEgressQoS.
 func (mr *MockClientMockRecorder) UninstallEgressQoS(meterID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallEgressQoS", reflect.TypeOf((*MockClient)(nil).UninstallEgressQoS), meterID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallEndpointFlows mocks base method.
 func (m *MockClient) UninstallEndpointFlows(arg0 openflow0.Protocol, endpoints []proxy.Endpoint) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallEndpointFlows", arg0, endpoints)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallEndpointFlows indicates an expected call of UninstallEndpointFlows.
 func (mr *MockClientMockRecorder) UninstallEndpointFlows(arg0, endpoints any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallEndpointFlows", reflect.TypeOf((*MockClient)(nil).UninstallEndpointFlows), arg0, endpoints)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallMulticastFlows mocks base method.
 func (m *MockClient) UninstallMulticastFlows(multicastIP net.IP) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallMulticastFlows", multicastIP)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallMulticastFlows indicates an expected call of UninstallMulticastFlows.
 func (mr *MockClientMockRecorder) UninstallMulticastFlows(multicastIP any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallMulticastFlows", reflect.TypeOf((*MockClient)(nil).UninstallMulticastFlows), multicastIP)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallMulticastGroup mocks base method.
 func (m *MockClient) UninstallMulticastGroup(groupID openflow0.GroupIDType) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallMulticastGroup", groupID)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallMulticastGroup indicates an expected call of UninstallMulticastGroup.
 func (mr *MockClientMockRecorder) UninstallMulticastGroup(groupID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallMulticastGroup", reflect.TypeOf((*MockClient)(nil).UninstallMulticastGroup), groupID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallMulticlusterFlows mocks base method.
 func (m *MockClient) UninstallMulticlusterFlows(clusterID string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallMulticlusterFlows", clusterID)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallMulticlusterFlows indicates an expected call of UninstallMulticlusterFlows.
 func (mr *MockClientMockRecorder) UninstallMulticlusterFlows(clusterID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallMulticlusterFlows", reflect.TypeOf((*MockClient)(nil).UninstallMulticlusterFlows), clusterID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallMulticlusterPodFlows mocks base method.
 func (m *MockClient) UninstallMulticlusterPodFlows(podIP string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallMulticlusterPodFlows", podIP)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallMulticlusterPodFlows indicates an expected call of UninstallMulticlusterPodFlows.
 func (mr *MockClientMockRecorder) UninstallMulticlusterPodFlows(podIP any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallMulticlusterPodFlows", reflect.TypeOf((*MockClient)(nil).UninstallMulticlusterPodFlows), podIP)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallNodeFlows mocks base method.
 func (m *MockClient) UninstallNodeFlows(hostname string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallNodeFlows", hostname)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallNodeFlows indicates an expected call of UninstallNodeFlows.
 func (mr *MockClientMockRecorder) UninstallNodeFlows(hostname any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallNodeFlows", reflect.TypeOf((*MockClient)(nil).UninstallNodeFlows), hostname)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallPodFlows mocks base method.
 func (m *MockClient) UninstallPodFlows(interfaceName string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallPodFlows", interfaceName)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallPodFlows indicates an expected call of UninstallPodFlows.
 func (mr *MockClientMockRecorder) UninstallPodFlows(interfaceName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallPodFlows", reflect.TypeOf((*MockClient)(nil).UninstallPodFlows), interfaceName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallPodSNATFlows mocks base method.
 func (m *MockClient) UninstallPodSNATFlows(ofPort uint32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallPodSNATFlows", ofPort)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallPodSNATFlows indicates an expected call of UninstallPodSNATFlows.
 func (mr *MockClientMockRecorder) UninstallPodSNATFlows(ofPort any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallPodSNATFlows", reflect.TypeOf((*MockClient)(nil).UninstallPodSNATFlows), ofPort)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallPolicyRuleFlows mocks base method.
 func (m *MockClient) UninstallPolicyRuleFlows(ruleID uint32) ([]string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallPolicyRuleFlows", ruleID)
-	ret0, _ := ret[0].([]string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // UninstallPolicyRuleFlows indicates an expected call of UninstallPolicyRuleFlows.
 func (mr *MockClientMockRecorder) UninstallPolicyRuleFlows(ruleID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallPolicyRuleFlows", reflect.TypeOf((*MockClient)(nil).UninstallPolicyRuleFlows), ruleID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallSNATMarkFlows mocks base method.
 func (m *MockClient) UninstallSNATMarkFlows(mark uint32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallSNATMarkFlows", mark)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallSNATMarkFlows indicates an expected call of UninstallSNATMarkFlows.
 func (mr *MockClientMockRecorder) UninstallSNATMarkFlows(mark any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallSNATMarkFlows", reflect.TypeOf((*MockClient)(nil).UninstallSNATMarkFlows), mark)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallServiceFlows mocks base method.
 func (m *MockClient) UninstallServiceFlows(svcIP net.IP, svcPort uint16, arg2 openflow0.Protocol) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallServiceFlows", svcIP, svcPort, arg2)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallServiceFlows indicates an expected call of UninstallServiceFlows.
 func (mr *MockClientMockRecorder) UninstallServiceFlows(svcIP, svcPort, arg2 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallServiceFlows", reflect.TypeOf((*MockClient)(nil).UninstallServiceFlows), svcIP, svcPort, arg2)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallServiceGroup mocks base method.
 func (m *MockClient) UninstallServiceGroup(groupID openflow0.GroupIDType) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallServiceGroup", groupID)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallServiceGroup indicates an expected call of UninstallServiceGroup.
 func (mr *MockClientMockRecorder) UninstallServiceGroup(groupID any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallServiceGroup", reflect.TypeOf((*MockClient)(nil).UninstallServiceGroup), groupID)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallTraceflowFlows mocks base method.
 func (m *MockClient) UninstallTraceflowFlows(dataplaneTag uint8) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallTraceflowFlows", dataplaneTag)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallTraceflowFlows indicates an expected call of UninstallTraceflowFlows.
 func (mr *MockClientMockRecorder) UninstallTraceflowFlows(dataplaneTag any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallTraceflowFlows", reflect.TypeOf((*MockClient)(nil).UninstallTraceflowFlows), dataplaneTag)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallTrafficControlMarkFlows mocks base method.
 func (m *MockClient) UninstallTrafficControlMarkFlows(name string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallTrafficControlMarkFlows", name)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallTrafficControlMarkFlows indicates an expected call of UninstallTrafficControlMarkFlows.
 func (mr *MockClientMockRecorder) UninstallTrafficControlMarkFlows(name any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallTrafficControlMarkFlows", reflect.TypeOf((*MockClient)(nil).UninstallTrafficControlMarkFlows), name)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallTrafficControlReturnPortFlow mocks base method.
 func (m *MockClient) UninstallTrafficControlReturnPortFlow(returnOFPort uint32) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallTrafficControlReturnPortFlow", returnOFPort)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallTrafficControlReturnPortFlow indicates an expected call of UninstallTrafficControlReturnPortFlow.
 func (mr *MockClientMockRecorder) UninstallTrafficControlReturnPortFlow(returnOFPort any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallTrafficControlReturnPortFlow", reflect.TypeOf((*MockClient)(nil).UninstallTrafficControlReturnPortFlow), returnOFPort)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallVMUplinkFlows mocks base method.
 func (m *MockClient) UninstallVMUplinkFlows(hostInterfaceName string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UninstallVMUplinkFlows", hostInterfaceName)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // UninstallVMUplinkFlows indicates an expected call of UninstallVMUplinkFlows.
 func (mr *MockClientMockRecorder) UninstallVMUplinkFlows(hostInterfaceName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UninstallVMUplinkFlows", reflect.TypeOf((*MockClient)(nil).UninstallVMUplinkFlows), hostInterfaceName)
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -27,73 +27,39 @@ type GroupSpecBuilder struct {
 	Namespace string
 }
 
-func (b *GroupSpecBuilder) Get() *crdv1beta1.Group {
-	return &crdv1beta1.Group{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      b.Name,
-			Namespace: b.Namespace,
-		},
-		Spec: b.Spec,
-	}
-}
+func (b *GroupSpecBuilder) Get() *crdv1beta1.Group { _ = "STUB: not implemented"; return nil }
 
 func (b *GroupSpecBuilder) SetName(name string) *GroupSpecBuilder {
-	b.Name = name
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *GroupSpecBuilder) SetNamespace(namespace string) *GroupSpecBuilder {
-	b.Namespace = namespace
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *GroupSpecBuilder) SetPodSelector(podSelector map[string]string, podSelectorMatchExp []metav1.LabelSelectorRequirement) *GroupSpecBuilder {
-	var ps *metav1.LabelSelector
-	if podSelector != nil {
-		ps = &metav1.LabelSelector{
-			MatchLabels: podSelector,
-		}
-		if podSelectorMatchExp != nil {
-			ps.MatchExpressions = podSelectorMatchExp
-		}
-	}
-	b.Spec.PodSelector = ps
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *GroupSpecBuilder) SetNamespaceSelector(nsSelector map[string]string, nsSelectorMatchExp []metav1.LabelSelectorRequirement) *GroupSpecBuilder {
-	var ns *metav1.LabelSelector
-	if nsSelector != nil {
-		ns = &metav1.LabelSelector{
-			MatchLabels: nsSelector,
-		}
-		if nsSelectorMatchExp != nil {
-			ns.MatchExpressions = nsSelectorMatchExp
-		}
-	}
-	b.Spec.NamespaceSelector = ns
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *GroupSpecBuilder) SetIPBlocks(ipBlocks []crdv1beta1.IPBlock) *GroupSpecBuilder {
-	b.Spec.IPBlocks = ipBlocks
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *GroupSpecBuilder) SetServiceReference(svcNS, svcName string) *GroupSpecBuilder {
-	svcRef := &crdv1beta1.NamespacedName{
-		Namespace: svcNS,
-		Name:      svcName,
-	}
-	b.Spec.ServiceReference = svcRef
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (b *GroupSpecBuilder) SetChildGroups(cgs []string) *GroupSpecBuilder {
-	var childGroups []crdv1beta1.ClusterGroupReference
-	for _, c := range cgs {
-		childGroups = append(childGroups, crdv1beta1.ClusterGroupReference(c))
-	}
-	b.Spec.ChildGroups = childGroups
-	return b
+	_ = "STUB: not implemented"
+	return nil
 }

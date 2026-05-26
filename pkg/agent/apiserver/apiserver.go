@@ -16,48 +16,17 @@ package apiserver
 
 import (
 	"context"
-	"fmt"
-	"net"
-	"net/http"
-	"os"
-	"path"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
-	genericopenapi "k8s.io/apiserver/pkg/endpoints/openapi"
-	"k8s.io/apiserver/pkg/registry/rest"
 	genericapiserver "k8s.io/apiserver/pkg/server"
-	"k8s.io/apiserver/pkg/server/healthz"
 	genericoptions "k8s.io/apiserver/pkg/server/options"
-	basecompatibility "k8s.io/component-base/compatibility"
 
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/addressgroup"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/agentinfo"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/appliedtogroup"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/bgppeer"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/bgppolicy"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/bgproute"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/featuregates"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/fqdncache"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/memberlist"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/multicast"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/networkpolicy"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/ovsflows"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/ovstracing"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/podinterface"
-	"antrea.io/antrea/v2/pkg/agent/apiserver/handlers/serviceexternalip"
 	agentquerier "antrea.io/antrea/v2/pkg/agent/querier"
 	systeminstall "antrea.io/antrea/v2/pkg/apis/system/install"
-	systemv1beta1 "antrea.io/antrea/v2/pkg/apis/system/v1beta1"
-	"antrea.io/antrea/v2/pkg/apiserver"
-	"antrea.io/antrea/v2/pkg/apiserver/handlers/loglevel"
-	"antrea.io/antrea/v2/pkg/apiserver/openapi"
-	"antrea.io/antrea/v2/pkg/apiserver/registry/system/supportbundle"
-	"antrea.io/antrea/v2/pkg/ovs/ovsctl"
 	"antrea.io/antrea/v2/pkg/querier"
-	"antrea.io/antrea/v2/pkg/version"
 )
 
 const CertPairName = "antrea-agent-api"
@@ -76,46 +45,18 @@ type agentAPIServer struct {
 	GenericAPIServer *genericapiserver.GenericAPIServer
 }
 
-func (s *agentAPIServer) Run(ctx context.Context) error {
-	return s.GenericAPIServer.PrepareRun().RunWithContext(ctx)
-}
+func (s *agentAPIServer) Run(ctx context.Context) error { _ = "STUB: not implemented"; return nil }
 
-func (s *agentAPIServer) GetCertData() []byte {
-	secureServingInfo := s.GenericAPIServer.SecureServingInfo
-	if secureServingInfo == nil {
-		return nil
-	}
-	cert, _ := secureServingInfo.Cert.CurrentCertKeyContent()
-	return cert
-}
+func (s *agentAPIServer) GetCertData() []byte { _ = "STUB: not implemented"; return nil }
 
 func installHandlers(aq agentquerier.AgentQuerier, npq querier.AgentNetworkPolicyInfoQuerier, mq querier.AgentMulticastInfoQuerier, seipq querier.ServiceExternalIPStatusQuerier, s *genericapiserver.GenericAPIServer, bgpq querier.AgentBGPPolicyInfoQuerier) {
-	s.Handler.NonGoRestfulMux.HandleFunc("/loglevel", loglevel.HandleFunc())
-	s.Handler.NonGoRestfulMux.HandleFunc("/podmulticaststats", multicast.HandleFunc(mq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/featuregates", featuregates.HandleFunc())
-	s.Handler.NonGoRestfulMux.HandleFunc("/agentinfo", agentinfo.HandleFunc(aq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/podinterfaces", podinterface.HandleFunc(aq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/networkpolicies", networkpolicy.HandleFunc(aq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/appliedtogroups", appliedtogroup.HandleFunc(npq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/addressgroups", addressgroup.HandleFunc(npq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/ovsflows", ovsflows.HandleFunc(aq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/ovstracing", ovstracing.HandleFunc(aq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/serviceexternalip", serviceexternalip.HandleFunc(seipq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/memberlist", memberlist.HandleFunc(aq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/bgppolicy", bgppolicy.HandleFunc(bgpq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/bgppeers", bgppeer.HandleFunc(bgpq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/bgproutes", bgproute.HandleFunc(bgpq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/fqdncache", fqdncache.HandleFunc(npq))
+	_ = "STUB: not implemented"
+	return
 }
 
 func installAPIGroup(s *genericapiserver.GenericAPIServer, aq agentquerier.AgentQuerier, npq querier.AgentNetworkPolicyInfoQuerier, v4Enabled, v6Enabled bool) error {
-	systemGroup := genericapiserver.NewDefaultAPIGroupInfo(systemv1beta1.GroupName, scheme, metav1.ParameterCodec, codecs)
-	systemStorage := map[string]rest.Storage{}
-	supportBundleStorage := supportbundle.NewAgentStorage(ovsctl.NewClient(aq.GetNodeConfig().OVSBridge), aq, npq, v4Enabled, v6Enabled)
-	systemStorage["supportbundles"] = supportBundleStorage.SupportBundle
-	systemStorage["supportbundles/download"] = supportBundleStorage.Download
-	systemGroup.VersionedResourcesStorageMap["v1beta1"] = systemStorage
-	return s.InstallAPIGroup(&systemGroup)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // New creates an APIServer for running in antrea agent.
@@ -133,19 +74,8 @@ func New(aq agentquerier.AgentQuerier,
 	v4Enabled,
 	v6Enabled bool,
 ) (*agentAPIServer, error) {
-	cfg, err := newConfig(aq, npq, secureServing, authentication, authorization, enableMetrics, kubeconfig, loopbackClientTokenPath)
-	if err != nil {
-		return nil, err
-	}
-	s, err := cfg.New(CertPairName, genericapiserver.NewEmptyDelegate())
-	if err != nil {
-		return nil, err
-	}
-	if err := installAPIGroup(s, aq, npq, v4Enabled, v6Enabled); err != nil {
-		return nil, err
-	}
-	installHandlers(aq, npq, mq, seipq, s, bgpq)
-	return &agentAPIServer{GenericAPIServer: s}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func newConfig(aq agentquerier.AgentQuerier,
@@ -157,58 +87,14 @@ func newConfig(aq agentquerier.AgentQuerier,
 	kubeconfig string,
 	loopbackClientTokenPath string,
 ) (*genericapiserver.CompletedConfig, error) {
+	_ = "STUB: not implemented"
 	// kubeconfig file is useful when antrea-agent isn't running as a Pod.
-	if len(kubeconfig) > 0 {
-		authentication.RemoteKubeConfigFile = kubeconfig
-		authorization.RemoteKubeConfigFile = kubeconfig
-	}
-
-	// Set the PairName but leave certificate directory blank to generate in-memory by default.
-	secureServing.ServerCert.CertDirectory = ""
-	secureServing.ServerCert.PairName = CertPairName
-
-	if err := secureServing.MaybeDefaultWithSelfSignedCerts("localhost", nil, []net.IP{net.ParseIP("127.0.0.1"), net.IPv6loopback}); err != nil {
-		return nil, fmt.Errorf("error creating self-signed certificates: %v", err)
-	}
-	serverConfig := genericapiserver.NewConfig(codecs)
-	if err := secureServing.ApplyTo(&serverConfig.SecureServing, &serverConfig.LoopbackClientConfig); err != nil {
-		return nil, err
-	}
-	if err := authentication.ApplyTo(&serverConfig.Authentication, serverConfig.SecureServing, nil); err != nil {
-		return nil, err
-	}
-	if err := authorization.ApplyTo(&serverConfig.Authorization); err != nil {
-		return nil, err
-	}
-	if err := os.MkdirAll(path.Dir(loopbackClientTokenPath), os.ModeDir); err != nil {
-		return nil, fmt.Errorf("error when creating dirs of token file: %v", err)
-	}
-	if err := os.WriteFile(loopbackClientTokenPath, []byte(serverConfig.LoopbackClientConfig.BearerToken), 0600); err != nil {
-		return nil, fmt.Errorf("error when writing loopback access token to file: %v", err)
-	}
-	serverConfig.EffectiveVersion = basecompatibility.NewEffectiveVersionFromString(version.GetFullVersion(), "", "")
-	serverConfig.EnableMetrics = enableMetrics
-	// Add readiness probe to check the status of watchers.
-	watcherCheck := healthz.NamedCheck("watcher", func(_ *http.Request) error {
-		if npq.GetControllerConnectionStatus() {
-			return nil
-		}
-		return fmt.Errorf("some watchers may not be connected")
-	})
-	serverConfig.ReadyzChecks = append(serverConfig.ReadyzChecks, watcherCheck)
-	// Add liveness probe to check the connection with OFSwitch.
-	// This helps automatic recovery if some issues cause OFSwitch reconnection to not work properly, e.g. issue #4092.
-	ovsConnCheck := healthz.NamedCheck("ovs", func(_ *http.Request) error {
-		if aq.GetOpenflowClient().IsConnected() {
-			return nil
-		}
-		return fmt.Errorf("disconnected from OFSwitch")
-	})
-	serverConfig.LivezChecks = append(serverConfig.LivezChecks, ovsConnCheck)
-	serverConfig.OpenAPIV3Config = genericapiserver.DefaultOpenAPIV3Config(
-		openapi.GetOpenAPIDefinitions,
-		genericopenapi.NewDefinitionNamer(apiserver.Scheme))
-
-	completedServerCfg := serverConfig.Complete(nil)
-	return &completedServerCfg, nil
+	return nil, nil
 }
+
+// Set the PairName but leave certificate directory blank to generate in-memory by default.
+
+// Add readiness probe to check the status of watchers.
+
+// Add liveness probe to check the connection with OFSwitch.
+// This helps automatic recovery if some issues cause OFSwitch reconnection to not work properly, e.g. issue #4092.

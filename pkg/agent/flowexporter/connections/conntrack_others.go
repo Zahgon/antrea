@@ -18,13 +18,9 @@
 package connections
 
 import (
-	"fmt"
 	"net/netip"
-	"strconv"
-	"strings"
 
 	"antrea.io/antrea/v2/pkg/agent/config"
-	"antrea.io/antrea/v2/pkg/agent/openflow"
 )
 
 type connTrackOvsCtlWindows struct {
@@ -32,31 +28,13 @@ type connTrackOvsCtlWindows struct {
 }
 
 func (ct *connTrackOvsCtlWindows) GetMaxConnections() (int, error) {
-	var zoneID int
-	if ct.serviceCIDRv4.IsValid() {
-		zoneID = openflow.CtZone
-	} else {
-		zoneID = openflow.CtZoneV6
-	}
-	// dpctl/ct-get-maxconns returns operation not supported on Windows node, use dpctl/ct-get-limits intead.
-	cmdOutput, execErr := ct.ovsctlClient.RunAppctlCmd("dpctl/ct-get-limits", false, fmt.Sprintf("zone=%d", zoneID))
-	if execErr != nil {
-		return 0, fmt.Errorf("error when executing dpctl/ct-get-limits command: %v", execErr)
-	}
-	flowSlice := strings.Split(string(cmdOutput), ",")
-	for _, fs := range flowSlice {
-		if strings.HasPrefix(fs, "limit") {
-			fields := strings.Split(fs, "=")
-			maxConns, err := strconv.Atoi(fields[len(fields)-1])
-			if err != nil {
-				return 0, fmt.Errorf("error when converting '%s' to int", fields[len(fields)-1])
-			}
-			return maxConns, nil
-		}
-	}
-	return 0, fmt.Errorf("couldn't find limit field in dpctl/ct-get-limits command output '%s'", cmdOutput)
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
+// dpctl/ct-get-maxconns returns operation not supported on Windows node, use dpctl/ct-get-limits intead.
+
 func NewConnTrackSystem(nodeConfig *config.NodeConfig, serviceCIDRv4 netip.Prefix, serviceCIDRv6 netip.Prefix, isAntreaProxyEnabled bool) *connTrackOvsCtlWindows {
-	return &connTrackOvsCtlWindows{*NewConnTrackOvsAppCtl(nodeConfig, serviceCIDRv4, serviceCIDRv6, isAntreaProxyEnabled)}
+	_ = "STUB: not implemented"
+	return nil
 }

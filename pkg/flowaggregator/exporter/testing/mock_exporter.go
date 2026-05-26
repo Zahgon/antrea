@@ -26,7 +26,6 @@ package testing
 
 import (
 	context "context"
-	reflect "reflect"
 
 	v1alpha1 "antrea.io/antrea/v2/pkg/apis/flow/v1alpha1"
 	ringbuffer "antrea.io/antrea/v2/pkg/flowaggregator/ringbuffer"
@@ -46,25 +45,23 @@ type MockRunnerMockRecorder struct {
 }
 
 // NewMockRunner creates a new mock instance.
-func NewMockRunner(ctrl *gomock.Controller) *MockRunner {
-	mock := &MockRunner{ctrl: ctrl}
-	mock.recorder = &MockRunnerMockRecorder{mock}
-	return mock
-}
+func NewMockRunner(ctrl *gomock.Controller) *MockRunner { _ = "STUB: not implemented"; return nil }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockRunner) EXPECT() *MockRunnerMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// Run mocks base method.
+	return nil
 }
 
-// Run mocks base method.
 func (m *MockRunner) Run(ctx context.Context, buf ringbuffer.BroadcastBuffer[*v1alpha1.Flow]) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Run", ctx, buf)
+	_ = "STUB: not implemented"
+	return
 }
 
 // Run indicates an expected call of Run.
 func (mr *MockRunnerMockRecorder) Run(ctx, buf any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockRunner)(nil).Run), ctx, buf)
+	_ = "STUB: not implemented"
+	return nil
 }

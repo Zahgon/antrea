@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	controlplanev1beta2 "antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	gentype "k8s.io/client-go/gentype"
 )
@@ -44,13 +43,6 @@ type iPGroupAssociations struct {
 
 // newIPGroupAssociations returns a IPGroupAssociations
 func newIPGroupAssociations(c *ControlplaneV1beta2Client) *iPGroupAssociations {
-	return &iPGroupAssociations{
-		gentype.NewClient[*controlplanev1beta2.IPGroupAssociation](
-			"ipgroupassociations",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			"",
-			func() *controlplanev1beta2.IPGroupAssociation { return &controlplanev1beta2.IPGroupAssociation{} },
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

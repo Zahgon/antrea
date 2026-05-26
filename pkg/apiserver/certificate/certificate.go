@@ -15,18 +15,9 @@
 package certificate
 
 import (
-	"context"
-	"fmt"
-	"os"
-	"path/filepath"
-	"time"
-
 	apiextensionclientset "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
-	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/apiserver/pkg/server/dynamiccertificates"
 	"k8s.io/apiserver/pkg/server/options"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/klog/v2"
 	"k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset"
 )
 
@@ -43,44 +34,12 @@ func ApplyServerCert(selfSignedCert bool,
 	apiExtensionClient apiextensionclientset.Interface,
 	secureServing *options.SecureServingOptionsWithLoopback,
 	caConfig *CAConfig) (*CACertController, error) {
-	var err error
-	var caContentProvider dynamiccertificates.CAContentProvider
-	if selfSignedCert {
-		caContentProvider, err = newSelfSignedCertProvider(client, secureServing, caConfig)
-		if err != nil {
-			return nil, fmt.Errorf("failed to initialize self-signed certificate: %w", err)
-		}
-	} else {
-		caCertPath := filepath.Join(caConfig.CertDir, CACertFile)
-		tlsCertPath := filepath.Join(caConfig.CertDir, TLSCertFile)
-		tlsKeyPath := filepath.Join(caConfig.CertDir, TLSKeyFile)
-		// The secret may be created after the Pod is created, for example, when cert-manager is used the secret
-		// is created asynchronously. It waits for a while before it's considered to be failed.
-		if err = wait.PollUntilContextTimeout(context.TODO(), 2*time.Second, caConfig.CertReadyTimeout, true,
-			func(ctx context.Context) (bool, error) {
-				for _, path := range []string{caCertPath, tlsCertPath, tlsKeyPath} {
-					f, err := os.Open(path)
-					if err != nil {
-						klog.InfoS("Couldn't read file when applying server certificate, retrying", "path", path)
-						return false, nil
-					}
-					f.Close()
-				}
-				return true, nil
-			}); err != nil {
-			return nil, fmt.Errorf("error reading TLS certificate and/or key. Please make sure the TLS CA (%s), cert (%s), and key (%s) files are present in \"%s\", when selfSignedCert is set to false", CACertFile, TLSCertFile, TLSKeyFile, caConfig.CertDir)
-		}
-		// Since 1.17.0 (https://github.com/kubernetes/kubernetes/commit/3f5fbfbfac281f40c11de2f57d58cc332affc37b),
-		// apiserver reloads certificate cert and key file from disk every minute, allowing serving tls config to be updated.
-		secureServing.ServerCert.CertKey.CertFile = tlsCertPath
-		secureServing.ServerCert.CertKey.KeyFile = tlsKeyPath
-
-		caContentProvider, err = dynamiccertificates.NewDynamicCAContentFromFile("user-provided CA cert", caCertPath)
-		if err != nil {
-			return nil, fmt.Errorf("error reading user-provided CA certificate: %v", err)
-		}
-	}
-
-	caCertController := newCACertController(caContentProvider, client, aggregatorClient, apiExtensionClient, caConfig)
-	return caCertController, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// The secret may be created after the Pod is created, for example, when cert-manager is used the secret
+// is created asynchronously. It waits for a while before it's considered to be failed.
+
+// Since 1.17.0 (https://github.com/kubernetes/kubernetes/commit/3f5fbfbfac281f40c11de2f57d58cc332affc37b),
+// apiserver reloads certificate cert and key file from disk every minute, allowing serving tls config to be updated.

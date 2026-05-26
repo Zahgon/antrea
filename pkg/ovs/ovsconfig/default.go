@@ -18,7 +18,6 @@
 package ovsconfig
 
 import (
-	"path"
 	"time"
 )
 
@@ -31,6 +30,4 @@ const (
 	defaultOvsVersionMessage = "OVS version not found in ovsdb. Please configure your OVS (ovsdb) to provide version information."
 )
 
-func GetConnAddress(ovsRunDir string) string {
-	return path.Join(ovsRunDir, defaultOVSDBFile)
-}
+func GetConnAddress(ovsRunDir string) string { _ = "STUB: not implemented"; return "" }

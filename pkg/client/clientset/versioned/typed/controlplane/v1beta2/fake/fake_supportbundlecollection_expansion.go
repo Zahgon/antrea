@@ -17,13 +17,10 @@ package fake
 import (
 	"context"
 
-	"k8s.io/client-go/testing"
-
 	"antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
 )
 
 func (c *fakeSupportBundleCollections) UpdateStatus(ctx context.Context, name string, status *v1beta2.SupportBundleCollectionStatus) error {
-	_, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(c.Resource(), "status", "", status), &v1beta2.SupportBundleCollectionStatus{})
-	return err
+	_ = "STUB: not implemented"
+	return nil
 }

@@ -18,25 +18,14 @@ package commonarea
 
 import (
 	"context"
-	"fmt"
 	"sync"
-	"time"
 
 	v1 "k8s.io/api/core/v1"
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/klog/v2"
-	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
-	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
-	mcv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
 	mcv1alpha2 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha2"
 	"antrea.io/antrea/v2/multicluster/controllers/multicluster/common"
 )
@@ -111,165 +100,40 @@ type remoteCommonArea struct {
 // connect to the leader cluster's CommonArea.
 func NewRemoteCommonArea(clusterID common.ClusterID, clusterSetID common.ClusterSetID, localClusterID common.ClusterID, mgr manager.Manager, remoteClient client.Client,
 	scheme *runtime.Scheme, localClusterClient client.Client, clusterSetNamespace string, localNamespace string, config *rest.Config, enableStretchedNetworkPolicy bool) (RemoteCommonArea, error) {
-	klog.InfoS("Create a RemoteCommonArea", "cluster", clusterID)
-
-	remote := &remoteCommonArea{
-		Client:                       remoteClient,
-		ClusterManager:               mgr,
-		ClusterSetID:                 clusterSetID,
-		ClusterID:                    clusterID,
-		config:                       config,
-		scheme:                       scheme,
-		Namespace:                    clusterSetNamespace,
-		connected:                    false,
-		localClusterClient:           localClusterClient,
-		localNamespace:               localNamespace,
-		localClusterID:               localClusterID,
-		enableStretchedNetworkPolicy: enableStretchedNetworkPolicy,
-	}
-	remote.clusterStatus.Type = mcv1alpha2.ClusterReady
-	remote.clusterStatus.Status = v1.ConditionUnknown
-	remote.clusterStatus.Message = "Leader cluster added"
-	remote.clusterStatus.LastTransitionTime = metav1.Now()
-	remote.leaderStatus.Type = mcv1alpha2.ClusterIsLeader
-	remote.leaderStatus.Status = v1.ConditionFalse
-	remote.leaderStatus.Message = "Leader cluster added"
-	remote.leaderStatus.LastTransitionTime = metav1.Now()
-
-	return remote, nil
+	_ = "STUB: not implemented"
+	return *new(RemoteCommonArea), nil
 }
 
 func GetRemoteConfigAndClient(secretObj *v1.Secret, url string, clusterID common.ClusterID, clusterSet *mcv1alpha2.ClusterSet, scheme *runtime.Scheme) (*rest.Config,
 	manager.Manager, client.Client, error) {
-	crtData, token, err := getSecretCACrtAndToken(secretObj)
-	if err != nil {
-		return nil, nil, nil, err
-	}
-	config, err := clientcmd.BuildConfigFromFlags(url, "")
-	if err != nil {
-		return nil, nil, nil, err
-	}
-	config.BearerToken = string(token)
-	config.CAData = crtData
-
-	config.QPS = common.ResourceExchangeQPS
-	config.Burst = common.ResourceExchangeBurst
-	remoteCommonAreaMgr, err := ctrl.NewManager(config, ctrl.Options{
-		Scheme: scheme,
-		Metrics: metricsserver.Options{
-			BindAddress: "0",
-		},
-		Cache: cache.Options{
-			DefaultNamespaces: map[string]cache.Config{
-				clusterSet.Spec.Namespace: {},
-			},
-		},
-	})
-	if err != nil {
-		klog.ErrorS(err, "Error creating manager for RemoteCommonArea", "cluster", clusterID)
-		return nil, nil, nil, err
-	}
-
-	remoteClient, e := client.New(config, client.Options{Scheme: scheme})
-	if e != nil {
-		return nil, nil, nil, e
-	}
-	return config, remoteCommonAreaMgr, remoteClient, nil
+	_ = "STUB: not implemented"
+	return nil, *new(manager.Manager), *new(client.Client), nil
 }
 
 /**
  * GetSecretCACrtAndToken returns the access credentials from Secret.
  */
 func getSecretCACrtAndToken(secretObj *v1.Secret) ([]byte, []byte, error) {
-	caData, found := secretObj.Data[v1.ServiceAccountRootCAKey]
-	if !found {
-		return nil, nil, fmt.Errorf("ca.crt data not found in Secret %v", secretObj.GetName())
-	}
-
-	token, found := secretObj.Data[v1.ServiceAccountTokenKey]
-	if !found {
-		return nil, nil, fmt.Errorf("token not found in Secret %v", secretObj.GetName())
-	}
-
-	return caData, token, nil
+	_ = "STUB: not implemented"
+	return nil, nil, nil
 }
 
-func (r *remoteCommonArea) SendMemberAnnounce() error {
-	var err error
-	memberAnnounceName := "member-announce-from-" + r.GetLocalClusterID()
-	existingMemberAnnounce := &mcv1alpha1.MemberClusterAnnounce{}
-	if err = r.Get(context.TODO(), types.NamespacedName{
-		Namespace: r.GetNamespace(),
-		Name:      memberAnnounceName,
-	}, existingMemberAnnounce); err != nil && !apierrors.IsNotFound(err) {
-		return err
-	}
+func (r *remoteCommonArea) SendMemberAnnounce() error { _ = "STUB: not implemented"; return nil }
 
-	localClusterMemberAnnounceExists := err == nil
-	localClusterMemberAnnounce := *existingMemberAnnounce
+// Add timestamp to force update on MemberClusterAnnounce. Leader cluster requires
+// periodic updates to detect connectivity. Without this, no-op updates will be ignored.
 
-	if localClusterMemberAnnounceExists {
-		r.updateLeaderStatus()
-		if localClusterMemberAnnounce.Annotations == nil {
-			localClusterMemberAnnounce.Annotations = make(map[string]string)
-		}
-		// Add timestamp to force update on MemberClusterAnnounce. Leader cluster requires
-		// periodic updates to detect connectivity. Without this, no-op updates will be ignored.
-		localClusterMemberAnnounce.Annotations[TimestampAnnotationKey] = time.Now().Format(time.RFC3339)
-		if err := r.Update(context.TODO(), &localClusterMemberAnnounce, &client.UpdateOptions{}); err != nil {
-			klog.ErrorS(err, "Error updating MemberClusterAnnounce", "cluster", r.GetClusterID())
-			return err
-		}
-		return nil
-	}
-
-	// Create happens first before the leader validation passes. When the creation is successful,
-	// it marks the connectivity status and then the validation on the leader can happen.
-	localClusterMemberAnnounce.ClusterID = r.GetLocalClusterID()
-	localClusterMemberAnnounce.Name = memberAnnounceName
-	localClusterMemberAnnounce.Namespace = r.Namespace
-	localClusterMemberAnnounce.ClusterSetID = string(r.ClusterSetID)
-	localClusterMemberAnnounce.LeaderClusterID = string(r.GetClusterID())
-	if err := r.Create(context.TODO(), &localClusterMemberAnnounce, &client.CreateOptions{}); err != nil {
-		klog.ErrorS(err, "Error creating MemberClusterAnnounce", "cluster", r.GetClusterID())
-		return err
-	}
-	return nil
-}
+// Create happens first before the leader validation passes. When the creation is successful,
+// it marks the connectivity status and then the validation on the leader can happen.
 
 func (r *remoteCommonArea) updateRemoteCommonAreaStatus(connected bool, err error) {
-	defer r.mutex.Unlock()
-	r.mutex.Lock()
-	if r.connected == connected {
-		return
-	}
-
-	klog.InfoS("Updating RemoteCommonArea status", "cluster", r.GetClusterID(), "connected", connected)
-
-	// TODO: Tolerate transient failures so we dont oscillate between connected and disconnected.
-	r.connected = connected
-	r.clusterStatus.Status = v1.ConditionTrue
-	r.clusterStatus.Message = ""
-	r.clusterStatus.Reason = ""
-	r.clusterStatus.LastTransitionTime = metav1.Now()
-	if !connected {
-		r.clusterStatus.Status = v1.ConditionFalse
-		r.clusterStatus.Message = err.Error()
-		r.clusterStatus.Reason = ReasonDisconnected
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
-func (r *remoteCommonArea) updateLeaderStatus() {
-	defer r.mutex.Unlock()
-	r.mutex.Lock()
+// TODO: Tolerate transient failures so we dont oscillate between connected and disconnected.
 
-	if r.leaderStatus.Status != v1.ConditionTrue {
-		r.leaderStatus.Status = v1.ConditionTrue
-		r.leaderStatus.Message = "This leader cluster is the leader for local cluster"
-		r.leaderStatus.Reason = ""
-		r.leaderStatus.LastTransitionTime = metav1.Now()
-	}
-}
+func (r *remoteCommonArea) updateLeaderStatus() { _ = "STUB: not implemented"; return }
 
 /**
  * ---------------------------
@@ -278,134 +142,57 @@ func (r *remoteCommonArea) updateLeaderStatus() {
  */
 
 func (r *remoteCommonArea) GetClusterID() common.ClusterID {
-	return r.ClusterID
+	_ = "STUB: not implemented"
+	return *new(common.ClusterID)
 }
 
 func (r *remoteCommonArea) GetNamespace() string {
-	return r.Namespace
-}
+	_ = "STUB: not implemented"
 
-/**
- * ---------------------------
- * RemoteCommonArea Implementation
- * ---------------------------
- */
+	/**
+	 * ---------------------------
+	 * RemoteCommonArea Implementation
+	 * ---------------------------
+	 */return ""
+}
 
 // Start starts a background routine.
 // Once connected to the RemoteCommonArea, the Start method runs a timer
 // on a go routine to periodically write MemberClusterAnnounce into the
 // RemoteCommonArea's CommonArea and also maintain its connectivity status.
 func (r *remoteCommonArea) Start() context.CancelFunc {
-	stopCtx, stopFunc := context.WithCancel(context.Background())
-
-	ticker := time.NewTicker(10 * time.Second)
-
-	go func() {
-		klog.InfoS("Starting MemberAnnounce to RemoteCommonArea", "cluster", r.GetClusterID())
-		r.doMemberAnnounce()
-		startedImporters := false
-		for {
-			select {
-			case <-stopCtx.Done():
-				klog.InfoS("Stopping MemberAnnounce to RemoteCommonArea", "cluster", r.GetClusterID())
-				ticker.Stop()
-				return
-			case <-ticker.C:
-				r.doMemberAnnounce()
-				if !startedImporters && r.connected {
-					if err := r.StartWatching(); err != nil {
-						// Will retry in next tick.
-						klog.ErrorS(err, "Failed to start watching events")
-						return
-					}
-					startedImporters = true
-				}
-			}
-		}
-	}()
-
-	r.stopFunc = stopFunc
-	return stopFunc
+	_ = "STUB: not implemented"
+	return *new(context.CancelFunc)
 }
 
-func (r *remoteCommonArea) doMemberAnnounce() {
-	if err := r.SendMemberAnnounce(); err != nil {
-		klog.ErrorS(err, "Error updating MemberClusterAnnounce", "cluster", r.GetClusterID())
-		r.updateRemoteCommonAreaStatus(false, err)
-	} else {
-		r.updateRemoteCommonAreaStatus(true, nil)
-	}
-}
+// Will retry in next tick.
 
-func (r *remoteCommonArea) Stop() {
-	if r.stopFunc == nil {
-		return
-	}
-	r.stopFunc()
-	r.stopFunc = nil
+func (r *remoteCommonArea) doMemberAnnounce() { _ = "STUB: not implemented"; return }
 
-	r.StopWatching()
-}
+func (r *remoteCommonArea) Stop() { _ = "STUB: not implemented"; return }
 
-func (r *remoteCommonArea) IsConnected() bool {
-	defer r.mutex.RUnlock()
-	r.mutex.RLock()
-	return r.connected
-}
+func (r *remoteCommonArea) IsConnected() bool { _ = "STUB: not implemented"; return false }
 
 func (r *remoteCommonArea) AddImportReconciler(reconciler ImportReconciler) {
-	r.importReconcilers = append(r.importReconcilers, reconciler)
+	_ = "STUB: not implemented"
+	return
 }
 
-func (r *remoteCommonArea) StartWatching() error {
-	if r.managerStopFunc != nil {
-		klog.InfoS("Manager already watching resources from RemoteCommonArea", "cluster", r.ClusterID)
-		return nil
-	}
+func (r *remoteCommonArea) StartWatching() error { _ = "STUB: not implemented"; return nil }
 
-	klog.V(2).InfoS("Start watching ResourceImports from RemoteCommonArea", "cluster", r.ClusterID)
+// This starts the Manager and blocks; Manager performs reconciliation of resources from the RemoteCommonArea.
+// When this RemoteCommonArea is not a leader anymore, stopCtx will be closed in StopWatching,
+// so this blocking routine can return and finish. And the next time this RemoteCommonArea is connected as
+// the leader again, it starts the Manager again.
 
-	for _, rc := range r.importReconcilers {
-		if err := rc.SetupWithManager(r.ClusterManager); err != nil {
-			return fmt.Errorf("error setting up ResourceImport controller for RemoteCommonArea: %v", err)
-		}
-	}
+func (r *remoteCommonArea) StopWatching() { _ = "STUB: not implemented"; return }
 
-	go func() {
-		stopCtx, stopFunc := context.WithCancel(context.Background())
-		r.managerStopFunc = stopFunc
-		// This starts the Manager and blocks; Manager performs reconciliation of resources from the RemoteCommonArea.
-		// When this RemoteCommonArea is not a leader anymore, stopCtx will be closed in StopWatching,
-		// so this blocking routine can return and finish. And the next time this RemoteCommonArea is connected as
-		// the leader again, it starts the Manager again.
-		err := r.ClusterManager.Start(stopCtx)
-		if err != nil {
-			klog.ErrorS(err, "Error starting ClusterManager for RemoteCommonArea", "cluster", r.ClusterID)
-		}
-		klog.InfoS("Stopping ClusterManager for RemoteCommonArea", "cluster", r.ClusterID)
-	}()
-
+func (r *remoteCommonArea) GetStatus() []mcv1alpha2.ClusterCondition {
+	_ = "STUB: not implemented"
 	return nil
 }
 
-func (r *remoteCommonArea) StopWatching() {
-	if r.managerStopFunc == nil {
-		return
-	}
-	r.managerStopFunc()
-	r.managerStopFunc = nil
-}
+// This will be a copy
+// This will be a copy
 
-func (r *remoteCommonArea) GetStatus() []mcv1alpha2.ClusterCondition {
-	defer r.mutex.Unlock()
-	r.mutex.Lock()
-
-	statues := make([]mcv1alpha2.ClusterCondition, 0, 2)
-	statues = append(statues, r.clusterStatus) // This will be a copy
-	statues = append(statues, r.leaderStatus)  // This will be a copy
-	return statues
-}
-
-func (r *remoteCommonArea) GetLocalClusterID() string {
-	return string(r.localClusterID)
-}
+func (r *remoteCommonArea) GetLocalClusterID() string { _ = "STUB: not implemented"; return "" }

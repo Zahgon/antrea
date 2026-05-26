@@ -16,26 +16,15 @@ package apiserver
 
 import (
 	"context"
-	"fmt"
-	"net"
-	"os"
-	"path"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	genericapiserver "k8s.io/apiserver/pkg/server"
-	genericoptions "k8s.io/apiserver/pkg/server/options"
-	basecompatibility "k8s.io/component-base/compatibility"
 
-	"antrea.io/antrea/v2/pkg/apis"
 	systeminstall "antrea.io/antrea/v2/pkg/apis/system/install"
-	"antrea.io/antrea/v2/pkg/apiserver/handlers/loglevel"
-	"antrea.io/antrea/v2/pkg/flowaggregator/apiserver/handlers/flowrecords"
-	"antrea.io/antrea/v2/pkg/flowaggregator/apiserver/handlers/recordmetrics"
 	"antrea.io/antrea/v2/pkg/flowaggregator/querier"
-	"antrea.io/antrea/v2/pkg/version"
 )
 
 const (
@@ -65,65 +54,24 @@ type flowAggregatorAPIServer struct {
 }
 
 func (s *flowAggregatorAPIServer) Run(ctx context.Context) error {
-	return s.GenericAPIServer.PrepareRun().RunWithContext(ctx)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func installHandlers(s *genericapiserver.GenericAPIServer, faq querier.FlowAggregatorQuerier) {
-	s.Handler.NonGoRestfulMux.HandleFunc("/flowrecords", flowrecords.HandleFunc(faq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/recordmetrics", recordmetrics.HandleFunc(faq))
-	s.Handler.NonGoRestfulMux.HandleFunc("/loglevel", loglevel.HandleFunc())
+	_ = "STUB: not implemented"
+	return
 }
 
 // New creates an APIServer for running in flow aggregator.
 func New(faq querier.FlowAggregatorQuerier, bindPort int, cipherSuites []uint16, tlsMinVersion uint16) (*flowAggregatorAPIServer, error) {
-	cfg, err := newConfig(bindPort)
-	if err != nil {
-		return nil, err
-	}
-	s, err := cfg.New(Name, genericapiserver.NewEmptyDelegate())
-	if err != nil {
-		return nil, err
-	}
-	s.SecureServingInfo.CipherSuites = cipherSuites
-	s.SecureServingInfo.MinTLSVersion = tlsMinVersion
-	installHandlers(s, faq)
-	return &flowAggregatorAPIServer{GenericAPIServer: s}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func newConfig(bindPort int) (*genericapiserver.CompletedConfig, error) {
-	secureServing := genericoptions.NewSecureServingOptions().WithLoopback()
-	authentication := genericoptions.NewDelegatingAuthenticationOptions()
-	authorization := genericoptions.NewDelegatingAuthorizationOptions().WithAlwaysAllowPaths("/healthz", "/livez", "/readyz")
-
-	// Set the PairName but leave certificate directory blank to generate in-memory by default.
-	secureServing.ServerCert.CertDirectory = ""
-	secureServing.ServerCert.PairName = Name
-	secureServing.BindAddress = net.IPv4zero
-	secureServing.BindPort = bindPort
-
-	authentication.WithRequestTimeout(authenticationTimeout)
-
-	if err := secureServing.MaybeDefaultWithSelfSignedCerts("localhost", nil, []net.IP{net.ParseIP("127.0.0.1"), net.IPv6loopback}); err != nil {
-		return nil, fmt.Errorf("error creating self-signed certificates: %v", err)
-	}
-	serverConfig := genericapiserver.NewConfig(codecs)
-	if err := secureServing.ApplyTo(&serverConfig.SecureServing, &serverConfig.LoopbackClientConfig); err != nil {
-		return nil, err
-	}
-	if err := authentication.ApplyTo(&serverConfig.Authentication, serverConfig.SecureServing, nil); err != nil {
-		return nil, err
-	}
-	if err := authorization.ApplyTo(&serverConfig.Authorization); err != nil {
-		return nil, err
-	}
-	if err := os.MkdirAll(path.Dir(apis.APIServerLoopbackTokenPath), os.ModeDir); err != nil {
-		return nil, fmt.Errorf("error when creating dirs of token file: %v", err)
-	}
-	if err := os.WriteFile(apis.APIServerLoopbackTokenPath, []byte(serverConfig.LoopbackClientConfig.BearerToken), 0600); err != nil {
-		return nil, fmt.Errorf("error when writing loopback access token to file: %v", err)
-	}
-	serverConfig.EffectiveVersion = basecompatibility.NewEffectiveVersionFromString(version.GetFullVersion(), "", "")
-
-	completedServerCfg := serverConfig.Complete(nil)
-	return &completedServerCfg, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// Set the PairName but leave certificate directory blank to generate in-memory by default.

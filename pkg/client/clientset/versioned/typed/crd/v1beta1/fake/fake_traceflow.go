@@ -29,20 +29,6 @@ type fakeTraceflows struct {
 }
 
 func newFakeTraceflows(fake *FakeCrdV1beta1) crdv1beta1.TraceflowInterface {
-	return &fakeTraceflows{
-		gentype.NewFakeClientWithList[*v1beta1.Traceflow, *v1beta1.TraceflowList](
-			fake.Fake,
-			"",
-			v1beta1.SchemeGroupVersion.WithResource("traceflows"),
-			v1beta1.SchemeGroupVersion.WithKind("Traceflow"),
-			func() *v1beta1.Traceflow { return &v1beta1.Traceflow{} },
-			func() *v1beta1.TraceflowList { return &v1beta1.TraceflowList{} },
-			func(dst, src *v1beta1.TraceflowList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta1.TraceflowList) []*v1beta1.Traceflow { return gentype.ToPointerSlice(list.Items) },
-			func(list *v1beta1.TraceflowList, items []*v1beta1.Traceflow) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.TraceflowInterface)
 }

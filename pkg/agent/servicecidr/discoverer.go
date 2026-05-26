@@ -15,23 +15,16 @@
 package servicecidr
 
 import (
-	"fmt"
 	"net"
-	"slices"
 	"sync"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	coreinformers "k8s.io/client-go/informers/core/v1"
 	corelisters "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
-	"k8s.io/klog/v2"
-	utilnet "k8s.io/utils/net"
-
-	"antrea.io/antrea/v2/pkg/agent/util"
 )
 
 const (
@@ -61,159 +54,28 @@ type Discoverer struct {
 }
 
 func NewServiceCIDRDiscoverer(serviceInformer coreinformers.ServiceInformer) *Discoverer {
-	d := &Discoverer{
-		serviceInformer: serviceInformer.Informer(),
-		serviceLister:   serviceInformer.Lister(),
-		queue:           workqueue.NewTyped[types.NamespacedName](),
-	}
-	d.serviceInformer.AddEventHandlerWithResyncPeriod(
-		cache.ResourceEventHandlerFuncs{
-			AddFunc:    d.addService,
-			UpdateFunc: d.updateService,
-		},
-		resyncPeriod,
-	)
-	return d
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func (d *Discoverer) Run(stopCh <-chan struct{}) {
-	defer d.queue.ShutDown()
+func (d *Discoverer) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	klog.Info("Starting ServiceCIDRDiscoverer")
-	defer klog.Info("Stopping ServiceCIDRDiscoverer")
-	if !cache.WaitForCacheSync(stopCh, d.serviceInformer.HasSynced) {
-		return
-	}
-	svcs, _ := d.serviceLister.List(labels.Everything())
-	d.updateServiceCIDR(svcs...)
-
-	go func() {
-		for {
-			nn, quit := d.queue.Get()
-			if quit {
-				return
-			}
-
-			svc, _ := d.serviceLister.Services(nn.Namespace).Get(nn.Name)
-			// Ignore it if not found.
-			if svc != nil {
-				d.updateServiceCIDR(svc)
-			}
-			d.queue.Done(nn)
-		}
-	}()
-	<-stopCh
-}
+// Ignore it if not found.
 
 func (d *Discoverer) GetServiceCIDRs() ([]*net.IPNet, error) {
-	d.RLock()
-	defer d.RUnlock()
-	if !d.initialized {
-		return nil, fmt.Errorf("Service CIDR discoverer is not initialized yet")
-	}
-	var serviceCIDRs []*net.IPNet
-	if d.serviceIPv4CIDR != nil {
-		serviceCIDRs = append(serviceCIDRs, d.serviceIPv4CIDR)
-	}
-	if d.serviceIPv6CIDR != nil {
-		serviceCIDRs = append(serviceCIDRs, d.serviceIPv6CIDR)
-	}
-	return serviceCIDRs, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-func (d *Discoverer) AddEventHandler(handler EventHandler) {
-	d.eventHandlers = append(d.eventHandlers, handler)
-}
+func (d *Discoverer) AddEventHandler(handler EventHandler) { _ = "STUB: not implemented"; return }
 
-func (d *Discoverer) addService(obj interface{}) {
-	svc := obj.(*corev1.Service)
-	klog.V(2).InfoS("Processing Service ADD event", "Service", klog.KObj(svc))
-	d.queue.Add(types.NamespacedName{Namespace: svc.Namespace, Name: svc.Name})
-}
+func (d *Discoverer) addService(obj interface{}) { _ = "STUB: not implemented"; return }
 
-func (d *Discoverer) updateService(old, obj interface{}) {
-	oldSvc := old.(*corev1.Service)
-	curSvc := obj.(*corev1.Service)
-	klog.V(2).InfoS("Processing Service UPDATE event", "Service", klog.KObj(curSvc))
-	if !slices.Equal(oldSvc.Spec.ClusterIPs, curSvc.Spec.ClusterIPs) {
-		d.queue.Add(types.NamespacedName{Namespace: curSvc.Namespace, Name: curSvc.Name})
-	}
-}
+func (d *Discoverer) updateService(old, obj interface{}) { _ = "STUB: not implemented"; return }
 
-func (d *Discoverer) updateServiceCIDR(svcs ...*corev1.Service) {
-	var newServiceCIDRs []*net.IPNet
+func (d *Discoverer) updateServiceCIDR(svcs ...*corev1.Service) { _ = "STUB: not implemented"; return }
 
-	curServiceIPv4CIDR, curServiceIPv6CIDR := func() (*net.IPNet, *net.IPNet) {
-		d.RLock()
-		defer d.RUnlock()
-		return d.serviceIPv4CIDR, d.serviceIPv6CIDR
-	}()
+// If the calculated Service CIDR exists but doesn't contain the ClusterIP, calculate a new Service CIDR by
+// enlarging the current Service CIDR with the ClusterIP.
 
-	updated := false
-	for _, svc := range svcs {
-		for _, clusterIPStr := range svc.Spec.ClusterIPs {
-			clusterIP := net.ParseIP(clusterIPStr)
-			if clusterIP == nil {
-				klog.V(2).InfoS("Skip invalid ClusterIP", "ClusterIP", clusterIPStr)
-				continue
-			}
-			isIPv6 := utilnet.IsIPv6(clusterIP)
-
-			curServiceCIDR := curServiceIPv4CIDR
-			mask := net.IPv4len * 8
-			if isIPv6 {
-				curServiceCIDR = curServiceIPv6CIDR
-				mask = net.IPv6len * 8
-			}
-
-			if curServiceCIDR != nil && curServiceCIDR.Contains(clusterIP) {
-				continue
-			}
-
-			var newServiceCIDR *net.IPNet
-			var err error
-			if curServiceCIDR != nil {
-				// If the calculated Service CIDR exists but doesn't contain the ClusterIP, calculate a new Service CIDR by
-				// enlarging the current Service CIDR with the ClusterIP.
-				if newServiceCIDR, err = util.ExtendCIDRWithIP(curServiceCIDR, clusterIP); err != nil {
-					klog.ErrorS(err, "Error when enlarging the Service CIDR", "ServiceCIDR", curServiceCIDR, "ClusterIP", clusterIPStr)
-					continue
-				}
-			} else {
-				mask := net.CIDRMask(mask, mask)
-				clusterIP := clusterIP.Mask(mask)
-				// If the calculated Service CIDR doesn't exist, generate a new Service CIDR with the ClusterIP.
-				newServiceCIDR = &net.IPNet{IP: clusterIP, Mask: mask}
-			}
-
-			if isIPv6 {
-				curServiceIPv6CIDR = newServiceCIDR
-			} else {
-				curServiceIPv4CIDR = newServiceCIDR
-			}
-			updated = true
-		}
-	}
-
-	if !updated {
-		return
-	}
-	func() {
-		d.Lock()
-		defer d.Unlock()
-		if d.serviceIPv4CIDR != curServiceIPv4CIDR {
-			d.serviceIPv4CIDR = curServiceIPv4CIDR
-			klog.InfoS("Service IPv4 CIDR was updated", "ServiceCIDR", curServiceIPv4CIDR)
-			newServiceCIDRs = append(newServiceCIDRs, curServiceIPv4CIDR)
-		}
-		if d.serviceIPv6CIDR != curServiceIPv6CIDR {
-			d.serviceIPv6CIDR = curServiceIPv6CIDR
-			klog.InfoS("Service IPv6 CIDR was updated", "ServiceCIDR", curServiceIPv6CIDR)
-			newServiceCIDRs = append(newServiceCIDRs, curServiceIPv6CIDR)
-		}
-		d.initialized = true
-	}()
-	for _, handler := range d.eventHandlers {
-		handler(newServiceCIDRs)
-	}
-}
+// If the calculated Service CIDR doesn't exist, generate a new Service CIDR with the ClusterIP.

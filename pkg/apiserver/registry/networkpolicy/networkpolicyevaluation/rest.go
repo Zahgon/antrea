@@ -16,14 +16,11 @@ package networkpolicyevaluation
 
 import (
 	"context"
-	"fmt"
 
-	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apiserver/pkg/registry/rest"
 
-	"antrea.io/antrea/v2/pkg/apis/controlplane"
 	"antrea.io/antrea/v2/pkg/controller/networkpolicy"
 )
 
@@ -39,34 +36,17 @@ var (
 )
 
 // NewREST returns a REST object that will work against API services.
-func NewREST(querier networkpolicy.PolicyRuleQuerier) *REST {
-	return &REST{querier}
-}
+func NewREST(querier networkpolicy.PolicyRuleQuerier) *REST { _ = "STUB: not implemented"; return nil }
 
-func (r *REST) New() runtime.Object {
-	return &controlplane.NetworkPolicyEvaluation{}
-}
+func (r *REST) New() runtime.Object { _ = "STUB: not implemented"; return *new(runtime.Object) }
 
-func (r *REST) Destroy() {
-}
+func (r *REST) Destroy() { _ = "STUB: not implemented"; return }
 
 func (r *REST) Create(ctx context.Context, obj runtime.Object, createValidation rest.ValidateObjectFunc, options *metav1.CreateOptions) (runtime.Object, error) {
-	eval, ok := obj.(*controlplane.NetworkPolicyEvaluation)
-	if !ok {
-		return nil, errors.NewBadRequest(fmt.Sprintf("not a NetworkPolicyEvaluation object: %T", obj))
-	}
-	response, err := r.querier.QueryNetworkPolicyEvaluation(eval.Request)
-	if err != nil {
-		return nil, errors.NewInternalError(err)
-	}
-	eval.Response = response
-	return eval, nil
+	_ = "STUB: not implemented"
+	return *new(runtime.Object), nil
 }
 
-func (r *REST) NamespaceScoped() bool {
-	return false
-}
+func (r *REST) NamespaceScoped() bool { _ = "STUB: not implemented"; return false }
 
-func (r *REST) GetSingularName() string {
-	return "networkpolicyevaluation"
-}
+func (r *REST) GetSingularName() string { _ = "STUB: not implemented"; return "" }

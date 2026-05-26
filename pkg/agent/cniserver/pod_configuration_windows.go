@@ -21,15 +21,8 @@ import (
 	"net"
 	"time"
 
-	"antrea.io/libOpenflow/openflow15"
 	current "github.com/containernetworking/cni/pkg/types/100"
-	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/client-go/kubernetes/scheme"
-	v1 "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/tools/cache"
-	"k8s.io/client-go/tools/events"
-	"k8s.io/client-go/util/workqueue"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/cniserver/ipam"
 	"antrea.io/antrea/v2/pkg/agent/interfacestore"
@@ -48,20 +41,15 @@ const (
 // in another goroutine. The function is for containerd runtime. The host interface is created after
 // CNI call completes.
 func (pc *podConfigurator) connectInterfaceToOVSAsync(ifConfig *interfacestore.InterfaceConfig, containerAccess *containerAccessArbitrator) error {
-	ovsPortName := ifConfig.InterfaceName
-	// Add the OVS port into the queue after 30s in case the OFPort is still not ready. This
-	// operation is performed before we update OVSDB, otherwise we
-	// need to think about the race condition between the current goroutine with the listener.
-	// It may generate a duplicated PodIsReady event if the Pod's OpenFlow entries are installed
-	// before the time, then the library shall merge the event.
-	pc.unreadyPortQueue.AddAfter(ovsPortName, podNotReadyTime)
-	return pc.ifConfigurator.addPostInterfaceCreateHook(ifConfig.ContainerID, ovsPortName, containerAccess, func() error {
-		if err := pc.ovsBridgeClient.SetInterfaceType(ovsPortName, ovsInterfaceTypeForPod); err != nil {
-			return err
-		}
-		return nil
-	})
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Add the OVS port into the queue after 30s in case the OFPort is still not ready. This
+// operation is performed before we update OVSDB, otherwise we
+// need to think about the race condition between the current goroutine with the listener.
+// It may generate a duplicated PodIsReady event if the Pod's OpenFlow entries are installed
+// before the time, then the library shall merge the event.
 
 // connectInterfaceToOVS connects an existing interface to the OVS bridge.
 func (pc *podConfigurator) connectInterfaceToOVS(
@@ -70,133 +58,58 @@ func (pc *podConfigurator) connectInterfaceToOVS(
 	ips []*current.IPConfig,
 	vlanID uint16,
 	containerAccess *containerAccessArbitrator) (*interfacestore.InterfaceConfig, error) {
+	_ = "STUB: not implemented"
 	// Use the outer veth interface name as the OVS port name.
-	ovsPortName := hostIface.Name
-	containerConfig := buildContainerConfig(ovsPortName, containerID, podName, podNamespace,
-		netNS, containerIface, ips, vlanID)
-	// The container interface is created after the CNI returns the network setup result.
-	// Because of this, we need to wait asynchronously for the interface to be created: we create the OVS port
-	// and set the OVS Interface type "" first, and change the OVS Interface type to "internal" to connect to the
-	// container interface after it is created. After OVS connects to the container interface, an OFPort is allocated.
-	klog.V(2).InfoS("Adding OVS port for container", "port", ovsPortName, "container", containerID)
-	ovsAttachInfo := BuildOVSPortExternalIDs(containerConfig)
-	portUUID, err := pc.createOVSPort(ovsPortName, ovsAttachInfo, containerConfig.VLANID)
-	if err != nil {
-		return nil, err
-	}
-	containerConfig.OVSPortConfig = &interfacestore.OVSPortConfig{PortUUID: portUUID}
-	// Add containerConfig into local cache
-	pc.ifaceStore.AddInterface(containerConfig)
-	return containerConfig, pc.connectInterfaceToOVSAsync(containerConfig, containerAccess)
+	return nil, nil
 }
+
+// The container interface is created after the CNI returns the network setup result.
+// Because of this, we need to wait asynchronously for the interface to be created: we create the OVS port
+// and set the OVS Interface type "" first, and change the OVS Interface type to "internal" to connect to the
+// container interface after it is created. After OVS connects to the container interface, an OFPort is allocated.
+
+// Add containerConfig into local cache
 
 func (pc *podConfigurator) configureInterfaces(
 	podName, podNamespace, containerID, containerNetNS string,
 	containerIFDev string, mtu int, sriovVFDeviceID string,
 	result *ipam.IPAMResult, createOVSPort bool, containerAccess *containerAccessArbitrator, mac net.HardwareAddr) error {
-	if !createOVSPort {
-		return pc.ifConfigurator.configureContainerLink(
-			podName, podNamespace, containerID, containerNetNS,
-			containerIFDev, mtu, sriovVFDeviceID, "",
-			&result.Result, containerAccess, mac)
-	}
-	// Check if the OVS configurations for the container exists or not. If yes, return
-	// immediately. This check is used on Windows, as kubelet on Windows will call CNI ADD
-	// multiple times for the infrastructure container to query IP of the Pod. But there should
-	// be only one OVS port created for the same Pod (identified by its sandbox container ID),
-	// and if the OVS port is added more than once, OVS will return an error.
-	// See: https://github.com/kubernetes/kubernetes/issues/57253#issuecomment-358897721.
-	interfaceConfig, found := pc.ifaceStore.GetContainerInterface(containerID)
-	if found {
-		klog.V(2).InfoS("Found an existing OVS port for container, returning", "container", containerID)
-		mac := interfaceConfig.MAC.String()
-		hostIface := &current.Interface{
-			Name:    interfaceConfig.InterfaceName,
-			Mac:     mac,
-			Sandbox: "",
-		}
-		containerIface := &current.Interface{
-			Name:    containerIFDev,
-			Mac:     mac,
-			Sandbox: containerNetNS,
-		}
-		result.Interfaces = []*current.Interface{hostIface, containerIface}
-		return nil
-	}
-
-	return pc.configureInterfacesCommon(podName, podNamespace, containerID, containerNetNS,
-		containerIFDev, mtu, sriovVFDeviceID, result, containerAccess, mac)
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// Check if the OVS configurations for the container exists or not. If yes, return
+// immediately. This check is used on Windows, as kubelet on Windows will call CNI ADD
+// multiple times for the infrastructure container to query IP of the Pod. But there should
+// be only one OVS port created for the same Pod (identified by its sandbox container ID),
+// and if the OVS port is added more than once, OVS will return an error.
+// See: https://github.com/kubernetes/kubernetes/issues/57253#issuecomment-358897721.
 
 // isInterfaceInvalid returns false because we now don't support detecting the disconnected host interface on Windows
 // due to the OVS issue (https://github.com/openvswitch/ovs-issues/issues/353), by which we can't differentiate from
 // the case that a Pod's host interface is created during agent downtime and is expected to re-connect after agent
 // is restarted.
 func (pc *podConfigurator) isInterfaceInvalid(ifaceConfig *interfacestore.InterfaceConfig) bool {
+	_ = "STUB: not implemented"
 	return false
 }
 
 func (pc *podConfigurator) reconcileMissingPods(ifConfigs []*interfacestore.InterfaceConfig, containerAccess *containerAccessArbitrator) {
-	for i := range ifConfigs {
-		ifaceConfig := ifConfigs[i]
-		if err := pc.connectInterfaceToOVSAsync(ifaceConfig, containerAccess); err != nil {
-			klog.ErrorS(err, "Failed to reconcile Pod", "Pod", klog.KRef(ifaceConfig.PodNamespace, ifaceConfig.PodNamespace))
-		}
-	}
+	_ = "STUB: not implemented"
+	return
 }
 
 // initPortStatusMonitor has subscribed a channel to listen for the OpenFlow PortStatus message, and it also
 // initiates the Pod recorder.
 func (pc *podConfigurator) initPortStatusMonitor(podInformer cache.SharedIndexInformer) {
-	pc.podLister = v1.NewPodLister(podInformer.GetIndexer())
-	pc.podListerSynced = podInformer.HasSynced
-	pc.unreadyPortQueue = workqueue.NewTypedDelayingQueueWithConfig[string](
-		workqueue.TypedDelayingQueueConfig[string]{
-			Name: workerName,
-		},
-	)
-	eventBroadcaster := events.NewBroadcaster(&events.EventSinkImpl{
-		Interface: pc.kubeClient.EventsV1(),
-	})
-	pc.eventBroadcaster = eventBroadcaster
-	pc.recorder = eventBroadcaster.NewRecorder(
-		scheme.Scheme,
-		"AntreaPodConfigurator",
-	)
-	pc.statusCh = make(chan *openflow15.PortStatus, 100)
-	pc.ofClient.SubscribeOFPortStatusMessage(pc.statusCh)
+	_ = "STUB: not implemented"
+	return
 }
 
-func (pc *podConfigurator) Run(stopCh <-chan struct{}) {
-	defer pc.unreadyPortQueue.ShutDown()
+func (pc *podConfigurator) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
-	klog.Infof("Starting %s", workerName)
-	defer klog.Infof("Shutting down %s", workerName)
-
-	if !cache.WaitForNamedCacheSync("podConfigurator", stopCh, pc.podListerSynced) {
-		return
-	}
-	pc.eventBroadcaster.StartStructuredLogging(0)
-	pc.eventBroadcaster.StartRecordingToSink(stopCh)
-	defer pc.eventBroadcaster.Shutdown()
-
-	go wait.Until(pc.worker, time.Second, stopCh)
-
-	for {
-		select {
-		case status := <-pc.statusCh:
-			klog.V(2).InfoS("Received PortStatus message", "message", status)
-			// Update Pod OpenFlow entries only after the OpenFlow port state is live.
-			pc.processPortStatusMessage(status)
-		case <-stopCh:
-			return
-		}
-	}
-}
+// Update Pod OpenFlow entries only after the OpenFlow port state is live.
 
 // worker is a long-running function that will continually call the processNextWorkItem function in
 // order to read and process a message on the workqueue.
-func (pc *podConfigurator) worker() {
-	for pc.processNextWorkItem() {
-	}
-}
+func (pc *podConfigurator) worker() { _ = "STUB: not implemented"; return }

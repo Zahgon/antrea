@@ -29,22 +29,6 @@ type fakeAntreaAgentInfos struct {
 }
 
 func newFakeAntreaAgentInfos(fake *FakeCrdV1beta1) crdv1beta1.AntreaAgentInfoInterface {
-	return &fakeAntreaAgentInfos{
-		gentype.NewFakeClientWithList[*v1beta1.AntreaAgentInfo, *v1beta1.AntreaAgentInfoList](
-			fake.Fake,
-			"",
-			v1beta1.SchemeGroupVersion.WithResource("antreaagentinfos"),
-			v1beta1.SchemeGroupVersion.WithKind("AntreaAgentInfo"),
-			func() *v1beta1.AntreaAgentInfo { return &v1beta1.AntreaAgentInfo{} },
-			func() *v1beta1.AntreaAgentInfoList { return &v1beta1.AntreaAgentInfoList{} },
-			func(dst, src *v1beta1.AntreaAgentInfoList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta1.AntreaAgentInfoList) []*v1beta1.AntreaAgentInfo {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1beta1.AntreaAgentInfoList, items []*v1beta1.AntreaAgentInfo) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.AntreaAgentInfoInterface)
 }

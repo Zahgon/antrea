@@ -15,81 +15,8 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"net"
-	"strconv"
 	"time"
-
-	"github.com/spf13/afero"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/fields"
-	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/apiserver/pkg/server/options"
-	"k8s.io/client-go/informers"
-	coreinformers "k8s.io/client-go/informers/core/v1"
-	"k8s.io/client-go/tools/cache"
-	"k8s.io/klog/v2"
-
-	mcinformers "antrea.io/antrea/v2/multicluster/pkg/client/informers/externalversions"
-	"antrea.io/antrea/v2/pkg/agent"
-	"antrea.io/antrea/v2/pkg/agent/apiserver"
-	"antrea.io/antrea/v2/pkg/agent/client"
-	"antrea.io/antrea/v2/pkg/agent/cniserver"
-	"antrea.io/antrea/v2/pkg/agent/cniserver/ipam"
-	"antrea.io/antrea/v2/pkg/agent/config"
-	"antrea.io/antrea/v2/pkg/agent/controller/bgp"
-	"antrea.io/antrea/v2/pkg/agent/controller/egress"
-	"antrea.io/antrea/v2/pkg/agent/controller/ipseccertificate"
-	"antrea.io/antrea/v2/pkg/agent/controller/networkpolicy"
-	"antrea.io/antrea/v2/pkg/agent/controller/networkpolicy/l7engine"
-	"antrea.io/antrea/v2/pkg/agent/controller/noderoute"
-	"antrea.io/antrea/v2/pkg/agent/controller/serviceexternalip"
-	"antrea.io/antrea/v2/pkg/agent/controller/traceflow"
-	"antrea.io/antrea/v2/pkg/agent/controller/trafficcontrol"
-	"antrea.io/antrea/v2/pkg/agent/externalnode"
-	"antrea.io/antrea/v2/pkg/agent/flowexporter"
-	flowexporteroptions "antrea.io/antrea/v2/pkg/agent/flowexporter/options"
-	"antrea.io/antrea/v2/pkg/agent/interfacestore"
-	"antrea.io/antrea/v2/pkg/agent/ipassigner/linkmonitor"
-	"antrea.io/antrea/v2/pkg/agent/memberlist"
-	"antrea.io/antrea/v2/pkg/agent/metrics"
-	"antrea.io/antrea/v2/pkg/agent/monitortool"
-	"antrea.io/antrea/v2/pkg/agent/multicast"
-	mcroute "antrea.io/antrea/v2/pkg/agent/multicluster"
-	"antrea.io/antrea/v2/pkg/agent/nodeip"
-	npl "antrea.io/antrea/v2/pkg/agent/nodeportlocal"
-	"antrea.io/antrea/v2/pkg/agent/openflow"
-	"antrea.io/antrea/v2/pkg/agent/packetcapture"
-	"antrea.io/antrea/v2/pkg/agent/proxy"
-	proxytypes "antrea.io/antrea/v2/pkg/agent/proxy/types"
-	"antrea.io/antrea/v2/pkg/agent/querier"
-	"antrea.io/antrea/v2/pkg/agent/route"
-	"antrea.io/antrea/v2/pkg/agent/secondarynetwork"
-	"antrea.io/antrea/v2/pkg/agent/servicecidr"
-	"antrea.io/antrea/v2/pkg/agent/stats"
-	support "antrea.io/antrea/v2/pkg/agent/supportbundlecollection"
-	agenttypes "antrea.io/antrea/v2/pkg/agent/types"
-	"antrea.io/antrea/v2/pkg/apis"
-	"antrea.io/antrea/v2/pkg/apis/controlplane"
-	crdinformers "antrea.io/antrea/v2/pkg/client/informers/externalversions"
-	crdv1alpha1informers "antrea.io/antrea/v2/pkg/client/informers/externalversions/crd/v1alpha1"
-	"antrea.io/antrea/v2/pkg/controller/externalippool"
-	"antrea.io/antrea/v2/pkg/features"
-	"antrea.io/antrea/v2/pkg/log"
-	"antrea.io/antrea/v2/pkg/monitor"
-	ofconfig "antrea.io/antrea/v2/pkg/ovs/openflow"
-	"antrea.io/antrea/v2/pkg/ovs/ovsconfig"
-	"antrea.io/antrea/v2/pkg/ovs/ovsctl"
-	"antrea.io/antrea/v2/pkg/signals"
-	"antrea.io/antrea/v2/pkg/util/channel"
-	"antrea.io/antrea/v2/pkg/util/k8s"
-	"antrea.io/antrea/v2/pkg/util/lazy"
-	"antrea.io/antrea/v2/pkg/util/objectstore"
-	utilwait "antrea.io/antrea/v2/pkg/util/wait"
-	"antrea.io/antrea/v2/pkg/version"
-	k8sproxy "antrea.io/antrea/v2/third_party/proxy"
 )
 
 // informerDefaultResync is the default resync period if a handler doesn't specify one.
@@ -110,969 +37,110 @@ var (
 var ipv4Localhost = net.ParseIP("127.0.0.1")
 
 // run starts Antrea agent with the given options and waits for termination signal.
-func run(o *Options) error {
-	klog.InfoS("Starting Antrea Agent", "version", version.GetFullVersion())
-
-	// Create K8s Clientset, CRD Clientset, Multicluster CRD Clientset and SharedInformerFactory for the given config.
-	k8sClient, _, crdClient, _, mcClient, _, err := k8s.CreateClients(o.config.ClientConnection, o.config.KubeAPIServerOverride)
-	if err != nil {
-		return fmt.Errorf("error creating K8s clients: %v", err)
-	}
-	k8s.OverrideKubeAPIServer(o.config.KubeAPIServerOverride)
-	informerFactory := informers.NewSharedInformerFactoryWithOptions(k8sClient, informerDefaultResync, informers.WithTransform(k8s.NewTrimmer(k8s.TrimNode)))
-	crdInformerFactory := crdinformers.NewSharedInformerFactoryWithOptions(crdClient, informerDefaultResync, crdinformers.WithTransform(k8s.NewTrimmer()))
-	traceflowInformer := crdInformerFactory.Crd().V1beta1().Traceflows()
-	packetCaptureInformer := crdInformerFactory.Crd().V1alpha1().PacketCaptures()
-	egressInformer := crdInformerFactory.Crd().V1beta1().Egresses()
-	externalIPPoolInformer := crdInformerFactory.Crd().V1beta1().ExternalIPPools()
-	trafficControlInformer := crdInformerFactory.Crd().V1alpha2().TrafficControls()
-	ipPoolInformer := crdInformerFactory.Crd().V1beta1().IPPools()
-	nodeInformer := informerFactory.Core().V1().Nodes()
-	serviceInformer := informerFactory.Core().V1().Services()
-	endpointSliceInformer := informerFactory.Discovery().V1().EndpointSlices()
-	namespaceInformer := informerFactory.Core().V1().Namespaces()
-	nodeLatencyMonitorInformer := crdInformerFactory.Crd().V1alpha1().NodeLatencyMonitors()
-	flowExporterDestinationInformer := crdInformerFactory.Crd().V1alpha1().FlowExporterDestinations()
-
-	// Create Antrea Clientset for the given config.
-	antreaClientProvider, err := client.NewAntreaClientProvider(o.config.AntreaClientConnection, k8sClient)
-	if err != nil {
-		return fmt.Errorf("failed to create Antrea client provider: %w", err)
-	}
-
-	// Register Antrea Agent metrics if EnablePrometheusMetrics is set
-	if *o.config.EnablePrometheusMetrics {
-		metrics.InitializePrometheusMetrics()
-	}
-	// Create ovsdb and openflow clients.
-	ovsdbAddress := ovsconfig.GetConnAddress(o.config.OVSRunDir)
-	ovsdbConnection, err := ovsconfig.NewOVSDBConnectionUDS(ovsdbAddress)
-	if err != nil {
-		// TODO: ovsconfig.NewOVSDBConnectionUDS might return timeout in the future, need to add retry
-		return fmt.Errorf("error connecting OVSDB: %v", err)
-	}
-	defer ovsdbConnection.Close()
-
-	enableAntreaIPAM := features.DefaultFeatureGate.Enabled(features.AntreaIPAM)
-	enableBridgingMode := enableAntreaIPAM && o.config.EnableBridgingMode
-	l7NetworkPolicyEnabled := features.DefaultFeatureGate.Enabled(features.L7NetworkPolicy)
-	nodeNetworkPolicyEnabled := features.DefaultFeatureGate.Enabled(features.NodeNetworkPolicy)
-	nodeLatencyMonitorEnabled := features.DefaultFeatureGate.Enabled(features.NodeLatencyMonitor)
-	enableMulticlusterGW := features.DefaultFeatureGate.Enabled(features.Multicluster) && o.config.Multicluster.EnableGateway
-	_, multiclusterEncryptionMode := config.GetTrafficEncryptionModeFromStr(o.config.Multicluster.TrafficEncryptionMode)
-	enableMulticlusterNP := features.DefaultFeatureGate.Enabled(features.Multicluster) && o.config.Multicluster.EnableStretchedNetworkPolicy
-	enableFlowExporter := features.DefaultFeatureGate.Enabled(features.FlowExporter)
-	var nodeIPTracker *nodeip.Tracker
-	if o.nodeType == config.K8sNode {
-		nodeIPTracker = nodeip.NewTracker(nodeInformer)
-	}
-	// Bridging mode will connect the uplink interface to the OVS bridge.
-	connectUplinkToBridge := enableBridgingMode
-	ovsDatapathType := ovsconfig.OVSDatapathType(o.config.OVSDatapathType)
-	// WithRequiredPortExternalIDs will ensure that whenever we create a port, the required
-	// external ID (interface type) is provided. This is a sanity check to ensure code
-	// correctness.
-	ovsBridgeClient := ovsconfig.NewOVSBridge(o.config.OVSBridge, ovsDatapathType, ovsdbConnection, ovsconfig.WithRequiredPortExternalIDs(interfacestore.AntreaInterfaceTypeKey))
-	ovsCtlClient := ovsctl.NewClient(o.config.OVSBridge)
-	ovsBridgeMgmtAddr := ofconfig.GetMgmtAddress(o.config.OVSRunDir, o.config.OVSBridge)
-	multicastEnabled := features.DefaultFeatureGate.Enabled(features.Multicast) && o.config.Multicast.Enable
-	groupIDAllocator := openflow.NewGroupAllocator()
-	ofClient := openflow.NewClient(o.config.OVSBridge,
-		ovsBridgeMgmtAddr,
-		nodeIPTracker,
-		o.enableAntreaProxy,
-		features.DefaultFeatureGate.Enabled(features.AntreaPolicy),
-		l7NetworkPolicyEnabled,
-		o.enableEgress,
-		features.DefaultFeatureGate.Enabled(features.EgressTrafficShaping),
-		enableFlowExporter,
-		o.config.AntreaProxy.ProxyAll,
-		features.DefaultFeatureGate.Enabled(features.LoadBalancerModeDSR),
-		connectUplinkToBridge,
-		multicastEnabled,
-		features.DefaultFeatureGate.Enabled(features.TrafficControl),
-		enableMulticlusterGW,
-		groupIDAllocator,
-		*o.config.EnablePrometheusMetrics,
-		o.config.PacketInRate,
-	)
-
-	var serviceCIDRNet *net.IPNet
-	var serviceCIDRProvider *servicecidr.Discoverer
-	if o.nodeType == config.K8sNode {
-		_, serviceCIDRNet, _ = net.ParseCIDR(o.config.ServiceCIDR)
-		serviceCIDRProvider = servicecidr.NewServiceCIDRDiscoverer(serviceInformer)
-	}
-	var serviceCIDRNetv6 *net.IPNet
-	if o.config.ServiceCIDRv6 != "" {
-		_, serviceCIDRNetv6, _ = net.ParseCIDR(o.config.ServiceCIDRv6)
-	}
-
-	_, encapMode := config.GetTrafficEncapModeFromStr(o.config.TrafficEncapMode)
-	_, encryptionMode := config.GetTrafficEncryptionModeFromStr(o.config.TrafficEncryptionMode)
-	_, ipsecAuthenticationMode := config.GetIPsecAuthenticationModeFromStr(o.config.IPsec.AuthenticationMode)
-	_, hostNetworkMode := config.GetHostNetworkModeFromStr(o.config.HostNetworkMode)
-
-	networkConfig := &config.NetworkConfig{
-		TunnelType:            ovsconfig.TunnelType(o.config.TunnelType),
-		TunnelPort:            o.config.TunnelPort,
-		TunnelCsum:            o.config.TunnelCsum,
-		TrafficEncapMode:      encapMode,
-		TrafficEncryptionMode: encryptionMode,
-		TransportIface:        o.config.TransportInterface,
-		TransportIfaceCIDRs:   o.config.TransportInterfaceCIDRs,
-		IPsecConfig: config.IPsecConfig{
-			AuthenticationMode: ipsecAuthenticationMode,
-		},
-		EnableMulticlusterGW:          enableMulticlusterGW,
-		MulticlusterEncryptionMode:    multiclusterEncryptionMode,
-		EnableHostNetworkAcceleration: *o.config.HostNetworkAcceleration.Enable,
-		HostNetworkMode:               hostNetworkMode,
-	}
-
-	wireguardConfig := &config.WireGuardConfig{
-		Port: o.config.WireGuard.Port,
-	}
-	exceptCIDRs := []net.IPNet{}
-	for _, cidr := range o.config.Egress.ExceptCIDRs {
-		_, exceptCIDR, _ := net.ParseCIDR(cidr)
-		exceptCIDRs = append(exceptCIDRs, *exceptCIDR)
-	}
-	egressConfig := &config.EgressConfig{
-		ExceptCIDRs: exceptCIDRs,
-	}
-
-	var proxyHealthCheckPort int64
-	if o.config.AntreaProxy.ProxyAll && !o.config.AntreaProxy.DisableServiceHealthCheckServer {
-		_, proxyHealthCheckPortStr, _ := net.SplitHostPort(o.config.AntreaProxy.ServiceHealthCheckServerBindAddress)
-		proxyHealthCheckPort, _ = strconv.ParseInt(proxyHealthCheckPortStr, 10, 32)
-	}
-
-	routeClient, err := route.NewClient(networkConfig,
-		o.config.NoSNAT,
-		o.config.AntreaProxy.ProxyAll,
-		connectUplinkToBridge,
-		nodeNetworkPolicyEnabled,
-		nodeLatencyMonitorEnabled,
-		multicastEnabled,
-		o.enableEgress,
-		o.config.SNATFullyRandomPorts,
-		*o.config.Egress.SNATFullyRandomPorts,
-		serviceCIDRProvider,
-		int32(wireguardConfig.Port),
-		int32(proxyHealthCheckPort),
-	)
-	if err != nil {
-		return fmt.Errorf("error creating route client: %v", err)
-	}
-
-	// Create an ifaceStore that caches network interfaces managed by this node.
-	ifaceStore := interfacestore.NewInterfaceStore()
-
-	// podNetworkWait is used to wait and notify that preconditions for Pod network are ready.
-	// Processes that are supposed to finish before enabling Pod network should increment the wait group and decrement
-	// it when finished.
-	// Processes that enable Pod network should wait for it.
-	podNetworkWait := utilwait.NewGroup()
-
-	// flowRestoreCompleteWait is used to wait until "essential" flows have been installed
-	// successfully in OVS. These flows include NetworkPolicy flows (guaranteed by
-	// podNetworkWait), Pod forwarding flows and flows installed by the
-	// NodeRouteController. Additional requirements may be added in the future.
-	flowRestoreCompleteWait := utilwait.NewGroup()
-
-	// staleFlowsDeletedWait starts with one pending unit (Increment); the stale-flow cleanup
-	// goroutine calls Done when deletion completes.
-	staleFlowsDeletedWait := utilwait.NewGroup().Increment()
-
-	// set up signal capture: the first SIGTERM / SIGINT signal is handled gracefully and will
-	// cause the stopCh channel to be closed; if another signal is received before the program
-	// exits, we will force exit.
-	stopCh := signals.RegisterSignalHandlers()
-	// Generate a context for functions which require one (instead of stopCh).
-	ctx := wait.ContextForChannel(stopCh)
-
-	if o.nodeType == config.K8sNode {
-		// Must start after registering all event handlers.
-		go serviceCIDRProvider.Run(stopCh)
-	}
-
-	// Get all available NodePort addresses.
-	var nodePortAddressesIPv4, nodePortAddressesIPv6 []net.IP
-	if o.config.AntreaProxy.ProxyAll {
-		excludeNodePortDevices := append(excludeNodePortDevices, o.config.HostGateway)
-		nodePortAddressesIPv4, nodePortAddressesIPv6, err = getAvailableNodePortAddresses(o.config.AntreaProxy.NodePortAddresses, excludeNodePortDevices, excludeNodePortDevicePrefixes)
-		if err != nil {
-			return fmt.Errorf("getting available NodePort IP addresses failed: %v", err)
-		}
-	}
-	serviceConfig := &config.ServiceConfig{
-		ServiceCIDR:           serviceCIDRNet,
-		ServiceCIDRv6:         serviceCIDRNetv6,
-		NodePortAddressesIPv4: nodePortAddressesIPv4,
-		NodePortAddressesIPv6: nodePortAddressesIPv6,
-	}
-
-	// Initialize agent and node network.
-	agentInitializer := agent.NewInitializer(
-		k8sClient,
-		crdClient,
-		ovsBridgeClient,
-		ovsCtlClient,
-		ofClient,
-		routeClient,
-		ifaceStore,
-		o.config.OVSBridge,
-		o.config.HostGateway,
-		o.config.DefaultMTU,
-		networkConfig,
-		wireguardConfig,
-		egressConfig,
-		serviceConfig,
-		podNetworkWait,
-		flowRestoreCompleteWait,
-		staleFlowsDeletedWait,
-		stopCh,
-		o.nodeType,
-		o.config.ExternalNode.ExternalNodeNamespace,
-		connectUplinkToBridge,
-		o.enableAntreaProxy,
-		l7NetworkPolicyEnabled,
-		o.config.DisableTXChecksumOffload)
-	if err := agentInitializer.Initialize(ctx); err != nil {
-		return fmt.Errorf("error initializing agent: %w", err)
-	}
-	nodeConfig := agentInitializer.GetNodeConfig()
-
-	var ipsecCertController *ipseccertificate.Controller
-
-	if networkConfig.TrafficEncryptionMode == config.TrafficEncryptionModeIPSec &&
-		networkConfig.IPsecConfig.AuthenticationMode == config.IPsecAuthenticationModeCert {
-		ipsecCertController = ipseccertificate.NewIPSecCertificateController(k8sClient, ovsBridgeClient, nodeConfig.Name)
-	}
-
-	var nodeRouteController *noderoute.Controller
-	if o.nodeType == config.K8sNode {
-		nodeRouteController = noderoute.NewNodeRouteController(
-			nodeInformer,
-			ofClient,
-			ovsctl.NewClient(o.config.OVSBridge),
-			ovsBridgeClient,
-			routeClient,
-			ifaceStore,
-			networkConfig,
-			nodeConfig,
-			agentInitializer.GetWireGuardClient(),
-			ipsecCertController,
-			flowRestoreCompleteWait,
-		)
-	}
-
-	// podUpdateChannel is a channel for receiving Pod updates from CNIServer and
-	// notifying NetworkPolicyController, StretchedNetworkPolicyController and
-	// EgressController to reconcile rules related to the updated Pods.
-	var podUpdateChannel *channel.SubscribableChannel
-	// externalEntityUpdateChannel is a channel for receiving ExternalEntity updates from ExternalNodeController and
-	// notifying NetworkPolicyController to reconcile rules related to the updated ExternalEntities.
-	var externalEntityUpdateChannel *channel.SubscribableChannel
-	if o.nodeType == config.K8sNode {
-		podUpdateChannel = channel.NewSubscribableChannel("PodUpdate", 100)
-	} else {
-		externalEntityUpdateChannel = channel.NewSubscribableChannel("ExternalEntityUpdate", 100)
-	}
-
-	// Lazily initialize localPodInformer when it's required by any module.
-	localPodInformer := lazy.New(func() cache.SharedIndexInformer {
-		listOptions := func(options *metav1.ListOptions) {
-			options.FieldSelector = fields.OneTermEqualSelector("spec.nodeName", nodeConfig.Name).String()
-		}
-		informer := coreinformers.NewFilteredPodInformer(
-			k8sClient,
-			metav1.NamespaceAll,
-			resyncPeriodDisabled,
-			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, // NamespaceIndex is used in NPLController.
-			listOptions,
-		)
-		informer.SetTransform(k8s.NewTrimmer(k8s.TrimPod))
-		return informer
-	})
-
-	var mcDefaultRouteController *mcroute.MCDefaultRouteController
-	var mcStrechedNetworkPolicyController *mcroute.StretchedNetworkPolicyController
-	var mcPodRouteController *mcroute.MCPodRouteController
-	var mcInformerFactory mcinformers.SharedInformerFactory
-	var mcInformerFactoryWithNamespaceOption mcinformers.SharedInformerFactory
-
-	if enableMulticlusterGW {
-		if !networkConfig.IPv4Enabled {
-			return fmt.Errorf("Antrea Mutli-cluster doesn't not support IPv6 only cluster")
-		}
-
-		mcInformerFactoryWithNamespaceOption = mcinformers.NewSharedInformerFactoryWithOptions(mcClient,
-			informerDefaultResync,
-			mcinformers.WithNamespace(o.config.Multicluster.Namespace),
-			mcinformers.WithTransform(k8s.NewTrimmer()),
-		)
-		gwInformer := mcInformerFactoryWithNamespaceOption.Multicluster().V1alpha1().Gateways()
-		ciImportInformer := mcInformerFactoryWithNamespaceOption.Multicluster().V1alpha1().ClusterInfoImports()
-		mcDefaultRouteController = mcroute.NewMCDefaultRouteController(
-			mcClient,
-			gwInformer,
-			ciImportInformer,
-			ofClient,
-			nodeConfig,
-			networkConfig,
-			routeClient,
-			o.config.Multicluster,
-		)
-		if networkConfig.TrafficEncapMode != config.TrafficEncapModeEncap {
-			mcPodRouteController = mcroute.NewMCPodRouteController(
-				k8sClient,
-				gwInformer,
-				ofClient,
-				nodeConfig,
-			)
-		}
-	}
-	if enableMulticlusterNP {
-		mcInformerFactory = mcinformers.NewSharedInformerFactoryWithOptions(mcClient, informerDefaultResync, mcinformers.WithTransform(k8s.NewTrimmer()))
-		labelIDInformer := mcInformerFactory.Multicluster().V1alpha1().LabelIdentities()
-		mcStrechedNetworkPolicyController = mcroute.NewMCAgentStretchedNetworkPolicyController(
-			ofClient,
-			ifaceStore,
-			localPodInformer.Get(),
-			namespaceInformer,
-			labelIDInformer,
-			podUpdateChannel,
-		)
-	}
-
-	v4Enabled := networkConfig.IPv4Enabled
-	v6Enabled := networkConfig.IPv6Enabled
-
-	var groupCounters []proxytypes.GroupCounter
-	groupIDUpdates := make(chan string, 100)
-	var v4GroupCounter, v6GroupCounter proxytypes.GroupCounter
-	if v4Enabled {
-		v4GroupCounter = proxytypes.NewGroupCounter(groupIDAllocator, groupIDUpdates)
-		groupCounters = append(groupCounters, v4GroupCounter)
-	}
-	if v6Enabled {
-		v6GroupCounter = proxytypes.NewGroupCounter(groupIDAllocator, groupIDUpdates)
-		groupCounters = append(groupCounters, v6GroupCounter)
-	}
-
-	nodeManager, err := k8sproxy.NewNodeManager(ctx, k8sClient, resyncPeriodDisabled, nodeConfig.Name, false)
-	if err != nil {
-		return fmt.Errorf("failed to create node manager: %w", err)
-	}
-	var proxyServer *proxy.ProxyServer
-	var proxyQuerier proxy.ProxyQuerier
-	if o.enableAntreaProxy {
-		proxyServer, err = proxy.NewProxyServer(nodeConfig.Name,
-			nodeManager,
-			ofClient,
-			routeClient,
-			nodeIPTracker,
-			v4Enabled,
-			v6Enabled,
-			nodePortAddressesIPv4,
-			nodePortAddressesIPv6,
-			o.config.AntreaProxy,
-			o.defaultLoadBalancerMode,
-			v4GroupCounter,
-			v6GroupCounter,
-			enableMulticlusterGW)
-		if err != nil {
-			return fmt.Errorf("error when creating proxyServer: %w", err)
-		}
-		proxyServer.Initialize(ctx, serviceInformer, endpointSliceInformer)
-		proxyQuerier = proxyServer.GetProxyQuerier()
-	}
-
-	// We pick a time interval for rule deletion in the async rule cache (part of the
-	// idAllocator) based on the configured flow poll interval for the Flow Exporter. This is to
-	// preserve the rule info for populating NetworkPolicy fields in the Flow Exporter even
-	// after rule deletion, and avoid missing or even incorrect information in the flow records.
-	// In theory, anything slightly longer than the poll interval should work, but to
-	// accommodate for longer than usual poll cycles we choose to play it safe.
-	// o.pollInterval will be 0 when the Flow Exporter is not enabled.
-	asyncRuleDeleteInterval := 3*o.pollInterval + networkpolicy.MinAllocatorAsyncDeleteInterval
-	antreaPolicyEnabled := features.DefaultFeatureGate.Enabled(features.AntreaPolicy)
-	// In Antrea agent, status manager will automatically be enabled if
-	// AntreaPolicy feature is enabled.
-	statusManagerEnabled := antreaPolicyEnabled
-
-	var auditLoggerOptions = &networkpolicy.AuditLoggerOptions{
-		MaxSize:    int(o.config.AuditLogging.MaxSize),
-		MaxBackups: int(*o.config.AuditLogging.MaxBackups),
-		MaxAge:     int(*o.config.AuditLogging.MaxAge),
-		Compress:   *o.config.AuditLogging.Compress,
-	}
-
-	var gwPort, tunPort uint32
-	if o.nodeType == config.K8sNode {
-		gwPort = nodeConfig.GatewayConfig.OFPort
-		tunPort = nodeConfig.TunnelOFPort
-	}
-
-	nodeKey := nodeConfig.Name
-	if o.nodeType == config.ExternalNode {
-		nodeKey = k8s.NamespacedName(o.config.ExternalNode.ExternalNodeNamespace, nodeKey)
-	}
-	var l7Reconciler *l7engine.Reconciler
-	if l7NetworkPolicyEnabled {
-		l7Reconciler = l7engine.NewReconciler(ofClient)
-	}
-	networkPolicyController, err := networkpolicy.NewNetworkPolicyController(
-		antreaClientProvider,
-		ofClient,
-		routeClient,
-		ifaceStore,
-		afero.NewOsFs(),
-		nodeKey,
-		podUpdateChannel,
-		externalEntityUpdateChannel,
-		groupCounters,
-		groupIDUpdates,
-		antreaPolicyEnabled,
-		l7NetworkPolicyEnabled,
-		nodeNetworkPolicyEnabled,
-		o.enableAntreaProxy,
-		statusManagerEnabled,
-		multicastEnabled,
-		auditLoggerOptions,
-		asyncRuleDeleteInterval,
-		o.dnsServerOverride,
-		o.nodeType,
-		v4Enabled,
-		v6Enabled,
-		gwPort,
-		tunPort,
-		nodeConfig,
-		podNetworkWait,
-		l7Reconciler,
-		uint32(o.config.FQDNCacheMinTTL),
-	)
-	if err != nil {
-		return fmt.Errorf("error creating new NetworkPolicy controller: %v", err)
-	}
-
-	var egressController *egress.EgressController
-	var externalIPPoolController *externalippool.ExternalIPPoolController
-	var externalIPController *serviceexternalip.ServiceExternalIPController
-	var memberlistCluster *memberlist.Cluster
-	var linkMonitor linkmonitor.Interface
-
-	if o.enableEgress || features.DefaultFeatureGate.Enabled(features.ServiceExternalIP) {
-		externalIPPoolController = externalippool.NewExternalIPPoolController(
-			crdClient, externalIPPoolInformer,
-		)
-		var nodeTransportIP net.IP
-		if nodeConfig.NodeTransportIPv4Addr != nil {
-			nodeTransportIP = nodeConfig.NodeTransportIPv4Addr.IP
-		} else if nodeConfig.NodeTransportIPv6Addr != nil {
-			nodeTransportIP = nodeConfig.NodeTransportIPv6Addr.IP
-		} else {
-			return fmt.Errorf("invalid Node Transport IPAddr in Node config: %v", nodeConfig)
-		}
-		memberlistCluster, err = memberlist.NewCluster(nodeTransportIP, o.config.ClusterMembershipPort,
-			nodeConfig.Name, nodeInformer, externalIPPoolInformer, nil,
-		)
-		if err != nil {
-			return fmt.Errorf("error creating new memberlist cluster: %v", err)
-		}
-		linkMonitor = linkmonitor.NewLinkMonitor()
-	}
-	if o.enableEgress {
-		egressController, err = egress.NewEgressController(
-			ofClient, k8sClient, antreaClientProvider, crdClient, ifaceStore, routeClient, nodeConfig.Name, nodeConfig.NodeTransportInterfaceName,
-			memberlistCluster, egressInformer, externalIPPoolInformer, nodeInformer, podUpdateChannel, serviceCIDRProvider, o.config.Egress.MaxEgressIPsPerNode,
-			features.DefaultFeatureGate.Enabled(features.EgressTrafficShaping),
-			features.DefaultFeatureGate.Enabled(features.EgressSeparateSubnet),
-			linkMonitor,
-			*o.config.Egress.UniqueMACForSubInterfaces,
-		)
-		if err != nil {
-			return fmt.Errorf("error creating new Egress controller: %v", err)
-		}
-	}
-	if features.DefaultFeatureGate.Enabled(features.ServiceExternalIP) {
-		externalIPController, err = serviceexternalip.NewServiceExternalIPController(
-			nodeConfig.Name,
-			nodeConfig.NodeTransportInterfaceName,
-			memberlistCluster,
-			serviceInformer,
-			endpointSliceInformer,
-			linkMonitor,
-		)
-		if err != nil {
-			return fmt.Errorf("error creating new ServiceExternalIP controller: %v", err)
-		}
-	}
-
-	if linkMonitor != nil {
-		go linkMonitor.Run(stopCh)
-	}
-
-	var cniServer *cniserver.CNIServer
-	var externalNodeController *externalnode.ExternalNodeController
-	var localExternalNodeInformer cache.SharedIndexInformer
-
-	var secondaryNetworkController *secondarynetwork.Controller
-	var cniDeleteChecker agenttypes.CNIDeleteChecker
-	cniDeleteChecker = nil
-	// Secondary network controller should be created before CNIServer.Run() to make sure no Pod CNI updates will be missed.
-	if features.DefaultFeatureGate.Enabled(features.SecondaryNetwork) {
-		secondaryNetworkController, err = secondarynetwork.NewController(
-			o.config.ClientConnection, o.config.KubeAPIServerOverride,
-			k8sClient, localPodInformer.Get(),
-			podUpdateChannel, ifaceStore, nodeConfig,
-			&o.config.SecondaryNetwork, ovsdbConnection, ipPoolInformer.Lister())
-		if err != nil {
-			return fmt.Errorf("failed to create secondary network controller: %w", err)
-		}
-		cniDeleteChecker = secondaryNetworkController
-	}
-
-	if o.nodeType == config.K8sNode {
-		isChaining := networkConfig.TrafficEncapMode.IsNetworkPolicyOnly()
-		cniServer = cniserver.New(
-			o.config.CNISocket,
-			o.config.HostProcPathPrefix,
-			nodeConfig,
-			localPodInformer.Get(),
-			k8sClient,
-			routeClient,
-			isChaining,
-			enableBridgingMode,
-			enableAntreaIPAM,
-			o.config.DisableTXChecksumOffload,
-			networkConfig,
-			podNetworkWait,
-			flowRestoreCompleteWait,
-			cniDeleteChecker)
-
-		err = cniServer.Initialize(ovsBridgeClient, ofClient, ifaceStore, podUpdateChannel)
-		if err != nil {
-			return fmt.Errorf("error initializing CNI server: %w", err)
-		}
-	} else {
-		listOptions := func(options *metav1.ListOptions) {
-			options.FieldSelector = fields.OneTermEqualSelector("metadata.name", nodeConfig.Name).String()
-		}
-		localExternalNodeInformer = crdv1alpha1informers.NewFilteredExternalNodeInformer(
-			crdClient,
-			o.config.ExternalNode.ExternalNodeNamespace,
-			resyncPeriodDisabled,
-			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
-			listOptions,
-		)
-		localExternalNodeInformer.SetTransform(k8s.NewTrimmer())
-		externalNodeController, err = externalnode.NewExternalNodeController(ovsBridgeClient, ofClient, localExternalNodeInformer,
-			ifaceStore, externalEntityUpdateChannel, o.config.ExternalNode.ExternalNodeNamespace, o.config.ExternalNode.PolicyBypassRules)
-		if err != nil {
-			return fmt.Errorf("error creating ExternalNode controller: %v", err)
-		}
-	}
-
-	var podCIDRs []*net.IPNet
-	if networkConfig.TrafficEncapMode.IsNetworkPolicyOnly() {
-		podCIDRs, err = getPodCIDRs(o, k8sClient)
-		if err != nil {
-			return fmt.Errorf("error getting Pod CIDRs: %w", err)
-		}
-		if podCIDRs == nil {
-			klog.InfoS("No Pod CIDR found, Traceflow may not work correctly for inter-Node Pod-to-Pod traffic")
-		}
-	}
-
-	var traceflowController *traceflow.Controller
-	if features.DefaultFeatureGate.Enabled(features.Traceflow) {
-		traceflowController = traceflow.NewTraceflowController(
-			k8sClient,
-			crdClient,
-			serviceInformer,
-			traceflowInformer,
-			ofClient,
-			networkPolicyController,
-			egressController,
-			nodeRouteController,
-			ifaceStore,
-			networkConfig,
-			nodeConfig,
-			serviceCIDRNet,
-			podCIDRs,
-			o.enableAntreaProxy)
-	}
-
-	var packetCaptureController *packetcapture.Controller
-	if features.DefaultFeatureGate.Enabled(features.PacketCapture) {
-		packetCaptureController, err = packetcapture.NewPacketCaptureController(
-			k8sClient,
-			crdClient,
-			packetCaptureInformer,
-			ifaceStore,
-		)
-		if err != nil {
-			return fmt.Errorf("error when creating PacketCapture controller: %v", err)
-		}
-	}
-
-	if err := antreaClientProvider.RunOnce(); err != nil {
-		return err
-	}
-
-	var podStore objectstore.PodStore
-	var flowExporter *flowexporter.FlowExporter
-	if enableFlowExporter {
-		podStore = objectstore.NewPodStore(localPodInformer.Get())
-		flowExporterOptions := &flowexporteroptions.FlowExporterOptions{
-			EnableStaticDestination: o.config.FlowExporter.Enable,
-			FlowCollectorAddr:       o.flowCollectorAddr,
-			FlowCollectorProto:      o.flowCollectorProto,
-			ActiveFlowTimeout:       o.activeFlowTimeout,
-			IdleFlowTimeout:         o.idleFlowTimeout,
-			StaleConnectionTimeout:  o.staleConnectionTimeout,
-			PollInterval:            o.pollInterval,
-			ConnectUplinkToBridge:   connectUplinkToBridge,
-			ProtocolFilter:          o.config.FlowExporter.ProtocolFilter,
-		}
-		flowExporter, err = flowexporter.NewFlowExporter(
-			podStore,
-			proxyQuerier,
-			k8sClient,
-			nodeRouteController,
-			networkConfig.TrafficEncapMode,
-			nodeConfig,
-			v4Enabled,
-			v6Enabled,
-			serviceCIDRNet,
-			serviceCIDRNetv6,
-			ovsDatapathType,
-			o.enableAntreaProxy,
-			networkPolicyController,
-			flowExporterOptions,
-			flowExporterDestinationInformer,
-			egressController,
-			podNetworkWait,
-		)
-		if err != nil {
-			return fmt.Errorf("error when creating IPFIX flow exporter: %v", err)
-		}
-		networkPolicyController.SetDenyStoreNotifier(flowExporter.GetDenyConnStoreNotifier())
-	}
-
-	log.StartLogFileNumberMonitor(stopCh)
-
-	if o.nodeType == config.K8sNode {
-		go routeClient.Run(ctx)
-		go podUpdateChannel.Run(stopCh)
-		go cniServer.Run(stopCh)
-		go nodeRouteController.Run(stopCh)
-	} else {
-		go externalEntityUpdateChannel.Run(stopCh)
-		go localExternalNodeInformer.Run(stopCh)
-		go externalNodeController.Run(stopCh)
-	}
-
-	if ipsecCertController != nil {
-		go ipsecCertController.Run(stopCh)
-	}
-
-	go antreaClientProvider.Run(ctx)
-
-	// Initialize the NPL agent.
-	if o.enableNodePortLocal {
-		nplController, err := npl.InitializeNPLAgent(
-			k8sClient,
-			serviceInformer,
-			localPodInformer.Get(),
-			nodeInformer,
-			o.nplStartPort,
-			o.nplEndPort,
-			nodeConfig.Name,
-			v4Enabled,
-			v6Enabled,
-		)
-		if err != nil {
-			return fmt.Errorf("failed to start NPL agent: %v", err)
-		}
-		go nplController.Run(stopCh)
-	}
-
-	// Antrea IPAM is needed by bridging mode and secondary network IPAM.
-	if enableAntreaIPAM {
-		ipamController, err := ipam.InitializeAntreaIPAMController(
-			crdClient, namespaceInformer, ipPoolInformer, localPodInformer.Get(), enableBridgingMode)
-		if err != nil {
-			return fmt.Errorf("failed to start Antrea IPAM agent: %v", err)
-		}
-		go ipamController.Run(stopCh)
-	}
-
-	var bgpController *bgp.Controller
-	if features.DefaultFeatureGate.Enabled(features.BGPPolicy) {
-		bgpPolicyInformer := crdInformerFactory.Crd().V1alpha1().BGPPolicies()
-		bgpController, err = bgp.NewBGPPolicyController(nodeInformer,
-			serviceInformer,
-			egressInformer,
-			bgpPolicyInformer,
-			endpointSliceInformer,
-			o.enableEgress,
-			k8sClient,
-			nodeConfig,
-			networkConfig)
-		if err != nil {
-			return err
-		}
-		go bgpController.Run(ctx)
-	}
-
-	if features.DefaultFeatureGate.Enabled(features.TrafficControl) {
-		tcController := trafficcontrol.NewTrafficControlController(ofClient,
-			ifaceStore,
-			ovsBridgeClient,
-			ovsCtlClient,
-			trafficControlInformer,
-			localPodInformer.Get(),
-			namespaceInformer,
-			podUpdateChannel)
-		go tcController.Run(stopCh)
-	}
-
-	//  Start the localPodInformer
-	if localPodInformer.Evaluated() {
-		go localPodInformer.Get().Run(stopCh)
-	}
-
-	var nodeLatencyMonitor *monitortool.NodeLatencyMonitor
-	if features.DefaultFeatureGate.Enabled(features.NodeLatencyMonitor) && o.nodeType == config.K8sNode {
-		nodeLatencyMonitor = monitortool.NewNodeLatencyMonitor(
-			antreaClientProvider,
-			nodeInformer,
-			nodeLatencyMonitorInformer,
-			nodeConfig,
-			networkConfig.TrafficEncapMode,
-		)
-	}
-
-	informerFactory.Start(stopCh)
-	crdInformerFactory.Start(stopCh)
-
-	if o.enableEgress || features.DefaultFeatureGate.Enabled(features.ServiceExternalIP) {
-		go externalIPPoolController.Run(stopCh)
-		go memberlistCluster.Run(stopCh)
-	}
-
-	if features.DefaultFeatureGate.Enabled(features.ServiceExternalIP) {
-		go externalIPController.Run(stopCh)
-	}
-
-	if features.DefaultFeatureGate.Enabled(features.Traceflow) {
-		go traceflowController.Run(stopCh)
-	}
-
-	if features.DefaultFeatureGate.Enabled(features.PacketCapture) {
-		go packetCaptureController.Run(stopCh)
-	}
-
-	if o.enableAntreaProxy {
-		go proxyServer.Run(ctx)
-
-		// If AntreaProxy is configured to proxy all Service traffic, we need to wait for it to sync at least once
-		// before moving forward. Components that rely on Service availability should run after it, otherwise accessing
-		// Service would fail.
-		if o.config.AntreaProxy.ProxyAll {
-			klog.InfoS("Waiting for AntreaProxy to be ready")
-			if err := wait.PollUntilContextCancel(wait.ContextForChannel(stopCh), time.Second, false, func(ctx context.Context) (bool, error) {
-				klog.V(2).InfoS("Checking if AntreaProxy is ready")
-				return proxyServer.GetProxyProvider().SyncedOnce(), nil
-			}); err != nil {
-				return fmt.Errorf("error when waiting for AntreaProxy to be ready: %v", err)
-			}
-			klog.InfoS("AntreaProxy is ready")
-		}
-	}
-
-	go networkPolicyController.Run(stopCh)
-	if o.enableEgress {
-		go egressController.Run(stopCh)
-	}
-
-	var mcastController *multicast.Controller
-	if multicastEnabled {
-		multicastSocket, err := multicast.CreateMulticastSocket()
-		if err != nil {
-			return fmt.Errorf("failed to create multicast socket")
-		}
-		var validator agenttypes.McastNetworkPolicyController
-		if antreaPolicyEnabled {
-			validator = networkPolicyController
-		}
-		mcastController = multicast.NewMulticastController(
-			ofClient,
-			groupIDAllocator,
-			nodeConfig,
-			ifaceStore,
-			multicastSocket,
-			sets.New[string](append(o.config.Multicast.MulticastInterfaces, nodeConfig.NodeTransportInterfaceName)...),
-			podUpdateChannel,
-			o.igmpQueryInterval,
-			o.igmpQueryVersions,
-			validator,
-			networkConfig.TrafficEncapMode.SupportsEncap(),
-			nodeInformer,
-			enableBridgingMode,
-			v4Enabled,
-			v6Enabled)
-		if err := mcastController.Initialize(); err != nil {
-			return err
-		}
-		go mcastController.Run(stopCh)
-	}
-
-	if enableMulticlusterGW {
-		mcInformerFactoryWithNamespaceOption.Start(stopCh)
-		go mcDefaultRouteController.Run(stopCh)
-		if mcPodRouteController != nil {
-			go mcPodRouteController.Run(stopCh)
-		}
-	}
-
-	if enableMulticlusterNP {
-		mcInformerFactory.Start(stopCh)
-		go mcStrechedNetworkPolicyController.Run(stopCh)
-	}
-
-	// We ensure that flowRestoreCompleteWait.Wait() cannot return until podNetworkWait.Wait() returns.
-	flowRestoreCompleteWait.Increment()
-	go func() {
-		defer flowRestoreCompleteWait.Done()
-		podNetworkWait.Wait()
-	}()
-
-	klog.InfoS("Waiting for flow restoration to complete")
-	flowRestoreCompleteWait.Wait()
-	if err := agentInitializer.FlowRestoreComplete(); err != nil {
-		return err
-	}
-	klog.InfoS("Flow restoration has completed")
-	// ConnectUplinkToOVSBridge must be run immediately after FlowRestoreComplete
-	if connectUplinkToBridge {
-		// Restore network config before shutdown. ovsdbConnection must be alive when restore.
-		defer agentInitializer.RestoreOVSBridge()
-		if err := agentInitializer.ConnectUplinkToOVSBridge(); err != nil {
-			return fmt.Errorf("failed to connect uplink to OVS bridge: %w", err)
-		}
-	}
-	// secondaryNetworkController Initialize must be run after FlowRestoreComplete for the case that Node
-	// IPs are moved to the secondary OVS bridge
-	if features.DefaultFeatureGate.Enabled(features.SecondaryNetwork) {
-		defer secondaryNetworkController.Restore()
-		if err = secondaryNetworkController.Initialize(); err != nil {
-			return fmt.Errorf("failed to initialize secondary network: %v", err)
-		}
-		go secondaryNetworkController.Run(stopCh)
-	}
-
-	// statsCollector collects stats and reports to the antrea-controller periodically. For now it's only used for
-	// NetworkPolicy stats and Multicast stats.
-	if features.DefaultFeatureGate.Enabled(features.NetworkPolicyStats) {
-		// staleFlowsDeletedWait: the collector waits inside Run until the initializer's stale-flow
-		// cleanup calls Done, so we do not report stats for flows from the prior round (see
-		// Initializer.initOpenFlowPipeline and flowRestoreCompleteWait / podNetworkWait).
-		statsCollector := stats.NewCollector(antreaClientProvider, ofClient, networkPolicyController, mcastController, staleFlowsDeletedWait)
-		go statsCollector.Run(stopCh)
-	}
-
-	agentQuerier := querier.NewAgentQuerier(
-		nodeConfig,
-		networkConfig,
-		ifaceStore,
-		k8sClient,
-		ofClient,
-		ovsBridgeClient,
-		proxyQuerier,
-		networkPolicyController,
-		o.config.APIPort,
-		o.config.NodePortLocal.PortRange,
-		memberlistCluster,
-		nodeInformer.Lister(),
-		bgpController,
-	)
-
-	if features.DefaultFeatureGate.Enabled(features.SupportBundleCollection) {
-		nodeNamespace := ""
-		nodeType := controlplane.SupportBundleCollectionNodeTypeNode
-		if o.nodeType == config.ExternalNode {
-			nodeNamespace = o.config.ExternalNode.ExternalNodeNamespace
-			nodeType = controlplane.SupportBundleCollectionNodeTypeExternalNode
-		}
-		supportBundleController := support.NewSupportBundleController(nodeConfig.Name, nodeType, nodeNamespace, antreaClientProvider,
-			ovsctl.NewClient(o.config.OVSBridge), agentQuerier, networkPolicyController, v4Enabled, v6Enabled)
-		go supportBundleController.Run(stopCh)
-	}
-
-	bindAddress := net.IPv4zero
-	if o.nodeType == config.ExternalNode {
-		bindAddress = ipv4Localhost
-	}
-	secureServing := options.NewSecureServingOptions().WithLoopback()
-	secureServing.BindAddress = bindAddress
-	secureServing.BindPort = o.config.APIPort
-	secureServing.CipherSuites = o.tlsCipherSuites
-	secureServing.MinTLSVersion = o.config.TLSMinVersion
-	authentication := options.NewDelegatingAuthenticationOptions()
-	authorization := options.NewDelegatingAuthorizationOptions().WithAlwaysAllowPaths("/healthz", "/livez", "/readyz")
-	apiServer, err := apiserver.New(
-		agentQuerier,
-		networkPolicyController,
-		mcastController,
-		externalIPController,
-		bgpController,
-		secureServing,
-		authentication,
-		authorization,
-		*o.config.EnablePrometheusMetrics,
-		o.config.ClientConnection.Kubeconfig,
-		apis.APIServerLoopbackTokenPath,
-		v4Enabled,
-		v6Enabled)
-	if err != nil {
-		return fmt.Errorf("error when creating agent API server: %v", err)
-	}
-
-	// The certificate is static and will not be rotated; it will be re-generated if the Agent restarts.
-	agentAPICertData := apiServer.GetCertData()
-	if agentAPICertData == nil {
-		return fmt.Errorf("error when getting generated cert for agent API server")
-	}
-
-	go apiServer.Run(ctx)
-
-	// The API certificate is passed on directly to the monitor, instead of being provided by
-	// the agentQuerier. This is to avoid a circular dependency between apiServer and
-	// agentQuerier. The apiServer already depends on the agentQuerier to implement some API
-	// handlers. The certificate data is only available after initializing the apiServer.
-	agentMonitor := monitor.NewAgentMonitor(crdClient, agentQuerier, agentAPICertData)
-	go agentMonitor.Run(stopCh)
-
-	// Start PacketIn and OVS meter stats collection for Prometheus
-	go ofClient.Run(stopCh)
-
-	// Start the goroutine to periodically export IPFIX flow records.
-	if enableFlowExporter {
-		go podStore.Run(stopCh)
-		go flowExporter.Run(stopCh)
-	}
-
-	// Start the node latency monitor if applicable.
-	if nodeLatencyMonitor != nil {
-		go nodeLatencyMonitor.Run(stopCh)
-	}
-
-	<-stopCh
-	klog.InfoS("Stopping Antrea Agent")
-	return nil
-}
+func run(o *Options) error { _ = "STUB: not implemented"; return nil }
+
+// Create K8s Clientset, CRD Clientset, Multicluster CRD Clientset and SharedInformerFactory for the given config.
+
+// Create Antrea Clientset for the given config.
+
+// Register Antrea Agent metrics if EnablePrometheusMetrics is set
+
+// Create ovsdb and openflow clients.
+
+// TODO: ovsconfig.NewOVSDBConnectionUDS might return timeout in the future, need to add retry
+
+// Bridging mode will connect the uplink interface to the OVS bridge.
+
+// WithRequiredPortExternalIDs will ensure that whenever we create a port, the required
+// external ID (interface type) is provided. This is a sanity check to ensure code
+// correctness.
+
+// Create an ifaceStore that caches network interfaces managed by this node.
+
+// podNetworkWait is used to wait and notify that preconditions for Pod network are ready.
+// Processes that are supposed to finish before enabling Pod network should increment the wait group and decrement
+// it when finished.
+// Processes that enable Pod network should wait for it.
+
+// flowRestoreCompleteWait is used to wait until "essential" flows have been installed
+// successfully in OVS. These flows include NetworkPolicy flows (guaranteed by
+// podNetworkWait), Pod forwarding flows and flows installed by the
+// NodeRouteController. Additional requirements may be added in the future.
+
+// staleFlowsDeletedWait starts with one pending unit (Increment); the stale-flow cleanup
+// goroutine calls Done when deletion completes.
+
+// set up signal capture: the first SIGTERM / SIGINT signal is handled gracefully and will
+// cause the stopCh channel to be closed; if another signal is received before the program
+// exits, we will force exit.
+
+// Generate a context for functions which require one (instead of stopCh).
+
+// Must start after registering all event handlers.
+
+// Get all available NodePort addresses.
+
+// Initialize agent and node network.
+
+// podUpdateChannel is a channel for receiving Pod updates from CNIServer and
+// notifying NetworkPolicyController, StretchedNetworkPolicyController and
+// EgressController to reconcile rules related to the updated Pods.
+
+// externalEntityUpdateChannel is a channel for receiving ExternalEntity updates from ExternalNodeController and
+// notifying NetworkPolicyController to reconcile rules related to the updated ExternalEntities.
+
+// Lazily initialize localPodInformer when it's required by any module.
+
+// NamespaceIndex is used in NPLController.
+
+// We pick a time interval for rule deletion in the async rule cache (part of the
+// idAllocator) based on the configured flow poll interval for the Flow Exporter. This is to
+// preserve the rule info for populating NetworkPolicy fields in the Flow Exporter even
+// after rule deletion, and avoid missing or even incorrect information in the flow records.
+// In theory, anything slightly longer than the poll interval should work, but to
+// accommodate for longer than usual poll cycles we choose to play it safe.
+// o.pollInterval will be 0 when the Flow Exporter is not enabled.
+
+// In Antrea agent, status manager will automatically be enabled if
+// AntreaPolicy feature is enabled.
+
+// Secondary network controller should be created before CNIServer.Run() to make sure no Pod CNI updates will be missed.
+
+// Initialize the NPL agent.
+
+// Antrea IPAM is needed by bridging mode and secondary network IPAM.
+
+//  Start the localPodInformer
+
+// If AntreaProxy is configured to proxy all Service traffic, we need to wait for it to sync at least once
+// before moving forward. Components that rely on Service availability should run after it, otherwise accessing
+// Service would fail.
+
+// We ensure that flowRestoreCompleteWait.Wait() cannot return until podNetworkWait.Wait() returns.
+
+// ConnectUplinkToOVSBridge must be run immediately after FlowRestoreComplete
+
+// Restore network config before shutdown. ovsdbConnection must be alive when restore.
+
+// secondaryNetworkController Initialize must be run after FlowRestoreComplete for the case that Node
+// IPs are moved to the secondary OVS bridge
+
+// statsCollector collects stats and reports to the antrea-controller periodically. For now it's only used for
+// NetworkPolicy stats and Multicast stats.
+
+// staleFlowsDeletedWait: the collector waits inside Run until the initializer's stale-flow
+// cleanup calls Done, so we do not report stats for flows from the prior round (see
+// Initializer.initOpenFlowPipeline and flowRestoreCompleteWait / podNetworkWait).
+
+// The certificate is static and will not be rotated; it will be re-generated if the Agent restarts.
+
+// The API certificate is passed on directly to the monitor, instead of being provided by
+// the agentQuerier. This is to avoid a circular dependency between apiServer and
+// agentQuerier. The apiServer already depends on the agentQuerier to implement some API
+// handlers. The certificate data is only available after initializing the apiServer.
+
+// Start PacketIn and OVS meter stats collection for Prometheus
+
+// Start the goroutine to periodically export IPFIX flow records.
+
+// Start the node latency monitor if applicable.

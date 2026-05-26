@@ -29,22 +29,6 @@ type fakeClusterNetworkPolicies struct {
 }
 
 func newFakeClusterNetworkPolicies(fake *FakeCrdV1beta1) crdv1beta1.ClusterNetworkPolicyInterface {
-	return &fakeClusterNetworkPolicies{
-		gentype.NewFakeClientWithList[*v1beta1.ClusterNetworkPolicy, *v1beta1.ClusterNetworkPolicyList](
-			fake.Fake,
-			"",
-			v1beta1.SchemeGroupVersion.WithResource("clusternetworkpolicies"),
-			v1beta1.SchemeGroupVersion.WithKind("ClusterNetworkPolicy"),
-			func() *v1beta1.ClusterNetworkPolicy { return &v1beta1.ClusterNetworkPolicy{} },
-			func() *v1beta1.ClusterNetworkPolicyList { return &v1beta1.ClusterNetworkPolicyList{} },
-			func(dst, src *v1beta1.ClusterNetworkPolicyList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta1.ClusterNetworkPolicyList) []*v1beta1.ClusterNetworkPolicy {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1beta1.ClusterNetworkPolicyList, items []*v1beta1.ClusterNetworkPolicy) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.ClusterNetworkPolicyInterface)
 }

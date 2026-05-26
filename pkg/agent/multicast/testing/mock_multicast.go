@@ -26,7 +26,6 @@ package testing
 
 import (
 	net "net"
-	reflect "reflect"
 
 	gomock "go.uber.org/mock/gomock"
 )
@@ -45,124 +44,103 @@ type MockRouteInterfaceMockRecorder struct {
 
 // NewMockRouteInterface creates a new mock instance.
 func NewMockRouteInterface(ctrl *gomock.Controller) *MockRouteInterface {
-	mock := &MockRouteInterface{ctrl: ctrl}
-	mock.recorder = &MockRouteInterfaceMockRecorder{mock}
-	return mock
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockRouteInterface) EXPECT() *MockRouteInterfaceMockRecorder {
-	return m.recorder
+	_ = "STUB: not implemented"
+
+	// AddMrouteEntry mocks base method.
+	return nil
 }
 
-// AddMrouteEntry mocks base method.
 func (m *MockRouteInterface) AddMrouteEntry(src, group net.IP, iif uint16, oifs []uint16) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddMrouteEntry", src, group, iif, oifs)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AddMrouteEntry indicates an expected call of AddMrouteEntry.
 func (mr *MockRouteInterfaceMockRecorder) AddMrouteEntry(src, group, iif, oifs any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddMrouteEntry", reflect.TypeOf((*MockRouteInterface)(nil).AddMrouteEntry), src, group, iif, oifs)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // AllocateVIFs mocks base method.
 func (m *MockRouteInterface) AllocateVIFs(interfaceNames []string, startVIF uint16) ([]uint16, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AllocateVIFs", interfaceNames, startVIF)
-	ret0, _ := ret[0].([]uint16)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // AllocateVIFs indicates an expected call of AllocateVIFs.
 func (mr *MockRouteInterfaceMockRecorder) AllocateVIFs(interfaceNames, startVIF any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AllocateVIFs", reflect.TypeOf((*MockRouteInterface)(nil).AllocateVIFs), interfaceNames, startVIF)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DelMrouteEntry mocks base method.
 func (m *MockRouteInterface) DelMrouteEntry(src, group net.IP, iif uint16) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DelMrouteEntry", src, group, iif)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // DelMrouteEntry indicates an expected call of DelMrouteEntry.
 func (mr *MockRouteInterfaceMockRecorder) DelMrouteEntry(src, group, iif any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DelMrouteEntry", reflect.TypeOf((*MockRouteInterface)(nil).DelMrouteEntry), src, group, iif)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // FlushMRoute mocks base method.
-func (m *MockRouteInterface) FlushMRoute() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "FlushMRoute")
-}
+func (m *MockRouteInterface) FlushMRoute() { _ = "STUB: not implemented"; return }
 
 // FlushMRoute indicates an expected call of FlushMRoute.
 func (mr *MockRouteInterfaceMockRecorder) FlushMRoute() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlushMRoute", reflect.TypeOf((*MockRouteInterface)(nil).FlushMRoute))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetFD mocks base method.
-func (m *MockRouteInterface) GetFD() int {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetFD")
-	ret0, _ := ret[0].(int)
-	return ret0
-}
+func (m *MockRouteInterface) GetFD() int { _ = "STUB: not implemented"; return 0 }
 
 // GetFD indicates an expected call of GetFD.
 func (mr *MockRouteInterfaceMockRecorder) GetFD() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFD", reflect.TypeOf((*MockRouteInterface)(nil).GetFD))
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // GetMroutePacketCount mocks base method.
 func (m *MockRouteInterface) GetMroutePacketCount(src, group net.IP) (uint32, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetMroutePacketCount", src, group)
-	ret0, _ := ret[0].(uint32)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
 // GetMroutePacketCount indicates an expected call of GetMroutePacketCount.
 func (mr *MockRouteInterfaceMockRecorder) GetMroutePacketCount(src, group any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMroutePacketCount", reflect.TypeOf((*MockRouteInterface)(nil).GetMroutePacketCount), src, group)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MulticastInterfaceJoinMgroup mocks base method.
 func (m *MockRouteInterface) MulticastInterfaceJoinMgroup(mgroup, ifaceIP net.IP, ifaceName string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MulticastInterfaceJoinMgroup", mgroup, ifaceIP, ifaceName)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MulticastInterfaceJoinMgroup indicates an expected call of MulticastInterfaceJoinMgroup.
 func (mr *MockRouteInterfaceMockRecorder) MulticastInterfaceJoinMgroup(mgroup, ifaceIP, ifaceName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MulticastInterfaceJoinMgroup", reflect.TypeOf((*MockRouteInterface)(nil).MulticastInterfaceJoinMgroup), mgroup, ifaceIP, ifaceName)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MulticastInterfaceLeaveMgroup mocks base method.
 func (m *MockRouteInterface) MulticastInterfaceLeaveMgroup(mgroup, ifaceIP net.IP, ifaceName string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MulticastInterfaceLeaveMgroup", mgroup, ifaceIP, ifaceName)
-	ret0, _ := ret[0].(error)
-	return ret0
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // MulticastInterfaceLeaveMgroup indicates an expected call of MulticastInterfaceLeaveMgroup.
 func (mr *MockRouteInterfaceMockRecorder) MulticastInterfaceLeaveMgroup(mgroup, ifaceIP, ifaceName any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MulticastInterfaceLeaveMgroup", reflect.TypeOf((*MockRouteInterface)(nil).MulticastInterfaceLeaveMgroup), mgroup, ifaceIP, ifaceName)
+	_ = "STUB: not implemented"
+	return nil
 }

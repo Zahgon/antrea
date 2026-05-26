@@ -41,12 +41,14 @@ type clusterSetLister struct {
 
 // NewClusterSetLister returns a new ClusterSetLister.
 func NewClusterSetLister(indexer cache.Indexer) ClusterSetLister {
-	return &clusterSetLister{listers.New[*multiclusterv1alpha1.ClusterSet](indexer, multiclusterv1alpha1.Resource("clusterset"))}
+	_ = "STUB: not implemented"
+	return *new(ClusterSetLister)
 }
 
 // ClusterSets returns an object that can list and get ClusterSets.
 func (s *clusterSetLister) ClusterSets(namespace string) ClusterSetNamespaceLister {
-	return clusterSetNamespaceLister{listers.NewNamespaced[*multiclusterv1alpha1.ClusterSet](s.ResourceIndexer, namespace)}
+	_ = "STUB: not implemented"
+	return *new(ClusterSetNamespaceLister)
 }
 
 // ClusterSetNamespaceLister helps list and get ClusterSets.

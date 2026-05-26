@@ -15,13 +15,7 @@
 package flowaggregator
 
 import (
-	"os"
-	"path/filepath"
 	"time"
-
-	"k8s.io/utils/ptr"
-
-	"antrea.io/antrea/v2/pkg/apis"
 )
 
 const (
@@ -53,77 +47,4 @@ const (
 	DefaultRecordBufferSize = 8192
 )
 
-func SetConfigDefaults(flowAggregatorConf *FlowAggregatorConfig) {
-	if flowAggregatorConf.Mode == "" {
-		flowAggregatorConf.Mode = AggregatorModeAggregate
-	}
-	if flowAggregatorConf.ActiveFlowRecordTimeout == "" {
-		flowAggregatorConf.ActiveFlowRecordTimeout = DefaultActiveFlowRecordTimeout
-	}
-	if flowAggregatorConf.InactiveFlowRecordTimeout == "" {
-		flowAggregatorConf.InactiveFlowRecordTimeout = DefaultInactiveFlowRecordTimeout
-	}
-	if flowAggregatorConf.AggregatorTransportProtocol == "" {
-		flowAggregatorConf.AggregatorTransportProtocol = DefaultAggregatorTransportProtocol
-	}
-	if flowAggregatorConf.APIServer.APIPort == 0 {
-		flowAggregatorConf.APIServer.APIPort = apis.FlowAggregatorAPIPort
-	}
-	if flowAggregatorConf.FlowCollector.RecordFormat == "" {
-		flowAggregatorConf.FlowCollector.RecordFormat = DefaultRecordFormat
-	}
-	if flowAggregatorConf.FlowCollector.TemplateRefreshTimeout == "" {
-		flowAggregatorConf.FlowCollector.TemplateRefreshTimeout = DefaultTemplateRefreshTimeout
-	}
-	if flowAggregatorConf.FlowCollector.IncludeK8sNames == nil {
-		flowAggregatorConf.FlowCollector.IncludeK8sNames = ptr.To(true)
-	}
-	if flowAggregatorConf.FlowCollector.IncludeK8sUIDs == nil {
-		flowAggregatorConf.FlowCollector.IncludeK8sUIDs = ptr.To(false)
-	}
-	if flowAggregatorConf.ClickHouse.Database == "" {
-		flowAggregatorConf.ClickHouse.Database = DefaultClickHouseDatabase
-	}
-	if flowAggregatorConf.ClickHouse.DatabaseURL == "" {
-		flowAggregatorConf.ClickHouse.DatabaseURL = DefaultClickHouseDatabaseUrl
-	}
-	if flowAggregatorConf.ClickHouse.Compress == nil {
-		flowAggregatorConf.ClickHouse.Compress = ptr.To(true)
-	}
-	if flowAggregatorConf.ClickHouse.CommitInterval == "" {
-		flowAggregatorConf.ClickHouse.CommitInterval = DefaultClickHouseCommitInterval
-	}
-	if flowAggregatorConf.S3Uploader.Compress == nil {
-		flowAggregatorConf.S3Uploader.Compress = ptr.To(true)
-	}
-	if flowAggregatorConf.S3Uploader.MaxRecordsPerFile == 0 {
-		flowAggregatorConf.S3Uploader.MaxRecordsPerFile = DefaultS3MaxRecordsPerFile
-	}
-	if flowAggregatorConf.S3Uploader.RecordFormat == "" {
-		flowAggregatorConf.S3Uploader.RecordFormat = DefaultS3RecordFormat
-	}
-	if flowAggregatorConf.S3Uploader.UploadInterval == "" {
-		flowAggregatorConf.S3Uploader.UploadInterval = DefaultS3UploadInterval
-	}
-	if flowAggregatorConf.FlowLogger.Path == "" {
-		flowAggregatorConf.FlowLogger.Path = filepath.Join(os.TempDir(), "antrea-flows.log")
-	}
-	if flowAggregatorConf.FlowLogger.MaxSize == 0 {
-		flowAggregatorConf.FlowLogger.MaxSize = DefaultLoggerMaxSize
-	}
-	if flowAggregatorConf.FlowLogger.MaxBackups == 0 {
-		flowAggregatorConf.FlowLogger.MaxBackups = DefaultLoggerMaxBackups
-	}
-	if flowAggregatorConf.FlowLogger.Compress == nil {
-		flowAggregatorConf.FlowLogger.Compress = ptr.To(true)
-	}
-	if flowAggregatorConf.FlowLogger.RecordFormat == "" {
-		flowAggregatorConf.FlowLogger.RecordFormat = DefaultLoggerRecordFormat
-	}
-	if flowAggregatorConf.FlowLogger.PrettyPrint == nil {
-		flowAggregatorConf.FlowLogger.PrettyPrint = ptr.To(true)
-	}
-	if flowAggregatorConf.RecordBufferSize == 0 {
-		flowAggregatorConf.RecordBufferSize = DefaultRecordBufferSize
-	}
-}
+func SetConfigDefaults(flowAggregatorConf *FlowAggregatorConfig) { _ = "STUB: not implemented"; return }

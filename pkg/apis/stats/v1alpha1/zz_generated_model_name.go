@@ -21,75 +21,54 @@ package v1alpha1
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in AntreaClusterNetworkPolicyStats) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.AntreaClusterNetworkPolicyStats"
+	_ = "STUB: not implemented"
+	return ""
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in AntreaClusterNetworkPolicyStatsList) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.AntreaClusterNetworkPolicyStatsList"
+	_ = "STUB: not implemented"
+	return ""
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in AntreaNetworkPolicyStats) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.AntreaNetworkPolicyStats"
-}
+func (in AntreaNetworkPolicyStats) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in AntreaNetworkPolicyStatsList) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.AntreaNetworkPolicyStatsList"
+	_ = "STUB: not implemented"
+	return ""
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in MulticastGroup) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.MulticastGroup"
-}
+func (in MulticastGroup) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in MulticastGroupList) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.MulticastGroupList"
-}
+func (in MulticastGroupList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyStats) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.NetworkPolicyStats"
-}
+func (in NetworkPolicyStats) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NetworkPolicyStatsList) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.NetworkPolicyStatsList"
-}
+func (in NetworkPolicyStatsList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NodeLatencyStats) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.NodeLatencyStats"
-}
+func (in NodeLatencyStats) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in NodeLatencyStatsList) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.NodeLatencyStatsList"
-}
+func (in NodeLatencyStatsList) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in PeerNodeLatencyStats) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.PeerNodeLatencyStats"
-}
+func (in PeerNodeLatencyStats) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in PodReference) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.PodReference"
-}
+func (in PodReference) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in RuleTrafficStats) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.RuleTrafficStats"
-}
+func (in RuleTrafficStats) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in TargetIPLatencyStats) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.TargetIPLatencyStats"
-}
+func (in TargetIPLatencyStats) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in TrafficStats) OpenAPIModelName() string {
-	return "io.antrea.stats.v1alpha1.TrafficStats"
-}
+func (in TrafficStats) OpenAPIModelName() string { _ = "STUB: not implemented"; return "" }

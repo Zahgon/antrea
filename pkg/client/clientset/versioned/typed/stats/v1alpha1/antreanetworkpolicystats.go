@@ -20,7 +20,6 @@ import (
 	context "context"
 
 	statsv1alpha1 "antrea.io/antrea/v2/pkg/apis/stats/v1alpha1"
-	scheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	watch "k8s.io/apimachinery/pkg/watch"
 	gentype "k8s.io/client-go/gentype"
@@ -47,16 +46,6 @@ type antreaNetworkPolicyStats struct {
 
 // newAntreaNetworkPolicyStats returns a AntreaNetworkPolicyStats
 func newAntreaNetworkPolicyStats(c *StatsV1alpha1Client, namespace string) *antreaNetworkPolicyStats {
-	return &antreaNetworkPolicyStats{
-		gentype.NewClientWithList[*statsv1alpha1.AntreaNetworkPolicyStats, *statsv1alpha1.AntreaNetworkPolicyStatsList](
-			"antreanetworkpolicystats",
-			c.RESTClient(),
-			scheme.ParameterCodec,
-			namespace,
-			func() *statsv1alpha1.AntreaNetworkPolicyStats { return &statsv1alpha1.AntreaNetworkPolicyStats{} },
-			func() *statsv1alpha1.AntreaNetworkPolicyStatsList {
-				return &statsv1alpha1.AntreaNetworkPolicyStatsList{}
-			},
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }

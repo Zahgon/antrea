@@ -15,14 +15,8 @@
 package externalnode
 
 import (
-	"fmt"
-
-	"k8s.io/klog/v2"
-
 	"antrea.io/antrea/v2/pkg/agent/config"
-	"antrea.io/antrea/v2/pkg/agent/util"
 	"antrea.io/antrea/v2/pkg/agent/util/winnet"
-	"antrea.io/antrea/v2/pkg/signals"
 )
 
 var winnetUtil winnet.Interface = &winnet.Handle{}
@@ -37,26 +31,22 @@ var winnetUtil winnet.Interface = &winnet.Handle{}
 // Copy the uplink interface's IP to the host interface.
 // Copy the uplink interface's Route to the host interface.
 func (c *ExternalNodeController) moveIFConfigurations(adapterConfig *config.AdapterNetConfig, src string, dst string) error {
+	_ = "STUB: not implemented"
+
+	// TODO: Handle for multiple interfaces
+	// For multiple interfaces, should remove VMSwitch only
+	// when the last interface is deleted from the ExternalNode.
 	return nil
 }
 
-// TODO: Handle for multiple interfaces
-// For multiple interfaces, should remove VMSwitch only
-// when the last interface is deleted from the ExternalNode.
 func (c *ExternalNodeController) removeExternalNodeConfig() error {
-	if ovsErr := c.ovsBridgeClient.Delete(); ovsErr != nil {
-		klog.ErrorS(ovsErr, "Failed to delete OVS bridge")
-	}
-
-	if err := winnetUtil.RemoveVMSwitch(util.LocalVMSwitch); err != nil {
-		return fmt.Errorf("failed to delete VM Switch, err: %v", err)
-	}
-	// Antrea Agent initializer creates a VM Switch corresponding to an
-	// ExternalNode. When the last ExternalNode is deleted, VM Switch is also
-	// deleted. Since antrea-agent cannot resume without a restart when a new
-	// ExternalNode is created, antrea-agent is terminated. Upon restart the
-	// antrea-agent will wait in the initialization phase, for an ExternalNode
-	// that corresponds to the VM.
-	signals.GenerateStopSignal()
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// Antrea Agent initializer creates a VM Switch corresponding to an
+// ExternalNode. When the last ExternalNode is deleted, VM Switch is also
+// deleted. Since antrea-agent cannot resume without a restart when a new
+// ExternalNode is created, antrea-agent is terminated. Upon restart the
+// antrea-agent will wait in the initialization phase, for an ExternalNode
+// that corresponds to the VM.

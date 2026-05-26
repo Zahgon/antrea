@@ -15,17 +15,9 @@
 package networkpolicy
 
 import (
-	"context"
-	"fmt"
-	"time"
-
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
-	"k8s.io/klog/v2"
 
 	"antrea.io/antrea/v2/pkg/agent/client"
 	"antrea.io/antrea/v2/pkg/apis/controlplane/v1beta2"
@@ -74,144 +66,61 @@ type realizedRule struct {
 }
 
 func realizedRuleKeyFunc(obj interface{}) (string, error) {
-	return obj.(*realizedRule).ruleID, nil
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 func realizedRulePolicyIndexFunc(obj interface{}) ([]string, error) {
-	rule := obj.(*realizedRule)
-	return []string{string(rule.policyID)}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func newStatusController(antreaClientProvider client.AntreaClientProvider, nodeName string, ruleCache *ruleCache) *StatusController {
-	return &StatusController{
-		statusControlInterface: &networkPolicyStatusControl{antreaClientProvider: antreaClientProvider},
-		nodeName:               nodeName,
-		ruleCache:              ruleCache,
-		realizedRules: cache.NewIndexer(realizedRuleKeyFunc, cache.Indexers{
-			realizedRulePolicyIndex: realizedRulePolicyIndexFunc,
-		}),
-		queue: workqueue.NewTypedRateLimitingQueueWithConfig(
-			workqueue.NewTypedItemExponentialFailureRateLimiter[types.UID](minRetryDelay, maxRetryDelay),
-			workqueue.TypedRateLimitingQueueConfig[types.UID]{
-				Name: "networkpolicystatus",
-			},
-		),
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (c *StatusController) SetRuleRealization(ruleID string, policyID types.UID) {
-	_, exists, _ := c.realizedRules.GetByKey(ruleID)
-	// This rule has been realized before. The current call must be triggered by group member updates, which doesn't
-	// affect the policy's realization status.
-	if exists {
-		return
-	}
-	c.realizedRules.Add(&realizedRule{ruleID: ruleID, policyID: policyID})
-	c.queue.Add(policyID)
+	_ = "STUB: not implemented"
+	return
 }
 
-func (c *StatusController) DeleteRuleRealization(ruleID string) {
-	obj, exists, _ := c.realizedRules.GetByKey(ruleID)
-	// This rule hasn't been realized before, so it doesn't affect the policy's realization status.
-	if !exists {
-		return
-	}
-	c.realizedRules.Delete(obj)
-	c.queue.Add(obj.(*realizedRule).policyID)
-}
+// This rule has been realized before. The current call must be triggered by group member updates, which doesn't
+// affect the policy's realization status.
 
-func (c *StatusController) Resync(policyID types.UID) {
-	klog.V(2).Infof("Resyncing NetworkPolicyStatus for %s", policyID)
-	c.queue.Add(policyID)
-}
+func (c *StatusController) DeleteRuleRealization(ruleID string) { _ = "STUB: not implemented"; return }
+
+// This rule hasn't been realized before, so it doesn't affect the policy's realization status.
+
+func (c *StatusController) Resync(policyID types.UID) { _ = "STUB: not implemented"; return }
 
 // worker is a long-running function that will continually call the processNextWorkItem function in
 // order to read and process a message on the workqueue.
-func (c *StatusController) worker() {
-	for c.processNextWorkItem() {
-	}
-}
+func (c *StatusController) worker() { _ = "STUB: not implemented"; return }
 
-func (c *StatusController) processNextWorkItem() bool {
-	key, quit := c.queue.Get()
-	if quit {
-		return false
-	}
-	// We call Done here so the workqueue knows we have finished processing this item. We also
-	// must remember to call Forget if we do not want this work item being re-queued. For
-	// example, we do not call Forget if a transient error occurs, instead the item is put back
-	// on the workqueue and attempted again after a back-off period.
-	defer c.queue.Done(key)
+func (c *StatusController) processNextWorkItem() bool { _ = "STUB: not implemented"; return false }
 
-	if err := c.syncHandler(key); err == nil {
-		// If no error occurs we Forget this item so it does not get queued again until
-		// another change happens.
-		c.queue.Forget(key)
-	} else {
-		// Put the item back on the workqueue to handle any transient errors.
-		c.queue.AddRateLimited(key)
-		klog.Errorf("Error syncing NetworkPolicyStatus for %s, requeuing. Error: %v", key, err)
-	}
-	return true
-}
+// We call Done here so the workqueue knows we have finished processing this item. We also
+// must remember to call Forget if we do not want this work item being re-queued. For
+// example, we do not call Forget if a transient error occurs, instead the item is put back
+// on the workqueue and attempted again after a back-off period.
 
-func (c *StatusController) syncHandler(uid types.UID) error {
-	policy := c.ruleCache.getNetworkPolicy(string(uid))
-	// The policy must have been deleted, no further processing.
-	if policy == nil {
-		return nil
-	}
-	desiredRules := c.ruleCache.getEffectiveRulesByNetworkPolicy(string(uid))
-	// The policy must have been deleted, no further processing.
-	if len(desiredRules) == 0 {
-		return nil
-	}
-	actualRules, _ := c.realizedRules.ByIndex(realizedRulePolicyIndex, string(uid))
-	// desiredRules should match actualRules exactly.
-	if len(desiredRules) != len(actualRules) {
-		return nil
-	}
-	desiredRuleSet := sets.New[string]()
-	for _, r := range desiredRules {
-		desiredRuleSet.Insert(r.ID)
-	}
-	for _, r := range actualRules {
-		ruleID := r.(*realizedRule).ruleID
-		if !desiredRuleSet.Has(ruleID) {
-			return nil
-		}
-		desiredRuleSet.Delete(ruleID)
-	}
-	if len(desiredRuleSet) > 0 {
-		return nil
-	}
+// If no error occurs we Forget this item so it does not get queued again until
+// another change happens.
 
-	// At this point, all desired rules have been realized and all undesired rules have been removed, report it to the antrea-controller.
-	klog.V(2).Infof("Syncing NetworkPolicyStatus for %s, generation: %v", uid, policy.Generation)
-	status := &v1beta2.NetworkPolicyStatus{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: policy.Name,
-		},
-		Nodes: []v1beta2.NetworkPolicyNodeStatus{
-			{
-				NodeName:           c.nodeName,
-				Generation:         policy.Generation,
-				RealizationFailure: false,
-			},
-		},
-	}
-	return c.statusControlInterface.UpdateNetworkPolicyStatus(status.Name, status)
-}
+// Put the item back on the workqueue to handle any transient errors.
 
-func (c *StatusController) Run(stopCh <-chan struct{}) {
-	klog.Info("Starting NetworkPolicy StatusController")
-	defer klog.Info("Shutting down NetworkPolicy StatusController")
+func (c *StatusController) syncHandler(uid types.UID) error { _ = "STUB: not implemented"; return nil }
 
-	for i := 0; i < defaultWorkers; i++ {
-		go wait.Until(c.worker, time.Second, stopCh)
-	}
-	<-stopCh
-}
+// The policy must have been deleted, no further processing.
+
+// The policy must have been deleted, no further processing.
+
+// desiredRules should match actualRules exactly.
+
+// At this point, all desired rules have been realized and all undesired rules have been removed, report it to the antrea-controller.
+
+func (c *StatusController) Run(stopCh <-chan struct{}) { _ = "STUB: not implemented"; return }
 
 // networkPolicyStatusControlInterface is an interface that knows how to get and update control plane NetworkPolicy status.
 // It's created as an interface to allow testing.
@@ -224,9 +133,6 @@ type networkPolicyStatusControl struct {
 }
 
 func (c *networkPolicyStatusControl) UpdateNetworkPolicyStatus(name string, status *v1beta2.NetworkPolicyStatus) error {
-	antreaClient, err := c.antreaClientProvider.GetAntreaClient()
-	if err != nil {
-		return fmt.Errorf("error getting antrea client: %v", err)
-	}
-	return antreaClient.ControlplaneV1beta2().NetworkPolicies().UpdateStatus(context.TODO(), name, status)
+	_ = "STUB: not implemented"
+	return nil
 }

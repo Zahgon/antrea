@@ -41,12 +41,14 @@ type externalEntityLister struct {
 
 // NewExternalEntityLister returns a new ExternalEntityLister.
 func NewExternalEntityLister(indexer cache.Indexer) ExternalEntityLister {
-	return &externalEntityLister{listers.New[*crdv1alpha2.ExternalEntity](indexer, crdv1alpha2.Resource("externalentity"))}
+	_ = "STUB: not implemented"
+	return *new(ExternalEntityLister)
 }
 
 // ExternalEntities returns an object that can list and get ExternalEntities.
 func (s *externalEntityLister) ExternalEntities(namespace string) ExternalEntityNamespaceLister {
-	return externalEntityNamespaceLister{listers.NewNamespaced[*crdv1alpha2.ExternalEntity](s.ResourceIndexer, namespace)}
+	_ = "STUB: not implemented"
+	return *new(ExternalEntityNamespaceLister)
 }
 
 // ExternalEntityNamespaceLister helps list and get ExternalEntities.

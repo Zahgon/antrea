@@ -18,70 +18,17 @@ package leader
 
 import (
 	"context"
-	"reflect"
-	"slices"
 
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	"antrea.io/antrea/v2/multicluster/apis/multicluster/constants"
 	mcsv1alpha1 "antrea.io/antrea/v2/multicluster/apis/multicluster/v1alpha1"
 )
 
 func (r *ResourceExportReconciler) handleClusterInfo(ctx context.Context, req ctrl.Request, resExport mcsv1alpha1.ResourceExport) (ctrl.Result, error) {
-	resImport := &mcsv1alpha1.ResourceImport{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      req.Name,
-			Namespace: req.Namespace,
-		},
-	}
-
-	if !resExport.DeletionTimestamp.IsZero() {
-		if slices.Contains(resExport.Finalizers, constants.LegacyResourceExportFinalizer) || slices.Contains(resExport.Finalizers, constants.ResourceExportFinalizer) {
-			err := r.Client.Delete(ctx, resImport, &client.DeleteOptions{})
-			if err == nil || apierrors.IsNotFound(err) {
-				return r.deleteResourceExport(&resExport)
-			}
-			return ctrl.Result{}, err
-		}
-		return ctrl.Result{}, nil
-	}
-
-	resImport.Spec = mcsv1alpha1.ResourceImportSpec{
-		Kind:      constants.ClusterInfoKind,
-		Name:      resExport.Name,
-		Namespace: resExport.Namespace,
-	}
-	resImportName := types.NamespacedName{
-		Name:      req.Name,
-		Namespace: req.Namespace,
-	}
-
-	var err error
-	if err = r.Client.Get(ctx, resImportName, resImport); err != nil {
-		if !apierrors.IsNotFound(err) {
-			return ctrl.Result{}, err
-		}
-		// Create a new ClusterInfo of ResourceImport
-		resImport.Spec.ClusterInfo = resExport.Spec.ClusterInfo
-		if err = r.Client.Create(ctx, resImport, &client.CreateOptions{}); err != nil {
-			return ctrl.Result{}, err
-		}
-		return ctrl.Result{}, nil
-	}
-	if reflect.DeepEqual(resImport.Spec.ClusterInfo, resExport.Spec.ClusterInfo) {
-		klog.V(2).InfoS("No data change from ResourceExport, skip reconciling", "resourceexport", klog.KObj(&resExport))
-		return ctrl.Result{}, nil
-	}
-	// Update an existing ClusterInfo of ResourceImport
-	resImport.Spec.ClusterInfo = resExport.Spec.ClusterInfo
-	klog.InfoS("Updating ResourceImport", "resourceimport", klog.KObj(&resExport))
-	if err = r.Client.Update(ctx, resImport, &client.UpdateOptions{}); err != nil {
-		return ctrl.Result{}, err
-	}
-	return ctrl.Result{}, nil
+	_ = "STUB: not implemented"
+	return *new(ctrl.Result), nil
 }
+
+// Create a new ClusterInfo of ResourceImport
+
+// Update an existing ClusterInfo of ResourceImport

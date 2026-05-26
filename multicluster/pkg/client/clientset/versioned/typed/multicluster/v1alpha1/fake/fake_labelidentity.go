@@ -29,22 +29,6 @@ type fakeLabelIdentities struct {
 }
 
 func newFakeLabelIdentities(fake *FakeMulticlusterV1alpha1) multiclusterv1alpha1.LabelIdentityInterface {
-	return &fakeLabelIdentities{
-		gentype.NewFakeClientWithList[*v1alpha1.LabelIdentity, *v1alpha1.LabelIdentityList](
-			fake.Fake,
-			"",
-			v1alpha1.SchemeGroupVersion.WithResource("labelidentities"),
-			v1alpha1.SchemeGroupVersion.WithKind("LabelIdentity"),
-			func() *v1alpha1.LabelIdentity { return &v1alpha1.LabelIdentity{} },
-			func() *v1alpha1.LabelIdentityList { return &v1alpha1.LabelIdentityList{} },
-			func(dst, src *v1alpha1.LabelIdentityList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.LabelIdentityList) []*v1alpha1.LabelIdentity {
-				return gentype.ToPointerSlice(list.Items)
-			},
-			func(list *v1alpha1.LabelIdentityList, items []*v1alpha1.LabelIdentity) {
-				list.Items = gentype.FromPointerSlice(items)
-			},
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(multiclusterv1alpha1.LabelIdentityInterface)
 }

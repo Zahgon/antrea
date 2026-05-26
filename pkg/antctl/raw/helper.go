@@ -15,92 +15,48 @@
 package raw
 
 import (
-	"bytes"
 	"context"
-	"fmt"
-	"net"
-	"path"
-	"strconv"
-	"strings"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"golang.org/x/mod/semver"
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/remotecommand"
 
-	"antrea.io/antrea/v2/pkg/antctl/runtime"
-	"antrea.io/antrea/v2/pkg/apis"
 	"antrea.io/antrea/v2/pkg/apis/crd/v1beta1"
 	antrea "antrea.io/antrea/v2/pkg/client/clientset/versioned"
-	antreascheme "antrea.io/antrea/v2/pkg/client/clientset/versioned/scheme"
-	"antrea.io/antrea/v2/pkg/util/compress"
 	"antrea.io/antrea/v2/pkg/util/ip"
-	"antrea.io/antrea/v2/pkg/util/k8s"
 )
 
 func GetNodeAddrs(node *corev1.Node) (*ip.DualStackIPs, error) {
+	_ = "STUB: not implemented"
 	// We prioritize the external Node IP to support cases where antctl is run outside of the
 	// cluster, and the internal Node IP may not be reachable.
-	return k8s.GetNodeAddrsWithType(node, []corev1.NodeAddressType{corev1.NodeExternalIP, corev1.NodeInternalIP})
+	return nil, nil
 }
 
 func SetupClients(kubeconfig *rest.Config) (*kubernetes.Clientset, *antrea.Clientset, error) {
-	k8sClientset, err := kubernetes.NewForConfig(kubeconfig)
-	if err != nil {
-		return nil, nil, fmt.Errorf("failed to create K8s clientset: %w", err)
-	}
-	antreaClientset, err := antrea.NewForConfig(kubeconfig)
-	if err != nil {
-		return k8sClientset, nil, fmt.Errorf("error when creating Antrea clientset: %w", err)
-	}
-	return k8sClientset, antreaClientset, nil
+	_ = "STUB: not implemented"
+	return nil, nil, nil
 }
 
 func ResolveKubeconfig(cmd *cobra.Command) (*rest.Config, error) {
-	kubeconfigPath, err := cmd.Flags().GetString("kubeconfig")
-	if err != nil {
-		return nil, err
-	}
-	kubeconfig, err := runtime.ResolveKubeconfig(kubeconfigPath)
-	if err != nil {
-		return nil, err
-	}
-	return kubeconfig, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func SetupLocalKubeconfig(kubeconfig *rest.Config) {
-	if !runtime.InPod {
-		// We want to avoid accidental uses of this function
-		panic("SetupLocalKubeconfig can only be called when running in-pod")
-	}
-	// TODO: generate kubeconfig in Antrea agent for antctl in-Pod access.
-	kubeconfig.NegotiatedSerializer = antreascheme.Codecs.WithoutConversion()
-	kubeconfig.Insecure = true
-	kubeconfig.CAFile = ""
-	kubeconfig.CAData = nil
-	kubeconfig.BearerTokenFile = apis.APIServerLoopbackTokenPath
-	if runtime.Mode == runtime.ModeAgent {
-		kubeconfig.Host = net.JoinHostPort("127.0.0.1", strconv.Itoa(apis.AntreaAgentAPIPort))
-	} else {
-		kubeconfig.Host = net.JoinHostPort("127.0.0.1", strconv.Itoa(apis.AntreaControllerAPIPort))
-	}
+	_ = "STUB: not implemented"
+
+	// We want to avoid accidental uses of this function
+	return
 }
 
+// TODO: generate kubeconfig in Antrea agent for antctl in-Pod access.
+
 func GetControllerCACert(ctx context.Context, client kubernetes.Interface, controllerInfo *v1beta1.AntreaControllerInfo) ([]byte, error) {
-	cm, err := client.CoreV1().ConfigMaps(controllerInfo.PodRef.Namespace).Get(ctx, apis.AntreaCAConfigMapName, metav1.GetOptions{})
-	if err != nil {
-		return nil, err
-	}
-	ca, ok := cm.Data[apis.CAConfigMapKey]
-	if !ok {
-		return nil, fmt.Errorf("missing key '%s' in ConfigMap", apis.CAConfigMapKey)
-	}
-	return []byte(ca), nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func CreateAgentClientCfgFromObjects(
@@ -111,45 +67,13 @@ func CreateAgentClientCfgFromObjects(
 	agentInfo *v1beta1.AntreaAgentInfo,
 	insecure bool,
 ) (*rest.Config, error) {
-	nodeIPs, err := GetNodeAddrs(node)
-	if err != nil {
-		return nil, fmt.Errorf("error when getting IP of Node %s", node.Name)
-	}
-
-	cfg := rest.CopyConfig(kubeconfig)
-	cfg.NegotiatedSerializer = scheme.Codecs.WithoutConversion()
-	if insecure {
-		cfg.Insecure = true
-		cfg.CAFile = ""
-		cfg.CAData = nil
-	} else {
-		cert := agentInfo.APICABundle
-		if len(cert) == 0 {
-			fmt.Println("Failed to retrieve certificate for Antrea Agent, which is required to establish a secure connection")
-			// v1.13 is when APICABundle was added to the AntreaAgentInfo CRD
-			if semver.Compare(agentInfo.Version, "v1.13") < 0 {
-				fmt.Println("You may be using a version of the Antrea Agent that does not publish certificate data (< v1.13)")
-			}
-			fmt.Println("You can try running the command again with '--insecure'")
-			return nil, fmt.Errorf("no cert available")
-		}
-		cfg.Insecure = false
-		// The self-signed Agent certificate is only valid for localhost / 127.0.0.1
-		cfg.ServerName = "localhost"
-		cfg.CAData = cert
-	}
-
-	var nodeIP string
-	if nodeIPs.IPv4 != nil {
-		nodeIP = nodeIPs.IPv4.String()
-	} else if nodeIPs.IPv6 != nil {
-		nodeIP = nodeIPs.IPv6.String()
-	} else {
-		return nil, fmt.Errorf("there is no NodeIP on agent Node")
-	}
-	cfg.Host = fmt.Sprintf("https://%s", net.JoinHostPort(nodeIP, fmt.Sprint(agentInfo.APIPort)))
-	return cfg, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// v1.13 is when APICABundle was added to the AntreaAgentInfo CRD
+
+// The self-signed Agent certificate is only valid for localhost / 127.0.0.1
 
 func CreateAgentClientCfg(
 	ctx context.Context,
@@ -159,19 +83,8 @@ func CreateAgentClientCfg(
 	nodeName string,
 	insecure bool,
 ) (*rest.Config, error) {
-	node, err := k8sClientset.CoreV1().Nodes().Get(ctx, nodeName, metav1.GetOptions{})
-	if err != nil {
-		return nil, fmt.Errorf("error when looking up Node %s: %w", nodeName, err)
-	}
-	agentInfo, err := antreaClientset.CrdV1beta1().AntreaAgentInfos().Get(ctx, nodeName, metav1.GetOptions{})
-	if err != nil {
-		return nil, err
-	}
-	if agentInfo.NodeRef.Name == "" {
-		return nil, fmt.Errorf("AntreaAgentInfo is not ready for Node %s", nodeName)
-	}
-
-	return CreateAgentClientCfgFromObjects(ctx, k8sClientset, kubeconfig, node, agentInfo, insecure)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func CreateControllerClientCfg(
@@ -181,74 +94,13 @@ func CreateControllerClientCfg(
 	kubeconfig *rest.Config,
 	insecure bool,
 ) (*rest.Config, error) {
-	controllerInfo, err := antreaClientset.CrdV1beta1().AntreaControllerInfos().Get(ctx, "antrea-controller", metav1.GetOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	controllerNode, err := k8sClientset.CoreV1().Nodes().Get(ctx, controllerInfo.NodeRef.Name, metav1.GetOptions{})
-	if err != nil {
-		return nil, fmt.Errorf("error when searching the Node of the controller: %w", err)
-	}
-	var controllerNodeIPs *ip.DualStackIPs
-	controllerNodeIPs, err = GetNodeAddrs(controllerNode)
-	if err != nil {
-		return nil, fmt.Errorf("error when getting controller IP: %w", err)
-	}
-
-	cfg := rest.CopyConfig(kubeconfig)
-	cfg.NegotiatedSerializer = scheme.Codecs.WithoutConversion()
-	if insecure {
-		cfg.Insecure = true
-		cfg.CAFile = ""
-		cfg.CAData = nil
-	} else {
-		caCert, err := GetControllerCACert(ctx, k8sClientset, controllerInfo)
-		if err != nil {
-			fmt.Println("Failed to retrieve certificate for Antrea Controller, which is required to establish a secure connection")
-			fmt.Println("You can try running the command again with '--insecure'")
-			return nil, fmt.Errorf("error when getting cert: %w", err)
-		}
-		cfg.Insecure = false
-		cfg.ServerName = k8s.GetServiceDNSNames(controllerInfo.PodRef.Namespace, apis.AntreaServiceName)[0]
-		cfg.CAData = caCert
-	}
-
-	var nodeIP string
-	if controllerNodeIPs.IPv4 != nil {
-		nodeIP = controllerNodeIPs.IPv4.String()
-	} else if controllerNodeIPs.IPv6 != nil {
-		nodeIP = controllerNodeIPs.IPv6.String()
-	} else {
-		return nil, fmt.Errorf("there is no NodeIP on controller Node")
-	}
-
-	cfg.Host = fmt.Sprintf("https://%s", net.JoinHostPort(nodeIP, fmt.Sprint(controllerInfo.APIPort)))
-	return cfg, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func ExecInPod(ctx context.Context, client kubernetes.Interface, config *rest.Config, namespace, pod, container string, command []string) (string, string, error) {
-	req := client.CoreV1().RESTClient().Post().Resource("pods").Name(pod).Namespace(namespace).SubResource("exec")
-	req.VersionedParams(&corev1.PodExecOptions{
-		Command:   command,
-		Container: container,
-		Stdin:     false,
-		Stdout:    true,
-		Stderr:    true,
-		TTY:       false,
-	}, scheme.ParameterCodec)
-	exec, err := remotecommand.NewSPDYExecutor(config, "POST", req.URL())
-	if err != nil {
-		return "", "", fmt.Errorf("error while creating executor: %w", err)
-	}
-	var stdout, stderr bytes.Buffer
-	err = exec.StreamWithContext(ctx, remotecommand.StreamOptions{
-		Stdin:  nil,
-		Stdout: &stdout,
-		Stderr: &stderr,
-		Tty:    false,
-	})
-	return stdout.String(), stderr.String(), err
+	_ = "STUB: not implemented"
+	return "", "", nil
 }
 
 type PodFileCopier interface {
@@ -261,23 +113,11 @@ type podFile struct {
 }
 
 func NewPodFileCopier(restConfig *rest.Config, client kubernetes.Interface) *podFile {
-	return &podFile{
-		RestConfig: restConfig,
-		Client:     client,
-	}
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (p *podFile) CopyFromPod(ctx context.Context, fs afero.Fs, namespace, name, containerName, srcPath, dstDir string) error {
-	dir, fileName := path.Split(srcPath)
-	cmd := []string{"tar"}
-	if dir != "" {
-		cmd = append(cmd, "-C", dir)
-	}
-	cmd = append(cmd, "-cf", "-", fileName)
-
-	output, _, err := ExecInPod(ctx, p.Client, p.RestConfig, namespace, name, containerName, cmd)
-	if err != nil {
-		return err
-	}
-	return compress.UnpackReader(fs, strings.NewReader(output), false, dstDir)
+	_ = "STUB: not implemented"
+	return nil
 }

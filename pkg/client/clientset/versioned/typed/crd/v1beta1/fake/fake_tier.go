@@ -29,18 +29,6 @@ type fakeTiers struct {
 }
 
 func newFakeTiers(fake *FakeCrdV1beta1) crdv1beta1.TierInterface {
-	return &fakeTiers{
-		gentype.NewFakeClientWithList[*v1beta1.Tier, *v1beta1.TierList](
-			fake.Fake,
-			"",
-			v1beta1.SchemeGroupVersion.WithResource("tiers"),
-			v1beta1.SchemeGroupVersion.WithKind("Tier"),
-			func() *v1beta1.Tier { return &v1beta1.Tier{} },
-			func() *v1beta1.TierList { return &v1beta1.TierList{} },
-			func(dst, src *v1beta1.TierList) { dst.ListMeta = src.ListMeta },
-			func(list *v1beta1.TierList) []*v1beta1.Tier { return gentype.ToPointerSlice(list.Items) },
-			func(list *v1beta1.TierList, items []*v1beta1.Tier) { list.Items = gentype.FromPointerSlice(items) },
-		),
-		fake,
-	}
+	_ = "STUB: not implemented"
+	return *new(crdv1beta1.TierInterface)
 }

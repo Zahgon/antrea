@@ -16,9 +16,7 @@ package supportbundlecollection
 
 import (
 	"context"
-	"fmt"
 
-	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apiserver/pkg/registry/rest"
@@ -32,9 +30,7 @@ type StatusREST struct {
 }
 
 // NewStatusREST returns a REST object that will work against API services.
-func NewStatusREST(collector statusCollector) *StatusREST {
-	return &StatusREST{collector}
-}
+func NewStatusREST(collector statusCollector) *StatusREST { _ = "STUB: not implemented"; return nil }
 
 // statusCollector is the interface required by the handler.
 type statusCollector interface {
@@ -43,24 +39,11 @@ type statusCollector interface {
 
 var _ rest.NamedCreater = &StatusREST{}
 
-func (s StatusREST) New() runtime.Object {
-	return &controlplane.SupportBundleCollectionStatus{}
-}
+func (s StatusREST) New() runtime.Object { _ = "STUB: not implemented"; return *new(runtime.Object) }
 
-func (s StatusREST) Destroy() {
-}
+func (s StatusREST) Destroy() { _ = "STUB: not implemented"; return }
 
 func (s StatusREST) Create(ctx context.Context, name string, obj runtime.Object, createValidation rest.ValidateObjectFunc, options *metav1.CreateOptions) (runtime.Object, error) {
-	status, ok := obj.(*controlplane.SupportBundleCollectionStatus)
-	if !ok {
-		return nil, errors.NewBadRequest(fmt.Sprintf("not a SupportBundleCollectionStatus object: %T", obj))
-	}
-	if name != status.Name {
-		return nil, errors.NewBadRequest("name in URL does not match name in SupportBundleCollectionStatus object")
-	}
-	err := s.collector.UpdateStatus(status)
-	if err != nil {
-		return nil, err
-	}
-	return &metav1.Status{Status: metav1.StatusSuccess}, nil
+	_ = "STUB: not implemented"
+	return *new(runtime.Object), nil
 }
